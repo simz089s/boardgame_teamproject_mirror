@@ -1,7 +1,9 @@
-package com.comp361d.flashpoint.gui.demo;
+package com.comp361d.flashpoint.gui.demo.GameScreens;
 
-import com.badlogic.gdx.ApplicationAdapter;
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -9,21 +11,21 @@ import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.*;
-import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
-public class FlashpointGUIDemo extends ApplicationAdapter {
-    static final String FLASHPOINT = "Flashpoint";
+public class LoginScreen extends FlashPointScreen {
+
+    static final String FLASHPOINT = "Flash Point";
 
     SpriteBatch batch;
 
-    Skin skinUI;
-
-    Label debugLbl;
+    private Label debugLbl;
 
     Texture txtrBG;
     Sprite spriteBG;
@@ -39,15 +41,28 @@ public class FlashpointGUIDemo extends ApplicationAdapter {
 
     Stage stage;
 
-    // Image img;
-    // Table tbl;
-    // Stack stack;
+    private static final String[][] ACCOUNTS = {
+        {"Simon", "underrated"},
+        {"Elvric", "BGod"},
+        {"Jacques", "corp"},
+        {"David", "notdaniel"},
+        {"Daniel", "notdavid"},
+        {"Mat", "hematics"}
+    };
+
+    private static boolean searchDB(String usr, String pwd) {
+        for (int i = 0; i < ACCOUNTS.length; i++)
+            if (ACCOUNTS[i][0].equals(usr) && ACCOUNTS[i][1].equals(pwd)) return true;
+        return false;
+    }
+
+    LoginScreen(Game pGame) {
+        super(pGame);
+    }
 
     @Override
-    public void create() {
+    public void show() {
         batch = new SpriteBatch();
-
-        skinUI = new Skin(Gdx.files.internal("core/assets/data/uiskin.json"));
 
         debugLbl = new Label("", skinUI);
         debugLbl.setPosition(10, 10);
@@ -57,7 +72,8 @@ public class FlashpointGUIDemo extends ApplicationAdapter {
         txtrBG = new Texture("core/assets/fire_rescue.png");
         spriteBG = new Sprite(txtrBG);
         spriteBG.setScale(0.6f);
-        spriteBG.setPosition(-(Gdx.graphics.getWidth() / 2f) - 125, -(Gdx.graphics.getHeight() / 2f) + 30);
+        spriteBG.setPosition(
+                -(Gdx.graphics.getWidth() / 2f) - 125, -(Gdx.graphics.getHeight() / 2f) + 30);
 
         generator =
                 new FreeTypeFontGenerator(Gdx.files.internal("core/assets/data/Capture_it.ttf"));
@@ -66,7 +82,6 @@ public class FlashpointGUIDemo extends ApplicationAdapter {
         fontCaptureIt = generator.generateFont(parameter);
         fontCaptureIt.setColor(Color.CORAL);
         gl = new GlyphLayout(fontCaptureIt, FLASHPOINT);
-
         btnLogin = new TextButton("Login", skinUI, "default");
         btnLogin.setWidth(100);
         btnLogin.setHeight(25);
@@ -77,20 +92,15 @@ public class FlashpointGUIDemo extends ApplicationAdapter {
                 new ClickListener() {
                     @Override
                     public void clicked(InputEvent event, float x, float y) {
-                        if (btnLogin.getText().toString().equals("Login")) btnLogin.setText("Logging in...");
-                        else btnLogin.setText("Login");
-                    }
+                        btnLogin.setText("Logging in...");
 
-                    @Override
-                    public void enter(
-                            InputEvent event, float x, float y, int pointer, Actor fromActor) {
-                        btnLogin.setText("Sent");
-                    }
-
-                    @Override
-                    public void exit(
-                            InputEvent event, float x, float y, int pointer, Actor toActor) {
-                        btnLogin.setText("Send");
+                        String usr = fdUname.getText().toString();
+                        String pwd = fdPwd.getText().toString();
+                        if (searchDB(usr, pwd)) {
+                            game.setScreen(game.lobbyScreen);
+                        } else {
+                            btnLogin.setText("Wrong");
+                        }
                     }
                 });
 
@@ -123,16 +133,7 @@ public class FlashpointGUIDemo extends ApplicationAdapter {
     }
 
     @Override
-    public void dispose() {
-        batch.dispose();
-        fontCaptureIt.dispose();
-        generator.dispose();
-        skinUI.dispose();
-        stage.dispose();
-    }
-
-    @Override
-    public void render() {
+    public void render(float delta) {
         Gdx.gl.glClearColor(1, 1, 1, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
@@ -163,4 +164,16 @@ public class FlashpointGUIDemo extends ApplicationAdapter {
 
     @Override
     public void resume() {}
+
+    @Override
+    public void hide() {}
+
+    @Override
+    public void dispose() {
+        batch.dispose();
+        fontCaptureIt.dispose();
+        generator.dispose();
+        skinUI.dispose();
+        stage.dispose();
+    }
 }
