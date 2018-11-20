@@ -25,8 +25,6 @@ public class LoginScreen extends FlashPointScreen {
 
     SpriteBatch batch;
 
-    private Label debugLbl;
-
     Texture txtrBG;
     Sprite spriteBG;
 
@@ -64,7 +62,6 @@ public class LoginScreen extends FlashPointScreen {
     public void show() {
         batch = new SpriteBatch();
 
-        debugLbl = new Label("", skinUI);
         debugLbl.setPosition(10, 10);
         debugLbl.setColor(Color.PURPLE);
         debugLbl.setText(Gdx.graphics.getWidth() + " " + Gdx.graphics.getHeight());

@@ -11,19 +11,21 @@ import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 public class LobbyScreen extends FlashPointScreen {
-
-    private Label debugLbl;
 
     SpriteBatch batch;
 
     Texture txtrBG;
     Sprite spriteBG;
+
+    TextButton btn;
 
     Stage stage;
 
@@ -35,7 +37,7 @@ public class LobbyScreen extends FlashPointScreen {
     public void show() {
         batch = new SpriteBatch();
 
-        debugLbl = new Label("LOBBY/CHAT SCREEN", skinUI);
+        debugLbl.setText("LOBBY/CHAT SCREEN");
         debugLbl.setPosition(
                 (Gdx.graphics.getWidth() - debugLbl.getWidth()) / 2f,
                 (Gdx.graphics.getHeight() - debugLbl.getHeight()) / 2f);
@@ -47,7 +49,22 @@ public class LobbyScreen extends FlashPointScreen {
         spriteBG.setPosition(
                 -(Gdx.graphics.getWidth() / 2f) - 125, -(Gdx.graphics.getHeight() / 2f) + 30);
 
+        btn = new TextButton("Join game", skinUI, "default");
+        btn.setWidth(100);
+        btn.setHeight(25);
+        btn.setPosition(
+                (Gdx.graphics.getWidth() - btn.getWidth()) / 2,
+                Gdx.graphics.getHeight() / 3f - (btn.getHeight() / 2));
+        btn.addListener(
+                new ClickListener() {
+                    @Override
+                    public void clicked(InputEvent event, float x, float y) {
+                        btn.setText("Joining...");
+                    }
+                });
+
         stage = new Stage();
+        stage.addActor(btn);
         stage.addActor(debugLbl);
 
         Gdx.input.setInputProcessor(stage);
