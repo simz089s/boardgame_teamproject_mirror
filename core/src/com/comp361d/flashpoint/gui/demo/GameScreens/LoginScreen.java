@@ -40,7 +40,8 @@ public class LoginScreen extends FlashPointScreen {
     Stage stage;
 
     private static final String[][] ACCOUNTS = {
-        {"Simon", "underrated"},
+        {"Username", "Password"},
+        {"Simon", "notunderrated"},
         {"Elvric", "BGod"},
         {"Jacques", "corp"},
         {"David", "notdaniel"},
@@ -79,6 +80,7 @@ public class LoginScreen extends FlashPointScreen {
         fontCaptureIt = generator.generateFont(parameter);
         fontCaptureIt.setColor(Color.CORAL);
         gl = new GlyphLayout(fontCaptureIt, FLASHPOINT);
+
         btnLogin = new TextButton("Login", skinUI, "default");
         btnLogin.setWidth(100);
         btnLogin.setHeight(25);
