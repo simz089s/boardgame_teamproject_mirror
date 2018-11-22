@@ -39,22 +39,6 @@ public class LoginScreen extends FlashPointScreen {
 
     Stage stage;
 
-    private static final String[][] ACCOUNTS = {
-        {"Username", "Password"},
-        {"Simon", "notunderrated"},
-        {"Elvric", "BGod"},
-        {"Jacques", "corp"},
-        {"David", "notdaniel"},
-        {"Daniel", "notdavid"},
-        {"Mat", "hematics"}
-    };
-
-    private static boolean searchDB(String usr, String pwd) {
-        for (int i = 0; i < ACCOUNTS.length; i++)
-            if (ACCOUNTS[i][0].equals(usr) && ACCOUNTS[i][1].equals(pwd)) return true;
-        return false;
-    }
-
     LoginScreen(Game pGame) {
         super(pGame);
     }
@@ -93,8 +77,8 @@ public class LoginScreen extends FlashPointScreen {
                     public void clicked(InputEvent event, float x, float y) {
                         btnLogin.setText("Logging in...");
 
-                        String usr = fdUname.getText().toString();
-                        String pwd = fdPwd.getText().toString();
+                        String usr = fdUname.getText();
+                        String pwd = fdPwd.getText();
                         if (searchDB(usr, pwd)) {
                             game.setScreen(game.lobbyScreen);
                         } else {

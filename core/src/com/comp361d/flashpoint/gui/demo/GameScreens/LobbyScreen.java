@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.List;
+import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
@@ -20,7 +21,8 @@ public class LobbyScreen extends FlashPointScreen {
     Texture txtrBG;
     Sprite spriteBG;
 
-    List lstGames;
+    ScrollPane sp;
+    List<String> lstGames;
 
     TextButton btnJoin;
 
@@ -46,7 +48,17 @@ public class LobbyScreen extends FlashPointScreen {
         spriteBG.setPosition(
                 -(Gdx.graphics.getWidth() / 2f) - 125, -(Gdx.graphics.getHeight() / 2f) + 30);
 
-        lstGames = new List(skinUI);
+        lstGames = new List<String>(skinUI);
+        String[] games = {"Game A", "Game B", "Game C", "Game D", "Game E", "Game F", "..."};
+        lstGames.setItems(games);
+        sp = new ScrollPane(lstGames);
+        sp.setSmoothScrolling(false);
+        sp.setTransform(true);
+        sp.setScale(0.5f);
+        sp.setBounds(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight() + 100);
+        sp.setPosition(
+                Gdx.graphics.getWidth() / 2f - sp.getWidth() / 4,
+                Gdx.graphics.getHeight() / 2f - sp.getHeight() / 4);
 
         btnJoin = new TextButton("Join game", skinUI, "default");
         btnJoin.setWidth(100);
@@ -59,11 +71,12 @@ public class LobbyScreen extends FlashPointScreen {
                     @Override
                     public void clicked(InputEvent event, float x, float y) {
                         btnJoin.setText("Joining...");
+                        debugLbl.setText(lstGames.getSelected());
                     }
                 });
 
         stage = new Stage();
-        stage.addActor(lstGames);
+        stage.addActor(sp);
         stage.addActor(btnJoin);
         stage.addActor(debugLbl);
 
