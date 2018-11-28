@@ -70,6 +70,7 @@ public class LobbyScreen extends FlashPointScreen {
                 new ClickListener() {
                     @Override
                     public void clicked(InputEvent event, float x, float y) {
+                        game.setScreen(game.chatScreen);
                         btnJoin.setText("Joining...");
                         debugLbl.setText(lstGames.getSelected());
                     }

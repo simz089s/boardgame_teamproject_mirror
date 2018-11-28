@@ -9,11 +9,13 @@ public class FlashPointGame extends Game {
 
     Screen loginScreen;
     Screen lobbyScreen;
+    Screen chatScreen;
 
     @Override
     public void create() {
         loginScreen = new LoginScreen(this);
         lobbyScreen = new LobbyScreen(this);
+        chatScreen = new ChatScreen(this);
 
         this.setScreen(loginScreen);
     }
