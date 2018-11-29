@@ -31,7 +31,7 @@ public class Player {
     }
 
     public void move() {
-        position.x = Gdx.input.getX() - texture.getWidth() / 2;
-        position.y = Gdx.graphics.getHeight() - (Gdx.input.getY() + texture.getHeight() / 2);
+        position.x = Gdx.input.getX() - sprite.getWidth() / 2;
+        position.y = Gdx.graphics.getHeight() - (Gdx.input.getY() + sprite.getHeight() / 2);
     }
 }

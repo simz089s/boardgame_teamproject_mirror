@@ -51,14 +51,13 @@ public class ChatScreen extends FlashPointScreen {
 
         batch = new SpriteBatch();
 
-        txtrBG = new Texture("core/assets/chat.png");
+        txtrBG = new Texture("chat.png");
         spriteBG = new Sprite(txtrBG);
         spriteBG.setScale(0.6f);
         spriteBG.setPosition(
                 -(Gdx.graphics.getWidth() / 2f) - 125, -(Gdx.graphics.getHeight() / 2f) + 30);
 
-        generator =
-                new FreeTypeFontGenerator(Gdx.files.internal("core/assets/data/Capture_it.ttf"));
+        generator = new FreeTypeFontGenerator(Gdx.files.internal("data/Capture_it.ttf"));
         parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
         parameter.size = 72;
         fontCaptureIt = generator.generateFont(parameter);
@@ -94,30 +93,31 @@ public class ChatScreen extends FlashPointScreen {
                 new ClickListener() {
                     @Override
                     public void clicked(InputEvent event, float x, float y) {
-                        game.setScreen(game.loginScreen);
+                        game.setScreen(game.boardScreen);
                     }
                 });
 
-        textFieldMsg.setTextFieldListener(new TextField.TextFieldListener(){
-            @Override
-            public void keyTyped(TextField textField, char c){
+        textFieldMsg.setTextFieldListener(
+                new TextField.TextFieldListener() {
+                    @Override
+                    public void keyTyped(TextField textField, char c) {
 
-                if((int)c == 13 || (int)c == 10) {
-                    String messageInputed = textFieldMsg.getText();
+                        if ((int) c == 13 || (int) c == 10) {
+                            String messageInputed = textFieldMsg.getText();
 
-                    if(!messageInputed.equals("") && !messageInputed.equals(" ")){
-                        textFieldMsg.setText("");
-                        msgs.add("Jacques:  " + messageInputed);
-                        String[] newMsg = msgs.toArray(new String[msgs.size()]);
-                        lstMsg.setItems(newMsg);
+                            if (!messageInputed.equals("") && !messageInputed.equals(" ")) {
+                                textFieldMsg.setText("");
+                                msgs.add("Jacques:  " + messageInputed);
+                                String[] newMsg = msgs.toArray(new String[msgs.size()]);
+                                lstMsg.setItems(newMsg);
 
-                        scrollPaneMsg.setActor(lstMsg);
-                        scrollPaneMsg.layout();
-                        scrollPaneMsg.scrollTo(0, 0, 0, 0);
+                                scrollPaneMsg.setActor(lstMsg);
+                                scrollPaneMsg.layout();
+                                scrollPaneMsg.scrollTo(0, 0, 0, 0);
+                            }
+                        }
                     }
-                }
-            }
-        });
+                });
 
         stage = new Stage();
         stage.addActor(scrollPaneMsg);
@@ -145,7 +145,6 @@ public class ChatScreen extends FlashPointScreen {
         stage.draw();
         stage.act();
         batch.end();
-
     }
 
     @Override
@@ -182,7 +181,7 @@ public class ChatScreen extends FlashPointScreen {
         listStyle.font = Font.get(25); // font size
         listStyle.fontColorUnselected = Color.BLACK;
         listStyle.fontColorSelected = Color.BLACK;
-        listStyle.selection = TextureLoader.getDrawable(100, 100, Color.CLEAR );
+        listStyle.selection = TextureLoader.getDrawable(100, 100, Color.CLEAR);
 
         lstMsg = new List<String>(listStyle);
         lstMsg.setItems(messages);
@@ -200,10 +199,8 @@ public class ChatScreen extends FlashPointScreen {
         scrollPaneMsg.setScale(1.0f);
         scrollPaneMsg.setWidth(Gdx.graphics.getWidth() - 20);
         scrollPaneMsg.setHeight(Gdx.graphics.getHeight() - 100);
-        //scrollMessage.setBounds(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight() + 100);
-        scrollPaneMsg.setPosition(
-                10,
-                Gdx.graphics.getHeight() - scrollPaneMsg.getHeight() - 45);
+        // scrollMessage.setBounds(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight() + 100);
+        scrollPaneMsg.setPosition(10, Gdx.graphics.getHeight() - scrollPaneMsg.getHeight() - 45);
     }
 
     private void createExitButton() {
@@ -219,9 +216,7 @@ public class ChatScreen extends FlashPointScreen {
         btnChangePage = new TextButton("Go to game", skinUI, "default");
         btnChangePage.setWidth(125);
         btnChangePage.setHeight(25);
-        btnChangePage.setPosition(
-                (Gdx.graphics.getWidth() - btnChangePage.getWidth() - 8),
-                5);
+        btnChangePage.setPosition((Gdx.graphics.getWidth() - btnChangePage.getWidth() - 8), 5);
     }
 
     private void createMessageInputText(String hint) {
@@ -229,8 +224,6 @@ public class ChatScreen extends FlashPointScreen {
         textFieldMsg.setMessageText(hint);
         textFieldMsg.setWidth(475);
         textFieldMsg.setHeight(25);
-        textFieldMsg.setPosition(
-                5,
-                5);
+        textFieldMsg.setPosition(5, 5);
     }
 }

@@ -42,7 +42,7 @@ public class LobbyScreen extends FlashPointScreen {
                 (Gdx.graphics.getHeight() - debugLbl.getHeight()) / 2f);
         debugLbl.setColor(Color.ROYAL);
 
-        txtrBG = new Texture("core/assets/fire_rescue.png");
+        txtrBG = new Texture("fire_rescue.png");
         spriteBG = new Sprite(txtrBG);
         spriteBG.setScale(0.6f);
         spriteBG.setPosition(

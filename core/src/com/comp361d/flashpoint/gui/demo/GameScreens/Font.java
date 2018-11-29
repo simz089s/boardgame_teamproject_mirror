@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
 
 public class Font {
-	private static final String FONT_NAME = "core/assets/verdana.ttf";
+	private static final String FONT_NAME = "verdana.ttf";
 	
 	private static FreeTypeFontGenerator generator;
 	private static FreeTypeFontParameter parameter;
