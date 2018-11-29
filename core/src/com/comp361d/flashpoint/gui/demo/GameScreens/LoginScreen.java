@@ -153,10 +153,11 @@ public class LoginScreen extends FlashPointScreen {
 
     @Override
     public void dispose() {
+        this.dispose();
+        //skinUI.dispose();
         batch.dispose();
         fontCaptureIt.dispose();
         generator.dispose();
-        skinUI.dispose();
         stage.dispose();
     }
 }
