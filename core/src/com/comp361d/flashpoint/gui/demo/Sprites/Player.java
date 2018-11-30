@@ -10,10 +10,12 @@ public class Player {
     private Texture texture;
     private Sprite sprite;
 
-    public Player(int x, int y) {
-        position = new Vector2(x, y);
+    public Player() {
         texture = new Texture("firefighter/6.png");
         sprite = new Sprite(texture);
+        float x = Gdx.input.getX() - sprite.getWidth() / 2;
+        float y = Gdx.graphics.getHeight() - (Gdx.input.getY() + sprite.getHeight() / 2);
+        position = new Vector2(x, y);
     }
 
     public void update(float dt) {}

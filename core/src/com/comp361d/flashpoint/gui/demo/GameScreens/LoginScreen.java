@@ -79,11 +79,11 @@ public class LoginScreen extends FlashPointScreen {
 
                         String usr = fdUname.getText();
                         String pwd = fdPwd.getText();
-                        //if (searchDB(usr, pwd)) {
+                        if (searchDB(usr, pwd)) {
                             game.setScreen(game.lobbyScreen);
-                        /*} else {
+                        } else {
                             btnLogin.setText("Wrong");
-                        }*/
+                        }
                     }
                 });
 
