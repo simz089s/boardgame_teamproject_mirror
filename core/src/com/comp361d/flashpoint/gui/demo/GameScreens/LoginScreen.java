@@ -13,9 +13,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
@@ -35,7 +33,12 @@ public class LoginScreen extends FlashPointScreen {
 
     TextField fdUname;
     TextField fdPwd;
+
+    CheckBox signUpCheck;
+
     TextButton btnLogin;
+
+    Label errorMsgLabel;
 
     Stage stage;
 
@@ -51,65 +54,66 @@ public class LoginScreen extends FlashPointScreen {
         debugLbl.setColor(Color.PURPLE);
         debugLbl.setText(Gdx.graphics.getWidth() + " " + Gdx.graphics.getHeight());
 
-        txtrBG = new Texture("fire_rescue.png");
+        txtrBG = new Texture("core/assets/login.png");
         spriteBG = new Sprite(txtrBG);
         spriteBG.setScale(0.6f);
         spriteBG.setPosition(
                 -(Gdx.graphics.getWidth() / 2f) - 125, -(Gdx.graphics.getHeight() / 2f) + 30);
 
         generator =
-                new FreeTypeFontGenerator(Gdx.files.internal("data/Capture_it.ttf"));
+                new FreeTypeFontGenerator(Gdx.files.internal("core/assets/data/Capture_it.ttf"));
         parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
         parameter.size = 72;
         fontCaptureIt = generator.generateFont(parameter);
         fontCaptureIt.setColor(Color.CORAL);
         gl = new GlyphLayout(fontCaptureIt, FLASHPOINT);
 
-        btnLogin = new TextButton("Login", skinUI, "default");
-        btnLogin.setWidth(100);
-        btnLogin.setHeight(25);
-        btnLogin.setPosition(
-                (Gdx.graphics.getWidth() - btnLogin.getWidth()) / 2,
-                Gdx.graphics.getHeight() / 3f - (btnLogin.getHeight() / 2));
+        createUsernameTextField();
+
+        createPasswordTextField();
+
+        createSignUpCheckbox();
+
+        createLoginBtn();
+
+        createErrorMsgLabel();
+
+        signUpCheck.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                if (signUpCheck.isChecked()) {
+                    btnLogin.setText("Sign up");
+                } else {
+                    btnLogin.setText("Login");
+                }
+            }
+        });
+
         btnLogin.addListener(
                 new ClickListener() {
                     @Override
                     public void clicked(InputEvent event, float x, float y) {
-                        btnLogin.setText("Logging in...");
-
                         String usr = fdUname.getText();
                         String pwd = fdPwd.getText();
-                        if (searchDB(usr, pwd)) {
-                            game.setScreen(game.lobbyScreen);
+
+                        if (usr.isEmpty() || pwd.isEmpty()){
+                            errorMsgLabel.setText("Error: empty fields");
                         } else {
-                            btnLogin.setText("Wrong");
+                            //if (searchDB(usr, pwd)) {
+                                game.setScreen(game.lobbyScreen);
+                            /*} else {
+                                btnLogin.setText("Wrong");
+                            }*/
                         }
                     }
                 });
 
-        fdUname = new TextField("", skinUI, "default");
-        fdUname.setMessageText("Username");
-        fdUname.setWidth(200);
-        fdUname.setHeight(25);
-        fdUname.setPosition(
-                (Gdx.graphics.getWidth() - fdUname.getWidth()) / 2,
-                Gdx.graphics.getHeight() * 3 / 5f - (fdUname.getHeight() / 2));
-
-        fdPwd = new TextField("", skinUI, "default");
-        fdPwd.setPasswordMode(true);
-        fdPwd.setPasswordCharacter('*');
-        fdPwd.setMessageText("Password");
-        fdPwd.setWidth(200);
-        fdPwd.setHeight(25);
-        fdPwd.setPosition(
-                (Gdx.graphics.getWidth() - fdUname.getWidth()) / 2,
-                Gdx.graphics.getHeight() / 2f - (fdUname.getHeight() / 2));
-
         stage = new Stage();
         stage.addActor(fdUname);
         stage.addActor(fdPwd);
+        stage.addActor(signUpCheck);
         stage.addActor(btnLogin);
-        // stage.addActor(fontCaptureIt);
+        stage.addActor(errorMsgLabel);
         stage.addActor(debugLbl);
 
         Gdx.input.setInputProcessor(stage);
@@ -153,11 +157,57 @@ public class LoginScreen extends FlashPointScreen {
 
     @Override
     public void dispose() {
-        this.dispose();
-        //skinUI.dispose();
         batch.dispose();
         fontCaptureIt.dispose();
         generator.dispose();
+        skinUI.dispose();
         stage.dispose();
+    }
+
+    public void createUsernameTextField(){
+        fdUname = new TextField("", skinUI, "default");
+        fdUname.setMessageText("Username");
+        fdUname.setWidth(200);
+        fdUname.setHeight(25);
+        fdUname.setPosition(
+                (Gdx.graphics.getWidth() - fdUname.getWidth()) / 2,
+                Gdx.graphics.getHeight() * 3 / 5f - (fdUname.getHeight() / 2));
+    }
+
+    public void createPasswordTextField(){
+        fdPwd = new TextField("", skinUI, "default");
+        fdPwd.setPasswordMode(true);
+        fdPwd.setPasswordCharacter('*');
+        fdPwd.setMessageText("Password");
+        fdPwd.setWidth(200);
+        fdPwd.setHeight(25);
+        fdPwd.setPosition(
+                (Gdx.graphics.getWidth() - fdUname.getWidth()) / 2,
+                Gdx.graphics.getHeight() / 2f - (fdUname.getHeight() / 2) + 10);
+    }
+
+
+    public void createSignUpCheckbox(){
+        signUpCheck = new CheckBox(" Sign up", skinUI);
+        signUpCheck.setPosition(
+                Gdx.graphics.getWidth() / 2 - signUpCheck.getWidth() / 2,
+                Gdx.graphics.getHeight() / 2f - (fdUname.getHeight() / 2) - 20);
+    }
+
+    public void createLoginBtn(){
+        btnLogin = new TextButton("Login", skinUI, "default");
+        btnLogin.setWidth(100);
+        btnLogin.setHeight(25);
+        btnLogin.setPosition(
+                (Gdx.graphics.getWidth() - btnLogin.getWidth()) / 2,
+                Gdx.graphics.getHeight() / 3f - (btnLogin.getHeight() / 2));
+    }
+
+    public void createErrorMsgLabel(){
+        errorMsgLabel = new Label("", skinUI);
+        errorMsgLabel.setPosition(
+                Gdx.graphics.getWidth() / 2 - 70,
+                (Gdx.graphics.getHeight() / 3f - (btnLogin.getHeight() / 2)) / 2);
+        errorMsgLabel.setColor(Color.RED);
     }
 }
