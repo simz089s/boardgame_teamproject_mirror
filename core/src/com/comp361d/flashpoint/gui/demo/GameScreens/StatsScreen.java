@@ -47,7 +47,7 @@ public class StatsScreen extends FlashPointScreen {
     public void show() {
         batch = new SpriteBatch();
 
-        txtrBG = new Texture("core/assets/stats.png");
+        txtrBG = new Texture("stats.png");
         spriteBG = new Sprite(txtrBG);
         spriteBG.setScale(0.6f);
         spriteBG.setPosition(
