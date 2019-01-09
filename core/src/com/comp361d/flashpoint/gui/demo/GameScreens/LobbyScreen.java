@@ -58,7 +58,7 @@ public class LobbyScreen extends FlashPointScreen {
     public void show() {
         batch = new SpriteBatch();
 
-        txtrBG = new Texture("core/assets/lobby.png");
+        txtrBG = new Texture("lobby.png");
         spriteBG = new Sprite(txtrBG);
         spriteBG.setScale(0.6f);
         spriteBG.setPosition(
