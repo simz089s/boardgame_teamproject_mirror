@@ -12,6 +12,9 @@ public class FlashPointGame extends Game {
     Screen createGameScreen;
     Screen chatScreen;
     Screen statsScreen;
+    public static final int WIDTH = 640;
+    public static final int HEIGHT = 480;
+    public static final String TITLE = "Flash Point";
 
     @Override
     public void create() {

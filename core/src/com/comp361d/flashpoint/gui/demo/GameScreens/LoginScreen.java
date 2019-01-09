@@ -54,7 +54,7 @@ public class LoginScreen extends FlashPointScreen {
         debugLbl.setColor(Color.PURPLE);
         debugLbl.setText(Gdx.graphics.getWidth() + " " + Gdx.graphics.getHeight());
 
-        txtrBG = new Texture("core/assets/login.png");
+        txtrBG = new Texture("login.png");
         spriteBG = new Sprite(txtrBG);
         spriteBG.setScale(0.6f);
         spriteBG.setPosition(

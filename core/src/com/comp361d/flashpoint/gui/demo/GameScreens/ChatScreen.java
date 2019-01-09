@@ -55,7 +55,7 @@ public class ChatScreen extends FlashPointScreen {
 
         batch = new SpriteBatch();
 
-        txtrBG = new Texture("core/assets/chat.png");
+        txtrBG = new Texture("chat.png");
         spriteBG = new Sprite(txtrBG);
         spriteBG.setScale(0.6f);
         spriteBG.setPosition(
