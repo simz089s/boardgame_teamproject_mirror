@@ -62,7 +62,7 @@ public class ChatScreen extends FlashPointScreen {
                 -(Gdx.graphics.getWidth() / 2f) - 125, -(Gdx.graphics.getHeight() / 2f) + 30);
 
         generator =
-                new FreeTypeFontGenerator(Gdx.files.internal("core/assets/data/Capture_it.ttf"));
+                new FreeTypeFontGenerator(Gdx.files.internal("data/Capture_it.ttf"));
         parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
         parameter.size = 72;
         fontCaptureIt = generator.generateFont(parameter);
