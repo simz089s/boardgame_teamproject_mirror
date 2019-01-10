@@ -1,8 +1,8 @@
-package com.361d.flashpoint.desktop;
+package com.cs361d.flashpoint.desktop;
 
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
-import com.361d.flashpoint.FlashPointGame;
+import com.cs361d.flashpoint.FlashPointGame;
 
 public class DesktopLauncher {
 	public static void main (String[] arg) {
