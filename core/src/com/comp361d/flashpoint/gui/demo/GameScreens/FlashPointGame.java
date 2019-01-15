@@ -2,17 +2,16 @@ package com.comp361d.flashpoint.gui.demo.GameScreens;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Screen;
-import com.comp361d.flashpoint.gui.demo.GameScreens.LobbyScreen;
-import com.comp361d.flashpoint.gui.demo.GameScreens.LoginScreen;
+import com.comp361d.flashpoint.gui.demo.GameScreens.Views.*;
 
 public class FlashPointGame extends Game {
 
-    Screen loginScreen;
-    Screen lobbyScreen;
-    Screen createGameScreen;
-    Screen chatScreen;
-    Screen statsScreen;
-    Screen boardScreen;
+    public Screen loginScreen;
+    public Screen lobbyScreen;
+    public Screen createGameScreen;
+    public Screen chatScreen;
+    public Screen statsScreen;
+    public Screen boardScreen;
 
     @Override
     public void create() {
@@ -23,6 +22,6 @@ public class FlashPointGame extends Game {
         statsScreen = new StatsScreen(this);
         boardScreen = new BoardScreen(this);
 
-        this.setScreen(boardScreen);
+        this.setScreen(loginScreen);
     }
 }

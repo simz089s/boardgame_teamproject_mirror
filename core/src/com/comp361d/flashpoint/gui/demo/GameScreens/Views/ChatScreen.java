@@ -1,4 +1,4 @@
-package com.comp361d.flashpoint.gui.demo.GameScreens;
+package com.comp361d.flashpoint.gui.demo.GameScreens.Views;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
@@ -17,6 +17,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.List.ListStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.comp361d.flashpoint.gui.demo.GameScreens.Font;
+import com.comp361d.flashpoint.gui.demo.GameScreens.TextureLoader;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -46,7 +49,7 @@ public class ChatScreen extends FlashPointScreen {
     TextButton btnChangePage;
     TextButton btnExit;
 
-    ChatScreen(Game pGame) {
+    public ChatScreen(Game pGame) {
         super(pGame);
     }
 
@@ -55,14 +58,14 @@ public class ChatScreen extends FlashPointScreen {
 
         batch = new SpriteBatch();
 
-        txtrBG = new Texture("core/assets/chat.png");
+        txtrBG = new Texture("chat.png");
         spriteBG = new Sprite(txtrBG);
         spriteBG.setScale(0.6f);
         spriteBG.setPosition(
                 -(Gdx.graphics.getWidth() / 2f) - 125, -(Gdx.graphics.getHeight() / 2f) + 30);
 
         generator =
-                new FreeTypeFontGenerator(Gdx.files.internal("core/assets/data/Capture_it.ttf"));
+                new FreeTypeFontGenerator(Gdx.files.internal("data/Capture_it.ttf"));
         parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
         parameter.size = 72;
         fontCaptureIt = generator.generateFont(parameter);

@@ -1,10 +1,11 @@
-package com.comp361d.flashpoint.gui.demo.GameScreens;
+package com.comp361d.flashpoint.gui.demo.GameScreens.Views;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.comp361d.flashpoint.gui.demo.GameScreens.FlashPointGame;
 
 public abstract class FlashPointScreen implements Screen {
 

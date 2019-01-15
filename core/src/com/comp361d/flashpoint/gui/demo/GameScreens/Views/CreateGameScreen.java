@@ -1,4 +1,4 @@
-package com.comp361d.flashpoint.gui.demo.GameScreens;
+package com.comp361d.flashpoint.gui.demo.GameScreens.Views;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
@@ -43,7 +43,7 @@ public class CreateGameScreen extends FlashPointScreen {
 
     Stage stage;
 
-    CreateGameScreen(Game pGame) {
+    public CreateGameScreen(Game pGame) {
         super(pGame);
     }
 
@@ -57,7 +57,7 @@ public class CreateGameScreen extends FlashPointScreen {
 
         batch = new SpriteBatch();
 
-        txtrBG = new Texture("core/assets/create.png");
+        txtrBG = new Texture("create.png");
         spriteBG = new Sprite(txtrBG);
         spriteBG.setScale(0.6f);
         spriteBG.setPosition(
@@ -114,7 +114,7 @@ public class CreateGameScreen extends FlashPointScreen {
 
                 String boardNum = "" + (lstGameBoard.getSelectedIndex() + 1);
 
-                gameBoardImg = new Image(new Texture("core/assets/board" + boardNum + ".png"));
+                gameBoardImg = new Image(new Texture("board" + boardNum + ".png"));
                 gameBoardImg.setHeight(180);
                 gameBoardImg.setWidth(240);
                 gameBoardImg.setPosition(
@@ -282,7 +282,7 @@ public class CreateGameScreen extends FlashPointScreen {
 
     private void createGameBoardImg() {
 
-        gameBoardImg = new Image(new Texture("core/assets/board1.png"));
+        gameBoardImg = new Image(new Texture("board1.png"));
         gameBoardImg.setHeight(180);
         gameBoardImg.setWidth(240);
         gameBoardImg.setPosition(

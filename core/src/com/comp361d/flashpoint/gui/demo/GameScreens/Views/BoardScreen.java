@@ -1,4 +1,4 @@
-package com.comp361d.flashpoint.gui.demo.GameScreens;
+package com.comp361d.flashpoint.gui.demo.GameScreens.Views;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
@@ -33,7 +33,7 @@ public class BoardScreen extends FlashPointScreen {
 
     Stage stage;
 
-    BoardScreen(Game pGame) {
+    public BoardScreen(Game pGame) {
         super(pGame);
     }
 
