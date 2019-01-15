@@ -108,7 +108,7 @@ public class LoginScreen extends FlashPointScreen {
                     }
                 });
 
-        stage = new Stage();
+        stage = new Stage(); 
         stage.addActor(fdUname);
         stage.addActor(fdPwd);
         stage.addActor(signUpCheck);
