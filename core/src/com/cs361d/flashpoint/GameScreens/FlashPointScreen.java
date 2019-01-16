@@ -1,4 +1,4 @@
-package com.comp361d.flashpoint.gui.demo.GameScreens;
+package com.cs361d.flashpoint.GameScreens;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;

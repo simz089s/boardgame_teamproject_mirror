@@ -1,9 +1,7 @@
-package com.comp361d.flashpoint.gui.demo.GameScreens;
+package com.cs361d.flashpoint.GameScreens;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Screen;
-import com.comp361d.flashpoint.gui.demo.GameScreens.LobbyScreen;
-import com.comp361d.flashpoint.gui.demo.GameScreens.LoginScreen;
 
 public class FlashPointGame extends Game {
 
