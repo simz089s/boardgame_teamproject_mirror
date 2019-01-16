@@ -2,18 +2,17 @@ package com.comp361d.flashpoint.gui.demo.GameScreens.Views;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.*;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
-import java.util.ArrayList;
+import static javafx.beans.binding.Bindings.select;
 
 public class BoardScreen extends FlashPointScreen {
 
@@ -82,9 +81,10 @@ public class BoardScreen extends FlashPointScreen {
 
                 tiles[i][j].addListener(
                         new ClickListener() {
+
                             @Override
                             public void clicked(InputEvent event, float x, float y) {
-
+                                select(tiles[tmp_index_i][tmp_index_j]);
                                 dialog = new Dialog("Choice", skinUI, "dialog") {
                                     public void result(Object obj) {
                                     }
@@ -221,7 +221,7 @@ public class BoardScreen extends FlashPointScreen {
                 }
 
                 dialog.remove();
-
+                select(myTile);
                 if (gameUnit != null) {
                     stage.addActor(gameUnit);
                 }
@@ -236,4 +236,14 @@ public class BoardScreen extends FlashPointScreen {
         return table;
 
     }
+
+    public void select(Image pawn) {
+        if (pawn !=null)
+        {
+            if (pawn.getColor().equals(Color.GREEN))
+            { pawn.setColor(Color.WHITE); }
+            else pawn.setColor(Color.GREEN);
+        }
+    }
+
 }
