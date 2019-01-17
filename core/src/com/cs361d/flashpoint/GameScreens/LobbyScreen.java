@@ -1,4 +1,4 @@
-package com.comp361d.flashpoint.gui.demo.GameScreens.Views;
+package com.cs361d.flashpoint.GameScreens;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
@@ -14,11 +14,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.List;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.comp361d.flashpoint.gui.demo.GameScreens.Font;
-import com.comp361d.flashpoint.gui.demo.GameScreens.TextureLoader;
-
-import java.util.ArrayList;
-import java.util.Arrays;
 
 public class LobbyScreen extends FlashPointScreen {
 
@@ -52,7 +47,7 @@ public class LobbyScreen extends FlashPointScreen {
 
     Stage stage;
 
-    public LobbyScreen(Game pGame) {
+    LobbyScreen(Game pGame) {
         super(pGame);
     }
 
@@ -62,9 +57,9 @@ public class LobbyScreen extends FlashPointScreen {
 
         txtrBG = new Texture("lobby.png");
         spriteBG = new Sprite(txtrBG);
-        spriteBG.setScale(0.6f);
+        //spriteBG.setScale(0.6f);
         spriteBG.setPosition(
-                -(Gdx.graphics.getWidth() / 2f) - 125, -(Gdx.graphics.getHeight() / 2f) + 30);
+                0, 0);
 
         // create labels
         createAvailGameLabel();
@@ -193,7 +188,7 @@ public class LobbyScreen extends FlashPointScreen {
     }
 
     private void createLogoutButton() {
-        btnLogout = new TextButton("LOGOUT", skinUI, "default");
+        btnLogout = new TextButton("Logout", skinUI, "default");
         btnLogout.setWidth(100);
         btnLogout.setHeight(25);
         btnLogout.setPosition(

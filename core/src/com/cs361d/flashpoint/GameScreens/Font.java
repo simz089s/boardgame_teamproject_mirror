@@ -1,4 +1,4 @@
-package com.comp361d.flashpoint.gui.demo.GameScreens;
+package com.cs361d.flashpoint.GameScreens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;

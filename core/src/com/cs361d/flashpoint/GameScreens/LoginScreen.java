@@ -1,8 +1,7 @@
-package com.comp361d.flashpoint.gui.demo.GameScreens.Views;
+package com.cs361d.flashpoint.GameScreens;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
@@ -42,7 +41,7 @@ public class LoginScreen extends FlashPointScreen {
 
     Stage stage;
 
-    public LoginScreen(Game pGame) {
+    LoginScreen(Game pGame) {
         super(pGame);
     }
 
@@ -56,9 +55,9 @@ public class LoginScreen extends FlashPointScreen {
 
         txtrBG = new Texture("login.png");
         spriteBG = new Sprite(txtrBG);
-        spriteBG.setScale(0.6f);
+        //spriteBG.setScale(0.6f);
         spriteBG.setPosition(
-                -(Gdx.graphics.getWidth() / 2f) - 125, -(Gdx.graphics.getHeight() / 2f) + 30);
+                0, 0);
 
         generator =
                 new FreeTypeFontGenerator(Gdx.files.internal("data/Capture_it.ttf"));
@@ -108,7 +107,7 @@ public class LoginScreen extends FlashPointScreen {
                     }
                 });
 
-        stage = new Stage(); 
+        stage = new Stage();
         stage.addActor(fdUname);
         stage.addActor(fdPwd);
         stage.addActor(signUpCheck);

@@ -1,17 +1,16 @@
-package com.comp361d.flashpoint.gui.demo.GameScreens;
+package com.cs361d.flashpoint.GameScreens;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Screen;
-import com.comp361d.flashpoint.gui.demo.GameScreens.Views.*;
 
 public class FlashPointGame extends Game {
 
-    public Screen loginScreen;
-    public Screen lobbyScreen;
-    public Screen createGameScreen;
-    public Screen chatScreen;
-    public Screen statsScreen;
-    public Screen boardScreen;
+    Screen loginScreen;
+    Screen lobbyScreen;
+    Screen createGameScreen;
+    Screen chatScreen;
+    Screen statsScreen;
+    Screen boardScreen;
 
     @Override
     public void create() {
