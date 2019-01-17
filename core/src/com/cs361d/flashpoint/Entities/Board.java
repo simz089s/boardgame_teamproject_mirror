@@ -1,5 +1,7 @@
 package com.cs361d.flashpoint.Entities;
 
+import com.cs361d.flashpoint.Entities.BoardElements.Tile;
+
 public class Board
 {
     Tile[][] Tiles = new Tile[10][8];

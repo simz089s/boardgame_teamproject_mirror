@@ -1,5 +1,7 @@
-package com.cs361d.flashpoint.Entities;
+package com.cs361d.flashpoint.Entities.BoardElements;
 
+
+import com.cs361d.flashpoint.Entities.Card;
 
 public class FireFighter{
 

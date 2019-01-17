@@ -1,4 +1,4 @@
-package com.cs361d.flashpoint.Entities;
+package com.cs361d.flashpoint.Entities.BoardElements;
 
 public class Wall {
 

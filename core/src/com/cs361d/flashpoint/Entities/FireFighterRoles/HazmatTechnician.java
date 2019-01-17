@@ -17,10 +17,10 @@ public class HazmatTechnician implements Card{
         return instance;
     }
 
-    @Override
-    public void specialAction() {
-        //TODO
-        //Print No special action except extra AP pts
-        return;
-    }
+//    @Override
+//    public void specialAction() {
+//        //TODO
+//        //Print No special action except extra AP pts
+//        return;
+//    }
 }
