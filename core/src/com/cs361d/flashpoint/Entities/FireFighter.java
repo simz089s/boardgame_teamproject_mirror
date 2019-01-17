@@ -2,7 +2,7 @@ package com.cs361d.flashpoint.Entities;
 
 
 public class FireFighter{
-/*
+
     //firefighter static attributes
 
     Texture texture ;
@@ -12,16 +12,25 @@ public class FireFighter{
 
     //firefighter dynamic attributes
 
-    FireFighterRole role ;
-    int actionPOints ;
-    tile currentTile ;
+    Card role ;
+    int maxActionPoints;
+    int actionPointsLeft ;
+    Tile currentTile ;
 
 
-    public FireFighter(){
+    public FireFighter(Card pCard ){
+
+        this.role = pCard ;
+
+        if(this.role.name == "Generalist" )
+        {
+            maxActionPoints = 6 ;
+        }
+
 
 
 
     }
 
-*/
+
 }
