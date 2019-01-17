@@ -5,7 +5,8 @@ public class FireFighter{
 
     //firefighter static attributes
 
-    Texture texture ;
+    //Texture texture ;
+    //Sprite sprite
 
     int PlayerNumber ;
     FireFighterColor color ;
