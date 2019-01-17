@@ -1,4 +1,4 @@
-package com.comp361d.flashpoint.gui.demo.GameScreens.Entities;
+package com.Entities;
 import com.badlogic.gdx.graphics.Texture;
 
 
