@@ -1,4 +1,4 @@
-package com.Entities;
+package com.cs361d.flashpoint.Entities;
 
 public class Door {
 

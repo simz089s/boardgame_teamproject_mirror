@@ -1,5 +1,4 @@
-package com.Entities;
-import com.badlogic.gdx.graphics.Texture;
+package com.cs361d.flashpoint.Entities;
 
 
 public class FireFighter{
