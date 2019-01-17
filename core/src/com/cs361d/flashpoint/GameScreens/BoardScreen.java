@@ -84,6 +84,7 @@ public class BoardScreen extends FlashPointScreen {
                             @Override
                             public void clicked(InputEvent event, float x, float y) {
 
+                                select(tiles[tmp_index_i][tmp_index_j]); //change color of active tile
                                 dialog = new Dialog("Choice", skinUI, "dialog") {
                                     public void result(Object obj) {
                                     }
@@ -234,6 +235,7 @@ public class BoardScreen extends FlashPointScreen {
                 }
 
 
+
                 if (lstOptions.getSelectedIndex() < 5){  // tile markers
                     gameUnit.setHeight(50);
                     gameUnit.setWidth(50);
@@ -243,6 +245,7 @@ public class BoardScreen extends FlashPointScreen {
                 }
 
                 dialog.remove();
+                select(myTile); //remove color of active tile after option was selected
 
                 if (gameUnit != null) {
                     stage.addActor(gameUnit);
@@ -275,5 +278,14 @@ public class BoardScreen extends FlashPointScreen {
         btnChat.setPosition(
                 (Gdx.graphics.getWidth() - btnExit.getWidth() - 8),
                 (Gdx.graphics.getHeight() - btnExit.getHeight() - 15 - btnChat.getHeight()));
+    }
+
+    public void select(Image pawn) {
+        if (pawn !=null)
+        {
+            if (pawn.getColor().equals(Color.GREEN))
+            { pawn.setColor(Color.WHITE); }
+            else pawn.setColor(Color.GREEN);
+        }
     }
 }
