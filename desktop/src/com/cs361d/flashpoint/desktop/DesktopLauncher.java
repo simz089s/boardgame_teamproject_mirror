@@ -10,7 +10,7 @@ public class DesktopLauncher {
         new LwjglApplication(new FlashPointGame(), config);
 
         // change window size
-        config.width = 1224;
-        config.height = 700;
+        config.width = 1225;
+        config.height = 675;
     }
 }

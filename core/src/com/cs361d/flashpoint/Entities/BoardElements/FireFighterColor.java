@@ -1,6 +1,6 @@
 package com.cs361d.flashpoint.Entities.BoardElements;
 
-enum FireFighterColor {
+public enum FireFighterColor {
   Blue,
   Green,
   Orange,

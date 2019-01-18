@@ -57,7 +57,7 @@ public class LoginScreen extends FlashPointScreen {
         spriteBG = new Sprite(txtrBG);
         //spriteBG.setScale(0.6f);
         spriteBG.setPosition(
-                0, 0);
+                0, 20);
 
         generator =
                 new FreeTypeFontGenerator(Gdx.files.internal("data/Capture_it.ttf"));
