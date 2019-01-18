@@ -9,7 +9,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-import com.cs361d.flashpoint.Entities.BoardElements.*;
+import com.cs361d.flashpoint.model.BoardElements.*;
 
 
 public class DBHandler {

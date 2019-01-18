@@ -1,6 +1,6 @@
 package com.cs361d.flashpoint.controller;
 
-import com.cs361d.flashpoint.Entities.BoardElements.Tile;
+import com.cs361d.flashpoint.model.BoardElements.Tile;
 
 public class GameController {
 
