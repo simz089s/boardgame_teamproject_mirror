@@ -1,8 +1,8 @@
 package com.cs361d.flashpoint.Entities;
 
-public interface Card {
+interface Card {
 
-    String name = "";
-    //void specialAction();
-    
+  String name = "";
+  // void specialAction();
+
 }

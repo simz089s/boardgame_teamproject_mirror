@@ -2,20 +2,21 @@ package com.cs361d.flashpoint.Entities;
 
 import com.cs361d.flashpoint.Entities.BoardElements.Tile;
 
-public class Board
-{
-    Tile[][] Tiles = new Tile[10][8];
+class Board {
+  private static final int height = 10;
+  private static final int width = 8;
+  private Tile[][] tileMap = new Tile[height][width];
 
-    //create an object of SingleObject
-    private static Board instance = new Board();
+  // create an object of SingleObject
+  private static Board instance = new Board();
 
-    //make the constructor private so that this class cannot be instantiated
-    private Board(){}
+  // make the constructor private so that this class cannot be instantiated
+  private Board() {
+    // TODO
+  }
 
-    //Get the only object available
-    public static Board getInstance(){
-        return instance;
-    }
+  // Get the only object available
+  public static Board getInstance() {
+    return instance;
+  }
 }
-
-

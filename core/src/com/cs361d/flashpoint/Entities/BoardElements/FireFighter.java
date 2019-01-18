@@ -1,39 +1,30 @@
 package com.cs361d.flashpoint.Entities.BoardElements;
 
-
 import com.cs361d.flashpoint.Entities.Card;
 
-public class FireFighter{
+class FireFighter {
 
-    //firefighter static attributes
+  // firefighter static attributes
 
-    //Texture texture ;
-    //Sprite sprite
+  // Texture texture ;
+  // Sprite sprite
 
-    int PlayerNumber ;
-    FireFighterColor color ;
+  private int PlayerNumber;
+  private FireFighterColor color;
 
-    //firefighter dynamic attributes
+  // firefighter dynamic attributes
 
-    Card role ;
-    int maxActionPoints;
-    int actionPointsLeft ;
-    Tile currentTile ;
+  private Card role;
+  private int maxActionPoints;
+  private int actionPointsLeft;
+  private Tile currentTile;
 
+  FireFighter(Card pCard) {
 
-    public FireFighter(Card pCard ){
+    this.role = pCard;
 
-        this.role = pCard ;
-
-        if(this.role.name == "Generalist" )
-        {
-            maxActionPoints = 6 ;
-        }
-
-
-
-
+    if (this.role.name == "Generalist") {
+      maxActionPoints = 6;
     }
-
-
+  }
 }

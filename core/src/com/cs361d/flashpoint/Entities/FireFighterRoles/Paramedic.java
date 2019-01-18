@@ -2,20 +2,20 @@ package com.cs361d.flashpoint.Entities.FireFighterRoles;
 
 import com.cs361d.flashpoint.Entities.Card;
 
-class Generalist implements Card {
+class Paramedic implements Card {
 
-  private String name = "Generalist";
+  private String name = "Paramedic";
 
   // create an object of SingleObject
-  private static Generalist instance = new Generalist();
+  private static Paramedic instance = new Paramedic();
 
   // make the constructor private so that this class cannot be instantiated
-  private Generalist() {
+  private Paramedic() {
     // TODO
   }
 
   // Get the only object available
-  public static Generalist getInstance() {
+  public static Paramedic getInstance() {
     return instance;
   }
 

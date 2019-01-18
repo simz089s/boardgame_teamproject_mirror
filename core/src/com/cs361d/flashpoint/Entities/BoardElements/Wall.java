@@ -1,12 +1,8 @@
 package com.cs361d.flashpoint.Entities.BoardElements;
 
-public class Wall {
+class Wall {
 
-    int health ;
-    boolean hasDoor;
-    Door door ;
-
-
-
-
+  private int health;
+  private boolean hasDoor;
+  private Door door;
 }

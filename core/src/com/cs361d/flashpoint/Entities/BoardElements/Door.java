@@ -1,8 +1,6 @@
 package com.cs361d.flashpoint.Entities.BoardElements;
 
-public class Door {
+class Door {
 
-
-    boolean doorState ; //open == true , closed == false
-
+  private boolean isOpen = false;
 }
