@@ -1,70 +1,39 @@
 package com.cs361d.flashpoint.model.BoardElements;
 
-import com.cs361d.flashpoint.model.Card;
+import com.cs361d.flashpoint.model.FireFighterRoles.Card;
 
 public class FireFighter {
 
-  // firefighter static attributes
-
-  // Texture texture ;
-  // Sprite sprite
-
-  private int PlayerNumber;
-  private String color;
-  private String status;
-
-  // firefighter dynamic attributes
-
+  private FireFighterColor color;
   private Card role;
-  private int maxActionPoints;
-  private int actionPointsLeft;
-  private Tile currentTile;
+  private static final int MAX_ACTION_POINTS = 8;
+  private int actionPoints;
   private int numVictimsSaved;
 
-
-  public FireFighter(String color) {
+  public FireFighter(FireFighterColor color) {
     this.color = color;
   }
 
-  public FireFighter(Card pCard) {
-
-    this.role = pCard;
-
-    if (this.role.name == "Generalist") {
-      maxActionPoints = 6;
+  public FireFighter(Card pCard, FireFighterColor color, int numVictimsSaved, int actionPoints) {
+    if (actionPoints > MAX_ACTION_POINTS) {
+      throw new IllegalArgumentException("Action points cannot exceed 8 was: " + actionPoints);
     }
+    this.role = pCard;
+    this.color = color;
+    this.numVictimsSaved = numVictimsSaved;
+    this.actionPoints = actionPoints;
   }
 
   public int getNumVictimsSaved() {
     return numVictimsSaved;
   }
 
-  public void setNumVictimsSaved(int numVictimsSaved) {
-    this.numVictimsSaved = numVictimsSaved;
+  public void addNumVictimsSaved() {
+    this.numVictimsSaved += numVictimsSaved;
   }
 
-  public String getStatus() {
-    return status;
-  }
-
-  public void setStatus(String status) {
-    this.status = status;
-  }
-
-  public int getPlayerNumber() {
-    return PlayerNumber;
-  }
-
-  public void setPlayerNumber(int playerNumber) {
-    PlayerNumber = playerNumber;
-  }
-
-  public String getColor() {
+  public FireFighterColor getColor() {
     return color;
-  }
-
-  public void setColor(String color) {
-    this.color = color;
   }
 
   public Card getRole() {
@@ -75,27 +44,23 @@ public class FireFighter {
     this.role = role;
   }
 
-  public int getMaxActionPoints() {
-    return maxActionPoints;
-  }
-
-  public void setMaxActionPoints(int maxActionPoints) {
-    this.maxActionPoints = maxActionPoints;
-  }
-
   public int getActionPointsLeft() {
-    return actionPointsLeft;
+    return actionPoints;
   }
 
-  public void setActionPointsLeft(int actionPointsLeft) {
-    this.actionPointsLeft = actionPointsLeft;
+  public boolean removeActionPoints(int a) {
+    if (a < 1 || this.actionPoints < a) {
+      return false;
+    } else {
+      this.actionPoints -= a;
+      return true;
+    }
   }
 
-  public Tile getCurrentTile() {
-    return currentTile;
-  }
-
-  public void setCurrentTile(Tile currentTile) {
-    this.currentTile = currentTile;
+  public void resetActionPoints() {
+    this.actionPoints += 4;
+    if (this.actionPoints > MAX_ACTION_POINTS) {
+      this.actionPoints = MAX_ACTION_POINTS;
+    }
   }
 }

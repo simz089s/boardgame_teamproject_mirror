@@ -1,68 +1,34 @@
 package com.cs361d.flashpoint.model.BoardElements;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Tile {
 
-    private int[][] position;
-
-    private int top_wall;
-    private int bottom_wall;
-    private int left_wall;
-    private int right_wall;
-
-    private ArrayList<FireFighter> firefighters = new ArrayList<FireFighter>();
-
-    private boolean has_victim;
-    private boolean has_false_alarm;
-
-    private boolean has_smoke;
-    private boolean has_fire;
-    private boolean has_explosion;
+    private final ArrayList<FireFighter> firefighters = new ArrayList<FireFighter>();
+    private FireStatus fireStatus;
+    private AbstractVictim victim;
     private boolean has_hotSpot;
+    private final HashMap<Direction, Obstacle> OBSTACLES = new HashMap<Direction, Obstacle>();
 
-    public Tile(){
-
+    public Tile(FireStatus fireStatus, boolean has_hotSpot){
+        this.fireStatus = fireStatus;
+        this.victim = NullVictim.getInstance();
+        this.has_hotSpot = has_hotSpot;
     }
 
-    public int[][] getPosition() {
-        return position;
+    public boolean addObstacle(Direction d, Obstacle o) {
+        if (OBSTACLES.containsKey(d)) {
+            throw new UnsupportedOperationException("You cannot overwrite a Obstacle that already exits");
+        }
+        else {
+            OBSTACLES.put(d, o);
+            return true;
+        }
     }
 
-    public void setPosition(int[][] position) {
-        this.position = position;
-    }
-
-    public int getTop_wall() {
-        return top_wall;
-    }
-
-    public void setTop_wall(int top_wall) {
-        this.top_wall = top_wall;
-    }
-
-    public int getBottom_wall() {
-        return bottom_wall;
-    }
-
-    public void setBottom_wall(int bottom_wall) {
-        this.bottom_wall = bottom_wall;
-    }
-
-    public int getLeft_wall() {
-        return left_wall;
-    }
-
-    public void setLeft_wall(int left_wall) {
-        this.left_wall = left_wall;
-    }
-
-    public int getRight_wall() {
-        return right_wall;
-    }
-
-    public void setRight_wall(int right_wall) {
-        this.right_wall = right_wall;
+    public Obstacle getObstacle(Direction d) {
+        return OBSTACLES.get(d);
     }
 
     public ArrayList<FireFighter> getFirefighters() {
@@ -73,48 +39,44 @@ public class Tile {
 
         firefighters.add(firefighter);
     }
+
     public void removeFirefighter(FireFighter firefighter) {
 
         firefighters.remove(firefighter);
     }
 
-    public boolean isHas_victim() {
-        return has_victim;
+    public boolean containsPointOfInterest() {
+        return !victim.isNull();
     }
 
-    public void setHas_victim(boolean has_victim) {
-        this.has_victim = has_victim;
+    public boolean containsVictim() {
+        if (victim.isNull()) {
+            return false;
+        }
+        return !victim.isFalseAlarm();
     }
 
-    public boolean isHas_false_alarm() {
-        return has_false_alarm;
+    public void setVictim(AbstractVictim victim) {
+        this.victim = victim;
     }
 
-    public void setHas_false_alarm(boolean has_false_alarm) {
-        this.has_false_alarm = has_false_alarm;
+    public void setNullVictim() {
+        this.victim = NullVictim.getInstance();
     }
 
-    public boolean isHas_smoke() {
-        return has_smoke;
+    public void setFireStatus(FireStatus f) {
+        this.fireStatus = f;
     }
 
-    public void setHas_smoke(boolean has_smoke) {
-        this.has_smoke = has_smoke;
+    public boolean hasFire() {
+        return this.fireStatus == FireStatus.FIRE;
     }
 
-    public boolean isHas_fire() {
-        return has_fire;
+    public boolean hasSmoke() {
+        return this.fireStatus == FireStatus.SMOKE;
     }
 
-    public void setHas_fire(boolean has_fire) {
-        this.has_fire = has_fire;
-    }
-
-    public boolean isHas_explosion() {
-        return has_explosion;
-    }
-
-    public void setHas_explosion(boolean has_explosion) {
-        this.has_explosion = has_explosion;
+    public boolean hasNoFireOrSmoke() {
+        return this.fireStatus == FireStatus.EMPTY;
     }
 }

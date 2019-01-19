@@ -156,9 +156,7 @@ public class DBHandler {
 
     // load data of a single firefighter from the firefighter.json DB
     public static FireFighter getFirefighterFromDB(String color) {
-
-        FireFighter fireFighter = new FireFighter(color);
-
+        FireFighterColor enumColor = FireFighterColor.valueOf(color);
         JSONParser parser = new JSONParser();
 
         try {
@@ -176,7 +174,6 @@ public class DBHandler {
 
                 if (("" + object.get("color_id")).equals(color)){
                     fireFighter.setActionPointsLeft(Integer.parseInt("" + object.get("AP")));
-                    fireFighter.setStatus("" + object.get("status"));
                     fireFighter.setNumVictimsSaved(Integer.parseInt("" + object.get("num_victims_saved")));
                     break;
                 }

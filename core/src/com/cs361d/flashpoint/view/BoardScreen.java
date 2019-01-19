@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.cs361d.flashpoint.model.BoardElements.FireFighter;
 import com.cs361d.flashpoint.model.BoardElements.Tile;
 import com.cs361d.flashpoint.controller.DBHandler;
 import com.cs361d.flashpoint.controller.GameController;
@@ -152,7 +153,7 @@ public class BoardScreen extends FlashPointScreen {
     @Override
     public void dispose() {
         // skinUI.dispose();
-        this.dispose();
+        super.dispose();
         batch.dispose();
         stage.dispose();
     }
@@ -348,6 +349,20 @@ public class BoardScreen extends FlashPointScreen {
         if(!tiles[i][j].getFirefighters().isEmpty()){ // placed at top left corner of tile
 
             Image gameUnit = new Image(new Texture("game_units/firefighters/blue.png"));
+            gameUnit.addListener(
+                    new ClickListener() {
+                        @Override
+                        public void clicked(InputEvent event, float x, float y) {
+                            dialog = new Dialog("Choice", skinUI, "dialog") {
+                                public void result(Object obj) {
+                                }
+                            };
+
+                            dialog.add(createDialogContentTable(tmp_index_i, tmp_index_j));
+
+                            dialog.show(stage);
+                        }
+                    });
 
             if (tiles[i][j].getFirefighters().get(0).getColor().equals("red")){
                 gameUnit = new Image(new Texture("game_units/firefighters/red.png"));
@@ -369,20 +384,6 @@ public class BoardScreen extends FlashPointScreen {
                     myTile.getX() ,
                     myTile.getY() + myTile.getHeight() / 2);
 
-            gameUnit.addListener(
-                    new ClickListener() {
-                        @Override
-                        public void clicked(InputEvent event, float x, float y) {
-                            dialog = new Dialog("Choice", skinUI, "dialog") {
-                                public void result(Object obj) {
-                                }
-                            };
-
-                            dialog.add(createDialogContentTable(tmp_index_i, tmp_index_j));
-
-                            dialog.show(stage);
-                        }
-                    });
 
             gameUnits.add(gameUnit);
             stage.addActor(gameUnit);
@@ -473,5 +474,9 @@ public class BoardScreen extends FlashPointScreen {
             gameUnits.get(i).remove();
         }
         gameUnits.clear();
+    }
+
+    private void addFireFighterListener(FireFighter f, Image i) {
+
     }
 }
