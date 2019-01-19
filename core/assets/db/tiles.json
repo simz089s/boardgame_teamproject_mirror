@@ -535,7 +535,7 @@
 		"left_wall": 0,
 		"top_wall": 3,
 		"has_false_alarm": false,
-		"has_firefighter": ["yellow"],
+		"has_firefighter": ["red"],
 		"bottom_wall": 2,
 		"has_explosion": false,
 		"position_id": "5-5"

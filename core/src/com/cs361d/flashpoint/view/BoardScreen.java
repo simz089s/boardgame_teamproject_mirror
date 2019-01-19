@@ -36,7 +36,7 @@ public class BoardScreen extends FlashPointScreen {
 
     Image[][] tilesImg = new Image[NUMBER_OF_ROWS][NUMBER_OF_COLS];
 
-    Tile[][] tiles = DBHandler.getTiles();
+    Tile[][] tiles = DBHandler.getTilesFromDB();
 
     Stage stage;
 
@@ -209,7 +209,7 @@ public class BoardScreen extends FlashPointScreen {
                 } else if (optArr[lstOptions.getSelectedIndex()].equals("Chop")) {
 
                 } else if (optArr[lstOptions.getSelectedIndex()].equals("Save")) {
-                    DBHandler.saveGame(tiles);
+                    DBHandler.saveTilesToDB(tiles);
                 } else if (optArr[lstOptions.getSelectedIndex()].equals("Cancel")) {
 
                 } else {

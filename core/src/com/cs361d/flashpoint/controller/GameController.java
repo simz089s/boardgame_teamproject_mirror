@@ -14,38 +14,55 @@ public class GameController {
     }
 
     public static Tile[][] moveUp(Tile[][] tiles, int i, int j){
-        String color = tiles[i][j].getFirefighters().get(0).getColor();
+
+        FireFighter f = tiles[i][j].getFirefighters().get(0);
+
         tiles[i][j].setFirefighters(null);
+
         ArrayList<FireFighter> firefightersArr = new ArrayList <FireFighter>();
-        firefightersArr.add(new FireFighter(color));
+        firefightersArr.add(f);
+
         tiles[i - 1][j].setFirefighters(firefightersArr);
+
         return tiles;
     }
 
     public static Tile[][] moveDown(Tile[][] tiles, int i, int j){
-        String color = tiles[i][j].getFirefighters().get(0).getColor();
+        FireFighter f = tiles[i][j].getFirefighters().get(0);
+
         tiles[i][j].setFirefighters(null);
+
         ArrayList<FireFighter> firefightersArr = new ArrayList <FireFighter>();
-        firefightersArr.add(new FireFighter(color));
+        firefightersArr.add(f);
+
         tiles[i + 1][j].setFirefighters(firefightersArr);
+
         return tiles;
     }
 
     public static Tile[][] moveLeft(Tile[][] tiles, int i, int j){
-        String color = tiles[i][j].getFirefighters().get(0).getColor();
+        FireFighter f = tiles[i][j].getFirefighters().get(0);
+
         tiles[i][j].setFirefighters(null);
+
         ArrayList<FireFighter> firefightersArr = new ArrayList <FireFighter>();
-        firefightersArr.add(new FireFighter(color));
+        firefightersArr.add(f);
+
         tiles[i][j - 1].setFirefighters(firefightersArr);
+
         return tiles;
     }
 
     public static Tile[][] moveRight(Tile[][] tiles, int i, int j){
-        String color = tiles[i][j].getFirefighters().get(0).getColor();
+        FireFighter f = tiles[i][j].getFirefighters().get(0);
+
         tiles[i][j].setFirefighters(null);
+
         ArrayList<FireFighter> firefightersArr = new ArrayList <FireFighter>();
-        firefightersArr.add(new FireFighter(color));
+        firefightersArr.add(f);
+
         tiles[i][j + 1].setFirefighters(firefightersArr);
+        
         return tiles;
     }
 }

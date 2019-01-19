@@ -16,7 +16,7 @@ import com.cs361d.flashpoint.model.BoardElements.*;
 public class DBHandler {
 
     // load the state of the game
-    public static Tile[][] getTiles() {
+    public static Tile[][] getTilesFromDB() {
 
         Tile[][] tiles = new Tile[8][10];
 
@@ -62,8 +62,8 @@ public class DBHandler {
                     Iterator<String> firefighterIter = firefightersArr.iterator();
                     while (firefighterIter.hasNext()) {
                         String firefighterColor = firefighterIter.next();
-                        // create a firefighter object; pass in its color
-                        FireFighter f = new FireFighter(firefighterColor);
+                        // create a firefighter object by retrieving its data from DB using its unique color id
+                        FireFighter f = getFirefighterFromDB(firefighterColor);
                         firefightersObjArr.add(f);
                     }
 
@@ -95,7 +95,7 @@ public class DBHandler {
     }
 
     // save the state of the game
-    public static void saveGame(Tile[][] tiles){
+    public static void saveTilesToDB (Tile[][] tiles){
 
 
         JSONObject newObj = new JSONObject();
@@ -124,8 +124,10 @@ public class DBHandler {
                 currentTile.put("right_wall", tiles[i][j].getRight_wall());
 
                 JSONArray newFirefightersList = new JSONArray();
-                for (FireFighter f: tiles[i][j].getFirefighters()){
-                    newFirefightersList.add(f.getColor());
+                if (tiles[i][j].getFirefighters() != null) {
+                    for (FireFighter f : tiles[i][j].getFirefighters()) {
+                        newFirefightersList.add(f.getColor());
+                    }
                 }
 
                 currentTile.put("has_firefighter", newFirefightersList);
@@ -156,8 +158,44 @@ public class DBHandler {
         } catch (ParseException e) {
             e.printStackTrace();
         }
+    }
 
+    // load data of a single firefighter from the firefighter.json DB
+    public static FireFighter getFirefighterFromDB(String color) {
 
+        FireFighter fireFighter = new FireFighter(color);
+
+        JSONParser parser = new JSONParser();
+
+        try {
+
+            Object obj = parser.parse(new FileReader("db/firefighters.json"));
+
+            JSONObject jsonObject = (JSONObject) obj;
+
+            // loop array
+            JSONArray firefightersArr = (JSONArray) jsonObject.get("firefighters");
+            Iterator<JSONObject> iterator = firefightersArr.iterator();
+            while (iterator.hasNext()) {
+
+                JSONObject object = iterator.next();
+
+                if (("" + object.get("color_id")).equals(color)){
+                    fireFighter.setActionPointsLeft(Integer.parseInt("" + object.get("AP")));
+                    fireFighter.setStatus("" + object.get("status"));
+                    fireFighter.setNumVictimsSaved(Integer.parseInt("" + object.get("num_victims_saved")));
+                    break;
+                }
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return fireFighter;
     }
 
 

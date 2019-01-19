@@ -2,7 +2,7 @@
 	"firefighters": [{
 		"color_id": "red",
 		"status": "active",
-		"AP": 0,
+		"AP": 100,
 		"num_victims_saved": 0,
 		"special_ability": false
 	}, {

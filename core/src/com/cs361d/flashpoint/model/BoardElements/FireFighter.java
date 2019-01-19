@@ -11,6 +11,7 @@ public class FireFighter {
 
   private int PlayerNumber;
   private String color;
+  private String status;
 
   // firefighter dynamic attributes
 
@@ -18,6 +19,7 @@ public class FireFighter {
   private int maxActionPoints;
   private int actionPointsLeft;
   private Tile currentTile;
+  private int numVictimsSaved;
 
 
   public FireFighter(String color) {
@@ -31,6 +33,22 @@ public class FireFighter {
     if (this.role.name == "Generalist") {
       maxActionPoints = 6;
     }
+  }
+
+  public int getNumVictimsSaved() {
+    return numVictimsSaved;
+  }
+
+  public void setNumVictimsSaved(int numVictimsSaved) {
+    this.numVictimsSaved = numVictimsSaved;
+  }
+
+  public String getStatus() {
+    return status;
+  }
+
+  public void setStatus(String status) {
+    this.status = status;
   }
 
   public int getPlayerNumber() {
