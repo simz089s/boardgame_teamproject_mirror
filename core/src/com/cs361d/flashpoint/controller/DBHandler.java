@@ -4,6 +4,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Iterator;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -44,16 +45,36 @@ public class DBHandler {
 
                 tiles[i][j] = new Tile();
 
+                // wall
                 tiles[i][j].setTop_wall(Integer.parseInt("" + object.get("top_wall")));
                 tiles[i][j].setBottom_wall(Integer.parseInt("" + object.get("bottom_wall")));
                 tiles[i][j].setLeft_wall(Integer.parseInt("" + object.get("left_wall")));
                 tiles[i][j].setRight_wall(Integer.parseInt("" + object.get("right_wall")));
 
-                tiles[i][j].setHas_firefighter((String) object.get("has_firefighter"));
+                // firefighters
+                JSONArray firefightersArr = (JSONArray) object.get("has_firefighter");
+                if (firefightersArr.isEmpty()){
+                    tiles[i][j].setFirefighters(null);
+                } else {
 
+                    ArrayList<FireFighter> firefightersObjArr = new ArrayList<FireFighter>();
+
+                    Iterator<String> firefighterIter = firefightersArr.iterator();
+                    while (firefighterIter.hasNext()) {
+                        String firefighterColor = firefighterIter.next();
+                        // create a firefighter object; pass in its color
+                        FireFighter f = new FireFighter(firefighterColor);
+                        firefightersObjArr.add(f);
+                    }
+
+                    tiles[i][j].setFirefighters(firefightersObjArr);
+                }
+
+                // POI
                 tiles[i][j].setHas_victim((Boolean) object.get("has_victim"));
                 tiles[i][j].setHas_false_alarm((Boolean) object.get("has_false_alarm"));
 
+                // dangerous mat
                 tiles[i][j].setHas_smoke((Boolean) object.get("has_smoke"));
                 tiles[i][j].setHas_fire((Boolean) object.get("has_fire"));
                 tiles[i][j].setHas_explosion((Boolean) object.get("has_explosion"));
@@ -78,7 +99,7 @@ public class DBHandler {
 
 
         JSONObject newObj = new JSONObject();
-        JSONArray newList = new JSONArray();
+        JSONArray newTilesList = new JSONArray();
 
         JSONParser parser = new JSONParser();
 
@@ -101,19 +122,27 @@ public class DBHandler {
                 currentTile.put("bottom_wall", tiles[i][j].getBottom_wall());
                 currentTile.put("left_wall", tiles[i][j].getLeft_wall());
                 currentTile.put("right_wall", tiles[i][j].getRight_wall());
-                currentTile.put("has_firefighter", tiles[i][j].getHas_firefighter());
+
+                JSONArray newFirefightersList = new JSONArray();
+                for (FireFighter f: tiles[i][j].getFirefighters()){
+                    newFirefightersList.add(f.getColor());
+                }
+
+                currentTile.put("has_firefighter", newFirefightersList);
+
                 currentTile.put("has_victim", tiles[i][j].isHas_victim());
                 currentTile.put("has_false_alarm", tiles[i][j].isHas_false_alarm());
+
                 currentTile.put("has_smoke", tiles[i][j].isHas_smoke());
                 currentTile.put("has_fire", tiles[i][j].isHas_fire());
                 currentTile.put("has_explosion", tiles[i][j].isHas_explosion());
 
-                newList.add(currentTile);
+                newTilesList.add(currentTile);
                 count ++;
 
             }
 
-            newObj.put("tiles", newList);
+            newObj.put("tiles", newTilesList);
 
             // use "db/tiles2.json" for test
             FileWriter file = new FileWriter("db/tiles.json");

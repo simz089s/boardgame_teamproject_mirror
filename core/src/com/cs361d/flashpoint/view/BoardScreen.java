@@ -40,14 +40,8 @@ public class BoardScreen extends FlashPointScreen {
 
     Stage stage;
 
-
-
     // reference to game units images
     ArrayList<Image> gameUnits = new ArrayList <Image>();
-    //Image[] gameUnits = new Image[1000]; // 1000 to be changed to actual max possible number of game units on board
-    //int gameUnits_indexCount = 0;
-
-
 
     BoardScreen(Game pGame) {
         super(pGame);
@@ -351,8 +345,24 @@ public class BoardScreen extends FlashPointScreen {
         }
 
 
-        if(!tiles[i][j].getHas_firefighter().equals("none")){ // placed at top left corner of tile
-            Image gameUnit = new Image(new Texture("game_units/Firefighter.png"));
+        if(tiles[i][j].getFirefighters() != null){ // placed at top left corner of tile
+
+            Image gameUnit = new Image(new Texture("game_units/firefighters/blue.png"));
+
+            if (tiles[i][j].getFirefighters().get(0).getColor().equals("red")){
+                gameUnit = new Image(new Texture("game_units/firefighters/red.png"));
+            } else if (tiles[i][j].getFirefighters().get(0).getColor().equals("blue")){
+                gameUnit = new Image(new Texture("game_units/firefighters/blue.png"));
+            } else if (tiles[i][j].getFirefighters().get(0).getColor().equals("white")){
+                gameUnit = new Image(new Texture("game_units/firefighters/white.png"));
+            } else if (tiles[i][j].getFirefighters().get(0).getColor().equals("orange")){
+                gameUnit = new Image(new Texture("game_units/firefighters/orange.png"));
+            } else if (tiles[i][j].getFirefighters().get(0).getColor().equals("yellow")){
+                gameUnit = new Image(new Texture("game_units/firefighters/yellow.png"));
+            } else if (tiles[i][j].getFirefighters().get(0).getColor().equals("green")){
+                gameUnit = new Image(new Texture("game_units/firefighters/green.png"));
+            }
+
             gameUnit.setHeight(30);
             gameUnit.setWidth(30);
             gameUnit.setPosition(

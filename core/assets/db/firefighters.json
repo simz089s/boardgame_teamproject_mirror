@@ -1,0 +1,39 @@
+{
+	"firefighters": [{
+		"color_id": "red",
+		"status": "active",
+		"AP": 0,
+		"num_victims_saved": 0,
+		"special_ability": false
+	}, {
+		"color_id": "blue",
+		"status": "active",
+		"AP": 0,
+		"num_victims_saved": 0,
+		"special_ability": false
+	}, {
+		"color_id": "green",
+		"status": "active",
+		"AP": 0,
+		"num_victims_saved": 0,
+		"special_ability": false
+	}, {
+		"color_id": "white",
+		"status": "active",
+		"AP": 0,
+		"num_victims_saved": 0,
+		"special_ability": false
+	}, {
+		"color_id": "yellow",
+		"status": "active",
+		"AP": 0,
+		"num_victims_saved": 0,
+		"special_ability": false
+	}, {
+		"color_id": "orange",
+		"status": "active",
+		"AP": 0,
+		"num_victims_saved": 0,
+		"special_ability": false
+	}]
+}

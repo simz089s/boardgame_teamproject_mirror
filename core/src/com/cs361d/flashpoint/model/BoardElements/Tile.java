@@ -1,5 +1,7 @@
 package com.cs361d.flashpoint.model.BoardElements;
 
+import java.util.ArrayList;
+
 public class Tile {
 
     private int[][] position;
@@ -9,7 +11,7 @@ public class Tile {
     private int left_wall;
     private int right_wall;
 
-    private String has_firefighter;
+    private ArrayList<FireFighter> firefighters = new ArrayList<FireFighter>();
 
     private boolean has_victim;
     private boolean has_false_alarm;
@@ -62,12 +64,13 @@ public class Tile {
         this.right_wall = right_wall;
     }
 
-    public String getHas_firefighter() {
-        return has_firefighter;
+    public ArrayList<FireFighter> getFirefighters() {
+        return firefighters;
     }
 
-    public void setHas_firefighter(String has_firefighter) {
-        this.has_firefighter = has_firefighter;
+    public void setFirefighters(ArrayList<FireFighter> firefighters) {
+
+        this.firefighters = firefighters;
     }
 
     public boolean isHas_victim() {
