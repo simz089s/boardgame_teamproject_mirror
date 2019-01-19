@@ -19,6 +19,7 @@ public class Tile {
     private boolean has_smoke;
     private boolean has_fire;
     private boolean has_explosion;
+    private boolean has_hotSpot;
 
     public Tile(){
 
@@ -68,9 +69,13 @@ public class Tile {
         return firefighters;
     }
 
-    public void setFirefighters(ArrayList<FireFighter> firefighters) {
+    public void addFirefighter(FireFighter firefighter) {
 
-        this.firefighters = firefighters;
+        firefighters.add(firefighter);
+    }
+    public void removeFirefighter(FireFighter firefighter) {
+
+        firefighters.remove(firefighter);
     }
 
     public boolean isHas_victim() {

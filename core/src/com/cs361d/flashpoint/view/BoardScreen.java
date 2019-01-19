@@ -184,27 +184,27 @@ public class BoardScreen extends FlashPointScreen {
                     // perform action
                     clearAllGameUnits();
                     // give it current board state (tiles) and current position (i, j); returns updated board state (tiles)
-                    tiles = GameController.moveUp(tiles, tmp_i, tmp_j);
+                    GameController.moveUp(tiles, tmp_i, tmp_j);
                     redrawGameUnitsOnTile();
 
                 } else if (optArr[lstOptions.getSelectedIndex()].equals("Move down")) {
                     clearAllGameUnits();
-                    tiles = GameController.moveDown(tiles, tmp_i, tmp_j);
+                    GameController.moveDown(tiles, tmp_i, tmp_j);
                     redrawGameUnitsOnTile();
 
                 } else if (optArr[lstOptions.getSelectedIndex()].equals("Move left")) {
                     clearAllGameUnits();
-                    tiles = GameController.moveLeft(tiles, tmp_i, tmp_j);
+                    GameController.moveLeft(tiles, tmp_i, tmp_j);
                     redrawGameUnitsOnTile();
 
                 } else if (optArr[lstOptions.getSelectedIndex()].equals("Move right")) {
                     clearAllGameUnits();
-                    tiles = GameController.moveRight(tiles, tmp_i, tmp_j);
+                    GameController.moveRight(tiles, tmp_i, tmp_j);
                     redrawGameUnitsOnTile();
 
                 } else if (optArr[lstOptions.getSelectedIndex()].equals("Extinguish")) {
                     clearAllGameUnits();
-                    tiles = GameController.extinguishFireToTile(tiles, tmp_i, tmp_j);
+                    GameController.extinguishFireToTile(tiles, tmp_i, tmp_j);
                     redrawGameUnitsOnTile();
                 } else if (optArr[lstOptions.getSelectedIndex()].equals("Chop")) {
 
@@ -345,7 +345,7 @@ public class BoardScreen extends FlashPointScreen {
         }
 
 
-        if(tiles[i][j].getFirefighters() != null){ // placed at top left corner of tile
+        if(!tiles[i][j].getFirefighters().isEmpty()){ // placed at top left corner of tile
 
             Image gameUnit = new Image(new Texture("game_units/firefighters/blue.png"));
 

@@ -7,62 +7,38 @@ import java.util.ArrayList;
 
 public class GameController {
 
-    // i = row, j = col
-    public static Tile[][] extinguishFireToTile(Tile[][] tiles, int i, int j){
-        tiles[i][j].setHas_fire(false);
-        return tiles;
+  private static FireFighter removeAndGetFireFighter(Tile[][] tiles, int i, int j) {
+    FireFighter f = tiles[i][j].getFirefighters().get(0);
+    tiles[i][j].removeFirefighter(f);
+    return f;
+  }
+
+  // i = row, j = col
+  public static boolean extinguishFireToTile(Tile[][] tiles, int i, int j) {
+    if (tiles[i][j].isHas_fire()) {
+      tiles[i][j].setHas_fire(false);
+      return true;
     }
+    return false;
+  }
 
-    public static Tile[][] moveUp(Tile[][] tiles, int i, int j){
+  public static boolean moveUp(Tile[][] tiles, int i, int j) {
+    tiles[i - 1][j].addFirefighter(removeAndGetFireFighter(tiles, i, j));
+    return true;
+  }
 
-        FireFighter f = tiles[i][j].getFirefighters().get(0);
+  public static boolean moveDown(Tile[][] tiles, int i, int j) {
+    tiles[i + 1][j].addFirefighter(removeAndGetFireFighter(tiles, i, j));
+    return true;
+  }
 
-        tiles[i][j].setFirefighters(null);
+  public static boolean moveLeft(Tile[][] tiles, int i, int j) {
+    tiles[i][j - 1].addFirefighter(removeAndGetFireFighter(tiles, i, j));
+    return true;
+  }
 
-        ArrayList<FireFighter> firefightersArr = new ArrayList <FireFighter>();
-        firefightersArr.add(f);
-
-        tiles[i - 1][j].setFirefighters(firefightersArr);
-
-        return tiles;
-    }
-
-    public static Tile[][] moveDown(Tile[][] tiles, int i, int j){
-        FireFighter f = tiles[i][j].getFirefighters().get(0);
-
-        tiles[i][j].setFirefighters(null);
-
-        ArrayList<FireFighter> firefightersArr = new ArrayList <FireFighter>();
-        firefightersArr.add(f);
-
-        tiles[i + 1][j].setFirefighters(firefightersArr);
-
-        return tiles;
-    }
-
-    public static Tile[][] moveLeft(Tile[][] tiles, int i, int j){
-        FireFighter f = tiles[i][j].getFirefighters().get(0);
-
-        tiles[i][j].setFirefighters(null);
-
-        ArrayList<FireFighter> firefightersArr = new ArrayList <FireFighter>();
-        firefightersArr.add(f);
-
-        tiles[i][j - 1].setFirefighters(firefightersArr);
-
-        return tiles;
-    }
-
-    public static Tile[][] moveRight(Tile[][] tiles, int i, int j){
-        FireFighter f = tiles[i][j].getFirefighters().get(0);
-
-        tiles[i][j].setFirefighters(null);
-
-        ArrayList<FireFighter> firefightersArr = new ArrayList <FireFighter>();
-        firefightersArr.add(f);
-
-        tiles[i][j + 1].setFirefighters(firefightersArr);
-        
-        return tiles;
-    }
+  public static boolean moveRight(Tile[][] tiles, int i, int j) {
+    tiles[i][j + 1].addFirefighter(removeAndGetFireFighter(tiles, i, j));
+    return true;
+  }
 }

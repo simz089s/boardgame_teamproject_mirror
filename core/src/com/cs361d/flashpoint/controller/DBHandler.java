@@ -53,21 +53,15 @@ public class DBHandler {
 
                 // firefighters
                 JSONArray firefightersArr = (JSONArray) object.get("has_firefighter");
-                if (firefightersArr.isEmpty()){
-                    tiles[i][j].setFirefighters(null);
-                } else {
-
-                    ArrayList<FireFighter> firefightersObjArr = new ArrayList<FireFighter>();
-
+                if (!firefightersArr.isEmpty()) {
                     Iterator<String> firefighterIter = firefightersArr.iterator();
                     while (firefighterIter.hasNext()) {
                         String firefighterColor = firefighterIter.next();
                         // create a firefighter object by retrieving its data from DB using its unique color id
                         FireFighter f = getFirefighterFromDB(firefighterColor);
-                        firefightersObjArr.add(f);
+                        tiles[i][j].addFirefighter(f);
                     }
 
-                    tiles[i][j].setFirefighters(firefightersObjArr);
                 }
 
                 // POI
