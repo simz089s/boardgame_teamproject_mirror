@@ -60,6 +60,7 @@ public class BoardScreen extends FlashPointScreen {
     myBoard.addFireStatus(1, 1, FireStatus.FIRE);
     myBoard.addFireStatus(2, 1, FireStatus.SMOKE);
     myBoard.addDoor(0, 0, Direction.RIGHT, 1, true);
+      myBoard.addFireFighter(7, 8, null, FireFighterColor.BLUE,0, 0);
     for (int i = 0; i < 20; i++) {
       myBoard.endTurnFireSpread(5,5);
     }
@@ -382,21 +383,7 @@ public class BoardScreen extends FlashPointScreen {
     // damage counter
     if (!tiles[i][j].getFirefighters().isEmpty()) { // placed at top left corner of tile
 
-      Image gameUnit = new Image(new Texture("game_units/firefighters/blue.png"));
-      gameUnit.addListener(
-          new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-              dialog =
-                  new Dialog("Choice", skinUI, "dialog") {
-                    public void result(Object obj) {}
-                  };
-
-              dialog.add(createDialogContentTable(tmp_index_i, tmp_index_j));
-
-              dialog.show(stage);
-            }
-          });
+      Image gameUnit;
       for (FireFighter f : tiles[i][j].getFirefighters()) {
         switch (f.getColor()) {
           case BLUE:
@@ -424,6 +411,22 @@ public class BoardScreen extends FlashPointScreen {
         gameUnit.setHeight(30);
         gameUnit.setWidth(30);
         gameUnit.setPosition(myTile.getX(), myTile.getY() + myTile.getHeight() / 2);
+
+          gameUnit.addListener(
+                  new ClickListener() {
+                      @Override
+                      public void clicked(InputEvent event, float x, float y) {
+                          dialog =
+                                  new Dialog("Choice", skinUI, "dialog") {
+                                      public void result(Object obj) {}
+                                  };
+
+                          dialog.add(createDialogContentTable(tmp_index_i, tmp_index_j));
+
+                          dialog.show(stage);
+                      }
+                  });
+
         gameUnits.add(gameUnit);
         stage.addActor(gameUnit);
       }
