@@ -16,6 +16,7 @@ import com.cs361d.flashpoint.controller.DBHandler;
 import com.cs361d.flashpoint.controller.GameController;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 public class BoardScreen extends FlashPointScreen {
 
@@ -53,14 +54,15 @@ public class BoardScreen extends FlashPointScreen {
 
 
     Board myBoard = Board.getInstance();
-//    myBoard.addDoor(0,0, Direction.TOP, 1, false);
-    myBoard.addDoor(0,0, Direction.BOTTOM, 1, true);
-    myBoard.addDoor(0,0, Direction.LEFT, 1, true);
-    myBoard.addFireStatus(1,1, FireStatus.FIRE);
-    myBoard.addFireStatus(2,1, FireStatus.SMOKE);
-    myBoard.addDoor(0,0, Direction.RIGHT, 1, true);
-
-
+    //    myBoard.addDoor(0,0, Direction.TOP, 1, false);
+    myBoard.addDoor(5, 5, Direction.BOTTOM, 1, false);
+    myBoard.addDoor(0, 0, Direction.LEFT, 1, true);
+    myBoard.addFireStatus(1, 1, FireStatus.FIRE);
+    myBoard.addFireStatus(2, 1, FireStatus.SMOKE);
+    myBoard.addDoor(0, 0, Direction.RIGHT, 1, true);
+    for (int i = 0; i < 20; i++) {
+      myBoard.endTurnFireSpread(5,5);
+    }
     debugLbl.setPosition(10, 10);
     debugLbl.setColor(Color.PURPLE);
 
@@ -244,11 +246,15 @@ public class BoardScreen extends FlashPointScreen {
   }
 
   private void drawObstacles(Image myTile, Obstacle obs, Direction d) {
-    Image gameUnit = null;
-    if (obs.isNull()) {
+    Image gameUnit;
+    if (obs.isNull() ) {
       return;
-    } else if (obs.isDoor()) { // door
-      if (obs.isOpen()) {
+
+    } else if (obs.isDoor()) {
+      if (obs.isDestroyed()) {
+        gameUnit = new Image(new Texture("game_units/walls/Destroyed_Door.png"));
+      }
+      else if (obs.isOpen()) {
         gameUnit = new Image(new Texture("game_units/walls/Open_Door.png"));
       } else {
         gameUnit = new Image(new Texture("game_units/walls/Closed_Door.png"));
@@ -391,28 +397,38 @@ public class BoardScreen extends FlashPointScreen {
               dialog.show(stage);
             }
           });
-
-      if (tiles[i][j].getFirefighters().get(0).getColor().equals("red")) {
-        gameUnit = new Image(new Texture("game_units/firefighters/red.png"));
-      } else if (tiles[i][j].getFirefighters().get(0).getColor().equals("blue")) {
-        gameUnit = new Image(new Texture("game_units/firefighters/blue.png"));
-      } else if (tiles[i][j].getFirefighters().get(0).getColor().equals("white")) {
-        gameUnit = new Image(new Texture("game_units/firefighters/white.png"));
-      } else if (tiles[i][j].getFirefighters().get(0).getColor().equals("orange")) {
-        gameUnit = new Image(new Texture("game_units/firefighters/orange.png"));
-      } else if (tiles[i][j].getFirefighters().get(0).getColor().equals("yellow")) {
-        gameUnit = new Image(new Texture("game_units/firefighters/yellow.png"));
-      } else if (tiles[i][j].getFirefighters().get(0).getColor().equals("green")) {
-        gameUnit = new Image(new Texture("game_units/firefighters/green.png"));
+      for (FireFighter f : tiles[i][j].getFirefighters()) {
+        switch (f.getColor()) {
+          case BLUE:
+            gameUnit = new Image(new Texture("game_units/firefighters/blue.png"));
+            break;
+          case RED:
+            gameUnit = new Image(new Texture("game_units/firefighters/red.png"));
+            break;
+          case GREEN:
+            gameUnit = new Image(new Texture("game_units/firefighters/green.png"));
+            break;
+          case WHITE:
+            gameUnit = new Image(new Texture("game_units/firefighters/white.png"));
+            break;
+          case ORANGE:
+            gameUnit = new Image(new Texture("game_units/firefighters/orange.png"));
+            break;
+          case YELLOW:
+            gameUnit = new Image(new Texture("game_units/firefighters/yellow.png"));
+            break;
+          default:
+            throw new IllegalArgumentException(
+                "FireFighter color " + f.getColor() + " does not exists");
+        }
+        gameUnit.setHeight(30);
+        gameUnit.setWidth(30);
+        gameUnit.setPosition(myTile.getX(), myTile.getY() + myTile.getHeight() / 2);
+        gameUnits.add(gameUnit);
+        stage.addActor(gameUnit);
       }
-
-      gameUnit.setHeight(30);
-      gameUnit.setWidth(30);
-      gameUnit.setPosition(myTile.getX(), myTile.getY() + myTile.getHeight() / 2);
-
-      gameUnits.add(gameUnit);
-      stage.addActor(gameUnit);
     }
+    // Point of Interest Rendering
     Image gameUnit;
     if (tiles[i][j].containsPointOfInterest()) {
       gameUnit = new Image(new Texture("game_units/POI_Rear.png"));
@@ -427,6 +443,7 @@ public class BoardScreen extends FlashPointScreen {
       stage.addActor(gameUnit);
     }
 
+    // Smoke And Fire Rendering
     if (tiles[i][j].hasSmoke()) { // placed at bottom left corner of tile
       gameUnit = new Image(new Texture("game_units/Smoke.png"));
       gameUnit.setHeight(30);
@@ -471,6 +488,4 @@ public class BoardScreen extends FlashPointScreen {
     }
     gameUnits.clear();
   }
-
-  private void addFireFighterListener(FireFighter f, Image i) {}
 }
