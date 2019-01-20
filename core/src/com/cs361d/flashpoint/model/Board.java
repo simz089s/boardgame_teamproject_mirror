@@ -130,9 +130,7 @@ public class Board {
   // Spread the fire in a specific direction after an explosion
   private void explosionFireSpread(int i, int j, Direction d) {
     Tile hitLocation = TILE_MAP[i][j];
-    if (hitLocation.hasNoFireAndNoSmoke()) {
-      hitLocation.setFireStatus(FireStatus.SMOKE);
-    } else if (hitLocation.hasSmoke()) {
+    if (hitLocation.hasNoFireAndNoSmoke() || hitLocation.hasSmoke()) {
       hitLocation.setFireStatus(FireStatus.FIRE);
     } else {
       Obstacle obs = hitLocation.getObstacle(d);
