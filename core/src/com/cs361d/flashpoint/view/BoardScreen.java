@@ -52,11 +52,14 @@ public class BoardScreen extends FlashPointScreen {
   public void show() {
     Board myBoard = Board.getInstance();
     //    myBoard.addDoor(0,0, Direction.TOP, 1, false);
-    myBoard.addDoor(0, 0, Direction.BOTTOM, 1, true);
+    myBoard.addDoor(5, 5, Direction.BOTTOM, 1, false);
     myBoard.addDoor(0, 0, Direction.LEFT, 1, true);
     myBoard.addFireStatus(1, 1, FireStatus.FIRE);
     myBoard.addFireStatus(2, 1, FireStatus.SMOKE);
     myBoard.addDoor(0, 0, Direction.RIGHT, 1, true);
+    for (int i = 0; i < 20; i++) {
+      myBoard.endTurnFireSpread(5,5);
+    }
     debugLbl.setPosition(10, 10);
     debugLbl.setColor(Color.PURPLE);
 
@@ -241,11 +244,14 @@ public class BoardScreen extends FlashPointScreen {
   }
 
   private void drawObstacles(Image myTile, Obstacle obs, Direction d) {
-    Image gameUnit = null;
-    if (obs.isNull()) {
+    Image gameUnit;
+    if (obs.isNull() ) {
       return;
     } else if (obs.isDoor()) {
-      if (obs.isOpen()) {
+      if (obs.isDestroyed()) {
+        gameUnit = new Image(new Texture("game_units/walls/Destroyed_Door.png"));
+      }
+      else if (obs.isOpen()) {
         gameUnit = new Image(new Texture("game_units/walls/Open_Door.png"));
       } else {
         gameUnit = new Image(new Texture("game_units/walls/Closed_Door.png"));

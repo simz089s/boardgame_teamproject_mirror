@@ -161,6 +161,7 @@ public class Board {
               return;
             }
             explosionFireSpread(i, j + 1, d);
+            break;
           default:
             throw new IllegalArgumentException("The Direction " + d + " does not exit.");
         }
