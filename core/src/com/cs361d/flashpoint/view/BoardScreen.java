@@ -29,9 +29,10 @@ public class BoardScreen extends FlashPointScreen {
   TextButton btnChat;
 
   // tiles properties
-  final int NUMBER_OF_ROWS = 8;
-  final int NUMBER_OF_COLS = 10;
-  final int NUMBER_OF_TILES = NUMBER_OF_ROWS * NUMBER_OF_COLS;
+  final int NUMBER_OF_ROWS = Board.HEIGHT;
+  final int NUMBER_OF_COLS = Board.WIDTH;
+
+  final int WALL_THICKNESS = 5;
   final int TILE_SIZE = 75;
 
   Image[][] tilesImg = new Image[NUMBER_OF_ROWS][NUMBER_OF_COLS];
@@ -49,6 +50,8 @@ public class BoardScreen extends FlashPointScreen {
 
   @Override
   public void show() {
+
+
     Board myBoard = Board.getInstance();
 //    myBoard.addDoor(0,0, Direction.TOP, 1, false);
     myBoard.addDoor(0,0, Direction.BOTTOM, 1, true);
@@ -56,6 +59,8 @@ public class BoardScreen extends FlashPointScreen {
     myBoard.addFireStatus(1,1, FireStatus.FIRE);
     myBoard.addFireStatus(2,1, FireStatus.SMOKE);
     myBoard.addDoor(0,0, Direction.RIGHT, 1, true);
+
+
     debugLbl.setPosition(10, 10);
     debugLbl.setColor(Color.PURPLE);
 
@@ -74,20 +79,19 @@ public class BoardScreen extends FlashPointScreen {
     int leftPadding = 20;
     int topPadding = 20;
     // draw the tiles
-    for (int i = 0; i < Board.HEIGHT; i++) {
-      for (int j = 0; j < Board.WIDTH; j++) {
+    for (int i = 0; i < NUMBER_OF_ROWS; i++) {
+      for (int j = 0; j < NUMBER_OF_COLS; j++) {
         if (j == 0) {
           curYPos = Gdx.graphics.getHeight() - (i + 1) * TILE_SIZE;
         }
 
         String tileFileName1 = "boards/tile.png"; // basic tile image
-        //                String tileFileName2 = "boards/board1_tiles/row-" + (i + 1) + "-col-" + (j
-        // + 1) + ".jpg"; // tiles with furniture image
+        //String tileFileName2 = "boards/board1_tiles/row-" + (i + 1) + "-col-" + (j + 1) + ".jpg"; // tiles with furniture image
 
         tilesImg[i][j] = new Image(new Texture(tileFileName1));
         tilesImg[i][j].setHeight(TILE_SIZE);
         tilesImg[i][j].setWidth(TILE_SIZE);
-        tilesImg[i][j].setPosition(j * TILE_SIZE + leftPadding, curYPos - topPadding);
+        tilesImg[i][j].setPosition(j * TILE_SIZE + leftPadding + (j + 1) * WALL_THICKNESS, curYPos - topPadding - (i + 1) * WALL_THICKNESS);
 
         stage.addActor(tilesImg[i][j]);
         drawGameUnitOnTile(tilesImg[i][j], i, j);
@@ -243,7 +247,7 @@ public class BoardScreen extends FlashPointScreen {
     Image gameUnit = null;
     if (obs.isNull()) {
       return;
-    } else if (obs.isDoor()) {
+    } else if (obs.isDoor()) { // door
       if (obs.isOpen()) {
         gameUnit = new Image(new Texture("game_units/walls/Open_Door.png"));
       } else {
@@ -282,7 +286,7 @@ public class BoardScreen extends FlashPointScreen {
           throw new IllegalArgumentException("That argument does not exist");
       }
 
-    } else {
+    } else { // wall
       switch (d) {
         case TOP:
           if (obs.getHealth() == 2) {
@@ -292,8 +296,8 @@ public class BoardScreen extends FlashPointScreen {
           } else {
             gameUnit = new Image(new Texture("game_units/walls/h0.png"));
           }
-          gameUnit.setHeight(5);
-          gameUnit.setWidth(75);
+          gameUnit.setHeight(WALL_THICKNESS);
+          gameUnit.setWidth(TILE_SIZE);
           gameUnit.setPosition(myTile.getX(), myTile.getY() + myTile.getHeight());
           break;
 
@@ -305,8 +309,8 @@ public class BoardScreen extends FlashPointScreen {
           } else {
             gameUnit = new Image(new Texture("game_units/walls/h0.png"));
           }
-          gameUnit.setHeight(5);
-          gameUnit.setWidth(75);
+          gameUnit.setHeight(WALL_THICKNESS);
+          gameUnit.setWidth(TILE_SIZE);
           gameUnit.setPosition(myTile.getX(), myTile.getY());
           break;
 
@@ -318,11 +322,11 @@ public class BoardScreen extends FlashPointScreen {
           } else {
             gameUnit = new Image(new Texture("game_units/walls/v0.png"));
           }
-          gameUnit.setHeight(75);
-          gameUnit.setWidth(5);
+          gameUnit.setHeight(TILE_SIZE);
+          gameUnit.setWidth(WALL_THICKNESS);
           gameUnit.setPosition(
-              myTile.getX() - gameUnit.getWidth() / 2,
-              myTile.getY() + myTile.getHeight() / 2 - gameUnit.getHeight() / 2);
+              myTile.getX() - WALL_THICKNESS,
+              myTile.getY());
 
           break;
 
@@ -334,11 +338,11 @@ public class BoardScreen extends FlashPointScreen {
           } else {
             gameUnit = new Image(new Texture("game_units/walls/v0.png"));
           }
-          gameUnit.setHeight(75);
-          gameUnit.setWidth(5);
+          gameUnit.setHeight(TILE_SIZE);
+          gameUnit.setWidth(WALL_THICKNESS);
           gameUnit.setPosition(
               myTile.getX() + myTile.getWidth(),
-              myTile.getY() + myTile.getHeight() / 2 - gameUnit.getHeight() / 2);
+              myTile.getY());
           break;
         default:
           throw new IllegalArgumentException("That argument does not exist");
@@ -352,11 +356,13 @@ public class BoardScreen extends FlashPointScreen {
 
     final int tmp_index_i = i;
     final int tmp_index_j = j;
+
     Obstacle top = tiles[i][j].getObstacle(Direction.TOP);
     Obstacle left = tiles[i][j].getObstacle(Direction.LEFT);
 
     drawObstacles(myTile, top, Direction.TOP);
     drawObstacles(myTile, left, Direction.LEFT);
+
     if (j == Board.WIDTH - 1) {
       Obstacle right = tiles[i][j].getObstacle(Direction.RIGHT);
       drawObstacles(myTile, right, Direction.RIGHT);
