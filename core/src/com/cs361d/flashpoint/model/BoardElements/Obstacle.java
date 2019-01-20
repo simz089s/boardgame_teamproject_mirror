@@ -27,7 +27,7 @@ public class Obstacle {
   }
 
   public boolean isDestroyed() {
-    return this.health == 0;
+    return this.health <= 0;
   }
     public int getHealth() {
       return health;
