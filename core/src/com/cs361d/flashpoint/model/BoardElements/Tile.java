@@ -48,7 +48,12 @@ public class Tile {
     public boolean containsPointOfInterest() {
         return !victim.isNull();
     }
-
+    public AbstractVictim getVictim() {
+        return victim;
+    }
+    /*
+    verifies that the Victim is not a FALSE_ALARM
+     */
     public boolean containsVictim() {
         if (victim.isNull()) {
             return false;
@@ -60,6 +65,9 @@ public class Tile {
         this.victim = victim;
     }
 
+    /*
+    Makes the victim null again just like Trump
+     */
     public void setNullVictim() {
         this.victim = NullVictim.getInstance();
     }
@@ -76,7 +84,7 @@ public class Tile {
         return this.fireStatus == FireStatus.SMOKE;
     }
 
-    public boolean hasNoFireOrSmoke() {
+    public boolean hasNoFireAndNoSmoke() {
         return this.fireStatus == FireStatus.EMPTY;
     }
 }

@@ -29,8 +29,10 @@ public class Obstacle {
   public boolean isDestroyed() {
     return this.health == 0;
   }
-
-  public boolean damage() {
+    public int getHealth() {
+      return health;
+    }
+  public boolean applyDamage() {
     if (isDestroyed()) {
       return false;
     } else {
@@ -74,5 +76,9 @@ public class Obstacle {
 
     public void setOpen(boolean isOpen) {
       this.isOpen = isOpen;
+    }
+
+    public boolean isDoor() {
+      return isDoor;
     }
 }

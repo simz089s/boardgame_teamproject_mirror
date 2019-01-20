@@ -15,8 +15,7 @@ public class GameController {
 
   // i = row, j = col
   public static boolean extinguishFireToTile(Tile[][] tiles, int i, int j) {
-    if (tiles[i][j].isHas_fire()) {
-      tiles[i][j].setHas_fire(false);
+    if (tiles[i][j].hasFire()) {
       return true;
     }
     return false;
