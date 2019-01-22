@@ -50,20 +50,12 @@ public class Obstacle {
         this.health = health;
     }
 
-    public void openDoor() {
-        if (isOpen || !isDoor) {
-            throw new IllegalAccessError("You cannot open a wall or open an open door");
+    public void interactWithDoor() {
+        if (!isDoor) {
+            throw new IllegalAccessError("You cannot open/close a wall");
         }
-        isOpen = true;
+        this.isOpen = !this.isOpen;
 
-    }
-
-    public void closeDoor() {
-        if (!isOpen || !isDoor) {
-            throw new IllegalAccessError("You cannot open a wall");
-
-        }
-        isOpen = false;
     }
 
     public boolean isOpen() {

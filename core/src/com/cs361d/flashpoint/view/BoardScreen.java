@@ -10,13 +10,11 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.cs361d.flashpoint.controller.FireFighterTurnController;
 import com.cs361d.flashpoint.model.Board;
 import com.cs361d.flashpoint.model.BoardElements.*;
-import com.cs361d.flashpoint.controller.DBHandler;
-import com.cs361d.flashpoint.controller.GameController;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 
 public class BoardScreen extends FlashPointScreen {
 
@@ -39,7 +37,7 @@ public class BoardScreen extends FlashPointScreen {
   Image[][] tilesImg = new Image[NUMBER_OF_ROWS][NUMBER_OF_COLS];
 
   Tile[][] tiles = Board.getInstance().getTiles();
-
+  FireFighterTurnController fireFighterTurnController = FireFighterTurnController.getInstance();
   Stage stage;
 
   // reference to game units images
@@ -56,14 +54,15 @@ public class BoardScreen extends FlashPointScreen {
     Board myBoard = Board.getInstance();
     //    myBoard.addDoor(0,0, Direction.TOP, 1, false);
     myBoard.addDoor(5, 5, Direction.BOTTOM, 1, false);
-    myBoard.addDoor(0, 0, Direction.LEFT, 1, true);
+    myBoard.addDoor(5, 5, Direction.LEFT, 1, true);
     myBoard.addFireStatus(1, 1, FireStatus.FIRE);
-    myBoard.addFireStatus(2, 1, FireStatus.SMOKE);
-    myBoard.addDoor(0, 0, Direction.RIGHT, 1, true);
-      myBoard.addFireFighter(7, 8, null, FireFighterColor.BLUE,0, 0);
-    for (int i = 0; i < 20; i++) {
-      myBoard.endTurnFireSpread(5,5);
-    }
+    myBoard.addFireStatus(2, 0, FireStatus.SMOKE);
+    myBoard.addDoor(1, 0, Direction.RIGHT, 1, true);
+    myBoard.addFireFighter(1, 0, FireFighterColor.BLUE,0, 3);
+    myBoard.addVictim(5,5,true, false,false);
+//    for (int i = 0; i < 20; i++) {
+//      myBoard.endTurnFireSpread(5,5);
+//    }
     debugLbl.setPosition(10, 10);
     debugLbl.setColor(Color.PURPLE);
 
@@ -194,27 +193,27 @@ public class BoardScreen extends FlashPointScreen {
               clearAllGameUnits();
               // give it current board state (tiles) and current position (i, j); returns updated
               // board state (tiles)
-              GameController.moveUp(tiles, tmp_i, tmp_j);
+              fireFighterTurnController.move(Direction.TOP);
               redrawGameUnitsOnTile();
 
             } else if (optArr[lstOptions.getSelectedIndex()].equals("Move down")) {
               clearAllGameUnits();
-              GameController.moveDown(tiles, tmp_i, tmp_j);
+              fireFighterTurnController.move(Direction.BOTTOM);
               redrawGameUnitsOnTile();
 
             } else if (optArr[lstOptions.getSelectedIndex()].equals("Move left")) {
               clearAllGameUnits();
-              GameController.moveLeft(tiles, tmp_i, tmp_j);
+              fireFighterTurnController.move(Direction.LEFT);
               redrawGameUnitsOnTile();
 
             } else if (optArr[lstOptions.getSelectedIndex()].equals("Move right")) {
               clearAllGameUnits();
-              GameController.moveRight(tiles, tmp_i, tmp_j);
+              fireFighterTurnController.move(Direction.RIGHT);
               redrawGameUnitsOnTile();
 
             } else if (optArr[lstOptions.getSelectedIndex()].equals("Extinguish")) {
               clearAllGameUnits();
-              GameController.extinguishFireToTile(tiles, tmp_i, tmp_j);
+              fireFighterTurnController.extinguishFire(Direction.RIGHT);
               redrawGameUnitsOnTile();
             } else if (optArr[lstOptions.getSelectedIndex()].equals("Chop")) {
 

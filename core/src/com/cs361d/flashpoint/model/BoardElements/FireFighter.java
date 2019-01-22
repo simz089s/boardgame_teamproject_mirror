@@ -2,26 +2,49 @@ package com.cs361d.flashpoint.model.BoardElements;
 
 import com.cs361d.flashpoint.model.FireFighterRoles.Card;
 
+import java.awt.*;
+import java.util.HashMap;
+
 public class FireFighter {
 
-  private FireFighterColor color;
-  private Card role;
+  private static final HashMap<FireFighterColor, FireFighter> FIREFIGHTERS= new HashMap<FireFighterColor,FireFighter>();
+  private final FireFighterColor color;
   private static final int MAX_ACTION_POINTS = 8;
   private int actionPoints;
   private int numVictimsSaved;
+  private Tile currentTile;
 
-  public FireFighter(FireFighterColor color) {
-    this.color = color;
-  }
-
-  public FireFighter(Card pCard, FireFighterColor color, int numVictimsSaved, int actionPoints) {
+  private FireFighter(FireFighterColor color, int numVictimsSaved, int actionPoints) {
     if (actionPoints > MAX_ACTION_POINTS) {
       throw new IllegalArgumentException("Action points cannot exceed 8 was: " + actionPoints);
     }
-    this.role = pCard;
     this.color = color;
     this.numVictimsSaved = numVictimsSaved;
     this.actionPoints = actionPoints;
+  }
+  public static FireFighter createFireFighter(FireFighterColor color) {
+    return createFireFighter(color, 0, 4);
+  }
+
+  public static FireFighter createFireFighter(FireFighterColor color, int numVictimsSaved, int actionPoints) {
+    FireFighter f;
+    if (FIREFIGHTERS.containsKey(color)) {
+      f = FIREFIGHTERS.get(color);
+      f.actionPoints = actionPoints;
+      f.numVictimsSaved = numVictimsSaved;
+    }
+    else {
+      f = new FireFighter(color, numVictimsSaved, actionPoints);
+    }
+    return f;
+  }
+
+  public void setTile(Tile t) {
+    this.currentTile = t;
+  }
+
+  public Tile getTile() {
+    return currentTile;
   }
 
   public int getNumVictimsSaved() {
@@ -34,14 +57,6 @@ public class FireFighter {
 
   public FireFighterColor getColor() {
     return color;
-  }
-
-  public Card getRole() {
-    return role;
-  }
-
-  public void setRole(Card role) {
-    this.role = role;
   }
 
   public int getActionPointsLeft() {
@@ -62,5 +77,52 @@ public class FireFighter {
     if (this.actionPoints > MAX_ACTION_POINTS) {
       this.actionPoints = MAX_ACTION_POINTS;
     }
+  }
+
+  public boolean moveAP(Direction d) {
+    Tile newTile = currentTile.getAdjacentTile(d);
+    if (newTile.hasFire()) {
+      if (actionPoints >= 2)
+      {
+        actionPoints -= 2;
+        return true;
+      }
+    } else if (actionPoints >= 1){
+      actionPoints--;
+      return true;
+    }
+    return false;
+  }
+
+  public boolean chopAP() {
+    if (actionPoints < 1) {
+      return false;
+    }
+    actionPoints--;
+    return true;
+  }
+
+  public boolean extinguishAP() {
+    if (actionPoints < 1) {
+      return false;
+    }
+    actionPoints--;
+    return true;
+  }
+
+  public boolean moveWithVictimAP() {
+    if (actionPoints < 2) {
+      return false;
+    }
+    actionPoints -= 2;
+    return true;
+  }
+
+  public boolean openCloseDoorAP() {
+    if (actionPoints < 1) {
+      return false;
+    }
+    actionPoints--;
+    return true;
   }
 }

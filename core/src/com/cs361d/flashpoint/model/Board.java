@@ -1,10 +1,10 @@
 package com.cs361d.flashpoint.model;
 
+import com.cs361d.flashpoint.controller.FireFighterTurnController;
 import com.cs361d.flashpoint.model.BoardElements.*;
 import com.cs361d.flashpoint.model.FireFighterRoles.*;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class Board {
   public static final int WIDTH = 10;
@@ -28,7 +28,7 @@ public class Board {
   private Board() {
     for (int i = 0; i < HEIGHT; i++) {
       for (int j = 0; j < WIDTH; j++) {
-        Tile newTile = new Tile(FireStatus.EMPTY, false);
+        Tile newTile = new Tile(FireStatus.EMPTY, false, i, j);
         TILE_MAP[i][j] = newTile;
         Obstacle top = new Obstacle(-1);
         Obstacle left = new Obstacle(1);
@@ -38,10 +38,10 @@ public class Board {
         /*
         Add wall to the bottom and right of adjacent tiles
          */
-        if (i != 0) {
+        if (i > 0) {
           TILE_MAP[i - 1][j].addObstacle(Direction.BOTTOM, top);
         }
-        if (j != 0) {
+        if (j > 0) {
           TILE_MAP[i][j - 1].addObstacle(Direction.RIGHT, left);
         }
         /*
@@ -81,16 +81,13 @@ public class Board {
   }
 
   public void addFireFighter(
-      int i, int j, Card pCard, FireFighterColor color, int numVictimsSaved, int actionPoints) {
-    /*
-    If color is already assigned throws an error
-     */
-    if (COLOR.contains(color)) {
-      throw new IllegalArgumentException(
-          "The fireFighter with color " + color + " Already exists on the board");
+      int i, int j, FireFighterColor color, int numVictimsSaved, int actionPoints) {
+    FireFighter f = FireFighter.createFireFighter(color, numVictimsSaved, actionPoints);
+    if (f.getTile() != null) {
+      throw new IllegalArgumentException();
     }
-    COLOR.add(color);
-    FireFighter f = new FireFighter(pCard, color, numVictimsSaved, actionPoints);
+    f.setTile(TILE_MAP[i][j]);
+    FireFighterTurnController.getInstance().addFireFighter(f);
     TILE_MAP[i][j].addFirefighter(f);
   }
 
@@ -130,7 +127,7 @@ public class Board {
   // Spread the fire in a specific direction after an explosion
   private void explosionFireSpread(int i, int j, Direction d) {
     Tile hitLocation = TILE_MAP[i][j];
-    if (hitLocation.hasNoFireAndNoSmoke() || hitLocation.hasSmoke()) {
+    if (!hitLocation.hasFire()) {
       hitLocation.setFireStatus(FireStatus.FIRE);
     } else {
       Obstacle obs = hitLocation.getObstacle(d);
@@ -258,7 +255,10 @@ public class Board {
     for (Tile[] rows : TILE_MAP) {
       for (Tile t : rows) {
         if (t.hasFire() && t.containsPointOfInterest()) {
-          numVictimDead++;
+          if (t.containsVictim()) {
+            numVictimDead++;
+          }
+          t.setNullVictim();
           /*
           Must add code to replace the victim hear
            */
@@ -271,12 +271,41 @@ public class Board {
   private void removeEdgeFire() {
     for (int i = 0; i < HEIGHT; i++) {
       TILE_MAP[i][0].setFireStatus(FireStatus.EMPTY);
-      TILE_MAP[i][WIDTH-1].setFireStatus(FireStatus.EMPTY);
+      TILE_MAP[i][WIDTH - 1].setFireStatus(FireStatus.EMPTY);
     }
     for (int j = 0; j < WIDTH; j++) {
       TILE_MAP[0][j].setFireStatus(FireStatus.EMPTY);
-      TILE_MAP[HEIGHT-1][j].setFireStatus(FireStatus.EMPTY);
-
+      TILE_MAP[HEIGHT - 1][j].setFireStatus(FireStatus.EMPTY);
     }
+  }
+
+  public Tile getAdjacentTile(Tile t, Direction d) {
+    int i = t.getI();
+    int j = t.getJ();
+    switch (d) {
+      case TOP:
+        if (i > 0) {
+          return TILE_MAP[i - 1][j];
+        }
+        break;
+      case BOTTOM:
+        if (i < Board.HEIGHT - 1) {
+          return TILE_MAP[i + 1][j];
+        }
+        break;
+      case LEFT:
+        if (j > 0) {
+          return TILE_MAP[i][j - 1];
+        }
+        break;
+      case RIGHT:
+        if (j < Board.WIDTH - 1) {
+          return TILE_MAP[i][j + 1];
+        }
+        break;
+      default:
+        throw new IllegalArgumentException();
+    }
+    return null;
   }
 }

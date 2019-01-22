@@ -1,29 +1,42 @@
 package com.cs361d.flashpoint.model.BoardElements;
 
+import com.cs361d.flashpoint.model.Board;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Tile {
 
-    private final ArrayList<FireFighter> firefighters = new ArrayList<FireFighter>();
+    private final ArrayList<FireFighter> FIREFIGHTERS = new ArrayList<FireFighter>();
     private FireStatus fireStatus;
     private AbstractVictim victim;
     private boolean has_hotSpot;
     private final HashMap<Direction, Obstacle> OBSTACLES = new HashMap<Direction, Obstacle>();
+    private final int I;
+    private final int J;
 
-    public Tile(FireStatus fireStatus, boolean has_hotSpot){
+    public Tile(FireStatus fireStatus, boolean has_hotSpot, int i, int j){
         this.fireStatus = fireStatus;
         this.victim = NullVictim.getInstance();
         this.has_hotSpot = has_hotSpot;
+        this.I = i;
+        this.J = j;
     }
 
-    public boolean addObstacle(Direction d, Obstacle o) {
+    public int getI() {
+        return I;
+    }
+
+    public int getJ() {
+        return J;
+    }
+
+    public void addObstacle(Direction d, Obstacle o) {
         if (OBSTACLES.containsKey(d)) {
             throw new UnsupportedOperationException("You cannot overwrite a Obstacle that already exits");
         }
         else {
             OBSTACLES.put(d, o);
-            return true;
         }
     }
 
@@ -31,18 +44,49 @@ public class Tile {
         return OBSTACLES.get(d);
     }
 
+    public boolean hasObstacle(Direction d) {
+        Obstacle o;
+        switch (d) {
+            case RIGHT:
+                o = OBSTACLES.get(Direction.RIGHT);
+                break;
+
+            case LEFT:
+                o = OBSTACLES.get(Direction.LEFT);
+                break;
+
+            case TOP:
+                o = OBSTACLES.get(Direction.TOP);
+                break;
+
+            case BOTTOM:
+                o = OBSTACLES.get(Direction.BOTTOM);
+                break;
+
+            default:
+                throw new IllegalArgumentException();
+        }
+        if (o.isDestroyed()) {
+            return false;
+        }
+        if (o.isDoor() && o.isOpen()) {
+            return false;
+        }
+        return true;
+    }
+
     public ArrayList<FireFighter> getFirefighters() {
-        return firefighters;
+        return FIREFIGHTERS;
     }
 
     public void addFirefighter(FireFighter firefighter) {
 
-        firefighters.add(firefighter);
+        FIREFIGHTERS.add(firefighter);
     }
 
     public void removeFirefighter(FireFighter firefighter) {
 
-        firefighters.remove(firefighter);
+        FIREFIGHTERS.remove(firefighter);
     }
 
     public boolean containsPointOfInterest() {
@@ -51,6 +95,7 @@ public class Tile {
     public AbstractVictim getVictim() {
         return victim;
     }
+
     /*
     verifies that the Victim is not a FALSE_ALARM
      */
@@ -61,12 +106,15 @@ public class Tile {
         return !victim.isFalseAlarm();
     }
 
+    public Tile getAdjacentTile(Direction d) {
+        return Board.getInstance().getAdjacentTile(this, d);
+    }
     public void setVictim(AbstractVictim victim) {
         this.victim = victim;
     }
 
     /*
-    Makes the victim null again just like Trump
+    Makes the victim null
      */
     public void setNullVictim() {
         this.victim = NullVictim.getInstance();
