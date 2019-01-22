@@ -1,120 +1,138 @@
 package com.cs361d.flashpoint.model.BoardElements;
 
+import com.cs361d.flashpoint.model.Board;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Tile {
 
-    private int[][] position;
-
-    private int top_wall;
-    private int bottom_wall;
-    private int left_wall;
-    private int right_wall;
-
-    private ArrayList<FireFighter> firefighters = new ArrayList<FireFighter>();
-
-    private boolean has_victim;
-    private boolean has_false_alarm;
-
-    private boolean has_smoke;
-    private boolean has_fire;
-    private boolean has_explosion;
+    private final ArrayList<FireFighter> FIREFIGHTERS = new ArrayList<FireFighter>();
+    private FireStatus fireStatus;
+    private AbstractVictim victim;
     private boolean has_hotSpot;
+    private final HashMap<Direction, Obstacle> OBSTACLES = new HashMap<Direction, Obstacle>();
+    private final int I;
+    private final int J;
 
-    public Tile(){
-
+    public Tile(FireStatus fireStatus, boolean has_hotSpot, int i, int j){
+        this.fireStatus = fireStatus;
+        this.victim = NullVictim.getInstance();
+        this.has_hotSpot = has_hotSpot;
+        this.I = i;
+        this.J = j;
     }
 
-    public int[][] getPosition() {
-        return position;
+    public int getI() {
+        return I;
     }
 
-    public void setPosition(int[][] position) {
-        this.position = position;
+    public int getJ() {
+        return J;
     }
 
-    public int getTop_wall() {
-        return top_wall;
+    public void addObstacle(Direction d, Obstacle o) {
+        if (OBSTACLES.containsKey(d)) {
+            throw new UnsupportedOperationException("You cannot overwrite a Obstacle that already exits");
+        }
+        else {
+            OBSTACLES.put(d, o);
+        }
     }
 
-    public void setTop_wall(int top_wall) {
-        this.top_wall = top_wall;
+    public Obstacle getObstacle(Direction d) {
+        return OBSTACLES.get(d);
     }
 
-    public int getBottom_wall() {
-        return bottom_wall;
-    }
+    public boolean hasObstacle(Direction d) {
+        Obstacle o;
+        switch (d) {
+            case RIGHT:
+                o = OBSTACLES.get(Direction.RIGHT);
+                break;
 
-    public void setBottom_wall(int bottom_wall) {
-        this.bottom_wall = bottom_wall;
-    }
+            case LEFT:
+                o = OBSTACLES.get(Direction.LEFT);
+                break;
 
-    public int getLeft_wall() {
-        return left_wall;
-    }
+            case TOP:
+                o = OBSTACLES.get(Direction.TOP);
+                break;
 
-    public void setLeft_wall(int left_wall) {
-        this.left_wall = left_wall;
-    }
+            case BOTTOM:
+                o = OBSTACLES.get(Direction.BOTTOM);
+                break;
 
-    public int getRight_wall() {
-        return right_wall;
-    }
-
-    public void setRight_wall(int right_wall) {
-        this.right_wall = right_wall;
+            default:
+                throw new IllegalArgumentException();
+        }
+        if (o.isDestroyed()) {
+            return false;
+        }
+        if (o.isDoor() && o.isOpen()) {
+            return false;
+        }
+        return true;
     }
 
     public ArrayList<FireFighter> getFirefighters() {
-        return firefighters;
+        return FIREFIGHTERS;
     }
 
     public void addFirefighter(FireFighter firefighter) {
 
-        firefighters.add(firefighter);
+        FIREFIGHTERS.add(firefighter);
     }
+
     public void removeFirefighter(FireFighter firefighter) {
 
-        firefighters.remove(firefighter);
+        FIREFIGHTERS.remove(firefighter);
     }
 
-    public boolean isHas_victim() {
-        return has_victim;
+    public boolean containsPointOfInterest() {
+        return !victim.isNull();
+    }
+    public AbstractVictim getVictim() {
+        return victim;
     }
 
-    public void setHas_victim(boolean has_victim) {
-        this.has_victim = has_victim;
+    /*
+    verifies that the Victim is not a FALSE_ALARM
+     */
+    public boolean containsVictim() {
+        if (victim.isNull()) {
+            return false;
+        }
+        return !victim.isFalseAlarm();
     }
 
-    public boolean isHas_false_alarm() {
-        return has_false_alarm;
+    public Tile getAdjacentTile(Direction d) {
+        return Board.getInstance().getAdjacentTile(this, d);
+    }
+    public void setVictim(AbstractVictim victim) {
+        this.victim = victim;
     }
 
-    public void setHas_false_alarm(boolean has_false_alarm) {
-        this.has_false_alarm = has_false_alarm;
+    /*
+    Makes the victim null
+     */
+    public void setNullVictim() {
+        this.victim = NullVictim.getInstance();
     }
 
-    public boolean isHas_smoke() {
-        return has_smoke;
+    public void setFireStatus(FireStatus f) {
+        this.fireStatus = f;
     }
 
-    public void setHas_smoke(boolean has_smoke) {
-        this.has_smoke = has_smoke;
+    public boolean hasFire() {
+        return this.fireStatus == FireStatus.FIRE;
     }
 
-    public boolean isHas_fire() {
-        return has_fire;
+    public boolean hasSmoke() {
+        return this.fireStatus == FireStatus.SMOKE;
     }
 
-    public void setHas_fire(boolean has_fire) {
-        this.has_fire = has_fire;
-    }
-
-    public boolean isHas_explosion() {
-        return has_explosion;
-    }
-
-    public void setHas_explosion(boolean has_explosion) {
-        this.has_explosion = has_explosion;
+    public boolean hasNoFireAndNoSmoke() {
+        return this.fireStatus == FireStatus.EMPTY;
     }
 }

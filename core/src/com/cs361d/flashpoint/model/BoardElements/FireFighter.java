@@ -1,101 +1,128 @@
 package com.cs361d.flashpoint.model.BoardElements;
 
-import com.cs361d.flashpoint.model.Card;
+import com.cs361d.flashpoint.model.FireFighterRoles.Card;
+
+import java.awt.*;
+import java.util.HashMap;
 
 public class FireFighter {
 
-  // firefighter static attributes
-
-  // Texture texture ;
-  // Sprite sprite
-
-  private int PlayerNumber;
-  private String color;
-  private String status;
-
-  // firefighter dynamic attributes
-
-  private Card role;
-  private int maxActionPoints;
-  private int actionPointsLeft;
-  private Tile currentTile;
+  private static final HashMap<FireFighterColor, FireFighter> FIREFIGHTERS= new HashMap<FireFighterColor,FireFighter>();
+  private final FireFighterColor color;
+  private static final int MAX_ACTION_POINTS = 8;
+  private int actionPoints;
   private int numVictimsSaved;
+  private Tile currentTile;
 
-
-  public FireFighter(String color) {
+  private FireFighter(FireFighterColor color, int numVictimsSaved, int actionPoints) {
+    if (actionPoints > MAX_ACTION_POINTS) {
+      throw new IllegalArgumentException("Action points cannot exceed 8 was: " + actionPoints);
+    }
     this.color = color;
+    this.numVictimsSaved = numVictimsSaved;
+    this.actionPoints = actionPoints;
+  }
+  public static FireFighter createFireFighter(FireFighterColor color) {
+    return createFireFighter(color, 0, 4);
   }
 
-  public FireFighter(Card pCard) {
-
-    this.role = pCard;
-
-    if (this.role.name == "Generalist") {
-      maxActionPoints = 6;
+  public static FireFighter createFireFighter(FireFighterColor color, int numVictimsSaved, int actionPoints) {
+    FireFighter f;
+    if (FIREFIGHTERS.containsKey(color)) {
+      f = FIREFIGHTERS.get(color);
+      f.actionPoints = actionPoints;
+      f.numVictimsSaved = numVictimsSaved;
     }
+    else {
+      f = new FireFighter(color, numVictimsSaved, actionPoints);
+    }
+    return f;
+  }
+
+  public void setTile(Tile t) {
+    this.currentTile = t;
+  }
+
+  public Tile getTile() {
+    return currentTile;
   }
 
   public int getNumVictimsSaved() {
     return numVictimsSaved;
   }
 
-  public void setNumVictimsSaved(int numVictimsSaved) {
-    this.numVictimsSaved = numVictimsSaved;
+  public void addNumVictimsSaved() {
+    this.numVictimsSaved += numVictimsSaved;
   }
 
-  public String getStatus() {
-    return status;
-  }
-
-  public void setStatus(String status) {
-    this.status = status;
-  }
-
-  public int getPlayerNumber() {
-    return PlayerNumber;
-  }
-
-  public void setPlayerNumber(int playerNumber) {
-    PlayerNumber = playerNumber;
-  }
-
-  public String getColor() {
+  public FireFighterColor getColor() {
     return color;
   }
 
-  public void setColor(String color) {
-    this.color = color;
-  }
-
-  public Card getRole() {
-    return role;
-  }
-
-  public void setRole(Card role) {
-    this.role = role;
-  }
-
-  public int getMaxActionPoints() {
-    return maxActionPoints;
-  }
-
-  public void setMaxActionPoints(int maxActionPoints) {
-    this.maxActionPoints = maxActionPoints;
-  }
-
   public int getActionPointsLeft() {
-    return actionPointsLeft;
+    return actionPoints;
   }
 
-  public void setActionPointsLeft(int actionPointsLeft) {
-    this.actionPointsLeft = actionPointsLeft;
+  public boolean removeActionPoints(int a) {
+    if (a < 1 || this.actionPoints < a) {
+      return false;
+    } else {
+      this.actionPoints -= a;
+      return true;
+    }
   }
 
-  public Tile getCurrentTile() {
-    return currentTile;
+  public void resetActionPoints() {
+    this.actionPoints += 4;
+    if (this.actionPoints > MAX_ACTION_POINTS) {
+      this.actionPoints = MAX_ACTION_POINTS;
+    }
   }
 
-  public void setCurrentTile(Tile currentTile) {
-    this.currentTile = currentTile;
+  public boolean moveAP(Direction d) {
+    Tile newTile = currentTile.getAdjacentTile(d);
+    if (newTile.hasFire()) {
+      if (actionPoints >= 2)
+      {
+        actionPoints -= 2;
+        return true;
+      }
+    } else if (actionPoints >= 1){
+      actionPoints--;
+      return true;
+    }
+    return false;
+  }
+
+  public boolean chopAP() {
+    if (actionPoints < 1) {
+      return false;
+    }
+    actionPoints--;
+    return true;
+  }
+
+  public boolean extinguishAP() {
+    if (actionPoints < 1) {
+      return false;
+    }
+    actionPoints--;
+    return true;
+  }
+
+  public boolean moveWithVictimAP() {
+    if (actionPoints < 2) {
+      return false;
+    }
+    actionPoints -= 2;
+    return true;
+  }
+
+  public boolean openCloseDoorAP() {
+    if (actionPoints < 1) {
+      return false;
+    }
+    actionPoints--;
+    return true;
   }
 }

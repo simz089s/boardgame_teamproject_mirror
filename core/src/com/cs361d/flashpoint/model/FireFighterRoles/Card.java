@@ -1,4 +1,4 @@
-package com.cs361d.flashpoint.model;
+package com.cs361d.flashpoint.model.FireFighterRoles;
 
 public interface Card {
 

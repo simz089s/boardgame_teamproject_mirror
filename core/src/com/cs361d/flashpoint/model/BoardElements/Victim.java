@@ -1,27 +1,38 @@
 package com.cs361d.flashpoint.model.BoardElements;
 
-public class Victim
+public class Victim extends AbstractVictim
 {
     private boolean isRevealed;
     private boolean isCured;
-    private boolean isRealVictim;
-
-    public Victim(boolean isRevealed, boolean isCured, boolean isRealVictim)
+    private final boolean IS_FALSE_ALARM;
+    public Victim(boolean isRevealed, boolean isCured, boolean isFalseAlarm)
     {
         this.isRevealed = isRevealed;
         this.isCured = isCured;
-        this.isRealVictim = isRealVictim;
+        this.IS_FALSE_ALARM = isFalseAlarm;
+    }
+    public Victim(boolean isFalseAlarm)
+      {
+        this.isCured = false;
+        this.isRevealed = false;
+        this.IS_FALSE_ALARM = isFalseAlarm;
     }
 
 
     public boolean isRevealed()
     {
+
         return isRevealed;
     }
 
-    public void setRevealed(boolean revealed)
+    public boolean reveal()
     {
-        isRevealed = revealed;
+        if (this.isRevealed) {
+            return false;
+    } else {
+      this.isRevealed = true;
+      return true;
+        }
     }
 
     public boolean isCured()
@@ -29,18 +40,23 @@ public class Victim
         return isCured;
     }
 
-    public void setCured(boolean cured)
+    public boolean cure()
     {
-        isCured = cured;
+        if (isCured) {
+            return false;
+        }
+        else {
+        this.isCured = true;
+        return true;
+        }
     }
 
-    public boolean isRealVictim()
+    public boolean isFalseAlarm()
     {
-        return isRealVictim;
+        return IS_FALSE_ALARM;
     }
 
-    public void setRealVictim(boolean realVictim)
-    {
-        isRealVictim = realVictim;
+    public boolean isNull() {
+        return false;
     }
 }

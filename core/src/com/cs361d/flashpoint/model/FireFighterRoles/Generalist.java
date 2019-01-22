@@ -1,7 +1,5 @@
 package com.cs361d.flashpoint.model.FireFighterRoles;
 
-import com.cs361d.flashpoint.model.Card;
-
 class Generalist implements Card {
 
   private String name = "Generalist";
