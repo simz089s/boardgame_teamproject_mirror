@@ -17,7 +17,7 @@ public class FireFighterTurnController {
   public void addFireFighter(FireFighter f) {
     FIREFIGHTERS.add(f);
     if (FIREFIGHTERS.size() > 6) {
-        throw new IllegalStateException();
+      throw new IllegalStateException();
     }
   }
 
@@ -33,14 +33,13 @@ public class FireFighterTurnController {
 
   public void move(Direction d) {
     // we will add an ap function here
-    if (canMove(d)) {
+    if (canMove(d) && getCurrentFireFighter().moveAP(d)) {
       FireFighter f = getCurrentFireFighter();
       Tile oldTile = f.getTile();
       Tile newTile = oldTile.getAdjacentTile(d);
       oldTile.removeFirefighter(f);
       newTile.addFirefighter(f);
       f.setTile(newTile);
-
       if (newTile.containsPointOfInterest()) {
         if (newTile.containsVictim()) {
           newTile.getVictim().reveal();
@@ -53,7 +52,7 @@ public class FireFighterTurnController {
   }
 
   public void moveWithVictim(Direction d) {
-    if (canMoveWithVictim(d)) {
+    if (canMoveWithVictim(d) && getCurrentFireFighter().moveWithVictimAP()) {
       FireFighter f = getCurrentFireFighter();
       AbstractVictim v = f.getTile().getVictim();
       Tile oldTile = f.getTile();
@@ -93,23 +92,17 @@ public class FireFighterTurnController {
   }
 
   public void extinguishFire(Direction d) {
-    Tile currentTile = getCurrentFireFighter().getTile();
-    if (d == null) {
-      if (currentTile.hasNoFireAndNoSmoke()) {
-        return;
-      }
-    }
-    Tile adjacentTile = currentTile.getAdjacentTile(d);
-    if (adjacentTile == null) {
+    Tile tileToExtinguish = getCurrentFireFighter().getTile().getAdjacentTile(d);
+    if (tileToExtinguish == null) {
       return;
-    } else if (adjacentTile.hasNoFireAndNoSmoke()) {
+    } else if (tileToExtinguish.hasNoFireAndNoSmoke()) {
       return;
     }
     if (getCurrentFireFighter().extinguishAP()) {
-      if (adjacentTile.hasFire()) {
-        adjacentTile.setFireStatus(FireStatus.SMOKE);
-      } else if (adjacentTile.hasSmoke()) {
-        adjacentTile.setFireStatus(FireStatus.EMPTY);
+      if (tileToExtinguish.hasFire()) {
+        tileToExtinguish.setFireStatus(FireStatus.SMOKE);
+      } else if (tileToExtinguish.hasSmoke()) {
+        tileToExtinguish.setFireStatus(FireStatus.EMPTY);
       }
     }
   }
@@ -120,18 +113,18 @@ public class FireFighterTurnController {
 
   private boolean canMove(Direction d) {
     Tile currentTile = getCurrentFireFighter().getTile();
+    // verifies that there is a tile in the direction
     if (currentTile.hasObstacle(d) || currentTile.getAdjacentTile(d) == null) {
       return false;
     }
 
-    // verifies that there is a tile in the direction
-    return getCurrentFireFighter().moveAP(d);
+    return true;
   }
 
   private boolean canMoveWithVictim(Direction d) {
     Tile currentTile = getCurrentFireFighter().getTile();
     Tile adjacentTile = currentTile.getAdjacentTile(d);
-    if (currentTile.hasObstacle(d) || adjacentTile == null) {
+    if (!canMove(d)) {
       return false;
     }
     if (!currentTile.containsVictim()
@@ -139,7 +132,7 @@ public class FireFighterTurnController {
         || adjacentTile.containsPointOfInterest()) {
       return false;
     }
-    return getCurrentFireFighter().moveWithVictimAP();
+    return true;
   }
 
   public FireFighter getCurrentFireFighter() {

@@ -4,7 +4,8 @@ public enum Direction {
     TOP("top"),
     BOTTOM("bottom"),
     LEFT("left"),
-    RIGHT("right");
+    RIGHT("right"),
+    NODIRECTION("nodirection");
 
     Direction(String text){}
 }

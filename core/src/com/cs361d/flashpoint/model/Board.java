@@ -303,6 +303,8 @@ public class Board {
           return TILE_MAP[i][j + 1];
         }
         break;
+      case NODIRECTION:
+        return t;
       default:
         throw new IllegalArgumentException();
     }
