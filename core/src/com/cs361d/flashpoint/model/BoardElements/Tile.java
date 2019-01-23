@@ -44,6 +44,7 @@ public class Tile {
         return OBSTACLES.get(d);
     }
 
+    // Return if there is an obstacle in the disired direction
     public boolean hasObstacle(Direction d) {
         Obstacle o;
         switch (d) {
@@ -62,7 +63,8 @@ public class Tile {
             case BOTTOM:
                 o = OBSTACLES.get(Direction.BOTTOM);
                 break;
-
+            case NODIRECTION:
+                return false;
             default:
                 throw new IllegalArgumentException();
         }
@@ -106,6 +108,7 @@ public class Tile {
         return !victim.isFalseAlarm();
     }
 
+    // return the tile adjacent in the direction wished
     public Tile getAdjacentTile(Direction d) {
         return Board.getInstance().getAdjacentTile(this, d);
     }

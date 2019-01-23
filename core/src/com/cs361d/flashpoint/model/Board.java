@@ -116,6 +116,7 @@ public class Board {
     }
     updateSmoke();
     updateVictim();
+    // TODO
     /*
     updatePlayer();
     must be done to ensure on player is in fire at the end of the spread of the fire
@@ -123,7 +124,12 @@ public class Board {
 
     removeEdgeFire();
   }
+  public void reset() {
+    instance = new Board();
+    FireFighterTurnController.getInstance().reset();
+    FireFighter.reset();
 
+  }
   // Spread the fire in a specific direction after an explosion
   private void explosionFireSpread(int i, int j, Direction d) {
     Tile hitLocation = TILE_MAP[i][j];
@@ -259,6 +265,7 @@ public class Board {
             numVictimDead++;
           }
           t.setNullVictim();
+          // TODO
           /*
           Must add code to replace the victim hear
            */
@@ -303,6 +310,7 @@ public class Board {
           return TILE_MAP[i][j + 1];
         }
         break;
+        // if there is no direction return the tile given
       case NODIRECTION:
         return t;
       default:

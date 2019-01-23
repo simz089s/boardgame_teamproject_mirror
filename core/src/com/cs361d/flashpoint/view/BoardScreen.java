@@ -53,16 +53,16 @@ public class BoardScreen extends FlashPointScreen {
 
     Board myBoard = Board.getInstance();
     //    myBoard.addDoor(0,0, Direction.TOP, 1, false);
-    myBoard.addDoor(5, 5, Direction.BOTTOM, 1, false);
+    myBoard.addDoor(5, 5, Direction.BOTTOM, 1, true);
     myBoard.addDoor(5, 5, Direction.LEFT, 1, true);
     myBoard.addFireStatus(1, 1, FireStatus.FIRE);
     myBoard.addFireStatus(2, 0, FireStatus.SMOKE);
     myBoard.addDoor(1, 0, Direction.RIGHT, 1, true);
     myBoard.addFireFighter(1, 0, FireFighterColor.BLUE,0, 3);
     myBoard.addVictim(5,5,true, false,false);
-//    for (int i = 0; i < 20; i++) {
-//      myBoard.endTurnFireSpread(5,5);
-//    }
+    for (int i = 0; i < 4; i++) {
+      myBoard.endTurnFireSpread(5,5);
+    }
     debugLbl.setPosition(10, 10);
     debugLbl.setColor(Color.PURPLE);
 

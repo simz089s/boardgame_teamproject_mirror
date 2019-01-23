@@ -1,13 +1,10 @@
 package com.cs361d.flashpoint.model.BoardElements;
 
-import com.cs361d.flashpoint.model.FireFighterRoles.Card;
-
-import java.awt.*;
 import java.util.HashMap;
 
 public class FireFighter {
 
-  private static final HashMap<FireFighterColor, FireFighter> FIREFIGHTERS= new HashMap<FireFighterColor,FireFighter>();
+  private static HashMap<FireFighterColor, FireFighter> firefighters = new HashMap<FireFighterColor,FireFighter>();
   private final FireFighterColor color;
   private static final int MAX_ACTION_POINTS = 8;
   private int actionPoints;
@@ -28,8 +25,8 @@ public class FireFighter {
 
   public static FireFighter createFireFighter(FireFighterColor color, int numVictimsSaved, int actionPoints) {
     FireFighter f;
-    if (FIREFIGHTERS.containsKey(color)) {
-      f = FIREFIGHTERS.get(color);
+    if (firefighters.containsKey(color)) {
+      f = firefighters.get(color);
       f.actionPoints = actionPoints;
       f.numVictimsSaved = numVictimsSaved;
     }
@@ -124,5 +121,9 @@ public class FireFighter {
     }
     actionPoints--;
     return true;
+  }
+
+  public static void reset() {
+    firefighters = new HashMap<FireFighterColor, FireFighter>();
   }
 }

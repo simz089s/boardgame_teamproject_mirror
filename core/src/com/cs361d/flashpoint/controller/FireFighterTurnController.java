@@ -7,14 +7,17 @@ import java.util.LinkedList;
 
 public class FireFighterTurnController {
   private final LinkedList<FireFighter> FIREFIGHTERS = new LinkedList<FireFighter>();
-  private static FireFighterTurnController fireFighterTurnController =
+  private static FireFighterTurnController instance =
       new FireFighterTurnController();
 
   public static FireFighterTurnController getInstance() {
-    return fireFighterTurnController;
+    return instance;
   }
 
   public void addFireFighter(FireFighter f) {
+    if (FIREFIGHTERS.contains(f)) {
+      throw new IllegalArgumentException();
+    }
     FIREFIGHTERS.add(f);
     if (FIREFIGHTERS.size() > 6) {
       throw new IllegalStateException();
@@ -25,14 +28,14 @@ public class FireFighterTurnController {
     FIREFIGHTERS.remove(f);
   }
 
-  public void nextTurn() {
-    FireFighter last = FIREFIGHTERS.remove();
+  public void endTurn() {
+    FireFighter last = FIREFIGHTERS.removeFirst();
     last.resetActionPoints();
     FIREFIGHTERS.addLast(last);
+    Board.getInstance().endTurnFireSpread(0,0);
   }
 
   public void move(Direction d) {
-    // we will add an ap function here
     if (canMove(d) && getCurrentFireFighter().moveAP(d)) {
       FireFighter f = getCurrentFireFighter();
       Tile oldTile = f.getTile();
@@ -45,6 +48,7 @@ public class FireFighterTurnController {
           newTile.getVictim().reveal();
         } else {
           newTile.setNullVictim();
+          // TODO
           // Method to add new victim
         }
       }
@@ -95,7 +99,7 @@ public class FireFighterTurnController {
     Tile tileToExtinguish = getCurrentFireFighter().getTile().getAdjacentTile(d);
     if (tileToExtinguish == null) {
       return;
-    } else if (tileToExtinguish.hasNoFireAndNoSmoke()) {
+    } else if (tileToExtinguish.hasNoFireAndNoSmoke() || getCurrentFireFighter().getTile().hasObstacle(d)) {
       return;
     }
     if (getCurrentFireFighter().extinguishAP()) {
@@ -137,5 +141,9 @@ public class FireFighterTurnController {
 
   public FireFighter getCurrentFireFighter() {
     return FIREFIGHTERS.peek();
+  }
+
+  public void reset() {
+    instance = new FireFighterTurnController();
   }
 }
