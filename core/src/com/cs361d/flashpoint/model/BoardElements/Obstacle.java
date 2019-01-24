@@ -1,6 +1,6 @@
 package com.cs361d.flashpoint.model.BoardElements;
 
-import com.cs361d.flashpoint.model.BoardManager;
+import com.cs361d.flashpoint.manager.BoardManager;
 
 public class Obstacle {
   private int health;
@@ -40,7 +40,7 @@ public class Obstacle {
     } else {
       this.health--;
       if (!isDoor) {
-          BoardManager.getInstance().damageMarkerIncrease();
+          BoardManager.getInstance().useDamageMarker();
       }
       return true;
     }
