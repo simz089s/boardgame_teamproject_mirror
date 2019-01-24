@@ -1,34 +1,33 @@
 package com.cs361d.flashpoint.model;
 
-import com.cs361d.flashpoint.controller.FireFighterTurnController;
+import com.cs361d.flashpoint.controller.FireFighterTurnManager;
 import com.cs361d.flashpoint.model.BoardElements.*;
-import com.cs361d.flashpoint.model.FireFighterRoles.*;
 
 import java.util.ArrayList;
 
-public class Board {
+public class BoardManager {
   public static final int WIDTH = 10;
   public static final int HEIGHT = 8;
   private final Tile[][] TILE_MAP = new Tile[HEIGHT][WIDTH];
-  private int numberofWallDestroyed = 0;
+  private int numofWallDestroyed = 0;
   private int numVictimSaved = 0;
   private int numVictimDead = 0;
 
   private ArrayList<FireFighterColor> COLOR = new ArrayList<FireFighterColor>();
 
   // create an object of SingleObject
-  private static Board instance = new Board();
+  private static BoardManager instance = new BoardManager();
 
   // Get the only object available
-  public static Board getInstance() {
+  public static BoardManager getInstance() {
     return instance;
   }
 
   // make the constructor private so that this class cannot be instantiated
-  private Board() {
+  private BoardManager() {
     for (int i = 0; i < HEIGHT; i++) {
       for (int j = 0; j < WIDTH; j++) {
-        Tile newTile = new Tile(FireStatus.EMPTY, false, i, j);
+        Tile newTile = new Tile(FireStatus.EMPTY, i, j);
         TILE_MAP[i][j] = newTile;
         Obstacle top = new Obstacle(-1);
         Obstacle left = new Obstacle(1);
@@ -87,7 +86,7 @@ public class Board {
       throw new IllegalArgumentException();
     }
     f.setTile(TILE_MAP[i][j]);
-    FireFighterTurnController.getInstance().addFireFighter(f);
+    FireFighterTurnManager.getInstance().addFireFighter(f);
     TILE_MAP[i][j].addFirefighter(f);
   }
 
@@ -115,20 +114,16 @@ public class Board {
       explosion(i, j);
     }
     updateSmoke();
-    updateVictim();
-    // TODO
-    /*
-    updatePlayer();
-    must be done to ensure on player is in fire at the end of the spread of the fire
-     */
-
+    ArrayList<Tile> tiles = getTilesWithFire();
+    // we clear the edge tiles with fire as knocked down player must be able to respawn
     removeEdgeFire();
+    updateVictimAndFireFighter(tiles);
   }
-  public void reset() {
-    instance = new Board();
-    FireFighterTurnController.getInstance().reset();
-    FireFighter.reset();
 
+  public void reset() {
+    instance = new BoardManager();
+    FireFighterTurnManager.getInstance().reset();
+    FireFighter.reset();
   }
   // Spread the fire in a specific direction after an explosion
   private void explosionFireSpread(int i, int j, Direction d) {
@@ -256,20 +251,28 @@ public class Board {
     return false;
   }
 
-  // removes victims that are in a place with fire at the end of turn
-  private void updateVictim() {
-    for (Tile[] rows : TILE_MAP) {
-      for (Tile t : rows) {
-        if (t.hasFire() && t.containsPointOfInterest()) {
-          if (t.containsVictim()) {
-            numVictimDead++;
+  // removes victims that are in a place with fire at the end of turn as well as knockdown player
+  private void updateVictimAndFireFighter(ArrayList<Tile> tiles) {
+    for (Tile t : tiles) {
+      if (t.hasFireFighters()) {
+        knockedDown(t.getI(), t.getJ());
+      }
+      if (t.containsPointOfInterest()) {
+        if (t.containsVictim()) {
+          numVictimDead++;
+          if (numVictimDead > 3) {
+            // TODO
+            /*
+            we lost the game as too many victims died
+             */
+            reset();
           }
-          t.setNullVictim();
-          // TODO
-          /*
-          Must add code to replace the victim hear
-           */
         }
+        t.setNullVictim();
+        // TODO
+        /*
+        Must add code to replace the victim hear
+         */
       }
     }
   }
@@ -296,7 +299,7 @@ public class Board {
         }
         break;
       case BOTTOM:
-        if (i < Board.HEIGHT - 1) {
+        if (i < BoardManager.HEIGHT - 1) {
           return TILE_MAP[i + 1][j];
         }
         break;
@@ -306,7 +309,7 @@ public class Board {
         }
         break;
       case RIGHT:
-        if (j < Board.WIDTH - 1) {
+        if (j < BoardManager.WIDTH - 1) {
           return TILE_MAP[i][j + 1];
         }
         break;
@@ -317,5 +320,87 @@ public class Board {
         throw new IllegalArgumentException();
     }
     return null;
+  }
+
+  public ArrayList<Tile> getClosestAmbulance(int i, int j) {
+    ArrayList<Tile> tiles = new ArrayList<Tile>();
+    double currentSmallestDistance = Double.MAX_VALUE;
+    for (int k = 0; k < HEIGHT; k++) {
+      for (int l = 0; l < WIDTH; l++) {
+        if (TILE_MAP[k][l].canContainAmbulance() && !TILE_MAP[k][j].hasFire()) {
+          double squareDistance = Math.pow(i - k, 2) + Math.pow(j - l, 2);
+          if (squareDistance < currentSmallestDistance) {
+            currentSmallestDistance = squareDistance;
+            tiles.clear();
+            tiles.add(TILE_MAP[k][l]);
+          } else if (squareDistance == currentSmallestDistance) {
+            tiles.add(TILE_MAP[k][l]);
+          }
+        }
+      }
+    }
+    return tiles;
+  }
+
+  private void knockedDown(int i, int j) {
+    ArrayList<Tile> tiles = getClosestAmbulance(i, j);
+    for (FireFighter f : TILE_MAP[i][j].getFirefighters()) {
+      if (tiles.size() == 1) {
+        f.setTile(tiles.get(0));
+        tiles.get(0).addFirefighter(f);
+      } else if (tiles.size() > 1) {
+        // TODO
+        /*
+        We must then ask the fireFighter to what tile he wishes to go to
+         */
+      } else {
+        throw new IllegalStateException();
+      }
+    }
+    TILE_MAP[i][j].removeAllFireFighters();
+  }
+
+  public ArrayList<Tile> getTilesWithFire() {
+    ArrayList<Tile> tiles = new ArrayList<Tile>();
+    for (Tile[] rows : TILE_MAP) {
+      for (Tile t : rows) {
+        if (t.hasFire()) {
+          tiles.add(t);
+        }
+      }
+    }
+    return tiles;
+  }
+
+  public void setNumVictimSaved(int s) {
+    this.numVictimSaved = s;
+  }
+
+  public void setNumofWallDestroyed(int w) {
+    this.numofWallDestroyed = w;
+  }
+
+  public void verifyVictimRescueStatus(Tile t) {
+    if (t.canContainAmbulance() && t.containsVictim()) {
+      numVictimSaved++;
+    }
+    if (numVictimSaved > 6) {
+      // TODO
+      /*
+      the game ends we won
+       */
+      reset();
+    }
+  }
+
+  public void damageMarkerIncrease() {
+    this.numofWallDestroyed++;
+    if (this.numofWallDestroyed > 24) {
+      // TODO
+      /*
+      building colapsed we lost the game
+       */
+      reset();
+    }
   }
 }

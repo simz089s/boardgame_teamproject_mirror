@@ -10,8 +10,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.cs361d.flashpoint.controller.FireFighterTurnController;
-import com.cs361d.flashpoint.model.Board;
+import com.cs361d.flashpoint.controller.FireFighterTurnManager;
+import com.cs361d.flashpoint.model.BoardManager;
 import com.cs361d.flashpoint.model.BoardElements.*;
 
 import java.util.ArrayList;
@@ -28,16 +28,16 @@ public class BoardScreen extends FlashPointScreen {
   TextButton btnChat;
 
   // tiles properties
-  final int NUMBER_OF_ROWS = Board.HEIGHT;
-  final int NUMBER_OF_COLS = Board.WIDTH;
+  final int NUMBER_OF_ROWS = BoardManager.HEIGHT;
+  final int NUMBER_OF_COLS = BoardManager.WIDTH;
 
   final int WALL_THICKNESS = 5;
   final int TILE_SIZE = 75;
 
   Image[][] tilesImg = new Image[NUMBER_OF_ROWS][NUMBER_OF_COLS];
 
-  Tile[][] tiles = Board.getInstance().getTiles();
-  FireFighterTurnController fireFighterTurnController = FireFighterTurnController.getInstance();
+  Tile[][] tiles = BoardManager.getInstance().getTiles();
+  FireFighterTurnManager fireFighterTurnManager = FireFighterTurnManager.getInstance();
   Stage stage;
 
   // reference to game units images
@@ -51,17 +51,17 @@ public class BoardScreen extends FlashPointScreen {
   public void show() {
 
 
-    Board myBoard = Board.getInstance();
-    //    myBoard.addDoor(0,0, Direction.TOP, 1, false);
-    myBoard.addDoor(5, 5, Direction.BOTTOM, 1, true);
-    myBoard.addDoor(5, 5, Direction.LEFT, 1, true);
-    myBoard.addFireStatus(1, 1, FireStatus.FIRE);
-    myBoard.addFireStatus(2, 0, FireStatus.SMOKE);
-    myBoard.addDoor(1, 0, Direction.RIGHT, 1, true);
-    myBoard.addFireFighter(1, 0, FireFighterColor.BLUE,0, 3);
-    myBoard.addVictim(5,5,true, false,false);
+    BoardManager myBoardManager = BoardManager.getInstance();
+    //    myBoardManager.addDoor(0,0, Direction.TOP, 1, false);
+    myBoardManager.addDoor(5, 5, Direction.BOTTOM, 1, true);
+    myBoardManager.addDoor(5, 5, Direction.LEFT, 1, true);
+    myBoardManager.addFireStatus(1, 1, FireStatus.FIRE);
+    myBoardManager.addFireStatus(2, 0, FireStatus.SMOKE);
+    myBoardManager.addDoor(1, 0, Direction.RIGHT, 1, true);
+    myBoardManager.addFireFighter(1, 0, FireFighterColor.BLUE,0, 3);
+    myBoardManager.addVictim(5,5,true, false,false);
     for (int i = 0; i < 4; i++) {
-      myBoard.endTurnFireSpread(5,5);
+      myBoardManager.endTurnFireSpread(5,5);
     }
     debugLbl.setPosition(10, 10);
     debugLbl.setColor(Color.PURPLE);
@@ -193,27 +193,27 @@ public class BoardScreen extends FlashPointScreen {
               clearAllGameUnits();
               // give it current board state (tiles) and current position (i, j); returns updated
               // board state (tiles)
-              fireFighterTurnController.move(Direction.TOP);
+              fireFighterTurnManager.move(Direction.TOP);
               redrawGameUnitsOnTile();
 
             } else if (optArr[lstOptions.getSelectedIndex()].equals("Move down")) {
               clearAllGameUnits();
-              fireFighterTurnController.move(Direction.BOTTOM);
+              fireFighterTurnManager.move(Direction.BOTTOM);
               redrawGameUnitsOnTile();
 
             } else if (optArr[lstOptions.getSelectedIndex()].equals("Move left")) {
               clearAllGameUnits();
-              fireFighterTurnController.move(Direction.LEFT);
+              fireFighterTurnManager.move(Direction.LEFT);
               redrawGameUnitsOnTile();
 
             } else if (optArr[lstOptions.getSelectedIndex()].equals("Move right")) {
               clearAllGameUnits();
-              fireFighterTurnController.move(Direction.RIGHT);
+              fireFighterTurnManager.move(Direction.RIGHT);
               redrawGameUnitsOnTile();
 
             } else if (optArr[lstOptions.getSelectedIndex()].equals("Extinguish")) {
               clearAllGameUnits();
-              fireFighterTurnController.extinguishFire(Direction.RIGHT);
+              fireFighterTurnManager.extinguishFire(Direction.RIGHT);
               redrawGameUnitsOnTile();
             } else if (optArr[lstOptions.getSelectedIndex()].equals("Chop")) {
 
@@ -369,12 +369,12 @@ public class BoardScreen extends FlashPointScreen {
     drawObstacles(myTile, top, Direction.TOP);
     drawObstacles(myTile, left, Direction.LEFT);
 
-    if (j == Board.WIDTH - 1) {
+    if (j == BoardManager.WIDTH - 1) {
       Obstacle right = tiles[i][j].getObstacle(Direction.RIGHT);
       drawObstacles(myTile, right, Direction.RIGHT);
     }
 
-    if (i == Board.HEIGHT - 1) {
+    if (i == BoardManager.HEIGHT - 1) {
       Obstacle bottom = tiles[i][j].getObstacle(Direction.BOTTOM);
       drawObstacles(myTile, bottom, Direction.BOTTOM);
     }

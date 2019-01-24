@@ -4,19 +4,17 @@ import java.util.HashMap;
 
 public class FireFighter {
 
-  private static HashMap<FireFighterColor, FireFighter> firefighters = new HashMap<FireFighterColor,FireFighter>();
+  private static final HashMap<FireFighterColor, FireFighter> FIREFIGHTERS = new HashMap<FireFighterColor,FireFighter>();
   private final FireFighterColor color;
   private static final int MAX_ACTION_POINTS = 8;
   private int actionPoints;
-  private int numVictimsSaved;
   private Tile currentTile;
 
-  private FireFighter(FireFighterColor color, int numVictimsSaved, int actionPoints) {
+  private FireFighter(FireFighterColor color, int actionPoints) {
     if (actionPoints > MAX_ACTION_POINTS) {
       throw new IllegalArgumentException("Action points cannot exceed 8 was: " + actionPoints);
     }
     this.color = color;
-    this.numVictimsSaved = numVictimsSaved;
     this.actionPoints = actionPoints;
   }
   public static FireFighter createFireFighter(FireFighterColor color) {
@@ -25,13 +23,12 @@ public class FireFighter {
 
   public static FireFighter createFireFighter(FireFighterColor color, int numVictimsSaved, int actionPoints) {
     FireFighter f;
-    if (firefighters.containsKey(color)) {
-      f = firefighters.get(color);
+    if (FIREFIGHTERS.containsKey(color)) {
+      f = FIREFIGHTERS.get(color);
       f.actionPoints = actionPoints;
-      f.numVictimsSaved = numVictimsSaved;
     }
     else {
-      f = new FireFighter(color, numVictimsSaved, actionPoints);
+      f = new FireFighter(color, actionPoints);
     }
     return f;
   }
@@ -42,14 +39,6 @@ public class FireFighter {
 
   public Tile getTile() {
     return currentTile;
-  }
-
-  public int getNumVictimsSaved() {
-    return numVictimsSaved;
-  }
-
-  public void addNumVictimsSaved() {
-    this.numVictimsSaved += numVictimsSaved;
   }
 
   public FireFighterColor getColor() {
@@ -124,6 +113,6 @@ public class FireFighter {
   }
 
   public static void reset() {
-    firefighters = new HashMap<FireFighterColor, FireFighter>();
+    FIREFIGHTERS.clear();
   }
 }

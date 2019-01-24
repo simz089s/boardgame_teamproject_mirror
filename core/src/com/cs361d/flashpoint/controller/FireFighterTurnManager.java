@@ -1,16 +1,17 @@
 package com.cs361d.flashpoint.controller;
 
-import com.cs361d.flashpoint.model.Board;
+import com.cs361d.flashpoint.model.BoardManager;
 import com.cs361d.flashpoint.model.BoardElements.*;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 
-public class FireFighterTurnController {
+public class FireFighterTurnManager {
   private final LinkedList<FireFighter> FIREFIGHTERS = new LinkedList<FireFighter>();
-  private static FireFighterTurnController instance =
-      new FireFighterTurnController();
+  private static FireFighterTurnManager instance =
+      new FireFighterTurnManager();
 
-  public static FireFighterTurnController getInstance() {
+  public static FireFighterTurnManager getInstance() {
     return instance;
   }
 
@@ -32,7 +33,7 @@ public class FireFighterTurnController {
     FireFighter last = FIREFIGHTERS.removeFirst();
     last.resetActionPoints();
     FIREFIGHTERS.addLast(last);
-    Board.getInstance().endTurnFireSpread(0,0);
+    BoardManager.getInstance().endTurnFireSpread(0,0);
   }
 
   public void move(Direction d) {
@@ -66,6 +67,7 @@ public class FireFighterTurnController {
       oldTile.setNullVictim();
       newTile.setVictim(v);
       f.setTile(newTile);
+      BoardManager.getInstance().verifyVictimRescueStatus(newTile);
     }
   }
 
@@ -144,6 +146,23 @@ public class FireFighterTurnController {
   }
 
   public void reset() {
-    instance = new FireFighterTurnController();
+    instance = new FireFighterTurnManager();
   }
+
+  public void placeInitialFireFighter(FireFighter f, Tile t) {
+    int i = t.getI();
+    int j = t.getJ();
+    if (i > 0 || i > BoardManager.HEIGHT-2 || j > 0 || j > BoardManager.WIDTH-2) {
+      return;
+    }
+    // if the fireFighter already had a tile that means it was already one the board so we cannot place it initially.
+    if (f.getTile() != null) {
+      return;
+    }
+    addFireFighter(f);
+    f.setTile(t);
+    t.addFirefighter(f);
+  }
+
+  public void knockedDownReapearChoice(FireFighter f, ArrayList<Tile> tiles) {}
 }

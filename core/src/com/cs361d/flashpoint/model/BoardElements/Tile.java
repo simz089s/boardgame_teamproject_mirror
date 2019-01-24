@@ -1,6 +1,6 @@
 package com.cs361d.flashpoint.model.BoardElements;
 
-import com.cs361d.flashpoint.model.Board;
+import com.cs361d.flashpoint.model.BoardManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -10,18 +10,26 @@ public class Tile {
     private final ArrayList<FireFighter> FIREFIGHTERS = new ArrayList<FireFighter>();
     private FireStatus fireStatus;
     private AbstractVictim victim;
-    private boolean has_hotSpot;
+    private CarrierStatus carrierStatus;
     private final HashMap<Direction, Obstacle> OBSTACLES = new HashMap<Direction, Obstacle>();
     private final int I;
     private final int J;
 
-    public Tile(FireStatus fireStatus, boolean has_hotSpot, int i, int j){
+    public Tile(FireStatus fireStatus, int i, int j){
         this.fireStatus = fireStatus;
         this.victim = NullVictim.getInstance();
-        this.has_hotSpot = has_hotSpot;
         this.I = i;
         this.J = j;
+        this.carrierStatus = CarrierStatus.EMPTY;
     }
+    public Tile(FireStatus fireStatus, CarrierStatus s, int i, int j){
+        this.fireStatus = fireStatus;
+        this.victim = NullVictim.getInstance();
+        this.I = i;
+        this.J = j;
+        this.carrierStatus = s;
+    }
+
 
     public int getI() {
         return I;
@@ -91,6 +99,10 @@ public class Tile {
         FIREFIGHTERS.remove(firefighter);
     }
 
+    public void removeAllFireFighters() {
+        FIREFIGHTERS.clear();
+    }
+
     public boolean containsPointOfInterest() {
         return !victim.isNull();
     }
@@ -110,7 +122,7 @@ public class Tile {
 
     // return the tile adjacent in the direction wished
     public Tile getAdjacentTile(Direction d) {
-        return Board.getInstance().getAdjacentTile(this, d);
+        return BoardManager.getInstance().getAdjacentTile(this, d);
     }
     public void setVictim(AbstractVictim victim) {
         this.victim = victim;
@@ -137,5 +149,17 @@ public class Tile {
 
     public boolean hasNoFireAndNoSmoke() {
         return this.fireStatus == FireStatus.EMPTY;
+    }
+
+    public ArrayList<Tile> getClosestAmbulance() {
+        return BoardManager.getInstance().getClosestAmbulance(this.I, this.J);
+    }
+
+    public boolean canContainAmbulance() {
+        return this.carrierStatus == CarrierStatus.AMBULANCE;
+    }
+
+    public boolean hasFireFighters() {
+        return FIREFIGHTERS.size() > 0;
     }
 }
