@@ -1,16 +1,4 @@
-package com.cs361d.flashpoint.controller;
-
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
-import com.cs361d.flashpoint.model.BoardElements.*;
+package com.cs361d.flashpoint.manager;
 
 
 public class DBHandler {

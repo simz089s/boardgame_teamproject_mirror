@@ -1,9 +1,11 @@
 package com.cs361d.flashpoint.model.BoardElements;
 
-import com.cs361d.flashpoint.model.BoardManager;
+import com.cs361d.flashpoint.manager.BoardManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class Tile {
 
@@ -11,7 +13,7 @@ public class Tile {
     private FireStatus fireStatus;
     private AbstractVictim victim;
     private CarrierStatus carrierStatus;
-    private final HashMap<Direction, Obstacle> OBSTACLES = new HashMap<Direction, Obstacle>();
+    private final Map<Direction, Obstacle> OBSTACLES = new HashMap<Direction, Obstacle>();
     private final int I;
     private final int J;
 
@@ -41,7 +43,7 @@ public class Tile {
 
     public void addObstacle(Direction d, Obstacle o) {
         if (OBSTACLES.containsKey(d)) {
-            throw new UnsupportedOperationException("You cannot overwrite a Obstacle that already exits");
+            throw new UnsupportedOperationException("You cannot overwrite an Obstacle that already exits");
         }
         else {
             OBSTACLES.put(d, o);
@@ -52,7 +54,7 @@ public class Tile {
         return OBSTACLES.get(d);
     }
 
-    // Return if there is an obstacle in the disired direction
+    // Return if there is an obstacle in the desired direction
     public boolean hasObstacle(Direction d) {
         Obstacle o;
         switch (d) {
@@ -71,10 +73,11 @@ public class Tile {
             case BOTTOM:
                 o = OBSTACLES.get(Direction.BOTTOM);
                 break;
+
             case NODIRECTION:
                 return false;
             default:
-                throw new IllegalArgumentException();
+                throw new IllegalArgumentException(d + " is an invalid Direction.");
         }
         if (o.isDestroyed()) {
             return false;
@@ -85,17 +88,15 @@ public class Tile {
         return true;
     }
 
-    public ArrayList<FireFighter> getFirefighters() {
+    public List<FireFighter> getFirefighters() {
         return FIREFIGHTERS;
     }
 
     public void addFirefighter(FireFighter firefighter) {
-
         FIREFIGHTERS.add(firefighter);
     }
 
     public void removeFirefighter(FireFighter firefighter) {
-
         FIREFIGHTERS.remove(firefighter);
     }
 
@@ -103,9 +104,10 @@ public class Tile {
         FIREFIGHTERS.clear();
     }
 
-    public boolean containsPointOfInterest() {
+    public boolean hasPointOfInterest() {
         return !victim.isNull();
     }
+
     public AbstractVictim getVictim() {
         return victim;
     }
@@ -113,7 +115,7 @@ public class Tile {
     /*
     verifies that the Victim is not a FALSE_ALARM
      */
-    public boolean containsVictim() {
+    public boolean hasRealVictim() {
         if (victim.isNull()) {
             return false;
         }
@@ -151,7 +153,7 @@ public class Tile {
         return this.fireStatus == FireStatus.EMPTY;
     }
 
-    public ArrayList<Tile> getClosestAmbulance() {
+    public List<Tile> getClosestAmbulance() {
         return BoardManager.getInstance().getClosestAmbulance(this.I, this.J);
     }
 

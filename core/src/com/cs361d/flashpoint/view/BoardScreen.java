@@ -10,8 +10,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.cs361d.flashpoint.controller.FireFighterTurnManager;
-import com.cs361d.flashpoint.model.BoardManager;
+import com.cs361d.flashpoint.manager.FireFighterTurnManager;
+import com.cs361d.flashpoint.manager.BoardManager;
 import com.cs361d.flashpoint.model.BoardElements.*;
 
 import java.util.ArrayList;
@@ -55,11 +55,11 @@ public class BoardScreen extends FlashPointScreen {
     //    myBoardManager.addDoor(0,0, Direction.TOP, 1, false);
     myBoardManager.addDoor(5, 5, Direction.BOTTOM, 1, true);
     myBoardManager.addDoor(5, 5, Direction.LEFT, 1, true);
-    myBoardManager.addFireStatus(1, 1, FireStatus.FIRE);
+    // myBoardManager.addFireStatus(1, 1, FireStatus.FIRE);
     myBoardManager.addFireStatus(2, 0, FireStatus.SMOKE);
     myBoardManager.addDoor(1, 0, Direction.RIGHT, 1, true);
     myBoardManager.addFireFighter(1, 0, FireFighterColor.BLUE,0, 3);
-    myBoardManager.addVictim(5,5,true, false,false);
+    myBoardManager.addVictim(1,1,false, false,true);
     for (int i = 0; i < 4; i++) {
       myBoardManager.endTurnFireSpread(5,5);
     }
@@ -432,7 +432,7 @@ public class BoardScreen extends FlashPointScreen {
     }
     // Point of Interest Rendering
     Image gameUnit;
-    if (tiles[i][j].containsPointOfInterest()) {
+    if (tiles[i][j].hasPointOfInterest()) {
       gameUnit = new Image(new Texture("game_units/POI_Rear.png"));
       if (tiles[i][j].getVictim().isRevealed()) {
         gameUnit = new Image(new Texture("game_units/Victim_1.png"));

@@ -1,12 +1,14 @@
-package com.cs361d.flashpoint.controller;
+package com.cs361d.flashpoint.manager;
 
-import com.cs361d.flashpoint.model.BoardManager;
 import com.cs361d.flashpoint.model.BoardElements.*;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 
 public class FireFighterTurnManager {
+  private final int MAX_NUMBER_OF_PLAYERS = 6;
+
   private final LinkedList<FireFighter> FIREFIGHTERS = new LinkedList<FireFighter>();
   private static FireFighterTurnManager instance =
       new FireFighterTurnManager();
@@ -20,7 +22,7 @@ public class FireFighterTurnManager {
       throw new IllegalArgumentException();
     }
     FIREFIGHTERS.add(f);
-    if (FIREFIGHTERS.size() > 6) {
+    if (FIREFIGHTERS.size() > MAX_NUMBER_OF_PLAYERS) {
       throw new IllegalStateException();
     }
   }
@@ -33,7 +35,7 @@ public class FireFighterTurnManager {
     FireFighter last = FIREFIGHTERS.removeFirst();
     last.resetActionPoints();
     FIREFIGHTERS.addLast(last);
-    BoardManager.getInstance().endTurnFireSpread(0,0);
+    // TODO : BoardManager.getInstance().endTurnFireSpread(0,0);
   }
 
   public void move(Direction d) {
@@ -44,8 +46,8 @@ public class FireFighterTurnManager {
       oldTile.removeFirefighter(f);
       newTile.addFirefighter(f);
       f.setTile(newTile);
-      if (newTile.containsPointOfInterest()) {
-        if (newTile.containsVictim()) {
+      if (newTile.hasPointOfInterest()) {
+        if (newTile.hasRealVictim()) {
           newTile.getVictim().reveal();
         } else {
           newTile.setNullVictim();
@@ -133,9 +135,9 @@ public class FireFighterTurnManager {
     if (!canMove(d)) {
       return false;
     }
-    if (!currentTile.containsVictim()
+    if (!currentTile.hasRealVictim()
         || adjacentTile.hasFire()
-        || adjacentTile.containsPointOfInterest()) {
+        || adjacentTile.hasPointOfInterest()) {
       return false;
     }
     return true;
@@ -164,5 +166,8 @@ public class FireFighterTurnManager {
     t.addFirefighter(f);
   }
 
-  public void knockedDownReapearChoice(FireFighter f, ArrayList<Tile> tiles) {}
+  /*
+  TODO
+   */
+  public void knockedDownReapearChoice(FireFighter f, List<Tile> tiles) {}
 }
