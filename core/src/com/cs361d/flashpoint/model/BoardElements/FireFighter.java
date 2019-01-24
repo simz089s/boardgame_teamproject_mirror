@@ -81,10 +81,10 @@ public class FireFighter {
   }
 
   public boolean chopAP() {
-    if (actionPoints < 1) {
+    if (actionPoints < 2) {
       return false;
     }
-    actionPoints--;
+    actionPoints -= 2;
     return true;
   }
 
