@@ -30,6 +30,10 @@ public class DBHandler {
             "3-3", "4-3", "3-7", "4-7",
             "5-6", "6-6", "5-8", "6-8"
     };
+    private static final String[] TOP_DOOR_TILE_ID = {"1-6", "3-8", "5-4", "7-3"};
+    private static final String[] LEFT_DOOR_TILE_ID = {"1-4", "2-6", "3-1", "3-3", "4-7", "4-9", "6-6", "6-8"};
+
+
 
     public static BoardManager getBFromDB() {
         BoardManager myBoardManager = BoardManager.getInstance();
@@ -75,7 +79,7 @@ public class DBHandler {
 
                 // doors
                 JSONObject topDoorStatus = (JSONObject) object.get("top_wall_door");
-                if (Integer.parseInt("" + topDoorStatus.get("status")) > - 1){
+                if (Integer.parseInt("" + topDoorStatus.get("status")) > -1){
                     if (Integer.parseInt("" + topDoorStatus.get("status")) == 0){
                         myBoardManager.addDoor(i, j, Direction.TOP, 2, false);
                     } else if (Integer.parseInt("" + topDoorStatus.get("status")) == 1){
@@ -84,7 +88,7 @@ public class DBHandler {
                 }
 
                 JSONObject bottomDoorStatus = (JSONObject) object.get("bottom_wall_door");
-                if (Integer.parseInt("" + bottomDoorStatus.get("status")) > - 1){
+                if (Integer.parseInt("" + bottomDoorStatus.get("status")) > -1){
                     if (Integer.parseInt("" + bottomDoorStatus.get("status")) == 0){
                         myBoardManager.addDoor(i, j, Direction.BOTTOM, 2, false);
                     } else if (Integer.parseInt("" + bottomDoorStatus.get("status")) == 1){
@@ -198,23 +202,14 @@ public class DBHandler {
 
                 currentTile.put("position_id", i + "-" + j);
 
-
-                JSONObject doorProperties = new JSONObject();
-                doorProperties.put("health", 2);
-                doorProperties.put("status", -1);
-
-                currentTile.put("top_wall_door", doorProperties);
-                currentTile.put("bottom_wall_door", doorProperties);
-                currentTile.put("left_wall_door", doorProperties);
-                currentTile.put("right_wall_door", doorProperties);
-
-                if (isPresentInArr(TOP_WALL_TILE_ID, i + "-" + j)){
+                // walls
+                if (isPresentInArr(TOP_WALL_TILE_ID, i + "-" + j) && !isPresentInArr(TOP_DOOR_TILE_ID, i + "-" + j)){
                     currentTile.put("top_wall", 2);
                 } else {
                     currentTile.put("top_wall", -1);
                 }
 
-                if (isPresentInArr(LEFT_WALL_TILE_ID, i + "-" + j)){
+                if (isPresentInArr(LEFT_WALL_TILE_ID, i + "-" + j) && !isPresentInArr(LEFT_DOOR_TILE_ID, i + "-" + j)){
                     currentTile.put("left_wall", 2);
                 } else {
                     currentTile.put("left_wall", -1);
@@ -222,6 +217,34 @@ public class DBHandler {
 
                 currentTile.put("bottom_wall", -1);
                 currentTile.put("right_wall", -1);
+
+
+                // doors
+                JSONObject doorProperties = new JSONObject();
+                doorProperties.put("health", 2);
+                doorProperties.put("status", -1);
+
+                if (isPresentInArr(TOP_DOOR_TILE_ID, i + "-" + j)){
+                    JSONObject openedDoorObject = new JSONObject();
+                    openedDoorObject.put("health", 2);
+                    openedDoorObject.put("status", 1);
+                    currentTile.put("top_wall_door", openedDoorObject);
+                } else {
+                    currentTile.put("top_wall_door", doorProperties);
+                }
+
+                if (isPresentInArr(LEFT_DOOR_TILE_ID, i + "-" + j)){
+                    JSONObject openedDoorObject = new JSONObject();
+                    openedDoorObject.put("health", 2);
+                    openedDoorObject.put("status", 1);
+                    currentTile.put("left_wall_door", openedDoorObject);
+                } else {
+                    currentTile.put("left_wall_door", doorProperties);
+                }
+
+                currentTile.put("bottom_wall_door", doorProperties);
+                currentTile.put("right_wall_door", doorProperties);
+
 
                 JSONArray newFirefightersList = new JSONArray();
 
