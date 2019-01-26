@@ -31,7 +31,7 @@ public class BoardManager {
         Tile newTile = new Tile(FireStatus.EMPTY, i, j);
         TILE_MAP[i][j] = newTile;
         Obstacle top = new Obstacle(-1);
-        Obstacle left = new Obstacle(1);
+        Obstacle left = new Obstacle(-1);
         newTile.addObstacle(Direction.TOP, top);
         newTile.addObstacle(Direction.LEFT, left);
 
@@ -48,7 +48,7 @@ public class BoardManager {
          Add wall to the right of the final tile or the bottom of the final tiles
         */
         if (j == WIDTH - 1) {
-          Obstacle right = new Obstacle(1);
+          Obstacle right = new Obstacle(-1);
           newTile.addObstacle(Direction.RIGHT, right);
         }
         if (i == HEIGHT - 1) {
