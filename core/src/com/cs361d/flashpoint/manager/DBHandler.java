@@ -18,6 +18,19 @@ import java.util.Iterator;
 
 public class DBHandler {
 
+    // FAMILY GAME BOARD OBSTACLES PLACEMENT
+    private static final String[] TOP_WALL_TILE_ID = {"1-1", "1-2", "1-3", "1-4", "1-5","1-6", "1-7", "1-8",
+            "7-1", "7-2", "7-3", "7-4", "7-5","7-6", "7-7", "7-8",
+            "3-3", "3-4", "3-5", "3-6", "3-7","3-8",
+            "5-1", "5-2", "5-3", "5-4", "5-5","5-6", "5-7", "5-8"
+    };
+    private static final String[] LEFT_WALL_TILE_ID = {"1-1", "2-1", "3-1", "4-1", "5-1", "6-1",
+            "1-9", "2-9", "3-9", "4-9", "5-9", "6-9",
+            "1-4", "2-4", "1-6", "2-6",
+            "3-3", "4-3", "3-7", "4-7",
+            "5-6", "6-6", "5-8", "6-8"
+    };
+
     public static BoardManager getBFromDB() {
         BoardManager myBoardManager = BoardManager.getInstance();
 
@@ -177,10 +190,13 @@ public class DBHandler {
 
             while (count < 80) {
 
+                int i = count / 10;
+                int j = count % 10;
+
                 // modification here
                 JSONObject currentTile = new JSONObject();
 
-                currentTile.put("position_id", (count / 10) + "-" + (count % 10));
+                currentTile.put("position_id", i + "-" + j);
 
 
                 JSONObject doorProperties = new JSONObject();
@@ -192,9 +208,19 @@ public class DBHandler {
                 currentTile.put("left_wall_door", doorProperties);
                 currentTile.put("right_wall_door", doorProperties);
 
-                currentTile.put("top_wall", -1);
+                if (isPresentInArr(TOP_WALL_TILE_ID, i + "-" + j)){
+                    currentTile.put("top_wall", 2);
+                } else {
+                    currentTile.put("top_wall", -1);
+                }
+
+                if (isPresentInArr(LEFT_WALL_TILE_ID, i + "-" + j)){
+                    currentTile.put("left_wall", 2);
+                } else {
+                    currentTile.put("left_wall", -1);
+                }
+
                 currentTile.put("bottom_wall", -1);
-                currentTile.put("left_wall", -1);
                 currentTile.put("right_wall", -1);
 
                 JSONArray newFirefightersList = new JSONArray();
@@ -275,6 +301,16 @@ public class DBHandler {
         }
         return null;
 
+    }
+
+    private static boolean isPresentInArr(String[] arr, String str){
+        for (int i = 0; i < arr.length; i++){
+            if (arr[i].equals(str)){
+                return true;
+            }
+        }
+
+        return false;
     }
 
 

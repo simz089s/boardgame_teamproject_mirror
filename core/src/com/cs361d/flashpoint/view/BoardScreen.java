@@ -39,6 +39,7 @@ public class BoardScreen extends FlashPointScreen {
 
   TextButton btnExit;
   TextButton btnChat;
+  TextButton btnStat;
 
   // tiles properties
   final int NUMBER_OF_ROWS = BoardManager.HEIGHT;
@@ -69,7 +70,6 @@ public class BoardScreen extends FlashPointScreen {
 
   @Override
   public void show() {
-
 
     BoardManager myBoardManager = DBHandler.getBoardFromDB();
 
@@ -116,6 +116,7 @@ public class BoardScreen extends FlashPointScreen {
 
     createExitButton();
     createChatButton();
+    createStatButton();
     createAPLeftLabel();
     createMovesList();
 
@@ -164,13 +165,22 @@ public class BoardScreen extends FlashPointScreen {
         new ClickListener() {
           @Override
           public void clicked(InputEvent event, float x, float y) {
-            // game.setScreen(game.chatScreen);
+            game.setScreen(game.chatScreen);
           }
         });
+
+    btnStat.addListener(
+            new ClickListener() {
+              @Override
+              public void clicked(InputEvent event, float x, float y) {
+                game.setScreen(game.statsScreen);
+              }
+            });
 
     stage.addActor(scrollPaneMoveOptions);
     stage.addActor(btnExit);
     stage.addActor(btnChat);
+    stage.addActor(btnStat);
     stage.addActor(APLeftTxt);
     stage.addActor(debugLbl);
 
@@ -440,6 +450,15 @@ public class BoardScreen extends FlashPointScreen {
     btnChat.setPosition(
         (Gdx.graphics.getWidth() - btnExit.getWidth() - 8),
         (Gdx.graphics.getHeight() - btnExit.getHeight() - 15 - btnChat.getHeight()));
+  }
+
+  private void createStatButton() {
+    btnStat = new TextButton("Stat", skinUI, "default");
+    btnStat.setWidth(100);
+    btnStat.setHeight(25);
+    btnStat.setPosition(
+            (Gdx.graphics.getWidth() - btnExit.getWidth() - 8),
+            (Gdx.graphics.getHeight() - btnExit.getHeight() - 22 - btnChat.getHeight() - btnStat.getHeight()));
   }
 
   private void createAPLeftLabel() {
