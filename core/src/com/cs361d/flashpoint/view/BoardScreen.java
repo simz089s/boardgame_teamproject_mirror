@@ -55,7 +55,7 @@ public class BoardScreen extends FlashPointScreen {
   Stage stage;
 
   final String[] OPTIONS_ARR = {
-          "MOVE", "EXTINGUISH", "CHOP", "MOVE WITH VICTIM", "END TURN", "SAVE"
+          "MOVE", "EXTINGUISH", "CHOP", "MOVE WITH VICTIM", "INTERACT WITH DOOR", "END TURN", "SAVE"
   };
 
   final String[] DIRECTIONS_ARR = {"UP", "DOWN", "LEFT", "RIGHT", "CANCEL"};
@@ -146,10 +146,15 @@ public class BoardScreen extends FlashPointScreen {
           createDirectionList(OPTIONS_ARR[indexSelected]);
           stage.addActor(scrollPaneMoveDirections);
 
+        } else if (OPTIONS_ARR[indexSelected].equals("INTERACT WITH DOOR")) {
+          clearDirectionsScrollPane();
+          createDirectionList(OPTIONS_ARR[indexSelected]);
+          stage.addActor(scrollPaneMoveDirections);
+
         } else if (OPTIONS_ARR[indexSelected].equals("END TURN")) {
-//          clearAllGameUnits();
-//          fireFighterTurnManager.endTurn();
-//          redrawGameUnitsOnTile();
+          clearAllGameUnits();
+          fireFighterTurnManager.endTurn();
+          redrawGameUnitsOnTile();
         }  else if (OPTIONS_ARR[indexSelected].equals("SAVE")) {
 
 
@@ -564,6 +569,10 @@ public class BoardScreen extends FlashPointScreen {
             clearAllGameUnits();
             fireFighterTurnManager.moveWithVictim(Direction.TOP);
             redrawGameUnitsOnTile();
+          } else if (move.equals("INTERACT WITH DOOR")){
+            clearAllGameUnits();
+            fireFighterTurnManager.interactWithDoor(Direction.TOP);
+            redrawGameUnitsOnTile();
           }
 
         } else if (DIRECTIONS_ARR[indexSelected].equals("DOWN")) {
@@ -583,6 +592,10 @@ public class BoardScreen extends FlashPointScreen {
             clearAllGameUnits();
             fireFighterTurnManager.moveWithVictim(Direction.BOTTOM);
             redrawGameUnitsOnTile();
+          } else if (move.equals("INTERACT WITH DOOR")){
+            clearAllGameUnits();
+            fireFighterTurnManager.interactWithDoor(Direction.BOTTOM);
+            redrawGameUnitsOnTile();
           }
         } else if (DIRECTIONS_ARR[indexSelected].equals("LEFT")) {
           if (move.equals("MOVE")){
@@ -600,6 +613,10 @@ public class BoardScreen extends FlashPointScreen {
           } else if (move.equals("MOVE WITH VICTIM")){
             clearAllGameUnits();
             fireFighterTurnManager.moveWithVictim(Direction.LEFT);
+            redrawGameUnitsOnTile();
+          } else if (move.equals("INTERACT WITH DOOR")){
+            clearAllGameUnits();
+            fireFighterTurnManager.interactWithDoor(Direction.LEFT);
             redrawGameUnitsOnTile();
           }
 
@@ -620,6 +637,10 @@ public class BoardScreen extends FlashPointScreen {
           } else if (move.equals("MOVE WITH VICTIM")){
             clearAllGameUnits();
             fireFighterTurnManager.moveWithVictim(Direction.RIGHT);
+            redrawGameUnitsOnTile();
+          } else if (move.equals("INTERACT WITH DOOR")){
+            clearAllGameUnits();
+            fireFighterTurnManager.interactWithDoor(Direction.RIGHT);
             redrawGameUnitsOnTile();
           }
 
