@@ -105,7 +105,9 @@ public class BoardManager {
   }
 
   // Spread the fire at the end of the turn
-  public void endTurnFireSpread(int i, int j) {
+  public void endTurnFireSpread() {
+    int i = 1+(int) (Math.random()*(HEIGHT-3));
+    int j = 1+(int) (Math.random()*(WIDTH-3));
     Tile hitLocation = TILE_MAP[i][j];
     if (hitLocation.hasNoFireAndNoSmoke()) {
       hitLocation.setFireStatus(FireStatus.SMOKE);
@@ -386,8 +388,14 @@ public class BoardManager {
   }
 
   public void verifyVictimRescueStatus(Tile t) {
-    if (t.canContainAmbulance() && t.hasRealVictim()) {
-      numVictimSaved++;
+    int i = t.getI();
+    int j = t.getJ();
+    if (i == 0 || i == HEIGHT-1 || j == 0 || j == WIDTH-1 ) {
+      if (t.hasRealVictim()) {
+        numVictimSaved++;
+        t.setNullVictim();
+        // TODO Place a new vicitm on the board hear
+      }
     }
     if (numVictimSaved >= NUM_VICTIM_SAVED_TO_WIN) {
       // TODO

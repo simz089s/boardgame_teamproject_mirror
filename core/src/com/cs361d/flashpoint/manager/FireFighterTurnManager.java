@@ -35,7 +35,7 @@ public class FireFighterTurnManager {
     FireFighter last = FIREFIGHTERS.removeFirst();
     last.resetActionPoints();
     FIREFIGHTERS.addLast(last);
-    // TODO : BoardManager.getInstance().endTurnFireSpread(0,0);
+    BoardManager.getInstance().endTurnFireSpread();
   }
 
   public void move(Direction d) {
