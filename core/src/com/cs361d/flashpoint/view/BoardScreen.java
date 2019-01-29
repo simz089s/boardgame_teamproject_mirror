@@ -70,7 +70,6 @@ public class BoardScreen extends FlashPointScreen {
   public void show() {
 
     final BoardManager myBoardManager = DBHandler.getBoardFromDB();
-    myBoardManager.addFireFighter(0,0, FireFighterColor.BLUE, 0,4);
     debugLbl.setPosition(10, 10);
     debugLbl.setColor(Color.PURPLE);
 
