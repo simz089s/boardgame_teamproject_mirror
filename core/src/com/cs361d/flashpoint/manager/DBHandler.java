@@ -18,6 +18,8 @@ import java.util.Iterator;
 
 public class DBHandler {
 
+    private static final String TILE_DB_FILENAME = "db/tiles.json";
+
     // FAMILY GAME BOARD OBSTACLES PLACEMENT
     private static final String[] TOP_WALL_TILE_ID = {"1-1", "1-2", "1-3", "1-4", "1-5","1-6", "1-7", "1-8",
             "7-1", "7-2", "7-3", "7-4", "7-5","7-6", "7-7", "7-8",
@@ -33,24 +35,7 @@ public class DBHandler {
     private static final String[] TOP_DOOR_TILE_ID = {"1-6", "3-8", "5-4", "7-3"};
     private static final String[] LEFT_DOOR_TILE_ID = {"1-4", "2-6", "3-1", "3-3", "4-7", "4-9", "6-6", "6-8"};
 
-
-
-    public static BoardManager getBFromDB() {
-        BoardManager myBoardManager = BoardManager.getInstance();
-
-        //    myBoardManager.addDoor(0,0, Direction.TOP, 1, false);
-        myBoardManager.addDoor(5, 5, Direction.BOTTOM, 1, true);
-        myBoardManager.addDoor(5, 5, Direction.LEFT, 1, true);
-        // myBoardManager.addFireStatus(1, 1, FireStatus.FIRE);
-        myBoardManager.addFireStatus(2, 0, FireStatus.SMOKE);
-        myBoardManager.addDoor(1, 0, Direction.RIGHT, 1, true);
-        myBoardManager.addFireFighter(1, 0, FireFighterColor.BLUE,0, 3);
-        myBoardManager.addVictim(1,1,false, false,true);
-
-        return myBoardManager;
-    }
-
-    // load the state of the game
+    // load the board from DB
     public static BoardManager getBoardFromDB() {
         BoardManager myBoardManager = BoardManager.getInstance();
 
@@ -58,7 +43,7 @@ public class DBHandler {
 
         try {
 
-            Object obj = parser.parse(new FileReader("db/tiles2.json"));
+            Object obj = parser.parse(new FileReader(TILE_DB_FILENAME));
 
             JSONObject jsonObject = (JSONObject) obj;
 
@@ -178,12 +163,142 @@ public class DBHandler {
         return myBoardManager;
     }
 
+    // save board to DB
+    public static void saveBoardToDB (BoardManager boardManager){
+
+
+        JSONObject newObj = new JSONObject();
+        JSONArray newTilesList = new JSONArray();
+
+        JSONParser parser = new JSONParser();
+
+        try {
+
+            Object obj = parser.parse(new FileReader(TILE_DB_FILENAME));
+            JSONObject jsonObject = (JSONObject) obj;
+            int count = 0;
+
+            JSONArray tilesArr = (JSONArray) jsonObject.get("tiles");
+            Iterator<JSONObject> iterator = tilesArr.iterator();
+            while (iterator.hasNext()) {
+
+                JSONObject currentTile = (JSONObject) iterator.next();
+                int i = count / 10;
+                int j = count % 10;
+
+                // walls
+                currentTile.put("top_wall", boardManager.getTiles()[i][j].getObstacle(Direction.TOP).getHealth());
+                currentTile.put("bottom_wall", boardManager.getTiles()[i][j].getObstacle(Direction.BOTTOM).getHealth());
+                currentTile.put("left_wall", boardManager.getTiles()[i][j].getObstacle(Direction.LEFT).getHealth());
+                currentTile.put("right_wall", boardManager.getTiles()[i][j].getObstacle(Direction.RIGHT).getHealth());
+
+                // firefighters
+                JSONArray newFirefightersList = new JSONArray();
+                if (boardManager.getTiles()[i][j].getFirefighters() != null) {
+                    for (FireFighter f : boardManager.getTiles()[i][j].getFirefighters()) {
+                        newFirefightersList.add(f.getColor());
+                    }
+                }
+
+                currentTile.put("firefighters", newFirefightersList);
+
+                // POI
+                if (boardManager.getTiles()[i][j].hasPointOfInterest()){
+                    if (boardManager.getTiles()[i][j].getVictim().isFalseAlarm()){
+                        currentTile.put("POI", 0);
+                    } else if (!boardManager.getTiles()[i][j].getVictim().isFalseAlarm()){
+                        currentTile.put("POI", 1);
+                    }
+                }
+
+                // fire_status
+                if (boardManager.getTiles()[i][j].hasFire()){
+                    currentTile.put("fire_status", "fire");
+                } else if (boardManager.getTiles()[i][j].hasSmoke()){
+                    currentTile.put("fire_status", "smoke");
+                } else {
+                    currentTile.put("fire_status", "none");
+                }
+
+                // top door
+                JSONObject topDoorObject = new JSONObject();
+                if (boardManager.getTiles()[i][j].getObstacle(Direction.TOP).isDoor()){
+                    topDoorObject.put("health", boardManager.getTiles()[i][j].getObstacle(Direction.TOP).getHealth());
+                    int status = boardManager.getTiles()[i][j].getObstacle(Direction.TOP).isOpen() ? 1 : 0;
+                    topDoorObject.put("status", status);
+                } else {
+                    topDoorObject.put("health", 2);
+                    topDoorObject.put("status", -1);
+                }
+
+                currentTile.put("top_wall_door", topDoorObject);
+
+                // bottom door
+                JSONObject bottomDoorObject = new JSONObject();
+                if (boardManager.getTiles()[i][j].getObstacle(Direction.BOTTOM).isDoor()){
+                    bottomDoorObject.put("health", boardManager.getTiles()[i][j].getObstacle(Direction.BOTTOM).getHealth());
+                    int status = boardManager.getTiles()[i][j].getObstacle(Direction.BOTTOM).isOpen() ? 1 : 0;
+                    bottomDoorObject.put("status", status);
+                } else {
+                    bottomDoorObject.put("health", 2);
+                    bottomDoorObject.put("status", -1);
+                }
+
+                currentTile.put("bottom_wall_door", topDoorObject);
+
+                // left door
+                JSONObject leftDoorObject = new JSONObject();
+                if (boardManager.getTiles()[i][j].getObstacle(Direction.LEFT).isDoor()){
+                    leftDoorObject.put("health", boardManager.getTiles()[i][j].getObstacle(Direction.LEFT).getHealth());
+                    int status = boardManager.getTiles()[i][j].getObstacle(Direction.LEFT).isOpen() ? 1 : 0;
+                    leftDoorObject.put("status", status);
+                } else {
+                    leftDoorObject.put("health", 2);
+                    leftDoorObject.put("status", -1);
+                }
+
+                currentTile.put("left_wall_door", topDoorObject);
+
+                // right door
+                JSONObject rightDoorObject = new JSONObject();
+                if (boardManager.getTiles()[i][j].getObstacle(Direction.RIGHT).isDoor()){
+                    rightDoorObject.put("health", boardManager.getTiles()[i][j].getObstacle(Direction.RIGHT).getHealth());
+                    int status = boardManager.getTiles()[i][j].getObstacle(Direction.RIGHT).isOpen() ? 1 : 0;
+                    rightDoorObject.put("status", status);
+                } else {
+                    rightDoorObject.put("health", 2);
+                    rightDoorObject.put("status", -1);
+                }
+
+                currentTile.put("right_wall_door", topDoorObject);
+
+                newTilesList.add(currentTile);
+                count ++;
+
+            }
+
+            newObj.put("tiles", newTilesList);
+
+            // use "db/tiles2.json" for test
+            FileWriter file = new FileWriter("db/tiles.json");
+            file.write(newObj.toJSONString());
+            file.flush();
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+    }
+
     // create a JSON file to save the Tiles
     // walls: [no wall = -1; wall full health = 2; wall one damage = 1; damaged wall = 0]
     // doors: [no door = -1; close = 0; open = 1]
-    // POI: [no POI = -1; victim = 1; false alarm = 1]
+    // POI: [no POI = -1; false alarm = 0; victim = 1]
     // fire status: "none", "smoke", "fire"
-    public static void createTilesDB (){
+    public static void createTilesDBFamilyVersion (){
 
         JSONObject newObj = new JSONObject();
         JSONArray newTilesList = new JSONArray();
@@ -262,7 +377,7 @@ public class DBHandler {
             newObj.put("tiles", newTilesList);
 
             // use "db/tiles2.json" for test
-            FileWriter file = new FileWriter("db/tiles2.json");
+            FileWriter file = new FileWriter(TILE_DB_FILENAME);
             file.write(newObj.toJSONString());
             file.flush();
 

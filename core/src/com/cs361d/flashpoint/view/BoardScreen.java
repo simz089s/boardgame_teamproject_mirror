@@ -23,7 +23,7 @@ public class BoardScreen extends FlashPointScreen {
   Texture txtrBG;
   Sprite spriteBG;
 
-  Label APLeftTxt;
+  Label gameInfoLabel;
 
   ScrollPane scrollPaneMoveOptions;
   ScrollPane.ScrollPaneStyle scrollStyle;
@@ -54,11 +54,9 @@ public class BoardScreen extends FlashPointScreen {
   FireFighterTurnManager fireFighterTurnManager = FireFighterTurnManager.getInstance();
   Stage stage;
 
-  final String[] OPTIONS_ARR = {
+  final String[] MOVES_ARR = {
           "MOVE", "EXTINGUISH", "CHOP", "MOVE WITH VICTIM", "INTERACT WITH DOOR", "END TURN", "SAVE"
   };
-
-  final String[] DIRECTIONS_ARR = {"UP", "DOWN", "LEFT", "RIGHT", "CANCEL"};
 
   // reference to game units images
   ArrayList<Image> gameUnits = new ArrayList<Image>();
@@ -71,7 +69,7 @@ public class BoardScreen extends FlashPointScreen {
   @Override
   public void show() {
 
-    BoardManager myBoardManager = DBHandler.getBoardFromDB();
+    final BoardManager myBoardManager = DBHandler.getBoardFromDB();
     myBoardManager.addFireFighter(0,0, FireFighterColor.BLUE, 0,4);
     debugLbl.setPosition(10, 10);
     debugLbl.setColor(Color.PURPLE);
@@ -84,7 +82,7 @@ public class BoardScreen extends FlashPointScreen {
     spriteBG = new Sprite(txtrBG);
     spriteBG.setScale(0.6f);
     spriteBG.setPosition(
-        -(Gdx.graphics.getWidth() / 2f) - 125, -(Gdx.graphics.getHeight() / 2f) + 30);
+            -(Gdx.graphics.getWidth() / 2f) - 125, -(Gdx.graphics.getHeight() / 2f) + 30);
 
     float curYPos = Gdx.graphics.getHeight();
 
@@ -122,38 +120,39 @@ public class BoardScreen extends FlashPointScreen {
 
         int indexSelected = lstMoveOptions.getSelectedIndex();
 
-        if (OPTIONS_ARR[indexSelected].equals("MOVE")) {
+        if (MOVES_ARR[indexSelected].equals("MOVE")) {
           clearDirectionsScrollPane();
-          createDirectionList(OPTIONS_ARR[indexSelected]);
+          createDirectionList(MOVES_ARR[indexSelected]);
           stage.addActor(scrollPaneMoveDirections);
 
-        } else if (OPTIONS_ARR[indexSelected].equals("EXTINGUISH")) {
+        } else if (MOVES_ARR[indexSelected].equals("EXTINGUISH")) {
           clearDirectionsScrollPane();
-          createDirectionList(OPTIONS_ARR[indexSelected]);
+          createDirectionList(MOVES_ARR[indexSelected]);
           stage.addActor(scrollPaneMoveDirections);
 
-        } else if (OPTIONS_ARR[indexSelected].equals("CHOP")) {
+        } else if (MOVES_ARR[indexSelected].equals("CHOP")) {
           clearDirectionsScrollPane();
-          createDirectionList(OPTIONS_ARR[indexSelected]);
+          createDirectionList(MOVES_ARR[indexSelected]);
           stage.addActor(scrollPaneMoveDirections);
 
-        } else if (OPTIONS_ARR[indexSelected].equals("MOVE WITH VICTIM")) {
+        } else if (MOVES_ARR[indexSelected].equals("MOVE WITH VICTIM")) {
           clearDirectionsScrollPane();
-          createDirectionList(OPTIONS_ARR[indexSelected]);
+          createDirectionList(MOVES_ARR[indexSelected]);
           stage.addActor(scrollPaneMoveDirections);
 
-        } else if (OPTIONS_ARR[indexSelected].equals("INTERACT WITH DOOR")) {
+        } else if (MOVES_ARR[indexSelected].equals("INTERACT WITH DOOR")) {
           clearDirectionsScrollPane();
-          createDirectionList(OPTIONS_ARR[indexSelected]);
+          createDirectionList(MOVES_ARR[indexSelected]);
           stage.addActor(scrollPaneMoveDirections);
 
-        } else if (OPTIONS_ARR[indexSelected].equals("END TURN")) {
+        } else if (MOVES_ARR[indexSelected].equals("END TURN")) {
           clearAllGameUnits();
           fireFighterTurnManager.endTurn();
           redrawGameUnitsOnTile();
-        }  else if (OPTIONS_ARR[indexSelected].equals("SAVE")) {
+          updateGameInfoLabel();
 
-
+        }  else if (MOVES_ARR[indexSelected].equals("SAVE")) {
+          //DBHandler.saveBoardToDB(myBoardManager); // TO DO
         }  else {
           debugLbl.setText("failed action");
         }
@@ -164,20 +163,20 @@ public class BoardScreen extends FlashPointScreen {
 
     // button listeners
     btnExit.addListener(
-        new ClickListener() {
-          @Override
-          public void clicked(InputEvent event, float x, float y) {
-            game.setScreen(game.lobbyScreen);
-          }
-        });
+            new ClickListener() {
+              @Override
+              public void clicked(InputEvent event, float x, float y) {
+                game.setScreen(game.lobbyScreen);
+              }
+            });
 
     btnChat.addListener(
-        new ClickListener() {
-          @Override
-          public void clicked(InputEvent event, float x, float y) {
-            game.setScreen(game.chatScreen);
-          }
-        });
+            new ClickListener() {
+              @Override
+              public void clicked(InputEvent event, float x, float y) {
+                game.setScreen(game.chatScreen);
+              }
+            });
 
     btnStat.addListener(
             new ClickListener() {
@@ -191,7 +190,7 @@ public class BoardScreen extends FlashPointScreen {
     stage.addActor(btnExit);
     stage.addActor(btnChat);
     stage.addActor(btnStat);
-    stage.addActor(APLeftTxt);
+    stage.addActor(gameInfoLabel);
     stage.addActor(debugLbl);
 
     Gdx.input.setInputProcessor(stage);
@@ -263,28 +262,28 @@ public class BoardScreen extends FlashPointScreen {
       switch (d) {
         case TOP:
           gameUnit.setPosition(
-              myTile.getX() + myTile.getWidth() / 2 - gameUnit.getHeight() / 2,
-              myTile.getY() + myTile.getHeight() - gameUnit.getHeight() / 2);
+                  myTile.getX() + myTile.getWidth() / 2 - gameUnit.getHeight() / 2,
+                  myTile.getY() + myTile.getHeight() - gameUnit.getHeight() / 2);
 
           break;
 
         case BOTTOM:
           gameUnit.setPosition(
-              myTile.getX() + myTile.getWidth() / 2 - gameUnit.getHeight() / 2,
-              myTile.getY() - gameUnit.getHeight() / 2);
+                  myTile.getX() + myTile.getWidth() / 2 - gameUnit.getHeight() / 2,
+                  myTile.getY() - gameUnit.getHeight() / 2);
           break;
 
         case LEFT:
           gameUnit.setPosition(
-              myTile.getX() - gameUnit.getWidth() / 2,
-              myTile.getY() + myTile.getHeight() / 2 - gameUnit.getHeight() / 2);
+                  myTile.getX() - gameUnit.getWidth() / 2,
+                  myTile.getY() + myTile.getHeight() / 2 - gameUnit.getHeight() / 2);
 
           break;
 
         case RIGHT:
           gameUnit.setPosition(
-              myTile.getX() + myTile.getWidth() - gameUnit.getWidth() / 2,
-              myTile.getY() + myTile.getHeight() / 2 - gameUnit.getHeight() / 2);
+                  myTile.getX() + myTile.getWidth() - gameUnit.getWidth() / 2,
+                  myTile.getY() + myTile.getHeight() / 2 - gameUnit.getHeight() / 2);
           break;
         default:
           throw new IllegalArgumentException("That argument does not exist");
@@ -329,8 +328,8 @@ public class BoardScreen extends FlashPointScreen {
           gameUnit.setHeight(TILE_SIZE);
           gameUnit.setWidth(WALL_THICKNESS);
           gameUnit.setPosition(
-              myTile.getX() - WALL_THICKNESS,
-              myTile.getY());
+                  myTile.getX() - WALL_THICKNESS,
+                  myTile.getY());
 
           break;
 
@@ -345,8 +344,8 @@ public class BoardScreen extends FlashPointScreen {
           gameUnit.setHeight(TILE_SIZE);
           gameUnit.setWidth(WALL_THICKNESS);
           gameUnit.setPosition(
-              myTile.getX() + myTile.getWidth(),
-              myTile.getY());
+                  myTile.getX() + myTile.getWidth(),
+                  myTile.getY());
           break;
         default:
           throw new IllegalArgumentException("That argument does not exist");
@@ -399,7 +398,7 @@ public class BoardScreen extends FlashPointScreen {
             break;
           default:
             throw new IllegalArgumentException(
-                "FireFighter color " + f.getColor() + " does not exists");
+                    "FireFighter color " + f.getColor() + " does not exists");
         }
         gameUnit.setHeight(30);
         gameUnit.setWidth(30);
@@ -419,7 +418,7 @@ public class BoardScreen extends FlashPointScreen {
       gameUnit.setHeight(30);
       gameUnit.setWidth(30);
       gameUnit.setPosition(
-          myTile.getX() + myTile.getHeight() / 2, myTile.getY() + myTile.getHeight() / 2);
+              myTile.getX() + myTile.getHeight() / 2, myTile.getY() + myTile.getHeight() / 2);
       gameUnits.add(gameUnit);
       stage.addActor(gameUnit);
     }
@@ -449,8 +448,8 @@ public class BoardScreen extends FlashPointScreen {
     btnExit.setWidth(100);
     btnExit.setHeight(25);
     btnExit.setPosition(
-        (Gdx.graphics.getWidth() - btnExit.getWidth() - 8),
-        (Gdx.graphics.getHeight() - btnExit.getHeight() - 8));
+            (Gdx.graphics.getWidth() - btnExit.getWidth() - 8),
+            (Gdx.graphics.getHeight() - btnExit.getHeight() - 8));
   }
 
   private void createChatButton() {
@@ -458,8 +457,8 @@ public class BoardScreen extends FlashPointScreen {
     btnChat.setWidth(100);
     btnChat.setHeight(25);
     btnChat.setPosition(
-        (Gdx.graphics.getWidth() - btnExit.getWidth() - 8),
-        (Gdx.graphics.getHeight() - btnExit.getHeight() - 15 - btnChat.getHeight()));
+            (Gdx.graphics.getWidth() - btnExit.getWidth() - 8),
+            (Gdx.graphics.getHeight() - btnExit.getHeight() - 15 - btnChat.getHeight()));
   }
 
   private void createStatButton() {
@@ -473,11 +472,12 @@ public class BoardScreen extends FlashPointScreen {
 
   private void createAPLeftLabel() {
     int numAP = fireFighterTurnManager.getCurrentFireFighter().getActionPointsLeft();
-    APLeftTxt = new Label("AP LEFT: " + numAP, skinUI);
-    APLeftTxt.setPosition(
+    FireFighterColor color = fireFighterTurnManager.getCurrentFireFighter().getColor();
+    gameInfoLabel = new Label("AP LEFT: " + numAP + "\nCurrent firefighter's turn: " + color, skinUI);
+    gameInfoLabel.setPosition(
             850,
             Gdx.graphics.getHeight() - 100);
-    APLeftTxt.setColor(Color.BLACK);
+    gameInfoLabel.setColor(Color.BLACK);
   }
 
   private void createMovesList() {
@@ -489,7 +489,7 @@ public class BoardScreen extends FlashPointScreen {
     listStyleMoveOptions.selection = TextureLoader.getDrawable(50, 100, Color.SKY );
 
     lstMoveOptions = new List<String>(listStyleMoveOptions);
-    lstMoveOptions.setItems(OPTIONS_ARR);
+    lstMoveOptions.setItems(MOVES_ARR);
 
     // scrollPane style
     scrollStyle = new ScrollPane.ScrollPaneStyle();
@@ -512,6 +512,8 @@ public class BoardScreen extends FlashPointScreen {
 
   private void createDirectionList(String moveSelected){
 
+    final String MOVE = moveSelected;
+
     // list style
     listStyleDirections = new List.ListStyle();
     listStyleDirections.font = Font.get(25); // font size
@@ -520,7 +522,7 @@ public class BoardScreen extends FlashPointScreen {
     listStyleDirections.selection = TextureLoader.getDrawable(50, 100, Color.YELLOW);
 
     lstMoveDirections = new List<String>(listStyleDirections);
-    lstMoveDirections.setItems(DIRECTIONS_ARR);
+    lstMoveDirections.setItems(getDirectionArrForDisplay(MOVE));
 
     // scrollPane style
     scrollStyleDirections = new ScrollPane.ScrollPaneStyle();
@@ -539,113 +541,25 @@ public class BoardScreen extends FlashPointScreen {
             850,
             Gdx.graphics.getHeight() - scrollPaneMoveDirections.getHeight() - 400);
 
-
-    final String move = moveSelected;
-
     lstMoveDirections.addListener(new InputListener() {
       @Override
       public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
 
-        int indexSelected = lstMoveDirections.getSelectedIndex();
-
-        if (DIRECTIONS_ARR[indexSelected].equals("UP")) {
-          if (move.equals("MOVE")){
-            clearAllGameUnits();
-            fireFighterTurnManager.move(Direction.TOP);
-            redrawGameUnitsOnTile();
-          } else if (move.equals("EXTINGUISH")){
-            clearAllGameUnits();
-            fireFighterTurnManager.extinguishFire(Direction.TOP);
-            redrawGameUnitsOnTile();
-          } else if (move.equals("CHOP")){
-            clearAllGameUnits();
-            fireFighterTurnManager.chopWall(Direction.TOP);
-            redrawGameUnitsOnTile();
-          } else if (move.equals("MOVE WITH VICTIM")){
-            clearAllGameUnits();
-            fireFighterTurnManager.moveWithVictim(Direction.TOP);
-            redrawGameUnitsOnTile();
-          } else if (move.equals("INTERACT WITH DOOR")){
-            clearAllGameUnits();
-            fireFighterTurnManager.interactWithDoor(Direction.TOP);
-            redrawGameUnitsOnTile();
-          }
-
-        } else if (DIRECTIONS_ARR[indexSelected].equals("DOWN")) {
-          if (move.equals("MOVE")){
-            clearAllGameUnits();
-            fireFighterTurnManager.move(Direction.BOTTOM);
-            redrawGameUnitsOnTile();
-          } else if (move.equals("EXTINGUISH")){
-            clearAllGameUnits();
-            fireFighterTurnManager.extinguishFire(Direction.BOTTOM);
-            redrawGameUnitsOnTile();
-          } else if (move.equals("CHOP")){
-            clearAllGameUnits();
-            fireFighterTurnManager.chopWall(Direction.BOTTOM);
-            redrawGameUnitsOnTile();
-          } else if (move.equals("MOVE WITH VICTIM")){
-            clearAllGameUnits();
-            fireFighterTurnManager.moveWithVictim(Direction.BOTTOM);
-            redrawGameUnitsOnTile();
-          } else if (move.equals("INTERACT WITH DOOR")){
-            clearAllGameUnits();
-            fireFighterTurnManager.interactWithDoor(Direction.BOTTOM);
-            redrawGameUnitsOnTile();
-          }
-        } else if (DIRECTIONS_ARR[indexSelected].equals("LEFT")) {
-          if (move.equals("MOVE")){
-            clearAllGameUnits();
-            fireFighterTurnManager.move(Direction.LEFT);
-            redrawGameUnitsOnTile();
-          } else if (move.equals("EXTINGUISH")){
-            clearAllGameUnits();
-            fireFighterTurnManager.extinguishFire(Direction.LEFT);
-            redrawGameUnitsOnTile();
-          } else if (move.equals("CHOP")){
-            clearAllGameUnits();
-            fireFighterTurnManager.chopWall(Direction.LEFT);
-            redrawGameUnitsOnTile();
-          } else if (move.equals("MOVE WITH VICTIM")){
-            clearAllGameUnits();
-            fireFighterTurnManager.moveWithVictim(Direction.LEFT);
-            redrawGameUnitsOnTile();
-          } else if (move.equals("INTERACT WITH DOOR")){
-            clearAllGameUnits();
-            fireFighterTurnManager.interactWithDoor(Direction.LEFT);
-            redrawGameUnitsOnTile();
-          }
-
-        } else if (DIRECTIONS_ARR[indexSelected].equals("RIGHT")) {
-          if (move.equals("MOVE")){
-            clearAllGameUnits();
-            fireFighterTurnManager.move(Direction.RIGHT);
-            redrawGameUnitsOnTile();
-          } else if (move.equals("EXTINGUISH")){
-            clearAllGameUnits();
-            fireFighterTurnManager.extinguishFire(Direction.RIGHT);
-            redrawGameUnitsOnTile();
-
-          } else if (move.equals("CHOP")){
-            clearAllGameUnits();
-            fireFighterTurnManager.chopWall(Direction.RIGHT);
-            redrawGameUnitsOnTile();
-          } else if (move.equals("MOVE WITH VICTIM")){
-            clearAllGameUnits();
-            fireFighterTurnManager.moveWithVictim(Direction.RIGHT);
-            redrawGameUnitsOnTile();
-          } else if (move.equals("INTERACT WITH DOOR")){
-            clearAllGameUnits();
-            fireFighterTurnManager.interactWithDoor(Direction.RIGHT);
-            redrawGameUnitsOnTile();
-          }
-
-        } else if (DIRECTIONS_ARR[indexSelected].equals("CANCEL")){
+        if (lstMoveDirections.getSelected().equals("CURRENT TILE")) {
+          performDirectionMove(MOVE, Direction.NODIRECTION);
+        } else if (lstMoveDirections.getSelected().equals("UP")){
+          performDirectionMove(MOVE, Direction.TOP);
+        } else if (lstMoveDirections.getSelected().equals("DOWN")) {
+          performDirectionMove(MOVE, Direction.BOTTOM);
+        } else if (lstMoveDirections.getSelected().equals("LEFT")) {
+          performDirectionMove(MOVE, Direction.LEFT);
+        } else if (lstMoveDirections.getSelected().equals("RIGHT")) {
+          performDirectionMove(MOVE, Direction.RIGHT);
+        } else if (lstMoveDirections.getSelected().equals("CANCEL")){
 
         }
 
-        APLeftTxt.setText("AP LEFT: " + fireFighterTurnManager.getCurrentFireFighter().getActionPointsLeft());
-
+        updateGameInfoLabel();
         scrollPaneMoveDirections.remove();
 
         return true;
@@ -653,6 +567,30 @@ public class BoardScreen extends FlashPointScreen {
     });
 
     directionsList.add(scrollPaneMoveDirections);
+  }
+
+  private void performDirectionMove(String move, Direction direction){
+    if (move.equals("MOVE")){
+      clearAllGameUnits();
+      fireFighterTurnManager.move(direction);
+      redrawGameUnitsOnTile();
+    } else if (move.equals("EXTINGUISH")){
+      clearAllGameUnits();
+      fireFighterTurnManager.extinguishFire(direction);
+      redrawGameUnitsOnTile();
+    } else if (move.equals("CHOP")){
+      clearAllGameUnits();
+      fireFighterTurnManager.chopWall(direction);
+      redrawGameUnitsOnTile();
+    } else if (move.equals("MOVE WITH VICTIM")){
+      clearAllGameUnits();
+      fireFighterTurnManager.moveWithVictim(direction);
+      redrawGameUnitsOnTile();
+    } else if (move.equals("INTERACT WITH DOOR")){
+      clearAllGameUnits();
+      fireFighterTurnManager.interactWithDoor(direction);
+      redrawGameUnitsOnTile();
+    }
   }
 
   private void clearAllGameUnits() {
@@ -668,6 +606,22 @@ public class BoardScreen extends FlashPointScreen {
       directionsList.get(i).remove();
     }
     directionsList.clear();
+  }
+
+  private void updateGameInfoLabel(){
+    int APLeft = fireFighterTurnManager.getCurrentFireFighter().getActionPointsLeft();
+    FireFighterColor color = fireFighterTurnManager.getCurrentFireFighter().getColor();
+    gameInfoLabel.setText("AP LEFT: " + APLeft + "\nCurrent firefighter's turn: " + color);
+  }
+
+  private String[] getDirectionArrForDisplay(String move){
+    String[] directionArr = {"UP", "DOWN", "LEFT", "RIGHT", "CANCEL"};
+    if (move.equals("EXTINGUISH")){
+      String[] extinguishDirArr = {"CURRENT TILE", "UP", "DOWN", "LEFT", "RIGHT", "CANCEL"};
+      return extinguishDirArr;
+    } else{
+      return directionArr;
+    }
   }
 
   //  private void createDialog(String message){

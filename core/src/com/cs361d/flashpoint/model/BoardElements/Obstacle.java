@@ -31,9 +31,11 @@ public class Obstacle {
   public boolean isDestroyed() {
     return this.health <= 0;
   }
-    public int getHealth() {
+
+  public int getHealth() {
       return health;
     }
+
   public boolean applyDamage() {
     if (isDestroyed()) {
       return false;
