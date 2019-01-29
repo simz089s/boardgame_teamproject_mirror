@@ -298,7 +298,9 @@ public class DBHandler {
     // doors: [no door = -1; close = 0; open = 1]
     // POI: [no POI = -1; false alarm = 0; victim = 1]
     // fire status: "none", "smoke", "fire"
-    public static void createTilesDBFamilyVersion (){
+
+    // TO RESET THE BOARD: call this right after show() method declaration in BoardScreen.java
+    public static void createBoardDBFamilyVersion (){
 
         JSONObject newObj = new JSONObject();
         JSONArray newTilesList = new JSONArray();
@@ -362,6 +364,16 @@ public class DBHandler {
 
 
                 JSONArray newFirefightersList = new JSONArray();
+
+                // start with a firefighter at position 1-1
+                if (i == 1 && j == 1){
+                    newFirefightersList.add("RED");
+                }
+
+                // another firefighter at position 5-5
+                if (i == 5 && j == 5){
+                    newFirefightersList.add("BLUE");
+                }
 
                 currentTile.put("firefighters", newFirefightersList);
 

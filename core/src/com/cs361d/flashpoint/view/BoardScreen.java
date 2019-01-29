@@ -69,6 +69,8 @@ public class BoardScreen extends FlashPointScreen {
   @Override
   public void show() {
 
+    //DBHandler.createBoardDBFamilyVersion();
+
     final BoardManager myBoardManager = DBHandler.getBoardFromDB();
 
     debugLbl.setPosition(10, 10);
