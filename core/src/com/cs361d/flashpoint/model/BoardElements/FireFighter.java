@@ -31,6 +31,7 @@ public class FireFighter {
     }
     else {
       f = new FireFighter(color, actionPoints);
+      FIREFIGHTERS.put(color, f);
     }
     return f;
   }
