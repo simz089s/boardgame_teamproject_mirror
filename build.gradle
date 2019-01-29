@@ -63,6 +63,9 @@ project(":core") {
         compile "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
         compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
         compile group: 'com.googlecode.json-simple', name: 'json-simple', version: '1.1'
+        
+        // Networking library KryoNet
+        compile "com.esotericsoftware:kryonet:2.22.0-RC1"
     }
 }
 
