@@ -70,7 +70,7 @@ public class BoardScreen extends FlashPointScreen {
   public void show() {
 
     final BoardManager myBoardManager = DBHandler.getBoardFromDB();
-    myBoardManager.addFireFighter(0,0, FireFighterColor.BLUE, 0,4);
+
     debugLbl.setPosition(10, 10);
     debugLbl.setColor(Color.PURPLE);
 
@@ -152,7 +152,8 @@ public class BoardScreen extends FlashPointScreen {
           updateGameInfoLabel();
 
         }  else if (MOVES_ARR[indexSelected].equals("SAVE")) {
-          //DBHandler.saveBoardToDB(myBoardManager); // TO DO
+          DBHandler.saveBoardToDB(myBoardManager);
+          createDialog("Save", "Your game has been successfully saved.");
         }  else {
           debugLbl.setText("failed action");
         }
@@ -473,7 +474,7 @@ public class BoardScreen extends FlashPointScreen {
   private void createAPLeftLabel() {
     int numAP = fireFighterTurnManager.getCurrentFireFighter().getActionPointsLeft();
     FireFighterColor color = fireFighterTurnManager.getCurrentFireFighter().getColor();
-    gameInfoLabel = new Label("AP LEFT: " + numAP + "\nCurrent firefighter's turn: " + color, skinUI);
+    gameInfoLabel = new Label("AP left: " + numAP + "\nCurrent turn: " + color, skinUI);
     gameInfoLabel.setPosition(
             850,
             Gdx.graphics.getHeight() - 100);
@@ -611,7 +612,7 @@ public class BoardScreen extends FlashPointScreen {
   private void updateGameInfoLabel(){
     int APLeft = fireFighterTurnManager.getCurrentFireFighter().getActionPointsLeft();
     FireFighterColor color = fireFighterTurnManager.getCurrentFireFighter().getColor();
-    gameInfoLabel.setText("AP LEFT: " + APLeft + "\nCurrent firefighter's turn: " + color);
+    gameInfoLabel.setText("AP left: " + APLeft + "\nCurrent turn: " + color);
   }
 
   private String[] getDirectionArrForDisplay(String move){
@@ -624,44 +625,44 @@ public class BoardScreen extends FlashPointScreen {
     }
   }
 
-  //  private void createDialog(String message){
-//    dialog =
-//            new Dialog("Choice", skinUI, "dialog") {
-//              public void result(Object obj) {}
-//            };
-//    dialog.add(createDialogContent(message));
-//    dialog.show(stage);
-//  }
-//
-//  public Table createDialogContent(String message) {
-//
-//    final String[] dialogOptArr = {"CANCEL"};
-//
-//    Table table = new Table(skinUI);
-//    table.add(new Label(message, skinUI));
-//    table.row();
-//
-//    final List<String> lstOptions = new List<String>(skinUI);
-//    lstOptions.setItems(dialogOptArr);
-//    ScrollPane optionsMenu = new ScrollPane(lstOptions);
-//
-//    // when clicking on an item of the list
-//    lstOptions.addListener(
-//            new InputListener() {
-//              @Override
-//              public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-//
-//                if (dialogOptArr[lstOptions.getSelectedIndex()].equals("CANCEL")) {
-//                  dialog.cancel();
-//                }
-//                return true;
-//              }
-//            });
-//
-//    table.add(optionsMenu);
-//    table.row();
-//
-//    return table;
-//  }
+  private void createDialog(String title, String message){
+    dialog =
+            new Dialog(title, skinUI, "dialog") {
+              public void result(Object obj) {}
+            };
+    dialog.add(createDialogContent(message));
+    dialog.show(stage);
+  }
+
+  public Table createDialogContent(String message) {
+
+    final String[] dialogOptArr = {"OK"};
+
+    Table table = new Table(skinUI);
+    table.add(new Label(message, skinUI));
+    table.row();
+
+    final List<String> lstOptions = new List<String>(skinUI);
+    lstOptions.setItems(dialogOptArr);
+    ScrollPane optionsMenu = new ScrollPane(lstOptions);
+
+    // when clicking on an item of the list
+    lstOptions.addListener(
+            new InputListener() {
+              @Override
+              public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+
+                if (lstOptions.getSelected().equals("OK")) {
+                  dialog.remove();
+                }
+                return true;
+              }
+            });
+
+    table.add(optionsMenu);
+    table.row();
+
+    return table;
+  }
 
 }

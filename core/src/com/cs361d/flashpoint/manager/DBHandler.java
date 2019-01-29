@@ -196,7 +196,7 @@ public class DBHandler {
                 JSONArray newFirefightersList = new JSONArray();
                 if (boardManager.getTiles()[i][j].getFirefighters() != null) {
                     for (FireFighter f : boardManager.getTiles()[i][j].getFirefighters()) {
-                        newFirefightersList.add(f.getColor());
+                        newFirefightersList.add(f.getColor().toString());
                     }
                 }
 
@@ -244,7 +244,7 @@ public class DBHandler {
                     bottomDoorObject.put("status", -1);
                 }
 
-                currentTile.put("bottom_wall_door", topDoorObject);
+                currentTile.put("bottom_wall_door", bottomDoorObject);
 
                 // left door
                 JSONObject leftDoorObject = new JSONObject();
@@ -257,7 +257,7 @@ public class DBHandler {
                     leftDoorObject.put("status", -1);
                 }
 
-                currentTile.put("left_wall_door", topDoorObject);
+                currentTile.put("left_wall_door", leftDoorObject);
 
                 // right door
                 JSONObject rightDoorObject = new JSONObject();
@@ -270,7 +270,7 @@ public class DBHandler {
                     rightDoorObject.put("status", -1);
                 }
 
-                currentTile.put("right_wall_door", topDoorObject);
+                currentTile.put("right_wall_door", rightDoorObject);
 
                 newTilesList.add(currentTile);
                 count ++;
