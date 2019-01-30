@@ -13,7 +13,7 @@ public abstract class FlashPointScreen implements Screen {
 
     FlashPointGame game;
 
-    Skin skinUI = new Skin(Gdx.files.internal("data/uiskin.json"));
+    static Skin skinUI = new Skin(Gdx.files.internal("data/uiskin.json"));
 
     Label debugLbl = new Label("", skinUI);
 
