@@ -41,6 +41,7 @@ public class BoardScreen extends FlashPointScreen {
   Sprite spriteBG;
   static Stage stage;
 
+  BoardChooseInitPosPanel boardChooseInitPosPanel;
   BoardMovesPanel boardMovesPanel;
   BoardChatFragment boardChatFragment;
 

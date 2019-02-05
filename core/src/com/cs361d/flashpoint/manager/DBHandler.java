@@ -20,7 +20,7 @@ public class DBHandler {
 
     private static final String TILE_DB_FILENAME = "db/tiles.json";
 
-    // FAMILY GAME BOARD OBSTACLES PLACEMENT
+    // FAMILY GAME BOARD OBSTACLES INITIAL PLACEMENT
     private static final String[] TOP_WALL_TILE_ID = {"1-1", "1-2", "1-3", "1-4", "1-5","1-6", "1-7", "1-8",
             "7-1", "7-2", "7-3", "7-4", "7-5","7-6", "7-7", "7-8",
             "3-3", "3-4", "3-5", "3-6", "3-7","3-8",
@@ -34,6 +34,10 @@ public class DBHandler {
     };
     private static final String[] TOP_DOOR_TILE_ID = {"1-6", "3-8", "5-4", "7-3"};
     private static final String[] LEFT_DOOR_TILE_ID = {"1-4", "2-6", "3-1", "3-3", "4-7", "4-9", "6-6", "6-8"};
+
+    // FAMILY GAME BOARD FIRE INITIAL PLACEMENT
+
+    private static final String[] FIRE_POS = {"2-2", "2-3", "3-2", "3-3", "3-4", "3-5", "4-4", "5-6", "5-7", "6-6"};
 
     // load the board from DB
     public static BoardManager getBoardFromDB() {
@@ -379,7 +383,11 @@ public class DBHandler {
 
                 currentTile.put("POI", -1);
 
-                currentTile.put("fire_status", "none");
+                if (isPresentInArr(FIRE_POS, i + "-" + j)){
+                    currentTile.put("fire_status", "fire");
+                } else {
+                    currentTile.put("fire_status", "none");
+                }
 
                 newTilesList.add(currentTile);
                 count ++;
