@@ -36,8 +36,10 @@ public class DBHandler {
     private static final String[] LEFT_DOOR_TILE_ID = {"1-4", "2-6", "3-1", "3-3", "4-7", "4-9", "6-6", "6-8"};
 
     // FAMILY GAME BOARD FIRE INITIAL PLACEMENT
-
     private static final String[] FIRE_POS = {"2-2", "2-3", "3-2", "3-3", "3-4", "3-5", "4-4", "5-6", "5-7", "6-6"};
+
+    // FAMILY GAME BOARD POI INITIAL PLACEMENT
+    private static final String[] POI_POS = {"2-4", "5-1", "5-8"};
 
     // load the board from DB
     public static BoardManager getBoardFromDB() {
@@ -135,12 +137,21 @@ public class DBHandler {
 
                 // POI
 
-                int POICode = Integer.parseInt("" + object.get("POI"));
-                if (POICode > -1){
-                    if (POICode == 0) {
-                        myBoardManager.addVictim(i, j, false, false, true);
-                    } else if (POICode == 1){
-                        myBoardManager.addVictim(i, j, false, false, false);
+                JSONObject pointOfInterest = (JSONObject) object.get("POI");
+                int POIStatus = Integer.parseInt("" + pointOfInterest.get("status"));
+                if (POIStatus > -1){
+                    if ((Boolean) pointOfInterest.get("revealed")){
+                        if (POIStatus == 0) {
+                            myBoardManager.addVictim(i, j, true, false, true);
+                        } else if (POIStatus == 1){
+                            myBoardManager.addVictim(i, j, true, false, false);
+                        }
+                    } else {
+                        if (POIStatus == 0) {
+                            myBoardManager.addVictim(i, j, false, false, true);
+                        } else if (POIStatus == 1){
+                            myBoardManager.addVictim(i, j, false, false, false);
+                        }
                     }
                 }
 
@@ -207,12 +218,20 @@ public class DBHandler {
                 currentTile.put("firefighters", newFirefightersList);
 
                 // POI
+                JSONObject pointOfInterestObj = new JSONObject();
                 if (boardManager.getTiles()[i][j].hasPointOfInterest()){
-                    if (boardManager.getTiles()[i][j].getVictim().isFalseAlarm()){
-                        currentTile.put("POI", 0);
-                    } else if (!boardManager.getTiles()[i][j].getVictim().isFalseAlarm()){
-                        currentTile.put("POI", 1);
+                    if (boardManager.getTiles()[i][j].getVictim().isRevealed()) {
+                        pointOfInterestObj.put("revealed", true);
+                    } else{
+                        pointOfInterestObj.put("revealed", false);
                     }
+                    if (boardManager.getTiles()[i][j].getVictim().isFalseAlarm()){
+                        pointOfInterestObj.put("status", 0);
+                    } else if (!boardManager.getTiles()[i][j].getVictim().isFalseAlarm()){
+                        pointOfInterestObj.put("status", 1);
+                    }
+
+                    currentTile.put("POI", pointOfInterestObj);
                 }
 
                 // fire_status
@@ -299,8 +318,8 @@ public class DBHandler {
 
     // create a JSON file to save the Tiles
     // walls: [no wall = -1; wall full health = 2; wall one damage = 1; damaged wall = 0]
-    // doors: [no door = -1; close = 0; open = 1]
-    // POI: [no POI = -1; false alarm = 0; victim = 1]
+    // doors status: [no door = -1; close = 0; open = 1]
+    // POI status: [no POI = -1; false alarm = 0; victim = 1]
     // fire status: "none", "smoke", "fire"
 
     // TO RESET THE BOARD: call this right after show() method declaration in BoardScreen.java
@@ -367,6 +386,7 @@ public class DBHandler {
                 currentTile.put("right_wall_door", doorProperties);
 
 
+                // firefighters
                 JSONArray newFirefightersList = new JSONArray();
 
                 // start with a firefighter at position 1-1
@@ -381,8 +401,19 @@ public class DBHandler {
 
                 currentTile.put("firefighters", newFirefightersList);
 
-                currentTile.put("POI", -1);
 
+                // POI
+                JSONObject pointOfInterest = new JSONObject();
+                pointOfInterest.put("revealed", false);
+                if (isPresentInArr(POI_POS, i + "-" + j)){
+                    pointOfInterest.put("status", 1);
+                } else {
+                    pointOfInterest.put("status", -1);
+                }
+                currentTile.put("POI", pointOfInterest);
+
+
+                // fire status
                 if (isPresentInArr(FIRE_POS, i + "-" + j)){
                     currentTile.put("fire_status", "fire");
                 } else {
