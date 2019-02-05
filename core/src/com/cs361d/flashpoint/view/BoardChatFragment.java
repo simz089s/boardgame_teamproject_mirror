@@ -26,8 +26,8 @@ public class BoardChatFragment {
     TextField textFieldMsg;
 
     // messages list
-    String[] messages = {"Jacques:  Ready guys?", "Simon:  let's start!", "Elvric: wait, just a sec"};
-    final ArrayList<String> msgs = new ArrayList<String>(Arrays.asList(messages));
+    ArrayList<String> messagesArrList = new ArrayList<String>();
+
 
     ArrayList<ScrollPane> msgList = new ArrayList<ScrollPane>();
     ArrayList<TextField> msgFieldList = new ArrayList<TextField>();
@@ -35,35 +35,37 @@ public class BoardChatFragment {
     // constructor
     public BoardChatFragment(Stage stage){
         this.stage = stage;
+        messagesArrList.add("R: yo, ready to set fire to the house?");
+        messagesArrList.add("B: let's do it. it's gonna be lit!");
+        messagesArrList.add("G: wait, can't find the explosives");
     }
 
     public void createChatFragment() {
         // list style
         listStyle = new List.ListStyle();
-        listStyle.font = Font.get(25); // font size
+        listStyle.font = Font.get(18); // font size
         listStyle.fontColorUnselected = Color.BLACK;
         listStyle.fontColorSelected = Color.BLACK;
         listStyle.selection = TextureLoader.getDrawable(100, 100, Color.CLEAR );
 
         lstMsg = new List<String>(listStyle);
-        lstMsg.setItems(messages);
+        String[] messagesStrArr = messagesArrList.toArray(new String[messagesArrList.size()]);
+        lstMsg.setItems(messagesStrArr);
 
         // scrollPane style
         scrollStyle = new ScrollPane.ScrollPaneStyle();
-        scrollStyle.vScrollKnob = TextureLoader.getDrawable(15, 15, Color.DARK_GRAY);
-        scrollStyle.vScroll = TextureLoader.getDrawable(15, 15, Color.LIGHT_GRAY);
+        scrollStyle.vScrollKnob = TextureLoader.getDrawable(10, 10, Color.DARK_GRAY);
+        scrollStyle.vScroll = TextureLoader.getDrawable(10, 10, Color.LIGHT_GRAY);
 
         scrollPaneMsg = new ScrollPane(lstMsg, scrollStyle);
         scrollPaneMsg.setOverscroll(false, false);
         scrollPaneMsg.setFadeScrollBars(false);
-        scrollPaneMsg.setScrollingDisabled(true, false);
         scrollPaneMsg.setTransform(true);
-        scrollPaneMsg.setScale(1.0f);
-        scrollPaneMsg.setWidth(300);
+        scrollPaneMsg.setWidth(360);
         scrollPaneMsg.setHeight(450);
         //scrollMessage.setBounds(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight() + 100);
         scrollPaneMsg.setPosition(
-                850,
+                845,
                 Gdx.graphics.getHeight() - scrollPaneMsg.getHeight() - 150);
 
         createMessageInputText();
@@ -78,11 +80,12 @@ public class BoardChatFragment {
     private void createMessageInputText() {
         textFieldMsg = new TextField("", skinUI, "default");
         textFieldMsg.setMessageText("Message + [Enter]");
-        textFieldMsg.setWidth(300);
+        textFieldMsg.setMaxLength(28); // max number of characters allowed
+        textFieldMsg.setWidth(360);
         textFieldMsg.setHeight(25);
         textFieldMsg.setPosition(
-                850,
-                20);
+                845,
+                30);
 
         textFieldMsg.setTextFieldListener(new TextField.TextFieldListener(){
             @Override
@@ -93,8 +96,8 @@ public class BoardChatFragment {
 
                     if(!messageInputed.equals("") && !messageInputed.equals(" ")){
                         textFieldMsg.setText("");
-                        msgs.add("Jacques:  " + messageInputed);
-                        String[] newMsg = msgs.toArray(new String[msgs.size()]);
+                        messagesArrList.add("Y: " + messageInputed);
+                        String[] newMsg = messagesArrList.toArray(new String[messagesArrList.size()]);
                         lstMsg.setItems(newMsg);
 
                         scrollPaneMsg.setActor(lstMsg);

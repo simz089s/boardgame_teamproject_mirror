@@ -105,7 +105,6 @@ public class BoardScreen extends FlashPointScreen {
     boardMovesPanel.createMovesAndDirectionsPanel();
 
     stage.addActor(btnExit);
-    stage.addActor(btnChat);
     stage.addActor(gameInfoLabel);
 
     Gdx.input.setInputProcessor(stage);
@@ -371,7 +370,7 @@ public class BoardScreen extends FlashPointScreen {
   private void createGameInfoLabel() {
     int numAP = fireFighterTurnManager.getCurrentFireFighter().getActionPointsLeft();
     FireFighterColor color = fireFighterTurnManager.getCurrentFireFighter().getColor();
-    gameInfoLabel = new Label("AP left: " + numAP + "\nCurrent turn: " + color, skinUI);
+    gameInfoLabel = new Label("Current turn: " + color + "\nAP left: " + numAP, skinUI);
     gameInfoLabel.setPosition(
             850,
             Gdx.graphics.getHeight() - 100);
@@ -381,7 +380,7 @@ public class BoardScreen extends FlashPointScreen {
   public static void updateGameInfoLabel(){
     int APLeft = fireFighterTurnManager.getCurrentFireFighter().getActionPointsLeft();
     FireFighterColor color = fireFighterTurnManager.getCurrentFireFighter().getColor();
-    gameInfoLabel.setText("AP left: " + APLeft + "\nCurrent turn: " + color);
+    gameInfoLabel.setText("Current turn: " + color + "\nAP left: " + APLeft);
   }
 
   public static void createDialog(String title, String message){
@@ -447,9 +446,11 @@ public class BoardScreen extends FlashPointScreen {
     btnChat = new TextButton("Chat", skinUI, "default");
     btnChat.setWidth(100);
     btnChat.setHeight(25);
-    btnChat.setPosition(
-            (Gdx.graphics.getWidth() - btnExit.getWidth() - 8),
-            (Gdx.graphics.getHeight() - btnExit.getHeight() - 15 - btnChat.getHeight()));
+
+    final float xPosBtnChat = Gdx.graphics.getWidth() - btnExit.getWidth() - 8;
+    final float yPosBtnChat = Gdx.graphics.getHeight() - btnExit.getHeight() - 15 - btnChat.getHeight();
+
+    btnChat.setPosition(xPosBtnChat, yPosBtnChat);
 
     btnChat.addListener(
             new ClickListener() {
@@ -457,19 +458,19 @@ public class BoardScreen extends FlashPointScreen {
               public void clicked(InputEvent event, float x, float y) {
                 boardMovesPanel.removeMovesAndDirectionsPanel();
                 boardChatFragment.createChatFragment();
-                createResumeGameButton();
-
+                createResumeGameButton(xPosBtnChat, yPosBtnChat);
+                btnChat.remove();
               }
             });
+
+    stage.addActor(btnChat);
   }
 
-  private void createResumeGameButton() {
+  private void createResumeGameButton(float x, float y) {
     btnResumeGame = new TextButton("Resume", skinUI, "default");
     btnResumeGame.setWidth(100);
     btnResumeGame.setHeight(25);
-    btnResumeGame.setPosition(
-            (Gdx.graphics.getWidth() - btnExit.getWidth() - 8),
-            (Gdx.graphics.getHeight() - btnExit.getHeight() - 22 - btnChat.getHeight() - btnResumeGame.getHeight()));
+    btnResumeGame.setPosition(x, y);
 
     btnResumeGame.addListener(
             new ClickListener() {
@@ -479,6 +480,7 @@ public class BoardScreen extends FlashPointScreen {
                   boardChatFragment.removeChatFragment();
                 }
 
+                createChatButton();
                 boardMovesPanel.createMovesAndDirectionsPanel();
                 btnResumeGame.remove();
               }
