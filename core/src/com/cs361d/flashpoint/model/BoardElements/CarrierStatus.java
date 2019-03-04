@@ -5,5 +5,21 @@ public enum CarrierStatus {
     AMBULANCE("ambulance"),
     FIRETRUCK("firetruck");
 
-    CarrierStatus(String text) {}
+    CarrierStatus(String text) {
+        this.text = text;
+    }
+    private String text;
+
+    public String getText() {
+        return this.text;
+    }
+
+    public static CarrierStatus fromString(String text) {
+        for (CarrierStatus b : CarrierStatus.values()) {
+            if (b.text.equalsIgnoreCase(text)) {
+                return b;
+            }
+        }
+        return null;
+    }
 }
