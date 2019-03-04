@@ -8,7 +8,6 @@ import java.util.List;
 
 public class FireFighterTurnManager {
   private final int MAX_NUMBER_OF_PLAYERS = 6;
-
   private final LinkedList<FireFighter> FIREFIGHTERS = new LinkedList<FireFighter>();
   private static FireFighterTurnManager instance =
       new FireFighterTurnManager();
@@ -27,18 +26,28 @@ public class FireFighterTurnManager {
     }
   }
 
-  public boolean chooseInitialPosition(Tile t) {
+  public boolean chooseInitialPosition(Tile t) throws IllegalAccessException {
     FireFighter f = FIREFIGHTERS.removeFirst();
     if (f.getTile() != null) {
-        FIREFIGHTERS.addLast(f);
-        return false;
+        throw new IllegalAccessException("The FireFighter has already been assigned a tile");
     }
     f.setTile(t);
     FIREFIGHTERS.addLast(f);
+    return FIREFIGHTERS.getFirst().getTile() != null;
+  }
+
+  public boolean allAssigned() {
+    for (FireFighter f : FIREFIGHTERS) {
+      if (f.getTile() == null) {
+        return false;
+      }
+    }
     return true;
   }
 
-  public void removeFireFighter(FireFighter f) { FIREFIGHTERS.remove(f);
+  public void removeFireFighter(FireFighter f) throws IllegalAccessException {
+    FIREFIGHTERS.remove(f);
+    f.removeFromBoard();
   }
 
   public void endTurn() throws IllegalAccessException {
