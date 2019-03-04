@@ -32,10 +32,14 @@ public class FireFighterTurnManager {
   }
 
   public void endTurn() {
-    FireFighter last = FIREFIGHTERS.removeFirst();
-    last.resetActionPoints();
-    FIREFIGHTERS.addLast(last);
-    BoardManager.getInstance().endTurnFireSpread();
+
+
+    if(endTurnCheck()) {
+      FireFighter last = FIREFIGHTERS.removeFirst();
+      last.resetActionPoints();
+      FIREFIGHTERS.addLast(last);
+      BoardManager.getInstance().endTurnFireSpread();
+    }
   }
 
   public void move(Direction d) {
@@ -170,4 +174,33 @@ public class FireFighterTurnManager {
   TODO
    */
   public void knockedDownReapearChoice(FireFighter f, List<Tile> tiles) {}
+
+  // Method that checks if you are allowed to end turn
+  public boolean endTurnCheck(){
+    Tile currentTile = getCurrentFireFighter().getTile();
+    if(!currentTile.hasFire()) return true; // return true if there is no fire on Tile
+
+    int currentAP = getCurrentFireFighter().getActionPointsLeft();
+
+    if(currentAP < 2){
+      if(currentAP == 0) return true; // No move possible sadly if ap = 0
+      if(currentAP == 1){
+        // Check if possible to move in 1 of 4 directions
+        Tile left = currentTile.getAdjacentTile(Direction.LEFT);
+        Tile right = currentTile.getAdjacentTile(Direction.RIGHT);
+        Tile up = currentTile.getAdjacentTile(Direction.TOP);
+        Tile bottom = currentTile.getAdjacentTile(Direction.BOTTOM);
+
+        if(!left.hasFire() && canMove(Direction.LEFT)) return false;
+        if(!right.hasFire() && canMove(Direction.RIGHT)) return false;
+        if(!up.hasFire() && canMove(Direction.TOP)) return false;
+        if(!bottom.hasFire() && canMove(Direction.BOTTOM)) return false;
+
+        return true; // If you can't move then sadly no block possible
+      }
+    }
+
+    return false; // false if ap >= 2, you can always extenguish fire first
+  }
+
 }
