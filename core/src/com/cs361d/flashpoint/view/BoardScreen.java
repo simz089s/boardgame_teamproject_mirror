@@ -11,7 +11,6 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.cs361d.flashpoint.manager.DBHandler;
 import com.cs361d.flashpoint.manager.FireFighterTurnManager;
@@ -457,7 +456,18 @@ public class BoardScreen extends FlashPointScreen {
             new ClickListener() {
               @Override
               public void clicked(InputEvent event, float x, float y) {
-                game.setScreen(game.lobbyScreen);
+                Dialog dialog = new Dialog("Warning", skinUI, "dialog") {
+                  public void result(Object obj) {
+                    if ((Boolean) obj){
+                      game.setScreen(game.lobbyScreen);
+                    } 
+                  }
+                };
+
+                dialog.text("Are you sure you want to quit?");
+                dialog.button("Yes", true); //sends "true" as the result
+                dialog.button("No", false); //sends "false" as the result
+                dialog.show(stage);
               }
             });
   }
