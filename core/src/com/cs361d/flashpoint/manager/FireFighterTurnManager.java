@@ -41,10 +41,10 @@ public class FireFighterTurnManager {
   public void removeFireFighter(FireFighter f) { FIREFIGHTERS.remove(f);
   }
 
-  public void endTurn() {
+  public void endTurn() throws IllegalAccessException {
 
-
-    if(endTurnCheck()) {
+    FireFighter fireFighter = getCurrentFireFighter();
+    if(!fireFighter.getTile().hasFire()) {
       FireFighter last = FIREFIGHTERS.removeFirst();
       last.resetActionPoints();
       FIREFIGHTERS.addLast(last);
@@ -57,16 +57,13 @@ public class FireFighterTurnManager {
       FireFighter f = getCurrentFireFighter();
       Tile oldTile = f.getTile();
       Tile newTile = oldTile.getAdjacentTile(d);
-      oldTile.removeFirefighter(f);
-      newTile.addFirefighter(f);
       f.setTile(newTile);
       if (newTile.hasPointOfInterest()) {
         if (newTile.hasRealVictim()) {
           newTile.getVictim().reveal();
         } else {
           newTile.setNullVictim();
-          // TODO
-          // Method to add new victim
+          BoardManager.getInstance().addNewPointInterest();
         }
       }
     }
@@ -78,8 +75,6 @@ public class FireFighterTurnManager {
       AbstractVictim v = f.getTile().getVictim();
       Tile oldTile = f.getTile();
       Tile newTile = oldTile.getAdjacentTile(d);
-      oldTile.removeFirefighter(f);
-      newTile.addFirefighter(f);
       oldTile.setNullVictim();
       newTile.setVictim(v);
       f.setTile(newTile);
@@ -88,6 +83,11 @@ public class FireFighterTurnManager {
   }
 
   public void chopWall(Direction d) {
+
+    // Don't let him chop wall if ap < 3
+    if((getCurrentFireFighter().getTile().hasFire()) && (getCurrentFireFighter().getActionPointsLeft() < 3))
+      return;
+    
     Obstacle o = getCurrentFireFighter().getTile().getObstacle(d);
     if (o.isDoor()) {
       return;
@@ -101,6 +101,11 @@ public class FireFighterTurnManager {
   }
 
   public void interactWithDoor(Direction d) {
+
+    // Don't let him interact with door if ap < 2
+    if((getCurrentFireFighter().getTile().hasFire()) && (getCurrentFireFighter().getActionPointsLeft() < 2))
+      return;
+
     Obstacle o = getCurrentFireFighter().getTile().getObstacle(d);
     if (!o.isDoor()) {
       return;
@@ -114,6 +119,11 @@ public class FireFighterTurnManager {
   }
 
   public void extinguishFire(Direction d) {
+
+    // Don't let him extenguish another Tile's fire or smoke if ap < 2
+    if((getCurrentFireFighter().getTile().hasFire()) && (getCurrentFireFighter().getActionPointsLeft() < 2) && (!d.equals(Direction.NODIRECTION)))
+      return;
+
     Tile tileToExtinguish = getCurrentFireFighter().getTile().getAdjacentTile(d);
     if (tileToExtinguish == null) {
       return;

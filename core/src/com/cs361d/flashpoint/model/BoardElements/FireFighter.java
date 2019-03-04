@@ -14,6 +14,7 @@ public class FireFighter {
   private static final int ACTION_POINTS_PER_TURN = 4;
   private int actionPoints;
   private Tile currentTile;
+  protected int apPointsToExtenguish;
 
   private FireFighter(FireFighterColor color, int actionPoints) {
     if (actionPoints > MAX_ACTION_POINTS) {
@@ -39,6 +40,14 @@ public class FireFighter {
       FIREFIGHTERS.put(color, f);
     }
     return f;
+  }
+
+  public void removeFromBoard() throws IllegalAccessException {
+      if (currentTile == null) {
+          throw new IllegalAccessException("This method cannot remove a FireFighter from the board if it has no current tile");
+      }
+      currentTile.removeFirefighter(this);
+      currentTile = null;
   }
 
   public void setTile(Tile t) {
@@ -71,26 +80,9 @@ public class FireFighter {
   }
 
   public boolean canEscape(Tile t) {
-    Direction[] directions = {Direction.RIGHT, Direction.LEFT, Direction.BOTTOM, Direction.TOP};
-    LinkedList<Tile> qt = new LinkedList<Tile>();
-    qt.add(t);
-    int cost = 2;
-    while (!qt.isEmpty()) {
-      t = qt.removeFirst();
-      if (!t.hasFire()) {
-        break;
-      }
-      for (Direction d : directions) {
-        if (!t.hasObstacle(d)) {
-          Tile child = t.getAdjacentTile(d);
-          if (child == null) {
-            continue;
-          }
-          qt.addLast(t);
-        }
-      }
-    }
-    return true;
+      return true;
+
+      // TODO : Do code for the Rescue Specialist
   }
 
   public void resetActionPoints() {

@@ -175,7 +175,7 @@ public class BoardManager {
   }
 
   // Spread the fire at the end of the turn
-  public void endTurnFireSpread() {
+  public void endTurnFireSpread() throws IllegalAccessException {
     int i = 1+(int) (Math.random()*(HEIGHT-3));
     int j = 1+(int) (Math.random()*(WIDTH-3));
     Tile hitLocation = TILE_MAP[i][j];
@@ -329,7 +329,7 @@ public class BoardManager {
   }
 
   // removes victims that are in a place with fire at the end of turn as well as knockdown player
-  private void updateVictimAndFireFighter(List<Tile> tiles) {
+  private void updateVictimAndFireFighter(List<Tile> tiles) throws IllegalAccessException {
     for (Tile t : tiles) {
       if (t.hasFireFighters()) {
         knockedDown(t.getI(), t.getJ());
@@ -448,12 +448,14 @@ public class BoardManager {
     return tiles;
   }
 
-  private void knockedDown(int i, int j) {
+  private void knockedDown(int i, int j) throws IllegalAccessException {
     List<Tile> tiles = getClosestAmbulanceTile(i, j);
     for (FireFighter f : TILE_MAP[i][j].getFirefighters()) {
       if (tiles.size() == 1) {
         f.setTile(tiles.get(0));
       } else if (tiles.size() > 1) {
+        f.removeFromBoard();
+
         // TODO
         /*
         We must then ask the fireFighter to what tile he wishes to go to
