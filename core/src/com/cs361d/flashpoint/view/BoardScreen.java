@@ -48,12 +48,14 @@ public class BoardScreen extends FlashPointScreen {
   BoardMovesPanel boardMovesPanel;
   BoardChatFragment boardChatFragment;
   BoardCheatSFragment boardCheatSFragment;
+  BoardStatsFragment boardStatsFragment;
 
   TextButton btnExit;
   TextButton btnChat;
   TextButton btnResumeGame;
   ImageButton btnResume;
   TextButton btnCheatS;
+  TextButton btnStats;
   static Label gameInfoLabel;
   static Dialog dialog;
 
@@ -79,6 +81,7 @@ public class BoardScreen extends FlashPointScreen {
 
     boardChatFragment = new BoardChatFragment(stage);
     boardCheatSFragment = new BoardCheatSFragment(stage);
+    boardStatsFragment = new BoardStatsFragment(stage);
 
     float curYPos = Gdx.graphics.getHeight();
 
@@ -107,8 +110,9 @@ public class BoardScreen extends FlashPointScreen {
     createGameInfoLabel();
 
     createExitButton();
-    createChatButton();
     createCheatSButton();
+    createStatsButton();
+    createChatButton();
     createResumeButton();
 
     // Moves panel
@@ -458,37 +462,13 @@ public class BoardScreen extends FlashPointScreen {
             });
   }
 
-  private void createChatButton() {
-    btnChat = new TextButton("Chat", skinUI, "default");
-    btnChat.setWidth(100);
-    btnChat.setHeight(25);
-
-    final float xPosBtnChat = Gdx.graphics.getWidth() - btnExit.getWidth() - 8;
-    final float yPosBtnChat = Gdx.graphics.getHeight() - btnExit.getHeight() - 15 - btnChat.getHeight();
-
-    btnChat.setPosition(xPosBtnChat, yPosBtnChat);
-
-    btnChat.addListener(
-            new ClickListener() {
-              @Override
-              public void clicked(InputEvent event, float x, float y) {
-                removeAllPrevFragments();
-                boardChatFragment.createChatFragment();
-                //createResumeGameButton(xPosBtnChat, yPosBtnChat);
-                //btnChat.remove();
-              }
-            });
-
-    stage.addActor(btnChat);
-  }
-
   private void createCheatSButton() {
     btnCheatS = new TextButton("Cheat sheet", skinUI, "default");
     btnCheatS.setWidth(100);
     btnCheatS.setHeight(25);
 
     final float xPosBtnCheatS = Gdx.graphics.getWidth() - btnExit.getWidth() - 8;
-    final float yPosBtnCheatS = Gdx.graphics.getHeight() - btnExit.getHeight() - 45 - btnChat.getHeight();
+    final float yPosBtnCheatS = Gdx.graphics.getHeight() - btnExit.getHeight() * 2 - 15;
 
     btnCheatS.setPosition(xPosBtnCheatS, yPosBtnCheatS);
 
@@ -498,14 +478,57 @@ public class BoardScreen extends FlashPointScreen {
               public void clicked(InputEvent event, float x, float y) {
                 removeAllPrevFragments();
                 boardCheatSFragment.createCheatSFragment();
-                //createResumeGameButton(xPosBtnCheatS, yPosBtnCheatS);
-                //btnCheatS.remove();
               }
             });
 
     stage.addActor(btnCheatS);
   }
 
+  private void createStatsButton() {
+    btnStats = new TextButton("Stats", skinUI, "default");
+    btnStats.setWidth(100);
+    btnStats.setHeight(25);
+
+    final float xPosBtnStats = Gdx.graphics.getWidth() - btnExit.getWidth() - 8;
+    final float yPosBtnStats = Gdx.graphics.getHeight() - btnExit.getHeight() * 2 - 48;
+
+    btnStats.setPosition(xPosBtnStats, yPosBtnStats);
+
+    btnStats.addListener(
+            new ClickListener() {
+              @Override
+              public void clicked(InputEvent event, float x, float y) {
+                removeAllPrevFragments();
+                boardStatsFragment.createStatsFragment();
+              }
+            });
+
+    stage.addActor(btnStats);
+  }
+
+  private void createChatButton() {
+    btnChat = new TextButton("Chat", skinUI, "default");
+    btnChat.setWidth(100);
+    btnChat.setHeight(25);
+
+    final float xPosBtnChat = Gdx.graphics.getWidth() - btnExit.getWidth() - 8;
+    final float yPosBtnChat = Gdx.graphics.getHeight() - btnExit.getHeight() * 3 - 55;
+
+    btnChat.setPosition(xPosBtnChat, yPosBtnChat);
+
+    btnChat.addListener(
+            new ClickListener() {
+              @Override
+              public void clicked(InputEvent event, float x, float y) {
+                removeAllPrevFragments();
+                boardChatFragment.createChatFragment();
+              }
+            });
+
+    stage.addActor(btnChat);
+  }
+
+  // show MovesAndDirectionsPanel on Resume
   private void createResumeButton(){
 
     Texture myTexture = new Texture(Gdx.files.internal("myResumeBtn.png"));
@@ -517,7 +540,7 @@ public class BoardScreen extends FlashPointScreen {
     btnResume.setHeight(50);
 
     final float x = Gdx.graphics.getWidth() - btnExit.getWidth() - btnResume.getWidth() - 50;
-    final float y = Gdx.graphics.getHeight() - btnExit.getHeight() - 45 - btnChat.getHeight();
+    final float y = Gdx.graphics.getHeight() - btnExit.getHeight() * 2 - 45;
 
     btnResume.setPosition(x, y);
 
@@ -533,46 +556,10 @@ public class BoardScreen extends FlashPointScreen {
     stage.addActor(btnResume);
   }
 
-  // show MovesAndDirectionsPanel on Resume
-  private void createResumeGameButton(float x, float y) {
-    btnResumeGame = new TextButton("Resume", skinUI, "default");
-    btnResumeGame.setWidth(100);
-    btnResumeGame.setHeight(25);
-    btnResumeGame.setPosition(x, y);
-
-    btnResumeGame.addListener(
-            new ClickListener() {
-              @Override
-              public void clicked(InputEvent event, float x, float y) {
-
-                removeAllPrevFragments();
-
-                if (btnChat == null) {
-                  createChatButton();
-                }
-
-                if (btnCheatS == null) {
-                  createCheatSButton();
-                }
-
-                boardMovesPanel.createMovesAndDirectionsPanel();
-                btnResumeGame.remove();
-              }
-            });
-
-    stage.addActor(btnResumeGame);
-  }
-
   private void removeAllPrevFragments(){
       boardMovesPanel.removeMovesAndDirectionsPanel();
       boardChatFragment.removeChatFragment();
       boardCheatSFragment.removeCheatSFragment();
+      boardStatsFragment.removeStatsFragment();
   }
-
-  private void printStage(){
-    for (Actor a : stage.getActors()){
-      System.out.println(a);
-    }
-  }
-
 }

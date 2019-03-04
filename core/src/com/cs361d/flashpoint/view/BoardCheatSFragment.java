@@ -19,7 +19,7 @@ public class BoardCheatSFragment {
 
     Stage stage;
 
-    // chat message list
+    // specialist cards list
     List<String> lstCards;
     List.ListStyle listStyle;
     ScrollPane scrollPaneCard;
