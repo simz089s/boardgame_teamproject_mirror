@@ -30,6 +30,14 @@ public class BoardScreen extends FlashPointScreen {
   static Image[][] tilesImg = new Image[NUMBER_OF_ROWS][NUMBER_OF_COLS];
   static ArrayList<Image> gameUnits = new ArrayList<Image>();
 
+  // choose init pos clickable tiles
+  final String[] CHOOSE_INIT_POS_TILES = {"0-0", "1-0", "2-0", "3-0", "4-0", "5-0", "6-0", "7-0",
+          "0-1","0-2","0-3","0-4","0-5","0-6","0-7","0-8","0-9",
+          "1-9", "2-9", "3-9", "4-9", "5-9", "6-9",
+          "7-1","7-2","7-3","7-4","7-5","7-6","7-7","7-8","7-9",
+  };
+
+
 
   // managers initialization
 
@@ -105,13 +113,12 @@ public class BoardScreen extends FlashPointScreen {
                 new ClickListener() {
                   @Override
                   public void clicked(InputEvent event, float x, float y) {
-                    if (activateChooseInitPos){
+                    if (activateChooseInitPos && DBHandler.isPresentInArr(CHOOSE_INIT_POS_TILES, i_pos + "-" + j_pos)){
                       System.out.println("POSITION CLICKED: " + i_pos +"-" + j_pos);
 
                       clearAllGameUnits();
-
                       Tile[][] tiles = BoardManager.getInstance().getTiles();
-                      while(FireFighterTurnManager.getInstance().chooseInitialPosition(tiles[i_pos][j_pos]))
+                      FireFighterTurnManager.getInstance().chooseInitialPosition(tiles[i_pos][j_pos]);
 
                       activateChooseInitPos = false;
                       removeAllFilterOnTile();
@@ -629,12 +636,7 @@ public class BoardScreen extends FlashPointScreen {
 
   private void addFilterOnTileForChooseInitPos(){
 
-    // choose init pos clickable tiles
-    final String[] CHOOSE_INIT_POS_TILES = {"0-0", "1-0", "2-0", "3-0", "4-0", "5-0", "6-0", "7-0",
-            "0-1","0-2","0-3","0-4","0-5","0-6","0-7","0-8","0-9",
-            "1-9", "2-9", "3-9", "4-9", "5-9", "6-9",
-            "7-1","7-2","7-3","7-4","7-5","7-6","7-7","7-8","7-9",
-    };
+    // TO DO: add filter to clickable tiles gotten from Manager
 
     for (int i = 0; i < CHOOSE_INIT_POS_TILES.length; i++){
       int i_pos = Integer.parseInt(CHOOSE_INIT_POS_TILES[i].split("-")[0]);
