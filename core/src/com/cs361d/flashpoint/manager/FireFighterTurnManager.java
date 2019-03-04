@@ -153,6 +153,11 @@ public class FireFighterTurnManager {
   }
 
   private boolean canMove(Direction d) {
+
+    // Don't allow a move if ap < 3 and moving into fire
+    if((getCurrentFireFighter().getTile().getAdjacentTile(d).hasFire()) && (getCurrentFireFighter().getActionPointsLeft() < 3))
+      return false;
+
     Tile currentTile = getCurrentFireFighter().getTile();
     // verifies that there is a tile in the direction
     if (currentTile.hasObstacle(d) || currentTile.getAdjacentTile(d) == null) {
