@@ -510,7 +510,7 @@ public class DBHandler {
 
     }
 
-    private static boolean isPresentInArr(String[] arr, String str){
+    public static boolean isPresentInArr(String[] arr, String str){
         for (int i = 0; i < arr.length; i++){
             if (arr[i].equals(str)){
                 return true;
