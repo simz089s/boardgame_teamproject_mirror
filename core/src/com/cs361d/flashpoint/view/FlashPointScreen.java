@@ -11,7 +11,7 @@ public abstract class FlashPointScreen implements Screen {
     double gameWidth = Gdx.graphics.getWidth();
     double gameHeight = Gdx.graphics.getHeight();
 
-    FlashPointGame game;
+    static FlashPointGame game;
 
     static Skin skinUI = new Skin(Gdx.files.internal("data/uiskin.json"));
 

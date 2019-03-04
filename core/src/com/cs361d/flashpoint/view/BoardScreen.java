@@ -31,14 +31,16 @@ public class BoardScreen extends FlashPointScreen {
   static ArrayList<Image> gameUnits = new ArrayList<Image>();
 
   // choose init pos clickable tiles
-  boolean activateChooseInitPos = false;
-
   final String[] CHOOSE_INIT_POS_TILES = {"0-0", "1-0", "2-0", "3-0", "4-0", "5-0", "6-0", "7-0",
           "0-1","0-2","0-3","0-4","0-5","0-6","0-7","0-8","0-9",
           "1-9", "2-9", "3-9", "4-9", "5-9", "6-9",
           "7-1","7-2","7-3","7-4","7-5","7-6","7-7","7-8","7-9",
   };
 
+  // choose pos on knock down
+  FireFighter knockedDownFirefigher;
+  boolean activateKnockDownChoosePos = false;
+  ArrayList<Tile> clickableTilesOnKnockDownArr = new ArrayList<Tile>();
 
 
   // GUI elements
@@ -120,7 +122,6 @@ public class BoardScreen extends FlashPointScreen {
                         e.printStackTrace();
                       }
 
-                      activateChooseInitPos = false;
                       removeAllFilterOnTile();
                       redrawGameUnitsOnTile();
                       updateGameInfoLabel();
@@ -131,8 +132,24 @@ public class BoardScreen extends FlashPointScreen {
                         createResumeButton();
                         boardMovesPanel.createMovesAndDirectionsPanel();
                       }
-
                     }
+
+
+                    // choose tile on knock down
+                    if (activateKnockDownChoosePos && isClickableTileOnKnockDown(i_pos, j_pos)){
+                      clearAllGameUnits();
+
+                      // TO DO: Call Manager with chosen tile by knocked down Firefighter
+
+                      clickableTilesOnKnockDownArr.clear();
+                      activateKnockDownChoosePos = false;
+                      knockedDownFirefigher = null;
+
+                      removeAllFilterOnTile();
+                      redrawGameUnitsOnTile();
+                      updateGameInfoLabel();
+                    }
+
                   }
                 });
 
@@ -422,13 +439,13 @@ public class BoardScreen extends FlashPointScreen {
     }
   }
 
-  public static void clearAllGameUnits() {
-    // System.out.println(gameUnits); // for test
-    for (int i = 0; i < gameUnits.size(); i++) {
-      gameUnits.get(i).remove();
-    }
-    gameUnits.clear();
-  }
+
+
+
+  // game info label
+
+
+
 
   private void createGameInfoLabel() {
 
@@ -447,10 +464,19 @@ public class BoardScreen extends FlashPointScreen {
     gameInfoLabel.setText("Current turn: " + color + "\nAP left: " + APLeft);
   }
 
+
+
+
+  // dialogs
+
+
+
+
   public static void createDialog(String title, String message){
     dialog =
             new Dialog(title, skinUI, "dialog") {
-              public void result(Object obj) {}
+              public void result(Object obj) {
+              }
             };
     dialog.add(createDialogContent(message));
     dialog.show(stage);
@@ -487,7 +513,24 @@ public class BoardScreen extends FlashPointScreen {
     return table;
   }
 
+  public static void createEndGameDialog(String title, String message){
+    dialog =
+            new Dialog(title, skinUI, "dialog") {
+              public void result(Object obj) {
+                game.setScreen(game.lobbyScreen);
+              }
+            };
+    dialog.add(createDialogContent(message));
+    dialog.show(stage);
+  }
+
+
+
+
   // right menu buttons
+
+
+
 
   private void createExitButton() {
     btnExit = new TextButton("Exit", skinUI, "default");
@@ -584,7 +627,7 @@ public class BoardScreen extends FlashPointScreen {
     stage.addActor(btnChat);
   }
 
-  // show MovesAndDirectionsPanel on Resume
+  // show MovesAndDirectionsPanel on resume
   private void createResumeButton(){
 
     Texture myTexture = new Texture(Gdx.files.internal("myResumeBtn.png"));
@@ -612,12 +655,13 @@ public class BoardScreen extends FlashPointScreen {
     stage.addActor(btnResume);
   }
 
-  private void removeAllPrevFragments(){
-      boardMovesPanel.removeMovesAndDirectionsPanel();
-      boardChatFragment.removeChatFragment();
-      boardCheatSFragment.removeCheatSFragment();
-      boardStatsFragment.removeStatsFragment();
-  }
+
+
+
+  // add filters
+
+
+
 
   private void addFilterOnTileForChooseInitPos(){
     for (int i = 0; i < CHOOSE_INIT_POS_TILES.length; i++){
@@ -627,11 +671,39 @@ public class BoardScreen extends FlashPointScreen {
     }
   }
 
-//  private void addFilterOnAfterKnockdownChoosePos(FireFighter f, List<Tile> clickableTiles){
-//    for (int i = 0; i < clickableTiles.size(); i++){
-//
-//    }
-//  }
+  public void addFilterOnKnockDownChoosePos(FireFighter f, ArrayList<Tile> clickableTiles){
+
+    clickableTilesOnKnockDownArr = clickableTiles;
+    knockedDownFirefigher = f;
+
+    for (int i = 0; i < clickableTiles.size(); i++){
+      tilesImg[clickableTiles.get(i).getI()][clickableTiles.get(i).getJ()].setColor(Color.GREEN);
+      activateKnockDownChoosePos = true;
+    }
+  }
+
+
+
+
+  // remove GUI elements
+
+
+
+
+  public static void clearAllGameUnits() {
+    // System.out.println(gameUnits); // for test
+    for (int i = 0; i < gameUnits.size(); i++) {
+      gameUnits.get(i).remove();
+    }
+    gameUnits.clear();
+  }
+
+  private void removeAllPrevFragments(){
+    boardMovesPanel.removeMovesAndDirectionsPanel();
+    boardChatFragment.removeChatFragment();
+    boardCheatSFragment.removeCheatSFragment();
+    boardStatsFragment.removeStatsFragment();
+  }
 
   private void removeAllFilterOnTile(){
     for (int i = 0; i < tilesImg.length; i++){
@@ -639,6 +711,27 @@ public class BoardScreen extends FlashPointScreen {
         tilesImg[i][j].setColor(Color.WHITE);
       }
     }
+  }
+
+
+
+
+  // helper methods
+
+
+
+
+  private boolean isClickableTileOnKnockDown(int i_input, int j_input){
+    for (int i = 0; i < clickableTilesOnKnockDownArr.size(); i++){
+      int i_pos = clickableTilesOnKnockDownArr.get(i).getI();
+      int j_pos = clickableTilesOnKnockDownArr.get(i).getJ();
+
+      if (i_input == i_pos && j_input == j_pos){
+        return true;
+      }
+    }
+
+    return false;
   }
 
 }
