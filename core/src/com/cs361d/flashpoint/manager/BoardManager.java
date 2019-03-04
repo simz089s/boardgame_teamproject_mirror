@@ -81,7 +81,9 @@ public class BoardManager {
       TILE_MAP[i][j].getObstacle(d).setHealth(health);
     }
   }
-
+  public void setCarrierStatus(int i, int j, CarrierStatus s) {
+    TILE_MAP[i][j].setCarrierStatus(s);
+  }
   public void addDoor(int i, int j, Direction d, int health, boolean isOpen) {
     Obstacle obstacle = TILE_MAP[i][j].getObstacle(d);
     /*
