@@ -124,11 +124,7 @@ public class DBHandler {
                 }
 
                 // engine
-                if (object.get("engine").equals("ambulance")){
-                    //myBoardManager.set(CarrierStatus("ambulance"));
-                } else if (object.get("engine").equals("firetruck")){
-                    //myBoardManager.set(CarrierStatus("ambulance"));
-                }
+                myBoardManager.setCarrierStatus(i, i, CarrierStatus.fromString("" + object.get("engine")));
 
                 // firefighters
                 JSONArray firefightersArr = (JSONArray) object.get("firefighters");

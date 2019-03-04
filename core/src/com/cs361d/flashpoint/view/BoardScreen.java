@@ -49,9 +49,10 @@ public class BoardScreen extends FlashPointScreen {
   BoardCheatSFragment boardCheatSFragment;
   BoardStatsFragment boardStatsFragment;
 
+  TextButton btnChooseInitPosTest;
+
   TextButton btnExit;
   TextButton btnChat;
-  TextButton btnResumeGame;
   ImageButton btnResume;
   TextButton btnCheatS;
   TextButton btnStats;
@@ -108,6 +109,7 @@ public class BoardScreen extends FlashPointScreen {
 
     createGameInfoLabel();
 
+    createChooseInitPosTestButton();
     createExitButton();
     createCheatSButton();
     createStatsButton();
@@ -443,6 +445,33 @@ public class BoardScreen extends FlashPointScreen {
   }
 
   // right menu buttons
+
+  private void createChooseInitPosTestButton() {
+
+    final String[] posToFilter = {"3-0", "4-0", "7-3", "7-4", "0-5", "0-6", "3-9", "4-9"};
+
+    btnChooseInitPosTest = new TextButton("Init Pos", skinUI, "default");
+    btnChooseInitPosTest.setWidth(100);
+    btnChooseInitPosTest.setHeight(25);
+    btnChooseInitPosTest.setPosition(
+            (Gdx.graphics.getWidth() - btnChooseInitPosTest.getWidth() * 2 - 20),
+            (Gdx.graphics.getHeight() - btnChooseInitPosTest.getHeight() - 8));
+
+    btnChooseInitPosTest.addListener(
+            new ClickListener() {
+              @Override
+              public void clicked(InputEvent event, float x, float y) {
+//                for (int i = 0; i < posToFilter.length; i++){
+//                  int i_pos = Integer.parseInt(posToFilter[i].split()[0]);
+//                  //tilesImg[i]
+//                }
+//                //tilesImg
+
+              }
+            });
+
+    stage.addActor(btnChooseInitPosTest);
+  }
 
   private void createExitButton() {
     btnExit = new TextButton("Exit", skinUI, "default");

@@ -345,8 +345,8 @@ public class BoardManager {
     int height;
     do
     {
-      width = new Random().nextInt(WIDTH - 1) + 1;
-      height = new Random().nextInt(HEIGHT - 1) + 1;
+      width = new Random().nextInt(WIDTH - 2) + 1;
+      height = new Random().nextInt(HEIGHT - 2) + 1;
 
     }
       while (TILE_MAP[width][height].hasPointOfInterest());
