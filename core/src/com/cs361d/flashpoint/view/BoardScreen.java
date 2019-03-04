@@ -627,9 +627,11 @@ public class BoardScreen extends FlashPointScreen {
     }
   }
 
-  private void addFilterOnAfterKnockdownChoosePos(){
-
-  }
+//  private void addFilterOnAfterKnockdownChoosePos(FireFighter f, List<Tile> clickableTiles){
+//    for (int i = 0; i < clickableTiles.size(); i++){
+//
+//    }
+//  }
 
   private void removeAllFilterOnTile(){
     for (int i = 0; i < tilesImg.length; i++){
