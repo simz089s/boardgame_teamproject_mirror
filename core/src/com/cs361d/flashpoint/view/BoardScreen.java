@@ -110,17 +110,28 @@ public class BoardScreen extends FlashPointScreen {
                 new ClickListener() {
                   @Override
                   public void clicked(InputEvent event, float x, float y) {
-                    if (activateChooseInitPos && DBHandler.isPresentInArr(CHOOSE_INIT_POS_TILES, i_pos + "-" + j_pos)){
-                      System.out.println("POSITION CLICKED: " + i_pos +"-" + j_pos);
-
+                     if (!FireFighterTurnManager.getInstance().allAssigned() && DBHandler.isPresentInArr(CHOOSE_INIT_POS_TILES, i_pos + "-" + j_pos)){
                       clearAllGameUnits();
                       Tile[][] tiles = BoardManager.getInstance().getTiles();
-                      FireFighterTurnManager.getInstance().chooseInitialPosition(tiles[i_pos][j_pos]);
+
+                      try {
+                        FireFighterTurnManager.getInstance().chooseInitialPosition(tiles[i_pos][j_pos]);
+                      } catch (IllegalAccessException e) {
+                        e.printStackTrace();
+                      }
 
                       activateChooseInitPos = false;
                       removeAllFilterOnTile();
                       redrawGameUnitsOnTile();
                       updateGameInfoLabel();
+
+                      if (!FireFighterTurnManager.getInstance().allAssigned()) {
+                        addFilterOnTileForChooseInitPos();
+                      } else {
+                        createResumeButton();
+                        boardMovesPanel.createMovesAndDirectionsPanel();
+                      }
+
                     }
                   }
                 });
@@ -132,7 +143,7 @@ public class BoardScreen extends FlashPointScreen {
 
     createGameInfoLabel();
 
-    createChooseInitPosTestButton();
+
     createExitButton();
     createCheatSButton();
     createStatsButton();
@@ -142,6 +153,12 @@ public class BoardScreen extends FlashPointScreen {
     // Moves panel
     boardMovesPanel = new BoardMovesPanel(stage);
     boardMovesPanel.createMovesAndDirectionsPanel();
+
+    if (!FireFighterTurnManager.getInstance().allAssigned()){
+      addFilterOnTileForChooseInitPos();
+      removeAllPrevFragments();
+      btnResume.remove();
+    }
 
     stage.addActor(btnExit);
     stage.addActor(gameInfoLabel);
@@ -472,36 +489,6 @@ public class BoardScreen extends FlashPointScreen {
 
   // right menu buttons
 
-
-  // to test choose init pos
-  private void createChooseInitPosTestButton() {
-
-    btnChooseInitPosTest = new TextButton("Init Pos", skinUI, "default");
-    btnChooseInitPosTest.setWidth(100);
-    btnChooseInitPosTest.setHeight(25);
-    btnChooseInitPosTest.setPosition(
-            (Gdx.graphics.getWidth() - btnChooseInitPosTest.getWidth() * 2 - 20),
-            (Gdx.graphics.getHeight() - btnChooseInitPosTest.getHeight() - 8));
-
-    btnChooseInitPosTest.addListener(
-            new ClickListener() {
-              @Override
-              public void clicked(InputEvent event, float x, float y) {
-
-                int numFireman = 3; // TO DO : getNumFirefighter from FireFighterTurnManager
-                for (int i = 0; i < numFireman; i++){
-                  addFilterOnTileForChooseInitPos(null);
-                  activateChooseInitPos = true;
-                }
-              }
-            });
-
-    stage.addActor(btnChooseInitPosTest);
-  }
-
-
-
-
   private void createExitButton() {
     btnExit = new TextButton("Exit", skinUI, "default");
     btnExit.setWidth(100);
@@ -632,10 +619,7 @@ public class BoardScreen extends FlashPointScreen {
       boardStatsFragment.removeStatsFragment();
   }
 
-  private void addFilterOnTileForChooseInitPos(List<Tile> tiles){
-
-    // TO DO: add filter to clickable tiles gotten from Manager
-
+  private void addFilterOnTileForChooseInitPos(){
     for (int i = 0; i < CHOOSE_INIT_POS_TILES.length; i++){
       int i_pos = Integer.parseInt(CHOOSE_INIT_POS_TILES[i].split("-")[0]);
       int j_pos = Integer.parseInt(CHOOSE_INIT_POS_TILES[i].split("-")[1]);
