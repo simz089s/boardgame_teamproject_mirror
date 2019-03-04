@@ -29,8 +29,8 @@ public class BoardChatFragment {
     ArrayList<String> messagesArrList = new ArrayList<String>();
 
 
-    ArrayList<ScrollPane> msgList = new ArrayList<ScrollPane>();
-    ArrayList<TextField> msgFieldList = new ArrayList<TextField>();
+    ArrayList<ScrollPane> msgListSP = new ArrayList<ScrollPane>();
+    ArrayList<TextField> msgFieldListTF = new ArrayList<TextField>();
 
     // constructor
     public BoardChatFragment(Stage stage){
@@ -70,8 +70,8 @@ public class BoardChatFragment {
 
         createMessageInputText();
 
-        msgList.add(scrollPaneMsg);
-        msgFieldList.add(textFieldMsg);
+        msgListSP.add(scrollPaneMsg);
+        msgFieldListTF.add(textFieldMsg);
 
         stage.addActor(scrollPaneMsg);
         stage.addActor(textFieldMsg);
@@ -110,13 +110,13 @@ public class BoardChatFragment {
     }
 
     public void removeChatFragment() {
-        for (int i = 0; i < msgList.size(); i++) {
-            msgList.get(i).remove();
-            msgFieldList.get(i).remove();
+        for (int i = 0; i < msgListSP.size(); i++) {
+            msgListSP.get(i).remove();
+            msgFieldListTF.get(i).remove();
         }
 
-        msgList.clear();
-        msgFieldList.clear();
+        msgListSP.clear();
+        msgFieldListTF.clear();
     }
 
 }

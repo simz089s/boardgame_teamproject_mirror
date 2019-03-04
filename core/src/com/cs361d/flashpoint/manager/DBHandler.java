@@ -222,9 +222,10 @@ public class DBHandler {
                 if (boardManager.getTiles()[i][j].hasPointOfInterest()){
                     if (boardManager.getTiles()[i][j].getVictim().isRevealed()) {
                         pointOfInterestObj.put("revealed", true);
-                    } else{
+                    } else {
                         pointOfInterestObj.put("revealed", false);
                     }
+
                     if (boardManager.getTiles()[i][j].getVictim().isFalseAlarm()){
                         pointOfInterestObj.put("status", 0);
                     } else if (!boardManager.getTiles()[i][j].getVictim().isFalseAlarm()){

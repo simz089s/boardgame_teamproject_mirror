@@ -7,9 +7,12 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.cs361d.flashpoint.manager.DBHandler;
 import com.cs361d.flashpoint.manager.FireFighterTurnManager;
 import com.cs361d.flashpoint.manager.BoardManager;
@@ -44,10 +47,13 @@ public class BoardScreen extends FlashPointScreen {
   BoardChooseInitPosPanel boardChooseInitPosPanel;
   BoardMovesPanel boardMovesPanel;
   BoardChatFragment boardChatFragment;
+  BoardCheatSFragment boardCheatSFragment;
 
   TextButton btnExit;
   TextButton btnChat;
   TextButton btnResumeGame;
+  ImageButton btnResume;
+  TextButton btnCheatS;
   static Label gameInfoLabel;
   static Dialog dialog;
 
@@ -72,6 +78,7 @@ public class BoardScreen extends FlashPointScreen {
             -(Gdx.graphics.getWidth() / 2f) - 125, -(Gdx.graphics.getHeight() / 2f) + 30);
 
     boardChatFragment = new BoardChatFragment(stage);
+    boardCheatSFragment = new BoardCheatSFragment(stage);
 
     float curYPos = Gdx.graphics.getHeight();
 
@@ -97,9 +104,12 @@ public class BoardScreen extends FlashPointScreen {
       }
     }
 
+    createGameInfoLabel();
+
     createExitButton();
     createChatButton();
-    createGameInfoLabel();
+    createCheatSButton();
+    createResumeButton();
 
     // Moves panel
     boardMovesPanel = new BoardMovesPanel(stage);
@@ -289,21 +299,27 @@ public class BoardScreen extends FlashPointScreen {
         switch (f.getColor()) {
           case BLUE:
             gameUnit = new Image(new Texture("game_units/firefighters/blue.png"));
+            gameUnit.setPosition(myTile.getX() - 7, myTile.getY() + myTile.getHeight() / 2);
             break;
           case RED:
             gameUnit = new Image(new Texture("game_units/firefighters/red.png"));
+            gameUnit.setPosition(myTile.getX() - 4, myTile.getY() + myTile.getHeight() / 2);
             break;
           case GREEN:
             gameUnit = new Image(new Texture("game_units/firefighters/green.png"));
+            gameUnit.setPosition(myTile.getX() - 1, myTile.getY() + myTile.getHeight() / 2);
             break;
           case WHITE:
             gameUnit = new Image(new Texture("game_units/firefighters/white.png"));
+            gameUnit.setPosition(myTile.getX() + 2, myTile.getY() + myTile.getHeight() / 2);
             break;
           case ORANGE:
             gameUnit = new Image(new Texture("game_units/firefighters/orange.png"));
+            gameUnit.setPosition(myTile.getX() + 5, myTile.getY() + myTile.getHeight() / 2);
             break;
           case YELLOW:
             gameUnit = new Image(new Texture("game_units/firefighters/yellow.png"));
+            gameUnit.setPosition(myTile.getX() + 8, myTile.getY() + myTile.getHeight() / 2);
             break;
           default:
             throw new IllegalArgumentException(
@@ -311,7 +327,6 @@ public class BoardScreen extends FlashPointScreen {
         }
         gameUnit.setHeight(30);
         gameUnit.setWidth(30);
-        gameUnit.setPosition(myTile.getX(), myTile.getY() + myTile.getHeight() / 2);
 
         gameUnits.add(gameUnit);
         stage.addActor(gameUnit);
@@ -327,7 +342,7 @@ public class BoardScreen extends FlashPointScreen {
       gameUnit.setHeight(30);
       gameUnit.setWidth(30);
       gameUnit.setPosition(
-              myTile.getX() + myTile.getHeight() / 2, myTile.getY() + myTile.getHeight() / 2);
+              myTile.getX() + myTile.getHeight() / 2 + 7, myTile.getY() + myTile.getHeight() / 2 + 7);
       gameUnits.add(gameUnit);
       stage.addActor(gameUnit);
     }
@@ -424,7 +439,7 @@ public class BoardScreen extends FlashPointScreen {
     return table;
   }
 
-  // general buttons
+  // right menu buttons
 
   private void createExitButton() {
     btnExit = new TextButton("Exit", skinUI, "default");
@@ -457,16 +472,68 @@ public class BoardScreen extends FlashPointScreen {
             new ClickListener() {
               @Override
               public void clicked(InputEvent event, float x, float y) {
-                boardMovesPanel.removeMovesAndDirectionsPanel();
+                removeAllPrevFragments();
                 boardChatFragment.createChatFragment();
-                createResumeGameButton(xPosBtnChat, yPosBtnChat);
-                btnChat.remove();
+                //createResumeGameButton(xPosBtnChat, yPosBtnChat);
+                //btnChat.remove();
               }
             });
 
     stage.addActor(btnChat);
   }
 
+  private void createCheatSButton() {
+    btnCheatS = new TextButton("Cheat sheet", skinUI, "default");
+    btnCheatS.setWidth(100);
+    btnCheatS.setHeight(25);
+
+    final float xPosBtnCheatS = Gdx.graphics.getWidth() - btnExit.getWidth() - 8;
+    final float yPosBtnCheatS = Gdx.graphics.getHeight() - btnExit.getHeight() - 45 - btnChat.getHeight();
+
+    btnCheatS.setPosition(xPosBtnCheatS, yPosBtnCheatS);
+
+    btnCheatS.addListener(
+            new ClickListener() {
+              @Override
+              public void clicked(InputEvent event, float x, float y) {
+                removeAllPrevFragments();
+                boardCheatSFragment.createCheatSFragment();
+                //createResumeGameButton(xPosBtnCheatS, yPosBtnCheatS);
+                //btnCheatS.remove();
+              }
+            });
+
+    stage.addActor(btnCheatS);
+  }
+
+  private void createResumeButton(){
+
+    Texture myTexture = new Texture(Gdx.files.internal("myResumeBtn.png"));
+    TextureRegion myTextureRegion = new TextureRegion(myTexture);
+    TextureRegionDrawable myTexRegionDrawable = new TextureRegionDrawable(myTextureRegion);
+
+    btnResume = new ImageButton(myTexRegionDrawable);
+    btnResume.setWidth(50);
+    btnResume.setHeight(50);
+
+    final float x = Gdx.graphics.getWidth() - btnExit.getWidth() - btnResume.getWidth() - 50;
+    final float y = Gdx.graphics.getHeight() - btnExit.getHeight() - 45 - btnChat.getHeight();
+
+    btnResume.setPosition(x, y);
+
+    btnResume.addListener(
+            new ClickListener() {
+              @Override
+              public void clicked(InputEvent event, float x, float y) {
+                removeAllPrevFragments();
+                boardMovesPanel.createMovesAndDirectionsPanel();
+              }
+            });
+
+    stage.addActor(btnResume);
+  }
+
+  // show MovesAndDirectionsPanel on Resume
   private void createResumeGameButton(float x, float y) {
     btnResumeGame = new TextButton("Resume", skinUI, "default");
     btnResumeGame.setWidth(100);
@@ -477,17 +544,35 @@ public class BoardScreen extends FlashPointScreen {
             new ClickListener() {
               @Override
               public void clicked(InputEvent event, float x, float y) {
-                if (boardChatFragment.scrollPaneMsg != null) {
-                  boardChatFragment.removeChatFragment();
+
+                removeAllPrevFragments();
+
+                if (btnChat == null) {
+                  createChatButton();
                 }
 
-                createChatButton();
+                if (btnCheatS == null) {
+                  createCheatSButton();
+                }
+
                 boardMovesPanel.createMovesAndDirectionsPanel();
                 btnResumeGame.remove();
               }
             });
 
     stage.addActor(btnResumeGame);
+  }
+
+  private void removeAllPrevFragments(){
+      boardMovesPanel.removeMovesAndDirectionsPanel();
+      boardChatFragment.removeChatFragment();
+      boardCheatSFragment.removeCheatSFragment();
+  }
+
+  private void printStage(){
+    for (Actor a : stage.getActors()){
+      System.out.println(a);
+    }
   }
 
 }
