@@ -31,6 +31,8 @@ public class BoardScreen extends FlashPointScreen {
   static ArrayList<Image> gameUnits = new ArrayList<Image>();
 
   // choose init pos clickable tiles
+  boolean activateChooseInitPos = false;
+
   final String[] CHOOSE_INIT_POS_TILES = {"0-0", "1-0", "2-0", "3-0", "4-0", "5-0", "6-0", "7-0",
           "0-1","0-2","0-3","0-4","0-5","0-6","0-7","0-8","0-9",
           "1-9", "2-9", "3-9", "4-9", "5-9", "6-9",
@@ -39,23 +41,18 @@ public class BoardScreen extends FlashPointScreen {
 
 
 
-  // managers initialization
-
-  boolean activateChooseInitPos = false;
-
+  // GUI elements
   SpriteBatch batch;
   Texture txtrBG;
   Sprite spriteBG;
   static Stage stage;
 
-  BoardChooseInitPosPanel boardChooseInitPosPanel;
   BoardMovesPanel boardMovesPanel;
   BoardChatFragment boardChatFragment;
   BoardCheatSFragment boardCheatSFragment;
   BoardStatsFragment boardStatsFragment;
 
   TextButton btnChooseInitPosTest;
-
   TextButton btnExit;
   TextButton btnChat;
   ImageButton btnResume;
@@ -123,6 +120,7 @@ public class BoardScreen extends FlashPointScreen {
                       activateChooseInitPos = false;
                       removeAllFilterOnTile();
                       redrawGameUnitsOnTile();
+                      updateGameInfoLabel();
                     }
                   }
                 });
@@ -492,7 +490,7 @@ public class BoardScreen extends FlashPointScreen {
 
                 int numFireman = 3; // TO DO : getNumFirefighter from FireFighterTurnManager
                 for (int i = 0; i < numFireman; i++){
-                  addFilterOnTileForChooseInitPos();
+                  addFilterOnTileForChooseInitPos(null);
                   activateChooseInitPos = true;
                 }
               }
@@ -634,7 +632,7 @@ public class BoardScreen extends FlashPointScreen {
       boardStatsFragment.removeStatsFragment();
   }
 
-  private void addFilterOnTileForChooseInitPos(){
+  private void addFilterOnTileForChooseInitPos(List<Tile> tiles){
 
     // TO DO: add filter to clickable tiles gotten from Manager
 
@@ -643,6 +641,10 @@ public class BoardScreen extends FlashPointScreen {
       int j_pos = Integer.parseInt(CHOOSE_INIT_POS_TILES[i].split("-")[1]);
       tilesImg[i_pos][j_pos].setColor(Color.GREEN);
     }
+  }
+
+  private void addFilterOnAfterKnockdownChoosePos(){
+
   }
 
   private void removeAllFilterOnTile(){
