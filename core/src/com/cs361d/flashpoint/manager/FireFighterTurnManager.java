@@ -94,7 +94,7 @@ public class FireFighterTurnManager {
   public void chopWall(Direction d) {
 
     // Don't let him chop wall if ap < 3
-    if(getCurrentFireFighter().getTile().hasFire() && getCurrentFireFighter().getActionPointsLeft() < 3)
+    if((getCurrentFireFighter().getTile().hasFire()) && (getCurrentFireFighter().getActionPointsLeft() < 3))
       return;
     
     Obstacle o = getCurrentFireFighter().getTile().getObstacle(d);
@@ -112,7 +112,7 @@ public class FireFighterTurnManager {
   public void interactWithDoor(Direction d) {
 
     // Don't let him interact with door if ap < 2
-    if(getCurrentFireFighter().getTile().hasFire() && getCurrentFireFighter().getActionPointsLeft() < 2)
+    if((getCurrentFireFighter().getTile().hasFire()) && (getCurrentFireFighter().getActionPointsLeft() < 2))
       return;
 
     Obstacle o = getCurrentFireFighter().getTile().getObstacle(d);
@@ -130,7 +130,7 @@ public class FireFighterTurnManager {
   public void extinguishFire(Direction d) {
 
     // Don't let him extenguish another Tile's fire or smoke if ap < 2
-    if(getCurrentFireFighter().getTile().hasFire() && getCurrentFireFighter().getActionPointsLeft() < 2 && !d.equals(Direction.NODIRECTION))
+    if((getCurrentFireFighter().getTile().hasFire()) && (getCurrentFireFighter().getActionPointsLeft() < 2) && (!d.equals(Direction.NODIRECTION)))
       return;
 
     Tile tileToExtinguish = getCurrentFireFighter().getTile().getAdjacentTile(d);
