@@ -27,9 +27,16 @@ public class FireFighterTurnManager {
     }
   }
 
-  public void placeOriginalFireFighter(int i, int j) {
+  public boolean chooseInitialPostion(Tile t) {
     FireFighter f = FIREFIGHTERS.removeFirst();
+    if (f.getTile() != null) {
+        return false;
+    }
+    f.setTile(t);
+    FIREFIGHTERS.addLast(f);
+    return true;
   }
+
   public void removeFireFighter(FireFighter f) {
     FIREFIGHTERS.remove(f);
   }
