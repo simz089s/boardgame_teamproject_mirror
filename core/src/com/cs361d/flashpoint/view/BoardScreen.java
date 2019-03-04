@@ -38,8 +38,8 @@ public class BoardScreen extends FlashPointScreen {
   };
 
   // choose pos on knock down
-  FireFighter knockedDownFirefigher;
   boolean activateKnockDownChoosePos = false;
+  FireFighter knockedDownFirefigher;
   ArrayList<Tile> clickableTilesOnKnockDownArr = new ArrayList<Tile>();
 
 
@@ -141,9 +141,7 @@ public class BoardScreen extends FlashPointScreen {
 
                       // TO DO: Call Manager with chosen tile by knocked down Firefighter
 
-                      clickableTilesOnKnockDownArr.clear();
                       activateKnockDownChoosePos = false;
-                      knockedDownFirefigher = null;
 
                       removeAllFilterOnTile();
                       redrawGameUnitsOnTile();
@@ -514,13 +512,16 @@ public class BoardScreen extends FlashPointScreen {
   }
 
   public static void createEndGameDialog(String title, String message){
-    dialog =
-            new Dialog(title, skinUI, "dialog") {
-              public void result(Object obj) {
-                game.setScreen(game.lobbyScreen);
-              }
-            };
-    dialog.add(createDialogContent(message));
+    Dialog dialog = new Dialog(title, skinUI, "dialog") {
+      public void result(Object obj) {
+        if ((Boolean) obj){
+          game.setScreen(game.lobbyScreen);
+        }
+      }
+    };
+
+    dialog.text(message);
+    dialog.button("OK", true);
     dialog.show(stage);
   }
 
@@ -548,7 +549,6 @@ public class BoardScreen extends FlashPointScreen {
                   public void result(Object obj) {
                     if ((Boolean) obj){
                       Gdx.app.exit();
-                      //game.setScreen(game.lobbyScreen);
                     }
                   }
                 };
