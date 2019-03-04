@@ -32,8 +32,6 @@ public class BoardScreen extends FlashPointScreen {
 
 
   // managers initialization
-  static Tile[][] tiles = BoardManager.getInstance().getTiles();
-  static FireFighterTurnManager fireFighterTurnManager = FireFighterTurnManager.getInstance();
 
   boolean activateChooseInitPos = false;
 
@@ -67,8 +65,6 @@ public class BoardScreen extends FlashPointScreen {
 
     //DBHandler.createBoardDBFamilyVersion(); // generate start board
     CreateNewGameManager.createNewGame(3, MapKind.ORIGINAL1, Difficulty.FAMILLY);
-
-    final BoardManager myBoardManager = BoardManager.getInstance();
 
     stage = new Stage();
     batch = new SpriteBatch();
@@ -114,7 +110,8 @@ public class BoardScreen extends FlashPointScreen {
 
                       clearAllGameUnits();
 
-                      while(fireFighterTurnManager.chooseInitialPosition(tiles[i_pos][j_pos]))
+                      Tile[][] tiles = BoardManager.getInstance().getTiles();
+                      while(FireFighterTurnManager.getInstance().chooseInitialPosition(tiles[i_pos][j_pos]))
 
                       activateChooseInitPos = false;
                       removeAllFilterOnTile();
@@ -300,7 +297,7 @@ public class BoardScreen extends FlashPointScreen {
 
   // draw all game units: obstacles, firefighter (top left), victim (top right), fire_status = smoke, fire (bottom left)
   private static void drawGameUnitsOnTile(Image myTile, int i, int j) {
-
+    Tile[][] tiles = BoardManager.getInstance().getTiles();
     Obstacle top = tiles[i][j].getObstacle(Direction.TOP);
     Obstacle left = tiles[i][j].getObstacle(Direction.LEFT);
 
@@ -394,6 +391,7 @@ public class BoardScreen extends FlashPointScreen {
   }
 
   public static void redrawGameUnitsOnTile() {
+    Tile[][] tiles = BoardManager.getInstance().getTiles();
     for (int i = 0; i < tiles.length; i++) {
       for (int j = 0; j < tiles[i].length; j++) {
         drawGameUnitsOnTile(tilesImg[i][j], i, j);
