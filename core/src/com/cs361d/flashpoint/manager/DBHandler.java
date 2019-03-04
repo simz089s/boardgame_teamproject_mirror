@@ -124,7 +124,7 @@ public class DBHandler {
                 }
 
                 // engine
-                myBoardManager.setCarrierStatus(i, i, CarrierStatus.fromString("" + object.get("engine")));
+                myBoardManager.setCarrierStatus(i, j, CarrierStatus.fromString("" + object.get("engine")));
 
                 // firefighters
                 JSONArray firefightersArr = (JSONArray) object.get("firefighters");
