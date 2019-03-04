@@ -24,12 +24,9 @@ public class Tile {
         this.J = j;
         this.carrierStatus = CarrierStatus.EMPTY;
     }
-    public Tile(FireStatus fireStatus, CarrierStatus s, int i, int j){
-        this.fireStatus = fireStatus;
-        this.victim = NullVictim.getInstance();
-        this.I = i;
-        this.J = j;
-        this.carrierStatus = s;
+
+    public void setCarrierStatus(CarrierStatus s) {
+        carrierStatus = s;
     }
 
 
@@ -153,8 +150,8 @@ public class Tile {
         return this.fireStatus == FireStatus.EMPTY;
     }
 
-    public List<Tile> getClosestAmbulance() {
-        return BoardManager.getInstance().getClosestAmbulance(this.I, this.J);
+    public List<Tile> getClosestAmbulanceTile() {
+        return BoardManager.getInstance().getClosestAmbulanceTile(this.I, this.J);
     }
 
     public boolean canContainAmbulance() {

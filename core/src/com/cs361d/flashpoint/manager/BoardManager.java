@@ -1,20 +1,23 @@
 package com.cs361d.flashpoint.manager;
 
 import com.cs361d.flashpoint.model.BoardElements.*;
+import jdk.internal.dynalink.support.LinkerServicesImpl;
 
-import java.util.ArrayList;
+import java.awt.*;
+import java.util.*;
 import java.util.List;
 
 public class BoardManager {
   public final static int NUM_VICTIM_SAVED_TO_WIN = 7;
   public final static int MAX_WALL_DAMAGE_POSSIBLE = 24;
-
   public static final int WIDTH = 10;
   public static final int HEIGHT = 8;
   private final Tile[][] TILE_MAP = new Tile[HEIGHT][WIDTH];
   private int totalWallDamageLeft = MAX_WALL_DAMAGE_POSSIBLE;
   private int numVictimSaved = 0;
   private int numVictimDead = 0;
+  private int numFalseAlarmRemoved = 0;
+  private List<AbstractVictim> victims = new ArrayList<AbstractVictim>(18);
 
   // create an object of SingleObject
   private static BoardManager instance = new BoardManager();
@@ -57,6 +60,15 @@ public class BoardManager {
         }
       }
     }
+    for (int i = 0; i < 6; i++) {
+      Victim v = new Victim( true);
+      victims.add(v);
+    }
+    for (int i = 6; i < 18; i++) {
+      Victim v = new Victim(false);
+      victims.add(v);
+    }
+    Collections.shuffle(victims);
   }
 
   public void addWall(int i, int j, Direction d, int health) {
@@ -95,9 +107,48 @@ public class BoardManager {
     TILE_MAP[i][j].setFireStatus(f);
   }
 
+  public void setVictims(int numFalseAlarmRemoved, int numVictimsDead, int numVictimSaved) throws IllegalAccessException {
+    this.numFalseAlarmRemoved = numFalseAlarmRemoved;
+    this.numVictimSaved = numVictimSaved;
+    this.numVictimDead = numVictimsDead;
+    if (victims.size() != 18) {
+      throw new IllegalAccessException("The method setVictims can only be called when the game is created");
+    }
+    for(int i = 0; i < victims.size(); i++) {
+      AbstractVictim v = victims.get(i);
+      if (v.isFalseAlarm()) {
+        if (numFalseAlarmRemoved > 0) {
+          victims.remove(v);
+          numFalseAlarmRemoved--;
+        }
+        }
+      else {
+        if (numVictimsDead > 0) {
+          victims.remove(v);
+          numVictimsDead--;
+        }
+      }
+    }
+    Collections.shuffle(victims);
+  }
+
   public void addVictim(int i, int j, boolean isRevealed, boolean isCured, boolean isFalseAlarm) {
-    AbstractVictim victim = new Victim(isRevealed, isCured, isFalseAlarm);
-    TILE_MAP[i][j].setVictim(victim);
+
+    for (int k = 0; k < victims.size(); k++) {
+      AbstractVictim v = victims.get(k);
+      if (v.isFalseAlarm() == isFalseAlarm) {
+        if (isRevealed) {
+          v.reveal();
+        }
+        if (isCured) {
+          v.cure();
+        }
+        TILE_MAP[i][j].setVictim(v);
+        victims.remove(v);
+        break;
+      }
+    }
+    Collections.shuffle(victims);
   }
 
   public Tile[][] getTiles() {
@@ -274,16 +325,45 @@ public class BoardManager {
              */
             reset();
           }
+          else {
+            addNewPointInterest();
+          }
+        }
+        else {
+          numVictimSaved++;
         }
         t.setNullVictim();
-        // TODO
-        /*
-        Must add code to replace the victim hear
-         */
       }
     }
   }
 
+  protected void addNewPointInterest() {
+    AbstractVictim v = victims.remove(0);
+    int width;
+    int height;
+    do
+    {
+      width = new Random().nextInt(WIDTH - 1) + 1;
+      height = new Random().nextInt(HEIGHT - 1) + 1;
+
+    }
+      while (TILE_MAP[width][height].hasPointOfInterest());
+      TILE_MAP[width][height].setFireStatus(FireStatus.EMPTY);
+      if (TILE_MAP[width][height].hasFireFighters()) {
+        // here we are on a firefighter and the point of interest is not
+        if (v.isFalseAlarm()) {
+          addNewPointInterest();
+          //TODO
+          // message to explain the situation
+        }
+        else {
+          v.reveal();
+        }
+      }
+      else {
+        TILE_MAP[width][height].setVictim(v);
+      }
+  }
   // removes the fire outside the building
   private void removeEdgeFire() {
     for (int i = 0; i < HEIGHT; i++) {
@@ -329,12 +409,12 @@ public class BoardManager {
     return null;
   }
 
-  public List<Tile> getClosestAmbulance(int i, int j) {
+  public List<Tile> getClosestAmbulanceTile(int i, int j) {
     List<Tile> tiles = new ArrayList<Tile>();
     double currentSmallestDistance = Double.MAX_VALUE;
     for (int k = 0; k < HEIGHT; k++) {
       for (int l = 0; l < WIDTH; l++) {
-        if (TILE_MAP[k][l].canContainAmbulance()/* && !TILE_MAP[k][j].hasFire()*/) {
+        if (TILE_MAP[k][l].canContainAmbulance()) {
           double squareDistance = Math.pow(i - k, 2) + Math.pow(j - l, 2);
           if (squareDistance < currentSmallestDistance) {
             currentSmallestDistance = squareDistance;
@@ -350,7 +430,7 @@ public class BoardManager {
   }
 
   private void knockedDown(int i, int j) {
-    List<Tile> tiles = getClosestAmbulance(i, j);
+    List<Tile> tiles = getClosestAmbulanceTile(i, j);
     for (FireFighter f : TILE_MAP[i][j].getFirefighters()) {
       if (tiles.size() == 1) {
         f.setTile(tiles.get(0));
@@ -394,7 +474,7 @@ public class BoardManager {
       if (t.hasRealVictim()) {
         numVictimSaved++;
         t.setNullVictim();
-        // TODO Place a new vicitm on the board hear
+        addNewPointInterest();
       }
     }
     if (numVictimSaved >= NUM_VICTIM_SAVED_TO_WIN) {
