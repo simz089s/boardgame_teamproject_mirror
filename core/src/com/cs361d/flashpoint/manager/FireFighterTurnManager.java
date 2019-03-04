@@ -41,7 +41,7 @@ public class FireFighterTurnManager {
   public void removeFireFighter(FireFighter f) { FIREFIGHTERS.remove(f);
   }
 
-  public void endTurn() {
+  public void endTurn() throws IllegalAccessException {
 
 
     if(endTurnCheck()) {
@@ -57,16 +57,13 @@ public class FireFighterTurnManager {
       FireFighter f = getCurrentFireFighter();
       Tile oldTile = f.getTile();
       Tile newTile = oldTile.getAdjacentTile(d);
-      oldTile.removeFirefighter(f);
-      newTile.addFirefighter(f);
       f.setTile(newTile);
       if (newTile.hasPointOfInterest()) {
         if (newTile.hasRealVictim()) {
           newTile.getVictim().reveal();
         } else {
           newTile.setNullVictim();
-          // TODO
-          // Method to add new victim
+          BoardManager.getInstance().addNewPointInterest();
         }
       }
     }
@@ -78,8 +75,6 @@ public class FireFighterTurnManager {
       AbstractVictim v = f.getTile().getVictim();
       Tile oldTile = f.getTile();
       Tile newTile = oldTile.getAdjacentTile(d);
-      oldTile.removeFirefighter(f);
-      newTile.addFirefighter(f);
       oldTile.setNullVictim();
       newTile.setVictim(v);
       f.setTile(newTile);

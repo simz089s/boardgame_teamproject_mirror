@@ -146,7 +146,11 @@ public class BoardMovesPanel {
 
                 } else if (moveSelected.equals("END TURN")) {
                     clearAllGameUnits();
-                    fireFighterTurnManager.endTurn();
+                    try {
+                        fireFighterTurnManager.endTurn();
+                    } catch (IllegalAccessException e) {
+                        e.printStackTrace();
+                    }
                     redrawGameUnitsOnTile();
                     updateGameInfoLabel();
 
