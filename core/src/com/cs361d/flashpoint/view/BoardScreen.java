@@ -66,8 +66,9 @@ public class BoardScreen extends FlashPointScreen {
   public void show() {
 
     //DBHandler.createBoardDBFamilyVersion(); // generate start board
+    CreateNewGameManager.createNewGame(3, MapKind.ORIGINAL1, Difficulty.FAMILLY);
 
-    final BoardManager myBoardManager = DBHandler.getBoardFromDB();
+    final BoardManager myBoardManager = BoardManager.getInstance();
 
     stage = new Stage();
     batch = new SpriteBatch();
@@ -113,7 +114,7 @@ public class BoardScreen extends FlashPointScreen {
 
                       clearAllGameUnits();
 
-                      while(fireFighterTurnManager.chooseInitialPostion(tiles[i_pos][j_pos]))
+                      while(fireFighterTurnManager.chooseInitialPosition(tiles[i_pos][j_pos]))
 
                       activateChooseInitPos = false;
                       removeAllFilterOnTile();
@@ -127,7 +128,6 @@ public class BoardScreen extends FlashPointScreen {
       }
     }
 
-    CreateNewGameManager.createNewGame(3, MapKind.ORIGINAL1, Difficulty.FAMILLY);
     createGameInfoLabel();
 
     createChooseInitPosTestButton();
@@ -411,8 +411,8 @@ public class BoardScreen extends FlashPointScreen {
 
   private void createGameInfoLabel() {
 
-    int numAP = fireFighterTurnManager.getCurrentFireFighter().getActionPointsLeft();
-    FireFighterColor color = fireFighterTurnManager.getCurrentFireFighter().getColor();
+    int numAP = FireFighterTurnManager.getInstance().getCurrentFireFighter().getActionPointsLeft();
+    FireFighterColor color = FireFighterTurnManager.getInstance().getCurrentFireFighter().getColor();
     gameInfoLabel = new Label("Current turn: " + color + "\nAP left: " + numAP, skinUI);
     gameInfoLabel.setPosition(
             850,
@@ -421,8 +421,8 @@ public class BoardScreen extends FlashPointScreen {
   }
 
   public static void updateGameInfoLabel(){
-    int APLeft = fireFighterTurnManager.getCurrentFireFighter().getActionPointsLeft();
-    FireFighterColor color = fireFighterTurnManager.getCurrentFireFighter().getColor();
+    int APLeft = FireFighterTurnManager.getInstance().getCurrentFireFighter().getActionPointsLeft();
+    FireFighterColor color = FireFighterTurnManager.getInstance().getCurrentFireFighter().getColor();
     gameInfoLabel.setText("Current turn: " + color + "\nAP left: " + APLeft);
   }
 

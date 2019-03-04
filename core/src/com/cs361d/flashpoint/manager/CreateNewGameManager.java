@@ -22,3 +22,4 @@ public class CreateNewGameManager {
         BoardManager.getInstance().setFireFighterNumber(numPlayer);
     }
 }
+
