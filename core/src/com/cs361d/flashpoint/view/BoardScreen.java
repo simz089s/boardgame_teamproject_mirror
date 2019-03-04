@@ -71,7 +71,7 @@ public class BoardScreen extends FlashPointScreen {
   public void show() {
 
     //DBHandler.createBoardDBFamilyVersion(); // generate start board
-    CreateNewGameManager.createNewGame(3, MapKind.ORIGINAL1, Difficulty.FAMILLY);
+    CreateNewGameManager.createNewGame("",3, MapKind.ORIGINAL1, Difficulty.FAMILLY);
 
     stage = new Stage();
     batch = new SpriteBatch();
@@ -457,6 +457,7 @@ public class BoardScreen extends FlashPointScreen {
   }
 
   public static void updateGameInfoLabel(){
+    FireFighterTurnManager ft = FireFighterTurnManager.getInstance();
     int APLeft = FireFighterTurnManager.getInstance().getCurrentFireFighter().getActionPointsLeft();
     FireFighterColor color = FireFighterTurnManager.getInstance().getCurrentFireFighter().getColor();
     gameInfoLabel.setText("Current turn: " + color + "\nAP left: " + APLeft);

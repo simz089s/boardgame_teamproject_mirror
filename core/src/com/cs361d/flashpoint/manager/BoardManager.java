@@ -1,9 +1,8 @@
 package com.cs361d.flashpoint.manager;
 
 import com.cs361d.flashpoint.model.BoardElements.*;
-import jdk.internal.dynalink.support.LinkerServicesImpl;
+import com.cs361d.flashpoint.view.BoardScreen;
 
-import java.awt.*;
 import java.util.*;
 import java.util.List;
 
@@ -18,6 +17,7 @@ public class BoardManager {
   private int numVictimSaved = 0;
   private int numVictimDead = 0;
   private int numFalseAlarmRemoved = 0;
+  private String gameName = "originalGame";
   private List<AbstractVictim> victims = new ArrayList<AbstractVictim>(18);
 
   // create an object of SingleObject
@@ -79,6 +79,13 @@ public class BoardManager {
 
   }
 
+  public void setGameName(String name) {
+      this.gameName = name;
+  }
+
+  public String getGameName() {
+      return this.gameName;
+    }
   public void addWall(int i, int j, Direction d, int health) {
     /*
      if the health is less than 1 then no need to update the walls
@@ -338,10 +345,7 @@ public class BoardManager {
         if (t.hasRealVictim()) {
           numVictimDead++;
           if (numVictimDead > 3) {
-            // TODO
-            /*
-            we lost the game as too many victims died
-             */
+            BoardScreen.createEndGameDialog("GAME OVER", "You lost the game more than 3 victims died");
             reset();
           }
           else {
@@ -362,8 +366,8 @@ public class BoardManager {
     int height;
     do
     {
-      width = new Random().nextInt(WIDTH - 1) + 1;
-      height = new Random().nextInt(HEIGHT - 1) + 1;
+      width = 1+(int) (Math.random()*(HEIGHT-3));
+      height = 1+(int) (Math.random()*(WIDTH-3));
 
     }
       while (TILE_MAP[width][height].hasPointOfInterest());
@@ -372,8 +376,6 @@ public class BoardManager {
         // here we are on a firefighter and the point of interest is not
         if (v.isFalseAlarm()) {
           addNewPointInterest();
-          //TODO
-          // message to explain the situation
         }
         else {
           v.reveal();
@@ -449,8 +451,11 @@ public class BoardManager {
   }
 
   private void knockedDown(int i, int j) throws IllegalAccessException {
+    if (TILE_MAP[i][j].canContainAmbulance()) {
+      return;
+    }
     List<Tile> tiles = getClosestAmbulanceTile(i, j);
-    for (FireFighter f : TILE_MAP[i][j].getFirefighters()) {
+    FireFighter f = TILE_MAP[i][j].getFirefighters().get(0);
       if (tiles.size() == 1) {
         f.setTile(tiles.get(0));
       } else if (tiles.size() > 1) {
@@ -463,7 +468,9 @@ public class BoardManager {
       } else {
         throw new IllegalStateException();
       }
-    }
+    if(!TILE_MAP[i][j].getFirefighters().isEmpty()) {
+        knockedDown(i, j);
+      }
   }
 
   public List<Tile> getTilesWithFire() {
@@ -497,10 +504,7 @@ public class BoardManager {
       }
     }
     if (numVictimSaved >= NUM_VICTIM_SAVED_TO_WIN) {
-      // TODO
-      /*
-      the game ends we won
-       */
+      BoardScreen.createEndGameDialog("GAME OVER", "Congratulation you won the game saving 7 victims!!!");
       reset();
     }
   }
@@ -508,15 +512,9 @@ public class BoardManager {
   public void useDamageMarker() {
     this.totalWallDamageLeft--;
     if (this.totalWallDamageLeft <= 0) {
-      // TODO
-      /*
-      building collapsed we lost the game
-       */
-      reset();
+      BoardScreen.createEndGameDialog("GAME OVER", "You lost the game the building collapsed");
+//      reset();
     }
   }
 
-  public void chooseInitialPosition() {
-
-  }
 }

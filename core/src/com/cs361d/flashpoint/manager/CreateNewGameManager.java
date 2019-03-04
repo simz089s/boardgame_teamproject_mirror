@@ -2,16 +2,18 @@ package com.cs361d.flashpoint.manager;
 
 public class CreateNewGameManager {
 
-    public static void createNewGame(int numPlayers, MapKind map, Difficulty diff) {
+    public static void createNewGame(String gameName, int numPlayers, MapKind map, Difficulty diff) {
         switch (diff) {
             case FAMILLY:
-                createFamilyGame(numPlayers, map);
+                createFamilyGame(gameName, numPlayers, map);
                 break;
 
         }
     }
 
-    private static void createFamilyGame(int numPlayer, MapKind map) {
+    private static void createFamilyGame(String gameName, int numPlayer, MapKind map) {
+        // TODO
+        // Set the game name
         BoardManager.getInstance().reset();
         switch (map) {
             case ORIGINAL1:
