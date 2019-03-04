@@ -20,5 +20,6 @@ public class CreateNewGameManager {
             default:
         }
         BoardManager.getInstance().setFireFighterNumber(numPlayer);
+        FireFighterTurnManager m = FireFighterTurnManager.getInstance();
     }
 }
