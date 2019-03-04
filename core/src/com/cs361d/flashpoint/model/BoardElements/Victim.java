@@ -5,12 +5,6 @@ public class Victim extends AbstractVictim
     private boolean isRevealed;
     private boolean isCured;
     private final boolean IS_FALSE_ALARM;
-    public Victim(boolean isRevealed, boolean isCured, boolean isFalseAlarm)
-    {
-        this.isRevealed = isRevealed;
-        this.isCured = isCured;
-        this.IS_FALSE_ALARM = isFalseAlarm;
-    }
     public Victim(boolean isFalseAlarm)
       {
         this.isCured = false;
