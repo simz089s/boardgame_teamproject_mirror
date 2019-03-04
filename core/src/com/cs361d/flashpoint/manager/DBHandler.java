@@ -134,7 +134,7 @@ public class DBHandler {
                         String firefighterColor = firefighterIter.next();
                         // create a firefighter object by retrieving its data from DB using its unique color id
                         //FireFighter f = getFirefighterFromDB(firefighterColor);
-                        myBoardManager.addFireFighter(i, j, getEnumFromString(firefighterColor), 5, 8);
+                        myBoardManager.addFireFighter(i, j, getEnumFromString(firefighterColor), 0, 8);
                     }
 
                 }
@@ -407,14 +407,14 @@ public class DBHandler {
                 JSONArray newFirefightersList = new JSONArray();
 
                 // start with a firefighter at position 1-1
-                if (i == 1 && j == 1){
-                    newFirefightersList.add("RED");
-                }
-
-                // another firefighter at position 5-5
-                if (i == 5 && j == 5){
-                    newFirefightersList.add("BLUE");
-                }
+//                if (i == 1 && j == 1){
+//                    newFirefightersList.add("RED");
+//                }
+//
+//                // another firefighter at position 5-5
+//                if (i == 5 && j == 5){
+//                    newFirefightersList.add("BLUE");
+//                }
 
                 currentTile.put("firefighters", newFirefightersList);
 

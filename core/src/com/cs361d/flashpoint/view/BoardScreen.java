@@ -12,9 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-import com.cs361d.flashpoint.manager.DBHandler;
-import com.cs361d.flashpoint.manager.FireFighterTurnManager;
-import com.cs361d.flashpoint.manager.BoardManager;
+import com.cs361d.flashpoint.manager.*;
 import com.cs361d.flashpoint.model.BoardElements.*;
 
 import java.util.ArrayList;
@@ -112,8 +110,14 @@ public class BoardScreen extends FlashPointScreen {
                   public void clicked(InputEvent event, float x, float y) {
                     if (activateChooseInitPos){
                       System.out.println("POSITION CLICKED: " + i_pos +"-" + j_pos);
+
+                      clearAllGameUnits();
+
+                      while(fireFighterTurnManager.chooseInitialPostion(tiles[i_pos][j_pos]))
+
                       activateChooseInitPos = false;
                       removeAllFilterOnTile();
+                      redrawGameUnitsOnTile();
                     }
                   }
                 });
@@ -123,6 +127,7 @@ public class BoardScreen extends FlashPointScreen {
       }
     }
 
+    CreateNewGameManager.createNewGame(3, MapKind.ORIGINAL1, Difficulty.FAMILLY);
     createGameInfoLabel();
 
     createChooseInitPosTestButton();
@@ -405,6 +410,7 @@ public class BoardScreen extends FlashPointScreen {
   }
 
   private void createGameInfoLabel() {
+
     int numAP = fireFighterTurnManager.getCurrentFireFighter().getActionPointsLeft();
     FireFighterColor color = fireFighterTurnManager.getCurrentFireFighter().getColor();
     gameInfoLabel = new Label("Current turn: " + color + "\nAP left: " + numAP, skinUI);
@@ -466,13 +472,6 @@ public class BoardScreen extends FlashPointScreen {
   // to test choose init pos
   private void createChooseInitPosTestButton() {
 
-    // tiles to color (clickable tiles)
-    final String[] posToFilter = {"0-0", "1-0", "2-0", "3-0", "4-0", "5-0", "6-0", "7-0",
-            "0-1","0-2","0-3","0-4","0-5","0-6","0-7","0-8","0-9",
-            "1-9", "2-9", "3-9", "4-9", "5-9", "6-9",
-            "7-1","7-2","7-3","7-4","7-5","7-6","7-7","7-8","7-9",
-    };
-
     btnChooseInitPosTest = new TextButton("Init Pos", skinUI, "default");
     btnChooseInitPosTest.setWidth(100);
     btnChooseInitPosTest.setHeight(25);
@@ -484,13 +483,12 @@ public class BoardScreen extends FlashPointScreen {
             new ClickListener() {
               @Override
               public void clicked(InputEvent event, float x, float y) {
-                for (int i = 0; i < posToFilter.length; i++){
-                  int i_pos = Integer.parseInt(posToFilter[i].split("-")[0]);
-                  int j_pos = Integer.parseInt(posToFilter[i].split("-")[1]);
-                  tilesImg[i_pos][j_pos].setColor(Color.GREEN);
-                }
 
-                activateChooseInitPos = true;
+                int numFireman = 3; // TO DO : getNumFirefighter from FireFighterTurnManager
+                for (int i = 0; i < numFireman; i++){
+                  addFilterOnTileForChooseInitPos();
+                  activateChooseInitPos = true;
+                }
               }
             });
 
@@ -630,6 +628,22 @@ public class BoardScreen extends FlashPointScreen {
       boardStatsFragment.removeStatsFragment();
   }
 
+  private void addFilterOnTileForChooseInitPos(){
+
+    // choose init pos clickable tiles
+    final String[] CHOOSE_INIT_POS_TILES = {"0-0", "1-0", "2-0", "3-0", "4-0", "5-0", "6-0", "7-0",
+            "0-1","0-2","0-3","0-4","0-5","0-6","0-7","0-8","0-9",
+            "1-9", "2-9", "3-9", "4-9", "5-9", "6-9",
+            "7-1","7-2","7-3","7-4","7-5","7-6","7-7","7-8","7-9",
+    };
+
+    for (int i = 0; i < CHOOSE_INIT_POS_TILES.length; i++){
+      int i_pos = Integer.parseInt(CHOOSE_INIT_POS_TILES[i].split("-")[0]);
+      int j_pos = Integer.parseInt(CHOOSE_INIT_POS_TILES[i].split("-")[1]);
+      tilesImg[i_pos][j_pos].setColor(Color.GREEN);
+    }
+  }
+
   private void removeAllFilterOnTile(){
     for (int i = 0; i < tilesImg.length; i++){
       for (int j = 0; j < tilesImg[i].length; j++) {
@@ -637,4 +651,5 @@ public class BoardScreen extends FlashPointScreen {
       }
     }
   }
+
 }
