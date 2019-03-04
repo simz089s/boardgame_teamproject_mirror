@@ -1,10 +1,7 @@
 package com.cs361d.flashpoint.manager;
 
 
-import com.cs361d.flashpoint.model.BoardElements.Direction;
-import com.cs361d.flashpoint.model.BoardElements.FireFighter;
-import com.cs361d.flashpoint.model.BoardElements.FireFighterColor;
-import com.cs361d.flashpoint.model.BoardElements.FireStatus;
+import com.cs361d.flashpoint.model.BoardElements.*;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -40,6 +37,10 @@ public class DBHandler {
 
     // FAMILY GAME BOARD POI INITIAL PLACEMENT
     private static final String[] POI_POS = {"2-4", "5-1", "5-8"};
+
+    // FAMILY ENGINES LOCATION
+    private static final String[] AMBULANCE_POS = {"3-0", "4-0", "7-3", "7-4", "0-5", "0-6", "3-9", "4-9"};
+    private static final String[] FIRETRUCK_POS = {"1-0", "2-0", "0-7", "0-8", "5-9", "6-9", "7-1", "7-2"};
 
     // load the board from DB
     public static BoardManager getBoardFromDB() {
@@ -120,6 +121,13 @@ public class DBHandler {
 
                 if (Integer.parseInt("" + object.get("right_wall")) > -1){
                     myBoardManager.addWall(i, j, Direction.RIGHT, Integer.parseInt("" + object.get("right_wall")));
+                }
+
+                // engine
+                if (object.get("engine").equals("ambulance")){
+                    //myBoardManager.set(CarrierStatus("ambulance"));
+                } else if (object.get("engine").equals("firetruck")){
+                    //myBoardManager.set(CarrierStatus("ambulance"));
                 }
 
                 // firefighters
@@ -386,6 +394,18 @@ public class DBHandler {
                 currentTile.put("bottom_wall_door", doorProperties);
                 currentTile.put("right_wall_door", doorProperties);
 
+                // engines
+                if (isPresentInArr(AMBULANCE_POS, i + "-" + j)){
+                    currentTile.put("engine", "ambulance");
+                }
+
+                if (isPresentInArr(FIRETRUCK_POS, i + "-" + j)){
+                    currentTile.put("engine", "firetruck");
+                }
+
+                if (!isPresentInArr(AMBULANCE_POS, i + "-" + j) && !isPresentInArr(FIRETRUCK_POS, i + "-" + j)){
+                    currentTile.put("engine", "empty");
+                }
 
                 // firefighters
                 JSONArray newFirefightersList = new JSONArray();
