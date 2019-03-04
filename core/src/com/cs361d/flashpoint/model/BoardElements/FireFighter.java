@@ -7,7 +7,8 @@ import java.util.Queue;
 
 public class FireFighter {
 
-  private static final Map<FireFighterColor, FireFighter> FIREFIGHTERS = new HashMap<FireFighterColor,FireFighter>();
+  private static final Map<FireFighterColor, FireFighter> FIREFIGHTERS =
+      new HashMap<FireFighterColor, FireFighter>();
   private final FireFighterColor color;
   private static final int MAX_ACTION_POINTS = 8;
   private static final int ACTION_POINTS_PER_TURN = 4;
@@ -16,22 +17,24 @@ public class FireFighter {
 
   private FireFighter(FireFighterColor color, int actionPoints) {
     if (actionPoints > MAX_ACTION_POINTS) {
-      throw new IllegalStateException("Action points cannot exceed " + MAX_ACTION_POINTS + " was: " + actionPoints);
+      throw new IllegalStateException(
+          "Action points cannot exceed " + MAX_ACTION_POINTS + " was: " + actionPoints);
     }
     this.color = color;
     this.actionPoints = actionPoints;
   }
+
   public static FireFighter createFireFighter(FireFighterColor color) {
     return createFireFighter(color, 0, 4);
   }
 
-  public static FireFighter createFireFighter(FireFighterColor color, int numVictimsSaved, int actionPoints) {
+  public static FireFighter createFireFighter(
+      FireFighterColor color, int numVictimsSaved, int actionPoints) {
     FireFighter f;
     if (FIREFIGHTERS.containsKey(color)) {
       f = FIREFIGHTERS.get(color);
       f.actionPoints = actionPoints;
-    }
-    else {
+    } else {
       f = new FireFighter(color, actionPoints);
       FIREFIGHTERS.put(color, f);
     }
@@ -39,7 +42,11 @@ public class FireFighter {
   }
 
   public void setTile(Tile t) {
+    if (currentTile != null) {
+      currentTile.removeFirefighter(this);
+    }
     this.currentTile = t;
+    t.addFirefighter(this);
   }
 
   public Tile getTile() {
@@ -64,26 +71,26 @@ public class FireFighter {
   }
 
   public boolean canEscape(Tile t) {
-      Direction[] directions = {Direction.RIGHT, Direction.LEFT, Direction.BOTTOM, Direction.TOP};
-      LinkedList<Tile> qt = new LinkedList<Tile>();
-      qt.add(t);
-      int cost = 2;
-      while(!qt.isEmpty()) {
-          t = qt.removeFirst();
-          if (!t.hasFire()) {
-              break;
+    Direction[] directions = {Direction.RIGHT, Direction.LEFT, Direction.BOTTOM, Direction.TOP};
+    LinkedList<Tile> qt = new LinkedList<Tile>();
+    qt.add(t);
+    int cost = 2;
+    while (!qt.isEmpty()) {
+      t = qt.removeFirst();
+      if (!t.hasFire()) {
+        break;
+      }
+      for (Direction d : directions) {
+        if (!t.hasObstacle(d)) {
+          Tile child = t.getAdjacentTile(d);
+          if (child == null) {
+            continue;
           }
-        for (Direction d : directions) {
-            if (!t.hasObstacle(d)) {
-               Tile child = t.getAdjacentTile(d);
-               if (child == null) {
-                   continue;
-               }
-               qt.addLast(t);
-            }
+          qt.addLast(t);
         }
       }
-      return true;
+    }
+    return true;
   }
 
   public void resetActionPoints() {
@@ -96,12 +103,11 @@ public class FireFighter {
   public boolean moveAP(Direction d) {
     Tile newTile = currentTile.getAdjacentTile(d);
     if (newTile.hasFire() && canEscape(newTile)) {
-      if (actionPoints >= 2)
-      {
+      if (actionPoints >= 2) {
         actionPoints -= 2;
         return true;
       }
-    } else if (actionPoints >= 1){
+    } else if (actionPoints >= 1) {
       actionPoints--;
       return true;
     }

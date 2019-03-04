@@ -90,6 +90,10 @@ public class Tile {
     }
 
     public void addFirefighter(FireFighter firefighter) {
+
+        if (FIREFIGHTERS.contains(firefighter)) {
+            throw new IllegalArgumentException("This tile already contains that fireFighter");
+        }
         FIREFIGHTERS.add(firefighter);
     }
 

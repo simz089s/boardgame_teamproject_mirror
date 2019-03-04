@@ -120,7 +120,6 @@ public class BoardManager {
     }
     f.setTile(TILE_MAP[i][j]);
     FireFighterTurnManager.getInstance().addFireFighter(f);
-    TILE_MAP[i][j].addFirefighter(f);
   }
 
   public void addFireStatus(int i, int j, FireStatus f) {
@@ -454,7 +453,6 @@ public class BoardManager {
     for (FireFighter f : TILE_MAP[i][j].getFirefighters()) {
       if (tiles.size() == 1) {
         f.setTile(tiles.get(0));
-        tiles.get(0).addFirefighter(f);
       } else if (tiles.size() > 1) {
         // TODO
         /*
@@ -464,7 +462,6 @@ public class BoardManager {
         throw new IllegalStateException();
       }
     }
-    TILE_MAP[i][j].removeAllFireFighters();
   }
 
   public List<Tile> getTilesWithFire() {
