@@ -1,7 +1,9 @@
 package com.cs361d.flashpoint.model.BoardElements;
 
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map;
+import java.util.Queue;
 
 public class FireFighter {
 
@@ -61,6 +63,29 @@ public class FireFighter {
     }
   }
 
+  public boolean canEscape(Tile t) {
+      Direction[] directions = {Direction.RIGHT, Direction.LEFT, Direction.BOTTOM, Direction.TOP};
+      LinkedList<Tile> qt = new LinkedList<Tile>();
+      qt.add(t);
+      int cost = 2;
+      while(!qt.isEmpty()) {
+          t = qt.removeFirst();
+          if (!t.hasFire()) {
+              break;
+          }
+        for (Direction d : directions) {
+            if (!t.hasObstacle(d)) {
+               Tile child = t.getAdjacentTile(d);
+               if (child == null) {
+                   continue;
+               }
+               qt.addLast(t);
+            }
+        }
+      }
+      return true;
+  }
+
   public void resetActionPoints() {
     this.actionPoints += ACTION_POINTS_PER_TURN;
     if (this.actionPoints > MAX_ACTION_POINTS) {
@@ -70,7 +95,7 @@ public class FireFighter {
 
   public boolean moveAP(Direction d) {
     Tile newTile = currentTile.getAdjacentTile(d);
-    if (newTile.hasFire()) {
+    if (newTile.hasFire() && canEscape(newTile)) {
       if (actionPoints >= 2)
       {
         actionPoints -= 2;

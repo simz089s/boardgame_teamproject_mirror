@@ -8,6 +8,7 @@ import java.util.*;
 import java.util.List;
 
 public class BoardManager {
+  private final LinkedList<FireFighterColor> colorList = new LinkedList<FireFighterColor>();
   public final static int NUM_VICTIM_SAVED_TO_WIN = 7;
   public final static int MAX_WALL_DAMAGE_POSSIBLE = 24;
   public static final int WIDTH = 10;
@@ -69,6 +70,13 @@ public class BoardManager {
       victims.add(v);
     }
     Collections.shuffle(victims);
+    colorList.add(FireFighterColor.BLUE);
+    colorList.add(FireFighterColor.GREEN);
+    colorList.add(FireFighterColor.RED);
+    colorList.add(FireFighterColor.ORANGE);
+    colorList.add(FireFighterColor.WHITE);
+    colorList.add(FireFighterColor.YELLOW);
+
   }
 
   public void addWall(int i, int j, Direction d, int health) {
@@ -83,6 +91,16 @@ public class BoardManager {
   }
   public void setCarrierStatus(int i, int j, CarrierStatus s) {
     TILE_MAP[i][j].setCarrierStatus(s);
+  }
+
+  public void setFireFighterNumber(int count) {
+    if (count > 6) {
+      throw new IllegalArgumentException("Max num of player is 6");
+    }
+    for (int i = 0; i < count; i++) {
+      FireFighter f = FireFighter.createFireFighter(colorList.removeFirst(), 0, 4);
+      FireFighterTurnManager.getInstance().addFireFighter(f);
+    }
   }
   public void addDoor(int i, int j, Direction d, int health, boolean isOpen) {
     Obstacle obstacle = TILE_MAP[i][j].getObstacle(d);
@@ -345,8 +363,8 @@ public class BoardManager {
     int height;
     do
     {
-      width = new Random().nextInt(WIDTH - 2) + 1;
-      height = new Random().nextInt(HEIGHT - 2) + 1;
+      width = new Random().nextInt(WIDTH - 1) + 1;
+      height = new Random().nextInt(HEIGHT - 1) + 1;
 
     }
       while (TILE_MAP[width][height].hasPointOfInterest());
@@ -497,5 +515,9 @@ public class BoardManager {
        */
       reset();
     }
+  }
+
+  public void chooseInitialPosition() {
+
   }
 }
