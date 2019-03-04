@@ -115,7 +115,11 @@ public class BoardScreen extends FlashPointScreen {
 
                       clearAllGameUnits();
                       Tile[][] tiles = BoardManager.getInstance().getTiles();
-                      FireFighterTurnManager.getInstance().chooseInitialPosition(tiles[i_pos][j_pos]);
+                      try {
+                        FireFighterTurnManager.getInstance().chooseInitialPosition(tiles[i_pos][j_pos]);
+                      } catch (IllegalAccessException e) {
+                        e.printStackTrace();
+                      }
 
                       activateChooseInitPos = false;
                       removeAllFilterOnTile();
