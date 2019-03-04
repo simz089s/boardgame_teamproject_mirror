@@ -43,7 +43,7 @@ public class DBHandler {
     private static final String[] FIRETRUCK_POS = {"1-0", "2-0", "0-7", "0-8", "5-9", "6-9", "7-1", "7-2"};
 
     // load the board from DB
-    public static BoardManager getBoardFromDB() {
+    private static BoardManager getBoardFromDB() {
         BoardManager myBoardManager = BoardManager.getInstance();
 
         JSONParser parser = new JSONParser();
@@ -448,6 +448,7 @@ public class DBHandler {
             FileWriter file = new FileWriter(TILE_DB_FILENAME);
             file.write(newObj.toJSONString());
             file.flush();
+            getBoardFromDB();
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();

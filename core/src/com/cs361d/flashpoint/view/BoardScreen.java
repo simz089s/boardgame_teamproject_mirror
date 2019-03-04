@@ -297,6 +297,7 @@ public class BoardScreen extends FlashPointScreen {
 
   // draw all game units: obstacles, firefighter (top left), victim (top right), fire_status = smoke, fire (bottom left)
   private static void drawGameUnitsOnTile(Image myTile, int i, int j) {
+
     Tile[][] tiles = BoardManager.getInstance().getTiles();
     Obstacle top = tiles[i][j].getObstacle(Direction.TOP);
     Obstacle left = tiles[i][j].getObstacle(Direction.LEFT);
