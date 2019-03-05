@@ -86,6 +86,7 @@ public class BoardManager {
   public String getGameName() {
       return this.gameName;
     }
+
   public void addWall(int i, int j, Direction d, int health) {
     /*
      if the health is less than 1 then no need to update the walls
@@ -471,6 +472,13 @@ public class BoardManager {
     if(!TILE_MAP[i][j].getFirefighters().isEmpty()) {
         knockedDown(i, j);
       }
+  }
+
+  public void chooseForKnowckedDown(Tile t, FireFighter f) {
+    if (!t.canContainAmbulance()) {
+      throw new IllegalArgumentException("Cannot place firefighter outside of ambulance tile after knocked down");
+    }
+    f.setTile(t);
   }
 
   public List<Tile> getTilesWithFire() {

@@ -161,6 +161,7 @@ public class Tile {
     public boolean canContainAmbulance() {
         return this.carrierStatus == CarrierStatus.AMBULANCE;
     }
+    public boolean canContainFireTruck() {return this.carrierStatus == CarrierStatus.FIRETRUCK;}
 
     public boolean hasFireFighters() {
         return FIREFIGHTERS.size() > 0;

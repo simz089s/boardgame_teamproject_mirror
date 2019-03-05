@@ -12,9 +12,8 @@ public class CreateNewGameManager {
     }
 
     private static void createFamilyGame(String gameName, int numPlayer, MapKind map) {
-        // TODO
-        // Set the game name
         BoardManager.getInstance().reset();
+        BoardManager.getInstance().setGameName(gameName);
         switch (map) {
             case ORIGINAL1:
                 DBHandler.createBoardDBFamilyVersion();
