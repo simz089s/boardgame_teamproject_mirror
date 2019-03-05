@@ -2,6 +2,7 @@ package com.cs361d.flashpoint.view;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
@@ -49,6 +50,8 @@ public class BoardScreen extends FlashPointScreen {
   Sprite spriteBG;
   static Stage stage;
 
+  private Music myMusic;
+
   BoardMovesPanel boardMovesPanel;
   BoardChatFragment boardChatFragment;
   BoardCheatSFragment boardCheatSFragment;
@@ -59,6 +62,7 @@ public class BoardScreen extends FlashPointScreen {
   ImageButton btnResume;
   TextButton btnCheatS;
   TextButton btnStats;
+  ImageButton btnMusicSound;
   static Label gameInfoLabel;
 
   BoardScreen(Game pGame) {
@@ -70,6 +74,13 @@ public class BoardScreen extends FlashPointScreen {
 
     //DBHandler.createBoardDBFamilyVersion(); // generate start board
     //CreateNewGameManager.createNewGame("",4, MapKind.ORIGINAL1, Difficulty.FAMILLY);
+
+
+    // background music
+    myMusic = Gdx.audio.newMusic(Gdx.files.internal("playlist/sound1.mp3"));
+    myMusic.setLooping(true);
+    myMusic.play();
+
 
     stage = new Stage();
     batch = new SpriteBatch();
@@ -156,11 +167,11 @@ public class BoardScreen extends FlashPointScreen {
 
     createGameInfoLabel();
 
-
     createExitButton();
     createCheatSButton();
     createStatsButton();
     createChatButton();
+    createSoundButton();
     createResumeButton();
 
     // Moves panel
@@ -638,6 +649,36 @@ public class BoardScreen extends FlashPointScreen {
             });
 
     stage.addActor(btnResume);
+  }
+
+  private void createSoundButton(){
+
+    Texture myTexture = new Texture(Gdx.files.internal("sound.png"));
+    TextureRegion myTextureRegion = new TextureRegion(myTexture);
+    TextureRegionDrawable myTexRegionDrawable = new TextureRegionDrawable(myTextureRegion);
+
+    btnMusicSound = new ImageButton(myTexRegionDrawable);
+    btnMusicSound.setWidth(30);
+    btnMusicSound.setHeight(30);
+
+    final float x = Gdx.graphics.getWidth() - btnExit.getWidth() - 75;
+    final float y = Gdx.graphics.getHeight() - btnExit.getHeight() * 2 - 15;
+
+    btnMusicSound.setPosition(x, y);
+
+    btnMusicSound.addListener(
+            new ClickListener() {
+              @Override
+              public void clicked(InputEvent event, float x, float y) {
+                if (myMusic.isPlaying()){
+                  myMusic.pause();
+                } else {
+                  myMusic.play();
+                }
+              }
+            });
+
+    stage.addActor(btnMusicSound);
   }
 
 

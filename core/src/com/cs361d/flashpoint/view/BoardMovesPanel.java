@@ -68,8 +68,7 @@ public class BoardMovesPanel {
                 "MOVE", "EXTINGUISH", "CHOP", "MOVE WITH VICTIM", "INTERACT WITH DOOR", "END TURN", "SAVE"
         };
 
-        // TODO
-        // MOVES_ARR = fireFighterTurnManager.getAvailableMoves();
+        // TODO: MOVES_ARR = fireFighterTurnManager.getAvailableMoves();
 
         return MOVES_ARR;
     }
