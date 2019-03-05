@@ -15,6 +15,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
+import java.io.File;
+import java.util.ArrayList;
+
 public class LobbyScreen extends FlashPointScreen {
 
     SpriteBatch batch;
@@ -282,4 +285,19 @@ public class LobbyScreen extends FlashPointScreen {
                 Gdx.graphics.getWidth() / 2,
                 Gdx.graphics.getHeight() - scrollPaneLoadGameList.getHeight() - 45);
     }
+
+    public ArrayList<String> listFilesForFolder() {
+
+        ArrayList<String> filesArr = new ArrayList<String>();
+        File folder = new File("db");
+
+        for (final File fileEntry : folder.listFiles()) {
+            if (fileEntry.isFile()) {
+                filesArr.add(fileEntry.getName());
+            }
+        }
+
+        return filesArr;
+    }
+
 }

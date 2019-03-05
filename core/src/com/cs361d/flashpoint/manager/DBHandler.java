@@ -211,19 +211,23 @@ public class DBHandler {
 
         JSONParser parser = new JSONParser();
 
+        JSONObject gameStats = new JSONObject();
+        gameStats.put("gameName", fileName);
+        gameStats.put("numVictimsLost", BoardManager.getInstance().getNumVictimDead());
+        gameStats.put("numVictimsSaved", BoardManager.getInstance().getNumVictimSaved());
+        gameStats.put("numFalseAlarmRemoved", BoardManager.getInstance().getNumFalseAlarmRemoved());
+        gameStats.put("numDamageLeft", BoardManager.getInstance().getTotalWallDamageLeft());
+
         try {
 
-            Object obj = parser.parse(new FileReader("db/" + fileName + ".json"));
-            JSONObject jsonObject = (JSONObject) obj;
             int count = 0;
 
-            JSONArray tilesArr = (JSONArray) jsonObject.get("tiles");
-            Iterator<JSONObject> iterator = tilesArr.iterator();
-            while (iterator.hasNext()) {
+            while (count < 80) {
 
-                JSONObject currentTile = (JSONObject) iterator.next();
                 int i = count / 10;
                 int j = count % 10;
+
+                JSONObject currentTile = new JSONObject();
 
                 // walls
                 currentTile.put("top_wall", boardManager.getTiles()[i][j].getObstacle(Direction.TOP).getHealth());
@@ -325,18 +329,19 @@ public class DBHandler {
 
             }
 
+            newObj.put("gameStats", gameStats);
             newObj.put("tiles", newTilesList);
 
-            // use "db/tiles2.json" for test
-            FileWriter file = new FileWriter("db/tiles.json");
+            // create save board json file
+
+            FileWriter file = new FileWriter("db/" + fileName + ".json");
             file.write(newObj.toJSONString());
             file.flush();
+
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ParseException e) {
             e.printStackTrace();
         }
     }

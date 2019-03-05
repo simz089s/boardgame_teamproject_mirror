@@ -72,10 +72,8 @@ public class BoardScreen extends FlashPointScreen {
   @Override
   public void show() {
 
-    DBHandler.createBoardDBFamilyVersion(MapKind.MAP1); // generate start board
-    //CreateNewGameManager.createNewGame("",4, MapKind.ORIGINAL1, Difficulty.FAMILLY);
-
-    //DBHandler.loadBoardFromDB("");
+   // DBHandler.createBoardDBFamilyVersion(MapKind.MAP1); // generate start board
+    //CreateNewGameManager.createNewGame("",4, MapKind.MAP1, Difficulty.FAMILLY);
 
     // background music
     myMusic = Gdx.audio.newMusic(Gdx.files.internal("playlist/sound1.mp3"));
