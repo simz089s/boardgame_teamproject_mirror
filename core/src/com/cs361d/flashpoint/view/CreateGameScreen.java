@@ -10,6 +10,9 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.cs361d.flashpoint.manager.CreateNewGameManager;
+import com.cs361d.flashpoint.manager.Difficulty;
+import com.cs361d.flashpoint.manager.MapKind;
 
 public class CreateGameScreen extends FlashPointScreen {
 
@@ -39,7 +42,7 @@ public class CreateGameScreen extends FlashPointScreen {
 
     Image gameBoardImg;
 
-    Stage stage;
+    static Stage stage;
 
     CreateGameScreen(Game pGame) {
         super(pGame);
@@ -47,11 +50,6 @@ public class CreateGameScreen extends FlashPointScreen {
 
     @Override
     public void show() {
-
-        debugLbl.setPosition(10, 10);
-        debugLbl.setColor(Color.PURPLE);
-        debugLbl.setText("debug");
-
 
         batch = new SpriteBatch();
 
@@ -98,10 +96,15 @@ public class CreateGameScreen extends FlashPointScreen {
                     @Override
                     public void clicked(InputEvent event, float x, float y) {
                         if (!gameNameField.getText().isEmpty()) {
-                            debugLbl.setText(gameNameField.getText() + ", " + lstNumPlayers.getSelected() + ", "
-                                    + lstDifficulty.getSelected() + ", " + lstGameBoard.getSelected());
+
+                            int numPlayers = Integer.parseInt(lstNumPlayers.getSelected());
+
+                            CreateNewGameManager.createNewGame(gameNameField.getText(), numPlayers, MapKind.ORIGINAL1, Difficulty.FAMILLY);
+
+                            game.setScreen(game.boardScreen);
+
                         } else {
-                            debugLbl.setText("Invalid: enter a game name.");
+                            createDialog("Warning", "Invalid: enter a game name.");
                         }
                     }
                 });
@@ -121,7 +124,6 @@ public class CreateGameScreen extends FlashPointScreen {
                                 - numPlayersMenu.getHeight() - 80 - gameBoardImg.getHeight());
 
                 stage.addActor(gameBoardImg);
-                //debugLbl.setText(lstGameBoard.getSelected());
                 return true;
             }
         });
@@ -185,6 +187,8 @@ public class CreateGameScreen extends FlashPointScreen {
         stage.dispose();
     }
 
+
+
     private void createExitButton() {
         btnExit = new TextButton("Exit", skinUI, "default");
         btnExit.setWidth(100);
@@ -193,6 +197,12 @@ public class CreateGameScreen extends FlashPointScreen {
                 (Gdx.graphics.getWidth() - btnExit.getWidth() - 8),
                 (Gdx.graphics.getHeight() - btnExit.getHeight() - 8));
     }
+
+
+
+    // game name
+
+
 
     private void createGameNameLabel() {
         gameNameLabel = new Label("Game name:", skinUI);
@@ -213,7 +223,11 @@ public class CreateGameScreen extends FlashPointScreen {
                 Gdx.graphics.getHeight() - 70);
     }
 
+
+
     // number of players
+
+
 
     private void createNumPlayersLabel() {
         numPlayersLabel = new Label("Number of players:", skinUI);
@@ -236,7 +250,11 @@ public class CreateGameScreen extends FlashPointScreen {
                         - numPlayersLabel.getHeight() - numPlayersMenu.getHeight() - 80);
     }
 
+
+
     // difficulty
+
+
 
     private void createDifficultyLabel() {
         difficultyLabel = new Label("Game difficulty:", skinUI);
@@ -258,7 +276,11 @@ public class CreateGameScreen extends FlashPointScreen {
                         - difficultyLabel.getHeight() - numPlayersMenu.getHeight() - 70);
     }
 
+
+
     // game board (choose)
+
+
 
     private void createGameBoardLabel() {
         gameBoardLabel = new Label("Game board:", skinUI);
@@ -291,7 +313,12 @@ public class CreateGameScreen extends FlashPointScreen {
                         - difficultyLabel.getHeight() - numPlayersMenu.getHeight() - 80 - gameBoardImg.getHeight());
     }
 
+
+
     // start game after creating game
+
+
+
     private void createStartGameButton() {
         btnStartGame = new TextButton("Start game", skinUI, "default");
         btnStartGame.setWidth(150);
@@ -299,6 +326,24 @@ public class CreateGameScreen extends FlashPointScreen {
         btnStartGame.setPosition(
                 (Gdx.graphics.getWidth() - btnStartGame.getWidth()) / 2,
                 10);
+    }
+
+
+
+    // dialog (warning message)
+
+
+
+    public static void createDialog(String title, String message){
+        Dialog dialog = new Dialog(title, skinUI, "dialog") {
+            public void result(Object obj) {
+                remove();
+            }
+        };
+
+        dialog.text(message);
+        dialog.button("OK", true);
+        dialog.show(stage);
     }
 
 }

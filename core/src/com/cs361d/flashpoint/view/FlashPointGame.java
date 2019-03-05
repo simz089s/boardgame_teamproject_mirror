@@ -21,6 +21,6 @@ public class FlashPointGame extends Game {
         statsScreen = new StatsScreen(this);
         boardScreen = new BoardScreen(this);
 
-        this.setScreen(boardScreen);
+        this.setScreen(createGameScreen);
     }
 }

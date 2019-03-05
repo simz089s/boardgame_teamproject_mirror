@@ -54,14 +54,12 @@ public class BoardScreen extends FlashPointScreen {
   BoardCheatSFragment boardCheatSFragment;
   BoardStatsFragment boardStatsFragment;
 
-  TextButton btnChooseInitPosTest;
   TextButton btnExit;
   TextButton btnChat;
   ImageButton btnResume;
   TextButton btnCheatS;
   TextButton btnStats;
   static Label gameInfoLabel;
-  static Dialog dialog;
 
   BoardScreen(Game pGame) {
     super(pGame);
@@ -71,7 +69,7 @@ public class BoardScreen extends FlashPointScreen {
   public void show() {
 
     //DBHandler.createBoardDBFamilyVersion(); // generate start board
-    CreateNewGameManager.createNewGame("",3, MapKind.ORIGINAL1, Difficulty.FAMILLY);
+    //CreateNewGameManager.createNewGame("",4, MapKind.ORIGINAL1, Difficulty.FAMILLY);
 
     stage = new Stage();
     batch = new SpriteBatch();
@@ -139,7 +137,7 @@ public class BoardScreen extends FlashPointScreen {
                     if (activateKnockDownChoosePos && isClickableTileOnKnockDown(i_pos, j_pos)){
                       clearAllGameUnits();
 
-                      // TO DO: Call Manager with chosen tile by knocked down Firefighter
+                      // TODO: Call Manager with chosen tile by knocked down Firefighter
 
                       activateKnockDownChoosePos = false;
 
@@ -169,7 +167,9 @@ public class BoardScreen extends FlashPointScreen {
     boardMovesPanel = new BoardMovesPanel(stage);
     boardMovesPanel.createMovesAndDirectionsPanel();
 
+    // Choose init pos
     if (!FireFighterTurnManager.getInstance().allAssigned()){
+      createDialog("Ready, set, go!", "Choose your initial position on the board (green tiles).");
       addFilterOnTileForChooseInitPos();
       removeAllPrevFragments();
       btnResume.remove();
@@ -426,6 +426,13 @@ public class BoardScreen extends FlashPointScreen {
       gameUnits.add(gameUnit);
       stage.addActor(gameUnit);
     }
+
+    // Engines (Ambulance, firetruck)
+    // TODO : getCarrierStatus() for display (color) on board
+//    if (tiles[i][j].getCarrierStatus()){
+//
+//    }
+
   }
 
   public static void redrawGameUnitsOnTile() {
@@ -450,10 +457,11 @@ public class BoardScreen extends FlashPointScreen {
     int numAP = FireFighterTurnManager.getInstance().getCurrentFireFighter().getActionPointsLeft();
     FireFighterColor color = FireFighterTurnManager.getInstance().getCurrentFireFighter().getColor();
     gameInfoLabel = new Label("Current turn: " + color + "\nAP left: " + numAP, skinUI);
+    gameInfoLabel.setFontScale(1.2f);
+    gameInfoLabel.setColor(Color.BLACK);
     gameInfoLabel.setPosition(
             850,
             Gdx.graphics.getHeight() - 100);
-    gameInfoLabel.setColor(Color.BLACK);
   }
 
   public static void updateGameInfoLabel(){
@@ -461,6 +469,10 @@ public class BoardScreen extends FlashPointScreen {
     int APLeft = FireFighterTurnManager.getInstance().getCurrentFireFighter().getActionPointsLeft();
     FireFighterColor color = FireFighterTurnManager.getInstance().getCurrentFireFighter().getColor();
     gameInfoLabel.setText("Current turn: " + color + "\nAP left: " + APLeft);
+
+    if(APLeft == 0){
+      gameInfoLabel.setColor(Color.RED);
+    }
   }
 
 
@@ -472,45 +484,17 @@ public class BoardScreen extends FlashPointScreen {
 
 
   public static void createDialog(String title, String message){
-    dialog =
-            new Dialog(title, skinUI, "dialog") {
-              public void result(Object obj) {
-              }
-            };
-    dialog.add(createDialogContent(message));
+    Dialog dialog = new Dialog(title, skinUI, "dialog") {
+      public void result(Object obj) {
+        remove();
+      }
+    };
+
+    dialog.text(message);
+    dialog.button("OK", true);
     dialog.show(stage);
   }
 
-  public static Table createDialogContent(String message) {
-
-    final String[] dialogOptArr = {"OK"};
-
-    Table table = new Table(skinUI);
-    table.add(new Label(message, skinUI));
-    table.row();
-
-    final List<String> lstOptions = new List<String>(skinUI);
-    lstOptions.setItems(dialogOptArr);
-    ScrollPane optionsMenu = new ScrollPane(lstOptions);
-
-    // when clicking on an item of the list
-    lstOptions.addListener(
-            new InputListener() {
-              @Override
-              public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-
-                if (lstOptions.getSelected().equals("OK")) {
-                  dialog.remove();
-                }
-                return true;
-              }
-            });
-
-    table.add(optionsMenu);
-    table.row();
-
-    return table;
-  }
 
   public static void createEndGameDialog(String title, String message){
     Dialog dialog = new Dialog(title, skinUI, "dialog") {
@@ -639,8 +623,8 @@ public class BoardScreen extends FlashPointScreen {
     btnResume.setWidth(50);
     btnResume.setHeight(50);
 
-    final float x = Gdx.graphics.getWidth() - btnExit.getWidth() - btnResume.getWidth() - 50;
-    final float y = Gdx.graphics.getHeight() - btnExit.getHeight() * 2 - 45;
+    final float x = Gdx.graphics.getWidth() - btnExit.getWidth() - btnResume.getWidth() - 35;
+    final float y = Gdx.graphics.getHeight() - btnExit.getHeight() * 3 - 55;
 
     btnResume.setPosition(x, y);
 

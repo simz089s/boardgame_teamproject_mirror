@@ -151,7 +151,9 @@ public class BoardMovesPanel {
                     } catch (IllegalAccessException e) {
                         e.printStackTrace();
                     }
+
                     redrawGameUnitsOnTile();
+                    gameInfoLabel.setColor(Color.BLACK);
                     updateGameInfoLabel();
 
                 }  else if (moveSelected.equals("SAVE")) {

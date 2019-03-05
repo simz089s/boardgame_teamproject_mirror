@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.List;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
+import com.cs361d.flashpoint.manager.FireFighterTurnManager;
 
 import java.util.ArrayList;
 
@@ -12,7 +13,7 @@ public class BoardStatsFragment {
 
     Stage stage;
 
-    // specialist cards list
+    // stats scroll pane
     List<String> lstStats;
     List.ListStyle listStyle;
     ScrollPane scrollPaneStats;
@@ -25,15 +26,10 @@ public class BoardStatsFragment {
         this.stage = stage;
     }
 
-    // TO DO : pass in an updated Stats object to be converted to a string (GameManager)
+    // TODO : pass in an updated Stats object to be converted to a string (GameManager)
     public void createStatsFragment() {
 
-        //create available games list (TO JOIN)
-        String[] gamesStatsArr = {"\t\t[Team stats]", "Walls left: X/20", "Victims saved: Y/7", "Victims lost: Z/5", "",
-                "[My info]", "Accumulated AP: 1", "Special AP: 0", "Specialist: Fire Captain", "# victims saved: 2", "",
-                "[BLUE]", "Accumulated AP: 2", "Special AP: 1", "Specialist: Rescue specialist", "# victims saved: 0", "",
-                "[YELLOW]", "Accumulated AP: 0", "Special AP: 1", "Specialist: Paramedic", "# victims saved: 0"
-        };
+        String[] gamesStatsArr = createStats();
 
         // list style
         listStyle = new List.ListStyle();
@@ -66,6 +62,33 @@ public class BoardStatsFragment {
 
         statsListSP.add(scrollPaneStats);
         stage.addActor(scrollPaneStats);
+    }
+
+    private String[] createStats(){
+
+        ArrayList<String> gamesStatsArrList = new ArrayList<String>();
+
+        gamesStatsArrList.add(""); // TODO: add name of the game (gotten from createGame page)
+        gamesStatsArrList.add("");
+        gamesStatsArrList.add("[Team stats]");
+        gamesStatsArrList.add("Walls left: X");
+        gamesStatsArrList.add("Victims saved: Y");
+        gamesStatsArrList.add("Victims lost: Z");
+        gamesStatsArrList.add("");
+
+        // TODO: get number of firefighters
+        for (int i = 0; i < 3; i++){
+            gamesStatsArrList.add("[RED]");
+            gamesStatsArrList.add("Accumulated AP: 1");
+            gamesStatsArrList.add("Special AP: 0");
+            gamesStatsArrList.add("Specialist: Fire Captain");
+            gamesStatsArrList.add("# victims saved: 2");
+            gamesStatsArrList.add("");
+        }
+
+        String[] gamesStatsArr = gamesStatsArrList.toArray(new String[0]);
+
+        return gamesStatsArr;
     }
 
     public void removeStatsFragment() {
