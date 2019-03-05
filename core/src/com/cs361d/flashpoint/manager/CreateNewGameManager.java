@@ -15,8 +15,8 @@ public class CreateNewGameManager {
         BoardManager.getInstance().reset();
         BoardManager.getInstance().setGameName(gameName);
         switch (map) {
-            case ORIGINAL1:
-                DBHandler.createBoardDBFamilyVersion();
+            case MAP1:
+                DBHandler.createBoardDBFamilyVersion(MapKind.MAP1);
                 break;
             default:
         }

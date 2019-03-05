@@ -3,8 +3,8 @@ package com.cs361d.flashpoint.manager;
 import com.cs361d.flashpoint.model.BoardElements.CarrierStatus;
 
 public enum MapKind {
-    ORIGINAL1("original1"),
-    ORIGINAL2("orignal2"),
+    MAP1("map1"),
+    MAP2("map2"),
     RANDOM("random");
 
     MapKind(String text) {

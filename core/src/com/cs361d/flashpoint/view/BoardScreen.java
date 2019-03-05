@@ -72,9 +72,10 @@ public class BoardScreen extends FlashPointScreen {
   @Override
   public void show() {
 
-    //DBHandler.createBoardDBFamilyVersion(); // generate start board
+    DBHandler.createBoardDBFamilyVersion(MapKind.MAP1); // generate start board
     //CreateNewGameManager.createNewGame("",4, MapKind.ORIGINAL1, Difficulty.FAMILLY);
 
+    //DBHandler.loadBoardFromDB("");
 
     // background music
     myMusic = Gdx.audio.newMusic(Gdx.files.internal("playlist/sound1.mp3"));
@@ -149,7 +150,7 @@ public class BoardScreen extends FlashPointScreen {
                     if (activateKnockDownChoosePos && isClickableTileOnKnockDown(i_pos, j_pos)){
                       clearAllGameUnits();
 
-                      // TODO: Call Manager with chosen tile by knocked down Firefighter
+                      BoardManager.getInstance().chooseForKnowckedDown(BoardManager.getInstance().getTiles()[i_pos][j_pos], knockedDownFirefigher);
 
                       activateKnockDownChoosePos = false;
 

@@ -99,7 +99,7 @@ public class CreateGameScreen extends FlashPointScreen {
 
                             int numPlayers = Integer.parseInt(lstNumPlayers.getSelected());
 
-                            CreateNewGameManager.createNewGame(gameNameField.getText(), numPlayers, MapKind.ORIGINAL1, Difficulty.FAMILLY);
+                            CreateNewGameManager.createNewGame(gameNameField.getText(), numPlayers, MapKind.MAP1, Difficulty.FAMILLY);
 
                             game.setScreen(game.boardScreen);
 
