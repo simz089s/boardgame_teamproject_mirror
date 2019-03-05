@@ -493,20 +493,7 @@ public class DBHandler {
 //    }
 
     private static FireFighterColor getEnumFromString(String color){
-        if (color.equals("RED")){
-            return FireFighterColor.RED;
-        } else if (color.equals("BLUE")){
-            return FireFighterColor.BLUE;
-        } else if (color.equals("YELLOW")){
-            return FireFighterColor.YELLOW;
-        } else if (color.equals("WHITE")){
-            return FireFighterColor.WHITE;
-        } else if (color.equals("ORANGE")){
-            return FireFighterColor.ORANGE;
-        } else if (color.equals("GREEN")){
-            return FireFighterColor.GREEN;
-        }
-        return null;
+        return FireFighterColor.fromString(color);
 
     }
 

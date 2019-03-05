@@ -8,5 +8,17 @@ public enum FireFighterColor {
   WHITE("white"),
   YELLOW("yellow");
 
-  FireFighterColor(String text) {}
-}
+  private String text;
+  FireFighterColor(String text) {
+    this.text = text;
+  }
+
+  public static FireFighterColor fromString(String text) {
+      for (FireFighterColor b : FireFighterColor.values()) {
+        if (b.text.equalsIgnoreCase(text)) {
+          return b;
+        }
+      }
+      return null;
+    }
+  }

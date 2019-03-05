@@ -3,6 +3,7 @@ package com.cs361d.flashpoint.manager;
 import com.cs361d.flashpoint.model.BoardElements.*;
 import com.cs361d.flashpoint.view.BoardScreen;
 
+import java.lang.reflect.Array;
 import java.util.*;
 import java.util.List;
 
@@ -344,17 +345,16 @@ public class BoardManager {
       }
       if (t.hasPointOfInterest()) {
         if (t.hasRealVictim()) {
-          numVictimDead++;
+          this.numVictimDead++;
           if (numVictimDead > 3) {
             BoardScreen.createEndGameDialog("GAME OVER", "You lost the game more than 3 victims died");
-            reset();
           }
           else {
             addNewPointInterest();
           }
         }
         else {
-          numVictimSaved++;
+          numFalseAlarmRemoved++;
         }
         t.setNullVictim();
       }
@@ -431,8 +431,8 @@ public class BoardManager {
     return null;
   }
 
-  public List<Tile> getClosestAmbulanceTile(int i, int j) {
-    List<Tile> tiles = new ArrayList<Tile>();
+  public ArrayList<Tile> getClosestAmbulanceTile(int i, int j) {
+    ArrayList<Tile> tiles = new ArrayList<Tile>();
     double currentSmallestDistance = Double.MAX_VALUE;
     for (int k = 0; k < HEIGHT; k++) {
       for (int l = 0; l < WIDTH; l++) {
@@ -455,17 +455,12 @@ public class BoardManager {
     if (TILE_MAP[i][j].canContainAmbulance()) {
       return;
     }
-    List<Tile> tiles = getClosestAmbulanceTile(i, j);
+    ArrayList<Tile> tiles = getClosestAmbulanceTile(i, j);
     FireFighter f = TILE_MAP[i][j].getFirefighters().get(0);
       if (tiles.size() == 1) {
         f.setTile(tiles.get(0));
       } else if (tiles.size() > 1) {
-        f.removeFromBoard();
-
-        // TODO
-        /*
-        We must then ask the fireFighter to what tile he wishes to go to
-         */
+        BoardScreen.addFilterOnKnockDownChoosePos(f, tiles);
       } else {
         throw new IllegalStateException();
       }
@@ -513,7 +508,6 @@ public class BoardManager {
     }
     if (numVictimSaved >= NUM_VICTIM_SAVED_TO_WIN) {
       BoardScreen.createEndGameDialog("GAME OVER", "Congratulation you won the game saving 7 victims!!!");
-      reset();
     }
   }
 
@@ -521,7 +515,6 @@ public class BoardManager {
     this.totalWallDamageLeft--;
     if (this.totalWallDamageLeft <= 0) {
       BoardScreen.createEndGameDialog("GAME OVER", "You lost the game the building collapsed");
-//      reset();
     }
   }
 
