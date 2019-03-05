@@ -68,26 +68,6 @@ public class BoardMovesPanel {
         }
     }
 
-    private String[] getMovesArrForDisplay(){
-        String[] MOVES_ARR = {
-                "MOVE", "EXTINGUISH", "CHOP", "MOVE WITH VICTIM", "INTERACT WITH DOOR", "END TURN", "SAVE"
-        };
-
-        // TODO: MOVES_ARR = fireFighterTurnManager.getAvailableMoves();
-
-        return MOVES_ARR;
-    }
-
-    private String[] getDirectionArrForDisplay(String move){
-        String[] directionArr = {"UP", "DOWN", "LEFT", "RIGHT", "CANCEL"};
-        if (move.equals("EXTINGUISH")){
-            String[] extinguishDirArr = {"CURRENT TILE", "UP", "DOWN", "LEFT", "RIGHT", "CANCEL"};
-            return extinguishDirArr;
-        } else{
-            return directionArr;
-        }
-    }
-
 
 
     public void createMovesAndDirectionsPanel() {
@@ -177,6 +157,7 @@ public class BoardMovesPanel {
 
         stage.addActor(scrollPaneMoveOptions);
     }
+
 
 
     private void createDirectionsPanelTable(String moveSelected){
@@ -274,6 +255,16 @@ public class BoardMovesPanel {
     // helper
 
 
+
+    private String[] getMovesArrForDisplay(){
+        String[] MOVES_ARR = {
+                "MOVE", "EXTINGUISH", "CHOP", "MOVE WITH VICTIM", "INTERACT WITH DOOR", "END TURN", "SAVE"
+        };
+
+        // TODO: MOVES_ARR = fireFighterTurnManager.getAvailableMoves();
+
+        return MOVES_ARR;
+    }
 
     private TextureRegionDrawable getTextureForDirectionTable(Direction d){
 

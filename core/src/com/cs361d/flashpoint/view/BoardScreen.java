@@ -39,9 +39,9 @@ public class BoardScreen extends FlashPointScreen {
   };
 
   // choose pos on knock down
-  boolean activateKnockDownChoosePos = false;
-  FireFighter knockedDownFirefigher;
-  ArrayList<Tile> clickableTilesOnKnockDownArr = new ArrayList<Tile>();
+  static boolean activateKnockDownChoosePos = false;
+  static FireFighter knockedDownFirefigher;
+  static ArrayList<Tile> clickableTilesOnKnockDownArr = new ArrayList<Tile>();
 
 
   // GUI elements
@@ -140,6 +140,7 @@ public class BoardScreen extends FlashPointScreen {
                       } else {
                         createResumeButton();
                         boardMovesPanel.createMovesAndDirectionsPanel();
+                        createEngineTilesColor();
                       }
                     }
 
@@ -438,12 +439,6 @@ public class BoardScreen extends FlashPointScreen {
       stage.addActor(gameUnit);
     }
 
-    // Engines (Ambulance, firetruck)
-    // TODO : getCarrierStatus() for display (color) on board
-//    if (tiles[i][j].getCarrierStatus()){
-//
-//    }
-
   }
 
   public static void redrawGameUnitsOnTile() {
@@ -697,7 +692,7 @@ public class BoardScreen extends FlashPointScreen {
     }
   }
 
-  public void addFilterOnKnockDownChoosePos(FireFighter f, ArrayList<Tile> clickableTiles){
+  public static void addFilterOnKnockDownChoosePos(FireFighter f, ArrayList<Tile> clickableTiles){
 
     clickableTilesOnKnockDownArr = clickableTiles;
     knockedDownFirefigher = f;
@@ -758,6 +753,20 @@ public class BoardScreen extends FlashPointScreen {
     }
 
     return false;
+  }
+
+  private void createEngineTilesColor(){
+    // Engines (Aimbulance, firetruck)
+    Tile[][] tiles = BoardManager.getInstance().getTiles();
+    for (int i = 0; i < tiles.length; i++){
+      for (int j = 0; j < tiles[i].length; j++){
+        if (tiles[i][j].canContainAmbulance()){
+          tilesImg[i][j].setColor(Color.NAVY);
+        } else if (tiles[i][j].canContainFireTruck()){
+          tilesImg[i][j].setColor(Color.ORANGE);
+        }
+      }
+    }
   }
 
 }

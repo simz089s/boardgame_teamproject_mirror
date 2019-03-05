@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.List;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
+import com.cs361d.flashpoint.manager.BoardManager;
 import com.cs361d.flashpoint.manager.FireFighterTurnManager;
 
 import java.util.ArrayList;
@@ -68,7 +69,7 @@ public class BoardStatsFragment {
 
         ArrayList<String> gamesStatsArrList = new ArrayList<String>();
 
-        gamesStatsArrList.add(""); // TODO: add name of the game (gotten from createGame page)
+        gamesStatsArrList.add(BoardManager.getInstance().getGameName()); 
         gamesStatsArrList.add("");
         gamesStatsArrList.add("[Team stats]");
         gamesStatsArrList.add("Walls left: X");
