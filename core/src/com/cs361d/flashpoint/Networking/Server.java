@@ -1,164 +1,301 @@
 package com.cs361d.flashpoint.Networking;
 
+
+//import com.cs361d.flashpoint.view.ChatServerScreen;
+
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.Iterator;
-import java.util.Observer;
-import java.util.Vector;
-import java.util.Observable;
-import java.io.IOException;
-import java.io.*;
+import java.net.UnknownHostException;
+import java.util.*;
 
-public class Server implements Observer {
-    private Socket socket;
+public class Server implements Runnable{
 
-    /** This vector holds all connected clients.
-     * May be used for broadcasting, etc. */
-    private Vector clients;
-    private ServerSocket ssocket;  //Server Socket
-    private StartServerThread sst; //inner class
+    // Vector to store active clients
+    static Vector<ClientHandler> clients = new Vector<ClientHandler>();
 
-    /**
-     * Represents each currently connected client.
-     * @label initiates
-     * @clientCardinality 1
-     * @supplierCardinality 0..*
-     */
-    private ClientThread clientThread;
+    // counter for clients
+    static int i = 0;
 
-    /** Port number of Server. */
-    private int port;
-    private boolean listening; //status for listening
+    ServerSocket ss; //Server Socket
+    Socket s; //Client socket
+    Thread startServer; // DON'T SEND TO SRC CLIENT TWICE
+    Thread chatServer;
+    ChatServerScreen css;
 
-    public Server() {
-        this.clients = new Vector<Observer>();
-        this.port = 5555; //default port
-        this.listening = false;
+
+    public Server(ChatServerScreen css) {
+        // server is listening on port 1234
+        try
+        {
+            ss = new ServerSocket(1234);
+            this.css = css;
+            startServer = new Thread(this);
+            startServer.start();
+
+        } catch (IOException e) { e.printStackTrace(); }
+
     }
 
-    public void startServer() {
-        if (!listening) {
-            this.sst = new StartServerThread();
-            this.sst.start();
-            this.listening = true;
-        }
-    }
-
-    public void stopServer() {
-        if (this.listening) {
-            this.sst.stopServerThread();
-            //close all connected clients//
-
-            java.util.Enumeration e = this.clients.elements();
-            while(e.hasMoreElements())
+    @Override
+    public void run()
+    {
+        // running infinite loop for getting client request
+        while (true)
+        {
+            // Accept the incoming request
+            try
             {
-                ClientThread ct = (ClientThread)e.nextElement();
-                ct.stopClient();
-            }
-            this.listening = false;
+                s = ss.accept();
+                System.out.println("New client request received : " + s);
+
+                // obtain input and output streams
+                DataInputStream din = new DataInputStream(s.getInputStream());
+                DataOutputStream dout = new DataOutputStream(s.getOutputStream());
+
+                System.out.println("Creating a new handler for this client...");
+
+                // Create a new handler object for handling this request.
+                ClientHandler clientObserver = new ClientHandler(s,"client " + i, din, dout, css);
+
+                // Create a new Thread with this object.
+                Thread t = new Thread(clientObserver);
+
+                System.out.println("Adding this client to active client list");
+
+                // add this client to active clients list
+                clients.add(clientObserver);
+
+                // start the thread.
+                t.start();
+
+                // increment i for new client.
+                // i is used for naming only, and can be replaced by any naming scheme
+                i++;
+
+            } catch (IOException e) { e.printStackTrace(); }
         }
     }
 
-    //observer interface//
-    public void update(Observable observable, Object object) {
-        //notified by observables, do cleanup here//
-        this.clients.removeElement(observable);
+
+    /* Send a message to a server */
+    public synchronized void sendMsg(String msg) {
+        try
+        {
+            for (ClientHandler mc : Server.clients) {
+                mc.dout.writeUTF(msg);
+            }
+            //update the chat for yourself
+            css.msgs.add(msg);
+            String[] newMsg = css.msgs.toArray(new String[css.msgs.size()]);
+//            css.lstMsg.setItems(newMsg);
+
+        } catch (IOException e) { e.printStackTrace(); }
     }
 
-    public int getPort() {
-        return port;
+
+    /* Get info about the server's machine */
+
+    public static String getMyHostName() {
+        String hostname = null;
+        try {
+            InetAddress addr = InetAddress.getLocalHost();
+            hostname = addr.getHostName();
+            System.out.println("Host Name = " + hostname);
+
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        }
+
+        return hostname;
     }
 
-    public void setPort(int port) {
-        this.port = port;
+    public static String getMyIPAddress() {
+        String ipAddress = null;
+        try {
+            InetAddress addr = InetAddress.getLocalHost();
+            String ipAddr = addr.getHostAddress();
+            System.out.println("IP Address = " + ipAddr.toString());
+
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        }
+
+        return ipAddress;
+    }
+
+    public static String getIPByAddress(String address) {
+        String ipAddress = null;
+        try {
+            InetAddress addr = InetAddress.getByName(address);
+            String ipAddr = addr.getHostAddress();
+            System.out.println("IP Address = " + ipAddr.toString());
+
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        }
+
+        return ipAddress;
+    }
+
+    public static String getHostNameByAdress(String address) {
+        String hostname = null;
+        try {
+            InetAddress addr = InetAddress.getByName(address);
+            hostname = addr.getHostName();
+            System.out.println("Host Name = " + hostname);
+
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        }
+
+        return hostname;
     }
 
 
+
+
+
+
+
+
+
+
+//    static ServerSocket s;
+//    static DataInputStream din;  // input from client
+//    static DataOutputStream dout;// output to client
+//    // Thread to read input from queue and writes to all clients
+//    Thread startServer = new Thread(); // DON'T SEND TO SRC CLIENT TWICE
+//
+//    private static LinkedList<String> msgQueue = new LinkedList<String>();
+//    private static ArrayList<Observer> clients = new ArrayList<Observer>();
+//
+//
+//    @Override
+//    public void run()
+//    {
+//        try {
+//            while (true)
+//            {
+//                if(!msgQueue.isEmpty()) {
+//                    dout.writeUTF(msgQueue.getFirst());
+//                    dout.flush();
+//                }
+//            }
+//
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//    }
+//
+//
+//    public Server(){ //Start the Server
+//
+//        try
+//        {
+//            s=new ServerSocket(3333);
+//            Socket newClientConnected = s.accept();
+//            clients.add((Observer) newClientConnected);
+//            startServer.start(); // Start reader thread
+//        } catch (IOException e)
+//        {
+//            e.printStackTrace();
+//        }
+//
+//    }
+//
 //    //add client to the server's registered list
-//    public void register(Observer o) {
-//        clients.add(o);
-//    }
+//    public void register(Observer o) { clients.add(o); }
 //    //remove client from server's list
-//    public void unregister(Observer o) {
-//        clients.remove(o);
+//    public void unregister(Observer o) { clients.remove(o); }
+//
+//    // Server notifies all the registered clients
+//    private synchronized void notifyAllObservers(String msg) {
+//        for (Observer obs : clients) {
+//            obs.update(new Observable(), msg);
+//        }
+//    }
+//
+//    public void sendMsg(String msg) { notifyAllObservers(msg); }
+//
+//
+
+//    public synchronized void  sendMsg(String msg)throws Exception {
+//
+//
+//        for (Client user: clients) {
+////            din=new DataInputStream(s.getInputStream());
+//            dout=new DataOutputStream(s.getOutputStream());
+//            dout.writeUTF(msg);
+//            dout.flush();
+//        }
+//
 //    }
 
-    // Server notifies all the registered clients
-    private synchronized void notifyAllObservers(String msg) {
-        //creating an iterator
-        Iterator value = clients.iterator();
-        while (value.hasNext()) {
-            ((Observer) value.next()).update(new Observable(), msg);
-        }
-    }
+//    public String sendMsg2(String msg)throws Exception{
+////       BufferedReader br=new BufferedReader(new InputStreamReader(System.in));
+//
+//        dout.writeUTF(msg);
+//        dout.flush();
+//        return din.readUTF();
+//    }
 
-    /** This inner class will keep listening to incoming connections,
-     *  and initiating a ClientThread object for each connection. */
+//    public String receiveMsg()
+//    {
+//        final String[] received = {""};
+//
+//        Runnable _runnable = new Runnable()
+//        {
+//            @Override
+//            public void run()
+//            {
+//                try
+//                {
+//                    received[0] =din.readUTF();
+//                    msgQueue.add(received[0]);
+//                } catch (IOException e)
+//                {
+//                    e.printStackTrace();
+//                }
+//
+//            }
+//        };
+//        return received[0];
+////        long start = System.currentTimeMillis();
+////        long _timeoutMs = 100;
+////        String received = "";
+////        while (System.currentTimeMillis() < (start + _timeoutMs)) {
+////            try
+////            {
+////                if (din != null)
+////                    received=din.readUTF();
+////            } catch (IOException e)
+////            {
+////                e.printStackTrace();
+////            }
+////        }
+////
+////        return received;
+//
+//    }
 
-    private class StartServerThread extends Thread {
-        private boolean listen;
-
-        public StartServerThread() {
-            this.listen = false;
-        }
-
-        public void run() {
-            this.listen = true;
-            try {
-
-/**The following constructor provides a default number of
- * connections -- 50, according to Java's documentation.
- * An overloaded constructor is available for providing a
- * specific number, more or less, about connections. */
-
-                Server.this.ssocket =
-                        new ServerSocket(Server.this.port);
-
-
-                while (this.listen) {
-
-                    //wait for client to connect//
-                    Server.this.socket = Server.this.ssocket.accept();
-                    System.out.println("Client connected");
-                    try {
-                        Server.this.clientThread = new ClientThread(Server.this.socket);
-                        Thread t = new Thread(Server.this.clientThread);
-
-                        // Add Client's Observer to our List
-                        Server.this.clientThread.addObserver(Server.this);
-                        Server.this.clients.addElement(Server.this.clientThread); //synced add to list
-
-                        t.start(); //Start the Client
-
-                    } catch (IOException ioe) {
-                        //some error occurred in ClientThread //
-                    }
-                }
-            } catch (IOException ioe) {
-                //I/O error in ServerSocket//
-                this.stopServerThread();
-            }
-        }
-
-        public void stopServerThread() {
-            try {
-                Server.this.ssocket.close();
-            }
-            catch (IOException ioe) {
-                //unable to close ServerSocket
-            }
-
-            this.listen = false;
-        }
-    }
+//    public void closeClient(){
+//        try
+//        {
+//            dout.close();
+//            s.close();
+//        } catch (IOException e)
+//        {
+//            e.printStackTrace();
+//        }
+//
+//    }
 
 
-    public static void main(String[] argv)throws IOException {
-        Server s = new Server();
-        s.startServer();
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
 
-    }
+
 }
-

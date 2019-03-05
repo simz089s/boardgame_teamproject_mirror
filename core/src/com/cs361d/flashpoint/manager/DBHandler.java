@@ -64,12 +64,14 @@ public class DBHandler {
 
             JSONObject gameStats = (JSONObject) jsonObject.get("gameStats");
 
+            String gameName = "" + gameStats.get("gameName");
             int numVictimsLost = Integer.parseInt("" + gameStats.get("numVictimsLost"));
             int numVictimsSaved = Integer.parseInt("" + gameStats.get("numVictimsSaved"));
             int numFalseAlarmRemoved = Integer.parseInt("" + gameStats.get("numFalseAlarmRemoved"));
             int numDamageLeft = Integer.parseInt("" + gameStats.get("numDamageLeft"));
 
-            //BoardManager.getInstance().setGameAtStart(numFalseAlarmRemoved, numVictimsLost, numVictimsSaved, numDamageLeft);
+            BoardManager.getInstance().setGameName(gameName);
+            BoardManager.getInstance().setGameAtStart(numFalseAlarmRemoved, numVictimsLost, numVictimsSaved, numDamageLeft);
 
             // loop array
             JSONArray tilesArr = (JSONArray) jsonObject.get("tiles");
