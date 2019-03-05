@@ -517,4 +517,31 @@ public class BoardManager {
     }
   }
 
+  public int getTotalWallDamageLeft() {
+    return totalWallDamageLeft;
+  }
+
+  public int getNumVictimSaved() {
+    return numVictimSaved;
+  }
+
+  public int getNumVictimDead() {
+    return numVictimDead;
+  }
+
+  public int getNumFalseAlarmRemoved() {
+    return numFalseAlarmRemoved;
+  }
+
+  public void setNumVictimDead(int numVictimDead) {
+    this.numVictimDead = numVictimDead;
+  }
+
+  public void setNumFalseAlarmRemoved(int numFalseAlarmRemoved) {
+    this.numFalseAlarmRemoved = numFalseAlarmRemoved;
+  }
+
+  public static void setInstance(BoardManager instance) {
+    BoardManager.instance = instance;
+  }
 }
