@@ -18,7 +18,7 @@ public class BoardManager {
   private int numVictimSaved = 0;
   private int numVictimDead = 0;
   private int numFalseAlarmRemoved = 0;
-  private String gameName = "originalGame";
+  private String gameName = "defaultName";
   private List<AbstractVictim> victims = new ArrayList<AbstractVictim>(18);
 
   // create an object of SingleObject
@@ -62,11 +62,11 @@ public class BoardManager {
         }
       }
     }
-    for (int i = 0; i < 6; i++) {
+    for (int i = 0; i < 5; i++) {
       Victim v = new Victim( true);
       victims.add(v);
     }
-    for (int i = 6; i < 18; i++) {
+    for (int i = 0; i < 11; i++) {
       Victim v = new Victim(false);
       victims.add(v);
     }
@@ -135,27 +135,20 @@ public class BoardManager {
     TILE_MAP[i][j].setFireStatus(f);
   }
 
-  public void setVictims(int numFalseAlarmRemoved, int numVictimsDead, int numVictimSaved) throws IllegalAccessException {
+  public void setGameAtStart(int numFalseAlarmRemoved, int numVictimsDead, int numVictimSaved, int totalWallDamageLeft) {
     this.numFalseAlarmRemoved = numFalseAlarmRemoved;
     this.numVictimSaved = numVictimSaved;
     this.numVictimDead = numVictimsDead;
-    if (victims.size() != 18) {
-      throw new IllegalAccessException("The method setVictims can only be called when the game is created");
+    this.totalWallDamageLeft = totalWallDamageLeft;
+    victims = new ArrayList<AbstractVictim>();
+    for (int i = 0; i < 12 - numVictimsDead - numVictimSaved; i++) {
+      Victim v = new Victim(false);
+      victims.add(v);
     }
-    for(int i = 0; i < victims.size(); i++) {
-      AbstractVictim v = victims.get(i);
-      if (v.isFalseAlarm()) {
-        if (numFalseAlarmRemoved > 0) {
-          victims.remove(v);
-          numFalseAlarmRemoved--;
-        }
-        }
-      else {
-        if (numVictimsDead > 0) {
-          victims.remove(v);
-          numVictimsDead--;
-        }
-      }
+    for (int i = 0; i < 6-numFalseAlarmRemoved; i++) {
+      Victim v = new Victim(true);
+      victims.add(v);
+
     }
     Collections.shuffle(victims);
   }
@@ -254,6 +247,7 @@ public class BoardManager {
   // Create an explosion at the specified location and propagates fire
   private void explosion(int i, int j) {
     Tile hitLocation = TILE_MAP[i][j];
+    hitLocation.setFireStatus(FireStatus.FIRE);
     if (i > 0) {
       Obstacle top = hitLocation.getObstacle(Direction.TOP);
       if (top.isDestroyed() || (top.isDoor() && top.isOpen())) {
@@ -386,6 +380,11 @@ public class BoardManager {
         TILE_MAP[width][height].setVictim(v);
       }
   }
+
+  protected void addNewPointInterest(int width, int height) {
+    AbstractVictim v = victims.get(0);
+    TILE_MAP[width][height].setVictim(v);
+  }
   // removes the fire outside the building
   private void removeEdgeFire() {
     for (int i = 0; i < HEIGHT; i++) {
@@ -488,10 +487,6 @@ public class BoardManager {
     return tiles;
   }
 
-  public void setNumVictimSaved(int s) {
-    this.numVictimSaved = s;
-  }
-
   public void setTotalWallDamageLeft(int w) {
     this.totalWallDamageLeft = w;
   }
@@ -534,15 +529,4 @@ public class BoardManager {
     return numFalseAlarmRemoved;
   }
 
-  public void setNumVictimDead(int numVictimDead) {
-    this.numVictimDead = numVictimDead;
-  }
-
-  public void setNumFalseAlarmRemoved(int numFalseAlarmRemoved) {
-    this.numFalseAlarmRemoved = numFalseAlarmRemoved;
-  }
-
-  public static void setInstance(BoardManager instance) {
-    BoardManager.instance = instance;
-  }
 }
