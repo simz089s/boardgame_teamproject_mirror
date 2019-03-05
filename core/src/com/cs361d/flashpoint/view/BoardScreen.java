@@ -626,7 +626,7 @@ public class BoardScreen extends FlashPointScreen {
   // show MovesAndDirectionsPanel on resume
   private void createResumeButton(){
 
-    Texture myTexture = new Texture(Gdx.files.internal("myResumeBtn.png"));
+    Texture myTexture = new Texture(Gdx.files.internal("icons/myResumeBtn.png"));
     TextureRegion myTextureRegion = new TextureRegion(myTexture);
     TextureRegionDrawable myTexRegionDrawable = new TextureRegionDrawable(myTextureRegion);
 
@@ -653,7 +653,7 @@ public class BoardScreen extends FlashPointScreen {
 
   private void createSoundButton(){
 
-    Texture myTexture = new Texture(Gdx.files.internal("sound.png"));
+    Texture myTexture = new Texture(Gdx.files.internal("icons/sound.png"));
     TextureRegion myTextureRegion = new TextureRegion(myTexture);
     TextureRegionDrawable myTexRegionDrawable = new TextureRegionDrawable(myTextureRegion);
 

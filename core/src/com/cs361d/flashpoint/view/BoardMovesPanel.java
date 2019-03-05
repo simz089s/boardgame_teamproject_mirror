@@ -2,11 +2,16 @@ package com.cs361d.flashpoint.view;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.List;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.cs361d.flashpoint.manager.BoardManager;
 import com.cs361d.flashpoint.manager.DBHandler;
 import com.cs361d.flashpoint.manager.FireFighterTurnManager;
@@ -18,21 +23,21 @@ import static com.cs361d.flashpoint.view.BoardScreen.*;
 
 public class BoardMovesPanel {
 
+    final int DIRECTION_BUTTON_SIZE = 75;
+
     ScrollPane scrollPaneMoveOptions;
     ScrollPane.ScrollPaneStyle scrollStyle;
     List<String> lstMoveOptions;
     List.ListStyle listStyleMoveOptions;
 
-    ScrollPane scrollPaneMoveDirections;
-    ScrollPane.ScrollPaneStyle scrollStyleDirections;
-    List<String> lstMoveDirections;
-    List.ListStyle listStyleDirections;
+    Table directionTable;
+
 
     Stage stage;
     FireFighterTurnManager fireFighterTurnManager = FireFighterTurnManager.getInstance();
 
-    ArrayList<ScrollPane> directionsList = new ArrayList<ScrollPane>();
     ArrayList<ScrollPane> movesList = new ArrayList<ScrollPane>();
+    ArrayList<Table> directionsTableList = new ArrayList<Table>();
 
     // constructor
     public BoardMovesPanel(Stage stage){
@@ -83,6 +88,8 @@ public class BoardMovesPanel {
         }
     }
 
+
+
     public void createMovesAndDirectionsPanel() {
         // list style
         listStyleMoveOptions = new List.ListStyle();
@@ -119,29 +126,29 @@ public class BoardMovesPanel {
                 String moveSelected = lstMoveOptions.getSelected();
 
                 if (moveSelected.equals("MOVE")) {
-                    removeDirectionsPanel();
-                    createDirectionsPanel(moveSelected);
-                    stage.addActor(scrollPaneMoveDirections);
+                    removeTableDirectionsPanel();
+                    createDirectionsPanelTable(moveSelected);
+                    stage.addActor(directionTable);
 
                 } else if (moveSelected.equals("EXTINGUISH")) {
-                    removeDirectionsPanel();
-                    createDirectionsPanel(moveSelected);
-                    stage.addActor(scrollPaneMoveDirections);
+                    removeTableDirectionsPanel();
+                    createDirectionsPanelTable(moveSelected);
+                    stage.addActor(directionTable);
 
                 } else if (moveSelected.equals("CHOP")) {
-                    removeDirectionsPanel();
-                    createDirectionsPanel(moveSelected);
-                    stage.addActor(scrollPaneMoveDirections);
+                    removeTableDirectionsPanel();
+                    createDirectionsPanelTable(moveSelected);
+                    stage.addActor(directionTable);
 
                 } else if (moveSelected.equals("MOVE WITH VICTIM")) {
-                    removeDirectionsPanel();
-                    createDirectionsPanel(moveSelected);
-                    stage.addActor(scrollPaneMoveDirections);
+                    removeTableDirectionsPanel();
+                    createDirectionsPanelTable(moveSelected);
+                    stage.addActor(directionTable);
 
                 } else if (moveSelected.equals("INTERACT WITH DOOR")) {
-                    removeDirectionsPanel();
-                    createDirectionsPanel(moveSelected);
-                    stage.addActor(scrollPaneMoveDirections);
+                    removeTableDirectionsPanel();
+                    createDirectionsPanelTable(moveSelected);
+                    stage.addActor(directionTable);
 
                 } else if (moveSelected.equals("END TURN")) {
                     clearAllGameUnits();
@@ -171,70 +178,139 @@ public class BoardMovesPanel {
         stage.addActor(scrollPaneMoveOptions);
     }
 
-    private void createDirectionsPanel(String moveSelected){
+
+    private void createDirectionsPanelTable(String moveSelected){
 
         final String MOVE = moveSelected;
 
-        // list style
-        listStyleDirections = new List.ListStyle();
-        listStyleDirections.font = Font.get(25); // font size
-        listStyleDirections.fontColorUnselected = Color.BLACK;
-        listStyleDirections.fontColorSelected = Color.BLACK;
-        listStyleDirections.selection = TextureLoader.getDrawable(50, 100, Color.YELLOW);
+        ImageButton btnDirectionU = new ImageButton(getTextureForDirectionTable(Direction.TOP));
+        ImageButton btnDirectionD = new ImageButton(getTextureForDirectionTable(Direction.BOTTOM));
+        ImageButton btnDirectionCurr = new ImageButton(getTextureForDirectionTable(Direction.NODIRECTION));
+        ImageButton btnDirectionL = new ImageButton(getTextureForDirectionTable(Direction.LEFT));
+        ImageButton btnDirectionR = new ImageButton(getTextureForDirectionTable(Direction.RIGHT));
 
-        lstMoveDirections = new List<String>(listStyleDirections);
-        lstMoveDirections.setItems(getDirectionArrForDisplay(MOVE));
+        directionTable = new Table();
 
-        // scrollPane style
-        scrollStyleDirections = new ScrollPane.ScrollPaneStyle();
-        scrollStyleDirections.vScrollKnob = TextureLoader.getDrawable(15, 15, Color.DARK_GRAY);
-        scrollStyleDirections.vScroll = TextureLoader.getDrawable(15, 15, Color.LIGHT_GRAY);
+        directionTable.add();
+        directionTable.add(btnDirectionU).width(DIRECTION_BUTTON_SIZE);
+        directionTable.add();
 
-        scrollPaneMoveDirections = new ScrollPane(lstMoveDirections, scrollStyleDirections);
-        scrollPaneMoveDirections.setOverscroll(false, false);
-        scrollPaneMoveDirections.setFadeScrollBars(false);
-        scrollPaneMoveDirections.setScrollingDisabled(true, false);
-        scrollPaneMoveDirections.setTransform(true);
-        scrollPaneMoveDirections.setScale(1.0f);
-        scrollPaneMoveDirections.setWidth(300);
-        scrollPaneMoveDirections.setHeight(200);
-        scrollPaneMoveDirections.setPosition(
-                850,
-                Gdx.graphics.getHeight() - scrollPaneMoveDirections.getHeight() - 400);
+        directionTable.row();
 
-        lstMoveDirections.addListener(new InputListener() {
+        directionTable.add(btnDirectionL).width(DIRECTION_BUTTON_SIZE);
+        if (MOVE.equals("EXTINGUISH")){
+            directionTable.add(btnDirectionCurr).width(DIRECTION_BUTTON_SIZE);
+        } else {
+            directionTable.add();
+        }
+        directionTable.add(btnDirectionR).width(DIRECTION_BUTTON_SIZE);
+
+        directionTable.row();
+
+        directionTable.add();
+        directionTable.add(btnDirectionD).width(DIRECTION_BUTTON_SIZE);
+        directionTable.add();
+
+        directionTable.setPosition(
+                1000,
+                Gdx.graphics.getHeight() - directionTable.getHeight() - 480);
+
+        btnDirectionU.addListener(new InputListener() {
             @Override
             public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-
-                if (lstMoveDirections.getSelected().equals("CURRENT TILE")) {
-                    performDirectionMove(MOVE, Direction.NODIRECTION);
-                } else if (lstMoveDirections.getSelected().equals("UP")){
-                    performDirectionMove(MOVE, Direction.TOP);
-                } else if (lstMoveDirections.getSelected().equals("DOWN")) {
-                    performDirectionMove(MOVE, Direction.BOTTOM);
-                } else if (lstMoveDirections.getSelected().equals("LEFT")) {
-                    performDirectionMove(MOVE, Direction.LEFT);
-                } else if (lstMoveDirections.getSelected().equals("RIGHT")) {
-                    performDirectionMove(MOVE, Direction.RIGHT);
-                } else if (lstMoveDirections.getSelected().equals("CANCEL")){
-
-                }
-
+                performDirectionMove(MOVE, Direction.TOP);
                 updateGameInfoLabel();
-                scrollPaneMoveDirections.remove();
-
+                removeTableDirectionsPanel();
                 return true;
             }
         });
 
-        directionsList.add(scrollPaneMoveDirections);
+        btnDirectionD.addListener(new InputListener() {
+            @Override
+            public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+                performDirectionMove(MOVE, Direction.BOTTOM);
+                updateGameInfoLabel();
+                removeTableDirectionsPanel();
+                return true;
+            }
+        });
+
+        btnDirectionCurr.addListener(new InputListener() {
+            @Override
+            public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+                performDirectionMove(MOVE, Direction.NODIRECTION);
+                updateGameInfoLabel();
+                removeTableDirectionsPanel();
+                return true;
+            }
+        });
+
+        btnDirectionL.addListener(new InputListener() {
+            @Override
+            public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+                performDirectionMove(MOVE, Direction.LEFT);
+                updateGameInfoLabel();
+                removeTableDirectionsPanel();
+                return true;
+            }
+        });
+
+        btnDirectionR.addListener(new InputListener() {
+            @Override
+            public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+                performDirectionMove(MOVE, Direction.RIGHT);
+                updateGameInfoLabel();
+                removeTableDirectionsPanel();
+                return true;
+            }
+        });
+
+
+        directionsTableList.add(directionTable);
     }
 
-    private void removeDirectionsPanel(){
-        for (int i = 0; i < directionsList.size(); i++) {
-            directionsList.get(i).remove();
+
+
+    // helper
+
+
+
+    private TextureRegionDrawable getTextureForDirectionTable(Direction d){
+
+        Texture myTexture = null;
+
+        if (d == Direction.TOP){
+            myTexture = new Texture(Gdx.files.internal("icons/arrow_u.png"));
+        } else if (d == Direction.BOTTOM){
+            myTexture = new Texture(Gdx.files.internal("icons/arrow_d.png"));
+        } else if (d == Direction.NODIRECTION){
+            myTexture = new Texture(Gdx.files.internal("icons/arrow_current.png"));
+        } else if (d == Direction.LEFT){
+            myTexture = new Texture(Gdx.files.internal("icons/arrow_l.png"));
+        } else if (d == Direction.RIGHT){
+            myTexture = new Texture(Gdx.files.internal("icons/arrow_r.png"));
         }
-        directionsList.clear();
+
+        TextureRegion myTextureRegion = new TextureRegion(myTexture);
+        TextureRegionDrawable myTexRegionDrawable = new TextureRegionDrawable(myTextureRegion);
+
+        return myTexRegionDrawable;
+    }
+
+
+
+
+
+    // remove
+
+
+
+
+    private void removeTableDirectionsPanel(){ //
+        for (int i = 0; i < directionsTableList.size(); i++) {
+            directionsTableList.get(i).remove();
+        }
+        directionsTableList.clear();
     }
 
     public void removeMovesAndDirectionsPanel(){
@@ -244,6 +320,6 @@ public class BoardMovesPanel {
 
         movesList.clear();
 
-        removeDirectionsPanel();
+        removeTableDirectionsPanel();
     }
 }
