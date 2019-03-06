@@ -27,7 +27,7 @@ public class Server implements Runnable{
     static int i = 0;
 //    final public static String SERVER_IP = "142.157.149.34"; //hardcoded ip for server ******
 //    final public static String SERVER_IP = "localhost"; //hardcoded ip for server ******
-    final static int SERVER_PORT = 50000;
+    final static int SERVER_PORT = 50001;
 //    final static int SERVER_PORT = 1234;
 
     ServerSocket ss; //Server Socket
