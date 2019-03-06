@@ -17,6 +17,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.List.ListStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.cs361d.flashpoint.Networking.NetworkManager;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -39,12 +41,17 @@ public class ChatScreen extends FlashPointScreen {
     ListStyle listStyle;
     ScrollPane scrollPaneMsg;
     ScrollPane.ScrollPaneStyle scrollStyle;
+    public ArrayList<String> msgs = new ArrayList<String>(); // store raw messages from player
 
     // input message field
     TextField textFieldMsg;
 
     TextButton btnChangePage;
     TextButton btnExit;
+
+    // Get the current network
+    NetworkManager myNetwork = NetworkManager.getInstance();
+
 
     ChatScreen(Game pGame) {
         super(pGame);
@@ -73,7 +80,7 @@ public class ChatScreen extends FlashPointScreen {
 
         // messages list
         String[] messages = {"Jacques:  Ready guys?", "Simon:  let's start!", "Elvric: wait, just a sec"};
-        final ArrayList<String> msgs = new ArrayList<String>(Arrays.asList(messages));
+        msgs = new ArrayList<String>(Arrays.asList(messages));
         createMessageList(messages);
 
         // exit button
@@ -111,6 +118,7 @@ public class ChatScreen extends FlashPointScreen {
 
                     if(!messageInputed.equals("") && !messageInputed.equals(" ")){
                         textFieldMsg.setText("");
+                        myNetwork.sendChatMessage(messageInputed); //send message over network
                         msgs.add("Jacques:  " + messageInputed);
                         String[] newMsg = msgs.toArray(new String[msgs.size()]);
                         lstMsg.setItems(newMsg);

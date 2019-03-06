@@ -3,6 +3,8 @@ package com.cs361d.flashpoint.Networking;
 
 //import com.cs361d.flashpoint.view.ChatServerScreen;
 
+import com.cs361d.flashpoint.view.FlashPointGame;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -14,25 +16,31 @@ import java.util.*;
 
 public class Server implements Runnable{
 
+    // A server has an instance of the game
+    public FlashPointGame serverFPGame = new FlashPointGame();
+
     // Vector to store active clients
     static Vector<ClientHandler> clients = new Vector<ClientHandler>();
 
     // counter for clients
     static int i = 0;
-    final public static String SERVER_IP = "142.157.149.34"; //hardcoded ip for server ******
+//    final public static String SERVER_IP = "142.157.149.34"; //hardcoded ip for server ******
+//    final public static String SERVER_IP = "localhost"; //hardcoded ip for server ******
+//    final static int SERVER_PORT = 50000;
+    final static int SERVER_PORT = 1234;
+
     ServerSocket ss; //Server Socket
     Socket s; //Client socket
     Thread startServer; // DON'T SEND TO SRC CLIENT TWICE
-    Thread chatServer;
-    ChatServerScreen css;
+//    ChatServerScreen css;
 
 
-    public Server(ChatServerScreen css) {
+    public Server() {
         // server is listening on port 1234
         try
         {
-            ss = new ServerSocket(50000);
-            this.css = css;
+            ss = new ServerSocket(SERVER_PORT);
+//            this.css = css;
             startServer = new Thread(this);
             startServer.start();
 
@@ -59,7 +67,8 @@ public class Server implements Runnable{
                 System.out.println("Creating a new handler for this client...");
 
                 // Create a new handler object for handling this request.
-                ClientHandler clientObserver = new ClientHandler(s,"client " + i, din, dout, css);
+//                ClientHandler clientObserver = new ClientHandler(s,"client " + i, din, dout, css);
+                ClientHandler clientObserver = new ClientHandler(s,"client " + i, din, dout, serverFPGame);
 
                 // Create a new Thread with this object.
                 Thread t = new Thread(clientObserver);
@@ -89,8 +98,8 @@ public class Server implements Runnable{
                 mc.dout.writeUTF(msg);
             }
             //update the chat for yourself
-            css.msgs.add(msg);
-            String[] newMsg = css.msgs.toArray(new String[css.msgs.size()]);
+//            serverFPGame.chatScreen.msgs.add(msg);
+//            String[] newMsg = serverFPGame.chatScreen.msgs.toArray(new String[serverFPGame.chatScreen.msgs.size()]);
 //            css.lstMsg.setItems(newMsg);
 
         } catch (IOException e) { e.printStackTrace(); }
@@ -112,53 +121,6 @@ public class Server implements Runnable{
 
         return hostname;
     }
-
-    public static String getMyIPAddress() {
-        String ipAddress = null;
-        try {
-            InetAddress addr = InetAddress.getLocalHost();
-            String ipAddr = addr.getHostAddress();
-            System.out.println("IP Address = " + ipAddr.toString());
-
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
-        }
-
-        return ipAddress;
-    }
-
-    public static String getIPByAddress(String address) {
-        String ipAddress = null;
-        try {
-            InetAddress addr = InetAddress.getByName(address);
-            String ipAddr = addr.getHostAddress();
-            System.out.println("IP Address = " + ipAddr.toString());
-
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
-        }
-
-        return ipAddress;
-    }
-
-    public static String getHostNameByAdress(String address) {
-        String hostname = null;
-        try {
-            InetAddress addr = InetAddress.getByName(address);
-            hostname = addr.getHostName();
-            System.out.println("Host Name = " + hostname);
-
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
-        }
-
-        return hostname;
-    }
-
-
-
-
-
 
 
 

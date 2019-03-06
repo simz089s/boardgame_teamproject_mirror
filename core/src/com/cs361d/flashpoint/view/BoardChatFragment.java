@@ -6,6 +6,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.List;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
+import com.cs361d.flashpoint.Networking.NetworkManager;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -31,6 +32,9 @@ public class BoardChatFragment {
 
     ArrayList<ScrollPane> msgListSP = new ArrayList<ScrollPane>();
     ArrayList<TextField> msgFieldListTF = new ArrayList<TextField>();
+
+    // Get the current network
+    NetworkManager myNetwork = NetworkManager.getInstance();
 
     // constructor
     public BoardChatFragment(Stage stage){
@@ -96,6 +100,7 @@ public class BoardChatFragment {
 
                     if(!messageInputed.equals("") && !messageInputed.equals(" ")){
                         textFieldMsg.setText("");
+                        myNetwork.sendChatMessage(messageInputed); //send message over network
                         messagesArrList.add("Y: " + messageInputed);
                         String[] newMsg = messagesArrList.toArray(new String[messagesArrList.size()]);
                         lstMsg.setItems(newMsg);

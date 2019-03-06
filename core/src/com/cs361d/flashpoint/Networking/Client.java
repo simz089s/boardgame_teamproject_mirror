@@ -1,6 +1,7 @@
 package com.cs361d.flashpoint.Networking;
 
 //import com.cs361d.flashpoint.view.ChatClientScreen;
+import com.cs361d.flashpoint.view.FlashPointGame;
 import kotlin.jvm.Synchronized;
 
 import java.io.DataInputStream;
@@ -9,23 +10,27 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.util.Observable;
-import java.util.Observer;
+
 
 public class Client {
 
-    final static int ServerPort = 50000;
+    // A client has an instance of the game
+    public static FlashPointGame clientFPGame = new FlashPointGame();
+
+//    final static int ServerPort = 50000;
+    final static int ServerPort = 1234;
     Socket s;
     DataInputStream din;
     DataOutputStream dout;
     String ip;        // getting Server's ip
 
-    ChatClientScreen ccs; // instance of the chat screen so we can modify/update it
+//    ChatClientScreen ccs; // instance of the chat screen so we can modify/update it
 
-    public Client(final ChatClientScreen ccs) {
+    public Client() {
             try {
-                ip = "142.157.149.34";
 
+                // ip = "142.157.149.34";
+                ip = "localhost";
                 // establish the connection
                 s = new Socket(ip, ServerPort);
 
@@ -33,7 +38,7 @@ public class Client {
                 din = new DataInputStream(s.getInputStream());
                 dout = new DataOutputStream(s.getOutputStream());
 
-                this.ccs = ccs;
+//                this.ccs = ccs;
 
                 // readMessage thread constantly listening
                 Thread readMessage = new Thread(new Runnable()
@@ -45,22 +50,36 @@ public class Client {
                             try {
                                 // read the message sent to this client
                                 String msg = din.readUTF();
-                                //the 1st 4 characters from the string: chat- stat- game-
+                                /* Get the first 4 chars from the string: wait, play, stat, game
+                                * wait: waiting screen chat changes
+                                * play: in-game chat changes
+                                * stat: stats changes
+                                * game: gameState changes
+                                * */
+
                                 String type = msg.substring(0,4);
                                 String msgToSend = msg.substring(5);
 
                                 // Update stats
-                                if (msgToSend.equals("stat")) {
+                                if (type.equals("stat")) {
                                     //TODO
                                 }
-
-                                //update chat
-                                else if(msgToSend.equals("chat")) {
+                                // Update chat message from waiting area
+                                else if(type.equals("wait")) {
+                                    // update messages array
+                                    if (!msg.equals("")) {
+//                                        ccs.msgs.add(msg);
+//                                        String[] newMsg = clientFPGame.chatScreen.msgs.toArray(new String[ccs.msgs.size()]);
+//                                        ccs.lstMsg.setItems(newMsg);
+                                    }
+                                }
+                                // Update chat message from game area
+                                else if(type.equals("play")) {
                                     // update messages array
                                     if (!msg.equals(""))
                                     {
-                                        ccs.msgs.add(msg);
-                                        String[] newMsg = ccs.msgs.toArray(new String[ccs.msgs.size()]);
+//                                        ccs.msgs.add(msg);
+//                                        String[] newMsg = clientFPGame.boardChatFragment.msgs.toArray(new String[ccs.msgs.size()]);
 //                                        ccs.lstMsg.setItems(newMsg);
                                     }
                                 }

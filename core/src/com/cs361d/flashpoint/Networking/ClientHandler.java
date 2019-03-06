@@ -2,6 +2,8 @@ package com.cs361d.flashpoint.Networking;
 
 //import com.cs361d.flashpoint.view.ChatServerScreen;
 
+import com.cs361d.flashpoint.view.FlashPointGame;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -14,17 +16,17 @@ class ClientHandler implements Runnable
     final DataOutputStream dout;
     Socket s;
     boolean isloggedin;
-    ChatServerScreen css;
+    FlashPointGame fpg;
 
     // constructor
     public ClientHandler(Socket s, String name,
-                         DataInputStream din, DataOutputStream dout, ChatServerScreen css) {
+                         DataInputStream din, DataOutputStream dout, FlashPointGame fpg) {
         this.din = din;
         this.dout = dout;
         this.name = name;
         this.s = s;
         this.isloggedin=true;
-//        this.css = css;
+        this.fpg = fpg;
     }
 
 
@@ -58,16 +60,14 @@ class ClientHandler implements Runnable
                 // ar is the vector storing client of active users
 
                 // update messages array for server's chat
-                if (!MsgToSend.equals(""))
-                {
-                    css.msgs.add(MsgToSend);
-                    String[] newMsg = css.msgs.toArray(new String[css.msgs.size()]);
-                    //css.lstMsg.setItems(newMsg);
+                if (!MsgToSend.equals("")) {
+//                    fpg.chatScreen.msgs.add(MsgToSend);
+//                    String[] newMsg = fpg.chatScreen.msgs.toArray(new String[css.msgs.size()]);
+//                    fpg.chatScreen.lstMsg.setItems(newMsg);
                 }
 
 
-                for (ClientHandler mc : Server.clients)
-                {
+                for (ClientHandler mc : Server.clients) {
                     // if the recipient is found, write on its
                     // output stream
 //                    if (mc.name.equals(recipient) && mc.isloggedin==true)
@@ -84,7 +84,7 @@ class ClientHandler implements Runnable
                     this.din.close();
                     this.dout.close();
 
-                } catch(IOException ee){ ee.printStackTrace();  }
+                } catch(IOException ee) { ee.printStackTrace();  }
             }
 
         }
