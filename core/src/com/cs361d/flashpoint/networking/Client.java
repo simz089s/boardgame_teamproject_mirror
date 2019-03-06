@@ -1,6 +1,7 @@
 package com.cs361d.flashpoint.networking;
 
 //import com.cs361d.flashpoint.view.ChatClientScreen;
+import com.cs361d.flashpoint.view.BoardChatFragment;
 import com.cs361d.flashpoint.view.ChatScreen;
 import com.cs361d.flashpoint.view.FlashPointGame;
 
@@ -56,8 +57,8 @@ public class Client {
                                 * game: gameState changes
                                 * */
 
-                                String type = msg.substring(0,4);
-                                String msgToSend = msg.substring(5);
+                                String type = msg.split("-")[0];
+                                String msgToSend = msg.substring(type.length()+1);
 
                                 // Update stats
                                 if (type.equals("stat")) {
@@ -67,8 +68,13 @@ public class Client {
                                 switch (c) {
                                     case CHATWAIT:
                                         if (!msg.equals("")) {
-//                                            ChatScreen.addMessageToGui(msg);
-                                          
+//                                            ChatScreen.addMessageToGui(msgToSend);
+
+                                        }
+                                    case CHATGAME:
+                                        if (!msg.equals("")) {
+//                                            BoardChatFragment.addMessageToGui(msgToSend);
+
                                         }
                                         default:
 
