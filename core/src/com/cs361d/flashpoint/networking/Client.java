@@ -16,8 +16,8 @@ public class Client {
     // A client has an instance of the game
     public static FlashPointGame clientFPGame = new FlashPointGame();
 
-//    final static int ServerPort = 50000;
-    final static int ServerPort = 1234;
+    final static int ServerPort = 50000;
+//    final static int ServerPort = 1234;
     Socket s;
     DataInputStream din;    // input stream
     DataOutputStream dout;  //output stream
@@ -28,8 +28,8 @@ public class Client {
     public Client() {
             try {
 
-                // ip = "142.157.149.34";
-                ip = "localhost";
+                 ip = "142.157.149.34";
+//                ip = "localhost";
                 // establish the connection
                 s = new Socket(ip, ServerPort);
 

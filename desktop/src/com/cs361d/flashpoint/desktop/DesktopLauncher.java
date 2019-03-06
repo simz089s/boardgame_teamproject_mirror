@@ -10,7 +10,7 @@ import com.cs361d.flashpoint.view.FlashPointGame;
 public class DesktopLauncher {
     public static void main(String[] arg) {
         LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-        new LwjglApplication(new FlashPointGame(), config);
+//        new LwjglApplication(new FlashPointGame(), config);
 
         NetworkManager myNetwork = NetworkManager.getInstance(); // Create a single network
 
