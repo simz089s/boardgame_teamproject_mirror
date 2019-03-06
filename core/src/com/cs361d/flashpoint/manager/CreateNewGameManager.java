@@ -30,6 +30,7 @@ public class CreateNewGameManager {
   }
 
   public static void loadSavedGame(String name) {
+    BoardManager.getInstance().reset();
     DBHandler.loadBoardFromDB(name);
   }
 

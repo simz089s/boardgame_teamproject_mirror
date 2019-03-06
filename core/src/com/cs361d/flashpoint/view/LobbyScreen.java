@@ -14,6 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.List;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.cs361d.flashpoint.manager.CreateNewGameManager;
 import com.cs361d.flashpoint.manager.DBHandler;
 
 import java.io.File;
@@ -113,7 +114,7 @@ public class LobbyScreen extends FlashPointScreen {
                 new ClickListener() {
                     @Override
                     public void clicked(InputEvent event, float x, float y) {
-                        DBHandler.loadBoardFromDB(lstLoadGames.getSelected());
+                        CreateNewGameManager.loadSavedGame(lstLoadGames.getSelected());
                         game.setScreen(game.boardScreen);
                     }
                 });
