@@ -25,7 +25,9 @@ public class Tile {
         this.J = j;
         this.carrierStatus = CarrierStatus.EMPTY;
     }
-
+    public String getCarrierStatusString() {
+        return this.carrierStatus.toString();
+    }
     public boolean hasHazmat() {
         return this.hasHazmat;
     }

@@ -16,13 +16,13 @@ import java.util.Iterator;
 public class DBHandler {
 
     // MAP 1
-    private static final String[] TOP_WALL_TILE_MAP1 = {"1-1", "1-2", "1-3", "1-4", "1-5","1-6", "1-7", "1-8",
-            "7-1", "7-2", "7-3", "7-4", "7-5","7-6", "7-7", "7-8",
+    private static final String[] TOP_WALL_TILE_MAP1 = {"1-1", "1-2", "1-3", "1-4", "1-5", "1-7", "1-8",
+            "7-1", "7-2", "7-4", "7-5","7-6", "7-7", "7-8",
             "3-3", "3-4", "3-5", "3-6", "3-7","3-8",
             "5-1", "5-2", "5-3", "5-4", "5-5","5-6", "5-7", "5-8"
     };
-    private static final String[] LEFT_WALL_TILE_MAP1 = {"1-1", "2-1", "3-1", "4-1", "5-1", "6-1",
-            "1-9", "2-9", "3-9", "4-9", "5-9", "6-9",
+    private static final String[] LEFT_WALL_TILE_MAP1 = {"1-1", "2-1", "4-1", "5-1", "6-1",
+            "1-9", "2-9", "3-9", "5-9", "6-9",
             "1-4", "2-4", "1-6", "2-6",
             "3-3", "4-3", "3-7", "4-7",
             "5-6", "6-6", "5-8", "6-8"
@@ -46,9 +46,9 @@ public class DBHandler {
             "2-4", "2-5",
             "3-1", "3-2", "4-4", "4-5", "4-6", "4-7", "4-8",
             "5-1", "5-2", "5-3", "5-4", "5-5", "5-6",
-            "7-1", "7-2", "7-3", "7-4", "7-5", "7-6", "7-7", "7-8"
+            "7-1", "7-2", "7-4", "7-5", "7-6", "7-7", "7-8"
     };
-    private static final String[] LEFT_WALL_TILE_MAP2 = {"1-1", "2-1", "3-1", "4-1", "5-1", "6-1",
+    private static final String[] LEFT_WALL_TILE_MAP2 = {"1-1", "2-1", "4-1", "5-1", "6-1",
             "1-9", "2-9", "3-9", "4-9", "5-9", "6-9",
             "1-4", "2-4", "3-4", "1-6", "2-6", "3-6", "4-7",
             "5-4", "6-4", "5-7", "6-7"
@@ -357,13 +357,10 @@ public class DBHandler {
 
                 currentTile.put("right_wall_door", rightDoorObject);
 
-                if (boardManager.getTiles()[i][j].canContainAmbulance()){
-                    currentTile.put("engine", "ambulance");
-                } else if (boardManager.getTiles()[i][j].canContainFireTruck()){
-                    currentTile.put("engine", "firetruck");
-                } else {
-                    currentTile.put("engine", "empty");
-                }
+
+                // engine
+                String carrier = boardManager.getTiles()[i][j].getCarrierStatusString();
+                currentTile.put("engine", carrier);
 
                 newTilesList.add(currentTile);
                 count ++;

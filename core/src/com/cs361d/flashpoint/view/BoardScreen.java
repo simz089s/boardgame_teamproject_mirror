@@ -72,7 +72,7 @@ public class BoardScreen extends FlashPointScreen {
   @Override
   public void show() {
 
-    //DBHandler.createBoard(MapKind.MAP2); // generate initial map
+    //DBHandler.createBoard(MapKind.MAP1); // generate initial map
 
     // background music
     myMusic = Gdx.audio.newMusic(Gdx.files.internal("playlist/sound1.mp3"));
@@ -183,6 +183,8 @@ public class BoardScreen extends FlashPointScreen {
       addFilterOnTileForChooseInitPos();
       removeAllPrevFragments();
       btnResume.remove();
+    } else {
+      createEngineTilesColor();
     }
 
     Gdx.input.setInputProcessor(stage);
@@ -755,7 +757,7 @@ public class BoardScreen extends FlashPointScreen {
   }
 
   private void createEngineTilesColor(){
-    // Engines (Aimbulance, firetruck)
+    // Engines (Ambulance, firetruck)
     Tile[][] tiles = BoardManager.getInstance().getTiles();
     for (int i = 0; i < tiles.length; i++){
       for (int j = 0; j < tiles[i].length; j++){
