@@ -14,15 +14,15 @@ public class DesktopLauncher {
 
         NetworkManager myNetwork = NetworkManager.getInstance(); // Create a single network
 
-    //Check if you should connect as a server or a client
+        //Check if you should connect as a server or a client
         if(myNetwork.getMyPublicIP().equals(myNetwork.SERVER_IP)){
             //start server with its Game instance
-            Server server = new Server();
+            Server server = new Server(NetworkManager.SERVER_PORT);
             myNetwork.addServer(server);
             new LwjglApplication(server.serverFPGame, config);
         }
         else {
-            Client client = new Client();
+            Client client = new Client(NetworkManager.SERVER_PORT);
             myNetwork.addNewClient(client);
             new LwjglApplication(client.clientFPGame, config);
         }

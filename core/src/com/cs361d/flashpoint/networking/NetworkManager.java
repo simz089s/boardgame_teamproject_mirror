@@ -12,6 +12,7 @@ public class NetworkManager {
     private static NetworkManager instance = null;
 //    final public String SERVER_IP = getMyIPAddress(); //hardcoded ip for server ******
     final public static String SERVER_IP = "142.157.149.34"; //public ip address
+    final public static int SERVER_PORT = 987654321;
 
     // variable of type String
     public Server server;

@@ -16,8 +16,6 @@ public class Client {
     // A client has an instance of the game
     public static FlashPointGame clientFPGame = new FlashPointGame();
 
-    final static int ServerPort = 50001;
-//    final static int ServerPort = 1234;
     Socket s;
     DataInputStream din;    // input stream
     DataOutputStream dout;  //output stream
@@ -25,13 +23,13 @@ public class Client {
 
 //    ChatClientScreen ccs; // instance of the chat screen so we can modify/update it
 
-    public Client() {
+    public Client(int serverPort) {
             try {
 
                  ip = "142.157.149.34";
 //                ip = "localhost";
                 // establish the connection
-                s = new Socket(ip, ServerPort);
+                s = new Socket(ip, serverPort);
 
                 // obtaining input and out streams
                 din = new DataInputStream(s.getInputStream());

@@ -25,23 +25,17 @@ public class Server implements Runnable{
 
     // counter for clients
     static int i = 0;
-//    final public static String SERVER_IP = "142.157.149.34"; //hardcoded ip for server ******
-//    final public static String SERVER_IP = "localhost"; //hardcoded ip for server ******
-    final static int SERVER_PORT = 50001;
-//    final static int SERVER_PORT = 1234;
 
-    ServerSocket ss; //Server Socket
-    Socket s; //Client socket
+    ServerSocket ss;    //Server Socket
+    Socket s;           //Client socket
     Thread startServer; // DON'T SEND TO SRC CLIENT TWICE
-//    ChatServerScreen css;
 
 
-    public Server() {
+    public Server(int serverPort) {
         // server is listening on port 1234
         try
         {
-            ss = new ServerSocket(SERVER_PORT);
-//            this.css = css;
+            ss = new ServerSocket(serverPort);
             startServer = new Thread(this);
             startServer.start();
 
