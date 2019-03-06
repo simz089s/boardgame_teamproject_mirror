@@ -50,13 +50,11 @@ public class Client {
                             try {
                                 // read the message sent to this client
                                 String msg = din.readUTF();
-                                /* Get the first 4 chars from the string: wait, play, stat, game
-                                * wait: waiting screen chat changes
-                                * play: in-game chat changes
-                                * stat: stats changes
-                                * game: gameState changes
+                                /* Get the command from the string read
+                                * CHATWAIT: waiting screen chat changes
+                                * CHATGAME: in-game chat changes
+                                * GAMESTATE: gameState changes
                                 * */
-
                                 String type = msg.split("-")[0];
                                 String msgToSend = msg.substring(type.length()+1);
 
@@ -76,13 +74,7 @@ public class Client {
                                         throw new IllegalArgumentException();
                                 }
 
-
-
-
-                            } catch (IOException e) {
-
-                                e.printStackTrace();
-                            }
+                            } catch (IOException e) { e.printStackTrace(); }
                         }
                     }
                 });
