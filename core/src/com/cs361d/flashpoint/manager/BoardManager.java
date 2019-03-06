@@ -2,10 +2,12 @@ package com.cs361d.flashpoint.manager;
 
 import com.cs361d.flashpoint.model.BoardElements.*;
 import com.cs361d.flashpoint.view.BoardScreen;
+import org.jetbrains.annotations.NotNull;
+
 import java.util.*;
 import java.util.List;
 
-public class BoardManager {
+public class BoardManager implements Iterable<Tile> {
   protected Difficulty difficulty;
   private final LinkedList<FireFighterColor> colorList = new LinkedList<FireFighterColor>();
   public final static int NUM_VICTIM_SAVED_TO_WIN = 7;
@@ -185,8 +187,8 @@ public class BoardManager {
 
   // Spread the fire at the end of the turn
   public void endTurnFireSpread() throws IllegalAccessException {
-    int i = 1+(int) (Math.random()*(HEIGHT-3));
-    int j = 1+(int) (Math.random()*(WIDTH-3));
+    int i = 1+(int) (Math.random()*(HEIGHT-2));
+    int j = 1+(int) (Math.random()*(WIDTH-2));
     Tile hitLocation = TILE_MAP[i][j];
     if (hitLocation.hasNoFireAndNoSmoke()) {
       hitLocation.setFireStatus(FireStatus.SMOKE);
@@ -350,26 +352,28 @@ public class BoardManager {
           if (numVictimDead > 3) {
             BoardScreen.createEndGameDialog("GAME OVER", "You lost the game more than 3 victims died");
           }
-          else {
-            addNewPointInterest();
-          }
         }
         else {
           numFalseAlarmRemoved++;
         }
+        addNewPointInterest();
         t.setNullVictim();
       }
     }
   }
 
   protected void addNewPointInterest() {
+    if (victims.isEmpty()) {
+//      throw new IllegalStateException("we cannot add a new point of interest if the list is empty");
+      return;
+    }
     AbstractVictim v = victims.remove(0);
     int width;
     int height;
     do
     {
-      width = 1+(int) (Math.random()*(HEIGHT-3));
-      height = 1+(int) (Math.random()*(WIDTH-3));
+      width = 1+(int) (Math.random()*(HEIGHT-2));
+      height = 1+(int) (Math.random()*(WIDTH-2));
 
     }
       while (TILE_MAP[width][height].hasPointOfInterest());
@@ -388,12 +392,12 @@ public class BoardManager {
       }
   }
 
-  protected void addNewPointInterest(int width, int height) {
+  protected void addNewPointInterest(int i, int j) {
     AbstractVictim v = victims.get(0);
-    TILE_MAP[width][height].setVictim(v);
+    TILE_MAP[i][j].setVictim(v);
   }
   // removes the fire outside the building
-  private void removeEdgeFire() {
+  protected void removeEdgeFire() {
     for (int i = 0; i < HEIGHT; i++) {
       TILE_MAP[i][0].setFireStatus(FireStatus.EMPTY);
       TILE_MAP[i][WIDTH - 1].setFireStatus(FireStatus.EMPTY);
@@ -542,5 +546,17 @@ public class BoardManager {
 
   public static void useFamillyGameManager() {
     instance = new BoardManager();
+  }
+
+  @NotNull
+  @Override
+  public Iterator<Tile> iterator() {
+    List<Tile> tiles = new ArrayList<Tile>();
+    for (int i = 0; i < WIDTH; i++) {
+      for (int j = 0; j < HEIGHT; j++) {
+        tiles.add(TILE_MAP[i][j]);
+      }
+    }
+    return tiles.iterator();
   }
 }

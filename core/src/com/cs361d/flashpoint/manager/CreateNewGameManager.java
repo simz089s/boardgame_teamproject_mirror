@@ -12,29 +12,39 @@ public class CreateNewGameManager {
         createFamilyGame(map);
         break;
       default:
-        creatExperienceGame(map);
-        ;
+        creatExperienceGame(map, diff, numPlayers);
     }
     BoardManager.getInstance().setGameName(gameName);
     BoardManager.getInstance().setFireFighterNumber(numPlayers);
   }
 
   private static void createFamilyGame(MapKind map) {
-    switch (map) {
-      case MAP1:
-        DBHandler.loadBoardFromDB("map1");
-        break;
-      default:
-    }
+    BoardManager.useFamillyGameManager();
+    loadMap(map);
     populateFamillyMap();
   }
 
+  private static void loadMap(MapKind map) {
+    switch (map) {
+      case MAP1:
+        DBHandler.loadBoardFromDB("map1");
+      case MAP2:
+        DBHandler.loadBoardFromDB("map2");
+        break;
+      default:
+        }
+    }
+  }
   public static void loadSavedGame(String name) {
     BoardManager.getInstance().reset();
     DBHandler.loadBoardFromDB(name);
   }
 
-  private static void creatExperienceGame(MapKind map) {}
+  private static void creatExperienceGame(MapKind map, Difficulty diff, int numPlayers) {
+    BoardManager.useExperienceGameManager();
+    loadMap(map);
+    populateExperiencedMap(diff, numPlayers);
+  }
 
   private static void populateFamillyMap() {
     BoardManager bm = BoardManager.getInstance();
@@ -53,7 +63,7 @@ public class CreateNewGameManager {
     bm.addFireStatus(6, 6, FireStatus.FIRE);
   }
 
-  private static void populateExperiencedMap(Difficulty diff) {
+  private static void populateExperiencedMap(Difficulty diff, int numPlayers) {
     BoardManagerAdvanced mg = (BoardManagerAdvanced) BoardManager.getInstance();
     Tile[][] tiles = mg.getTiles();
     int width = 3 + (int) (Math.random() * (1));
@@ -61,8 +71,8 @@ public class CreateNewGameManager {
     mg.explosion(width, height);
     mg.addHotspot(width, height);
     do {
-      width = 1 + (int) (Math.random() * (BoardManager.HEIGHT - 3));
-      height = 1 + (int) (Math.random() * (BoardManager.WIDTH - 3));
+      width = 1 + (int) (Math.random() * (BoardManager.WIDTH - 2));
+      height = 1 + (int) (Math.random() * (BoardManager.HEIGHT - 2));
     } while (tiles[width][height].hasFire());
     mg.explosion(width, height);
     mg.addHotspot(width, height);
@@ -92,18 +102,56 @@ public class CreateNewGameManager {
         throw new IllegalArgumentException();
     }
     do {
-      width = 1 + (int) (Math.random() * (BoardManager.HEIGHT - 3));
+      width = 1 + (int) (Math.random() * (BoardManager.WIDTH - 2));
     } while (tiles[width][height].hasFire());
     mg.explosion(width, height);
     mg.addHotspot(width, height);
+    int numExtraHazmat = 0;
+    int numExtraHotSpot = 0;
+    switch (diff) {
+      case HEROIC:
+        do {
+        width = 1 + (int) (Math.random() * (BoardManager.WIDTH - 2));
+        height = 1 + (int) (Math.random() * (BoardManager.HEIGHT - 2));
+        } while (tiles[width][height].hasFire());
+        mg.explosion(width, height);
+        mg.addHotspot(width, height);
+        numExtraHazmat = 5;
+        numExtraHotSpot = 3;
+        mg.setNumHotSpotLeft(12);
+        break;
+      case VETERAN:
+        numExtraHazmat = 4;
+        numExtraHotSpot = 3;
+        mg.setNumHotSpotLeft(6);
+        break;
+      case RECRUIT:
+        numExtraHazmat = 3;
+        if (numPlayers > 3) {
+          numExtraHotSpot = 3;
+        }
+        else {
+          numExtraHotSpot = 2;
+        }
+        mg.setNumHotSpotLeft(6);
+        break;
 
-    if (diff == Difficulty.HEROIC) {
+        default:
+          throw new IllegalArgumentException("Cannot set an experience game with familly version selected");
+    }
+    while (numExtraHazmat > 0) {
       do {
-        width = 1 + (int) (Math.random() * (BoardManager.HEIGHT - 3));
-        height = 1 + (int) (Math.random() * (BoardManager.WIDTH - 3));
+        width = 1 + (int) (Math.random() * (BoardManager.WIDTH - 2));
+        height = 1 + (int) (Math.random() * (BoardManager.HEIGHT - 2));
       } while (tiles[width][height].hasFire());
-      mg.explosion(width, height);
+      mg.addHazmat(width, height);
+      numExtraHazmat--;
+    }
+    while (numExtraHotSpot > 0) {
+      width = 1 + (int) (Math.random() * (BoardManager.WIDTH - 2));
+      height = 1 + (int) (Math.random() * (BoardManager.HEIGHT - 2));
       mg.addHotspot(width, height);
     }
+
   }
 }

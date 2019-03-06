@@ -4,11 +4,13 @@ import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.cs361d.flashpoint.networking.NetworkManager;
 import com.cs361d.flashpoint.view.FlashPointGame;
+import com.cs361d.flashpoint.view.FlashPointScreen;
 
 public class DesktopLauncher {
+    private static FlashPointGame f = new FlashPointGame();
     public static void main(String[] arg) {
         LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-        new LwjglApplication(new FlashPointGame(), config);
+        new LwjglApplication(f, config);
 
 //        NetworkManager myNetwork = NetworkManager.getInstance(); // Create a single network
 
@@ -27,5 +29,9 @@ public class DesktopLauncher {
         // change window size
         config.width = 1225;
         config.height = 675;
+    }
+
+    public static FlashPointGame getFlashPointScreen() {
+        return f;
     }
 }
