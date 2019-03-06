@@ -2,10 +2,7 @@ package com.cs361d.flashpoint.desktop;
 
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
-import com.cs361d.flashpoint.Networking.ChatServerScreen;
-import com.cs361d.flashpoint.Networking.Client;
 import com.cs361d.flashpoint.Networking.NetworkManager;
-import com.cs361d.flashpoint.Networking.Server;
 import com.cs361d.flashpoint.view.FlashPointGame;
 
 public class DesktopLauncher {
@@ -13,7 +10,7 @@ public class DesktopLauncher {
         LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
         new LwjglApplication(new FlashPointGame(), config);
 
-//        NetworkManager myNetwork = NetworkManager.getInstance(); // Create a single network
+        NetworkManager myNetwork = NetworkManager.getInstance(); // Create a single network
 
     //Check if you should connect as a server or a client
 //        if(myNetwork.getMyPublicIP().equals(myNetwork.SERVER_IP)){

@@ -16,7 +16,7 @@ import java.util.*;
 
 public class Server implements Runnable{
 
-    // A server has an instance of the game
+    // Server has an instance of the game
     public FlashPointGame serverFPGame = new FlashPointGame();
 
     // Vector to store active clients

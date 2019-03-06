@@ -20,9 +20,9 @@ public class Client {
 //    final static int ServerPort = 50000;
     final static int ServerPort = 1234;
     Socket s;
-    DataInputStream din;
-    DataOutputStream dout;
-    String ip;        // getting Server's ip
+    DataInputStream din;    // input stream
+    DataOutputStream dout;  //output stream
+    String ip;              // getting Server's ip
 
 //    ChatClientScreen ccs; // instance of the chat screen so we can modify/update it
 

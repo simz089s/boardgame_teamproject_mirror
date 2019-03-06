@@ -42,7 +42,6 @@ class ClientHandler implements Runnable
             {
                 // receive the string
                 MsgToSend = din.readUTF();
-
                 System.out.println(MsgToSend);
 //
 //                if(received.equals("logout")){

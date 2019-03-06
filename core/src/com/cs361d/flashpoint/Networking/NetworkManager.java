@@ -11,7 +11,7 @@ public class NetworkManager {
 
     private static NetworkManager instance = null;
 //    final public String SERVER_IP = getMyIPAddress(); //hardcoded ip for server ******
-    final public static String SERVER_IP = "142.157.149.34";
+    final public static String SERVER_IP = "142.157.149.34"; //public ip address
 
     // variable of type String
     public Server server;

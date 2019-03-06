@@ -41,7 +41,9 @@ public class ChatScreen extends FlashPointScreen {
     ListStyle listStyle;
     ScrollPane scrollPaneMsg;
     ScrollPane.ScrollPaneStyle scrollStyle;
-    public ArrayList<String> msgs = new ArrayList<String>(); // store raw messages from player
+
+    // store raw messages from player
+    public ArrayList<String> msgs = new ArrayList<String>();
 
     // input message field
     TextField textFieldMsg;
