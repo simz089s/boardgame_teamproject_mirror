@@ -3,6 +3,7 @@ package com.cs361d.flashpoint.networking;
 
 //import com.cs361d.flashpoint.view.ChatServerScreen;
 
+import com.cs361d.flashpoint.view.ChatScreen;
 import com.cs361d.flashpoint.view.FlashPointGame;
 
 import java.io.DataInputStream;
@@ -57,20 +58,19 @@ public class Server implements Runnable{
             // Accept the incoming request
             try
             {
-                s = ss.accept();
+                s = ss.accept(); // s is the client socket
                 System.out.println("New client request received : " + s);
 
-                // obtain input and output streams
+                // obtain input and output streams or the client
                 DataInputStream din = new DataInputStream(s.getInputStream());
                 DataOutputStream dout = new DataOutputStream(s.getOutputStream());
 
                 System.out.println("Creating a new handler for this client...");
 
                 // Create a new handler object for handling this request.
-//                ClientHandler clientObserver = new ClientHandler(s,"client " + i, din, dout, css);
                 ClientHandler clientObserver = new ClientHandler(s,"client " + i, din, dout, serverFPGame);
 
-                // Create a new Thread with this object.
+                // Create a new Thread with this client.
                 Thread t = new Thread(clientObserver);
 
                 System.out.println("Adding this client to active client list");
@@ -78,7 +78,7 @@ public class Server implements Runnable{
                 // add this client to active clients list
                 clients.add(clientObserver);
 
-                // start the thread.
+                // start the thread for the client.
                 t.start();
 
                 // increment i for new client.
@@ -98,9 +98,7 @@ public class Server implements Runnable{
                 mc.dout.writeUTF(msg);
             }
             //update the chat for yourself
-//            serverFPGame.chatScreen.msgs.add(msg);
-//            String[] newMsg = serverFPGame.chatScreen.msgs.toArray(new String[serverFPGame.chatScreen.msgs.size()]);
-//            css.lstMsg.setItems(newMsg);
+//            ChatScreen.addMessageToGui(msg);
 
         } catch (IOException e) { e.printStackTrace(); }
     }

@@ -64,17 +64,15 @@ public class Client {
                                     //TODO
                                 }
                                 Commands c = Commands.fromString(type);
-//                                switch (c) {
-//                                    case CHATWAIT:
-//                                        if (!msg.equals("")) {
-//                                            ChatScreen.addMsg(msg);
-//                                            //clientFPGame.getChatScreen().msgs.add(msg);
-////                                            String[] newMsg = clientFPGame.chatScreen.msgs.toArray(new String[ccs.msgs.size()]);
-////                                            clientFPGame.chatScreen.lstMsg.setItems(newMsg);
-//                                        }
-//                                        default:
-//
-//                                }
+                                switch (c) {
+                                    case CHATWAIT:
+                                        if (!msg.equals("")) {
+//                                            ChatScreen.addMessageToGui(msg);
+                                          
+                                        }
+                                        default:
+
+                                }
 //                                // Update chat message from waiting area
 //                                else if(type.equals("wait")) {
 //                                    // update messages array

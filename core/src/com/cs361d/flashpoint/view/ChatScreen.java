@@ -36,7 +36,7 @@ public class ChatScreen extends FlashPointScreen {
     Label labelInfo;
 
     // chat message list
-    List<String> lstMsg;
+    static List<String> lstMsg;
     ListStyle listStyle;
     ScrollPane scrollPaneMsg;
     ScrollPane.ScrollPaneStyle scrollStyle;
@@ -58,8 +58,10 @@ public class ChatScreen extends FlashPointScreen {
     // Get the current network
     NetworkManager myNetwork = NetworkManager.getInstance();
 
-    public static void addMsg(String msg) {
+    public static void addMessageToGui(String msg) {
         msgs.add(msg);
+        String[] newMsg = msgs.toArray(new String[msgs.size()]);
+        lstMsg.setItems(newMsg);
     }
 
     ChatScreen(Game pGame) {
