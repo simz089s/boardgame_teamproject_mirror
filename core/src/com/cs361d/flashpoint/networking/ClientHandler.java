@@ -9,8 +9,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 
-class ClientHandler implements Runnable
-{
+class ClientHandler extends Server implements Runnable {
     private String name;
     final DataInputStream din;
     final DataOutputStream dout;
@@ -43,6 +42,9 @@ class ClientHandler implements Runnable
                 // receive the string
                 MsgToSend = din.readUTF();
                 System.out.println(MsgToSend);
+
+                this.updateServerGui(MsgToSend);
+
 //
 //                if(received.equals("logout")){
 //                    this.isloggedin=false;
@@ -59,13 +61,13 @@ class ClientHandler implements Runnable
                 // ar is the vector storing client of active users
 
                 // update messages array for server's chat
-                if (!MsgToSend.equals("")) {
+//                if (!MsgToSend.equals("")) {
 //                    fpg.chatScreen.msgs.add(MsgToSend);
 //                    String[] newMsg = fpg.chatScreen.msgs.toArray(new String[css.msgs.size()]);
 //                    fpg.chatScreen.lstMsg.setItems(newMsg);
-                }
+//                }
 
-
+                // Send string to every client
                 for (ClientHandler mc : Server.clients) {
                     // if the recipient is found, write on its
                     // output stream

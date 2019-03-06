@@ -1,6 +1,5 @@
 package com.cs361d.flashpoint.networking;
 
-//import com.cs361d.flashpoint.view.ChatClientScreen;
 import com.cs361d.flashpoint.view.BoardChatFragment;
 import com.cs361d.flashpoint.view.ChatScreen;
 import com.cs361d.flashpoint.view.FlashPointGame;
@@ -61,15 +60,16 @@ public class Client {
                                 Commands c = Commands.fromString(type);
                                 switch (c) {
                                     case CHATWAIT:
-                                        if (!msg.equals("")) {
-//                                            ChatScreen.addMessageToGui(msgToSend);
-                                        }
+                                        if (!msg.equals(""))
+                                            ChatScreen.addMessageToGui(msgToSend);
+                                        break;
                                     case CHATGAME:
-                                        if (!msg.equals("")) {
-//                                            BoardChatFragment.addMessageToGui(msgToSend);
-                                        }
+                                        if (!msg.equals(""))
+                                            BoardChatFragment.addMessageToGui(msgToSend);
+                                        break;
                                     case GAMESTATE:
                                         //TODO
+                                        break;
                                         default:
                                         throw new IllegalArgumentException();
                                 }

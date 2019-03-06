@@ -1,8 +1,7 @@
 package com.cs361d.flashpoint.networking;
 
 
-//import com.cs361d.flashpoint.view.ChatServerScreen;
-
+import com.cs361d.flashpoint.view.BoardChatFragment;
 import com.cs361d.flashpoint.view.ChatScreen;
 import com.cs361d.flashpoint.view.FlashPointGame;
 
@@ -14,6 +13,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.*;
+
 
 public class Server implements Runnable{
 
@@ -90,18 +90,46 @@ public class Server implements Runnable{
     }
 
 
-    /* Send a message to a server */
+    /* Send a message to from server */
     public synchronized void sendMsg(String msg) {
         try
         {
             for (ClientHandler mc : Server.clients) {
                 mc.dout.writeUTF(msg);
             }
-            //update the chat for yourself
-//            ChatScreen.addMessageToGui(msg);
+            updateServerGui(msg); //update your own Gui
 
         } catch (IOException e) { e.printStackTrace(); }
     }
+
+    /* Update GUI of the Server based on sent String*/
+    public void updateServerGui(String msg) {
+        /* Get the command from the string read
+         * CHATWAIT: waiting screen chat changes
+         * CHATGAME: in-game chat changes
+         * GAMESTATE: gameState changes
+         * */
+        String type = msg.split("-")[0];
+        String msgToSend = msg.substring(type.length()+1);
+
+        Commands c = Commands.fromString(type);
+        switch (c) {
+            case CHATWAIT:
+                if (!msg.equals(""))
+                    ChatScreen.addMessageToGui(msgToSend);
+                break;
+            case CHATGAME:
+                if (!msg.equals(""))
+                    BoardChatFragment.addMessageToGui(msgToSend);
+                break;
+            case GAMESTATE:
+                //TODO
+                break;
+            default:
+                throw new IllegalArgumentException();
+        }
+    }
+
 
 
     /* Get info about the server's machine */
