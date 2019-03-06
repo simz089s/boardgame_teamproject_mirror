@@ -14,17 +14,17 @@ import java.util.Observer;
 
 public class Client {
 
-    final static int ServerPort = 1234;
+    final static int ServerPort = 50000;
     Socket s;
     DataInputStream din;
     DataOutputStream dout;
-    InetAddress ip;        // getting Server's ip
+    String ip;        // getting Server's ip
 
     ChatClientScreen ccs; // instance of the chat screen so we can modify/update it
 
     public Client(final ChatClientScreen ccs) {
             try {
-                ip = InetAddress.getByName("localhost");
+                ip = "142.157.149.34";
 
                 // establish the connection
                 s = new Socket(ip, ServerPort);

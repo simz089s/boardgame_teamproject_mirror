@@ -19,7 +19,7 @@ public class Server implements Runnable{
 
     // counter for clients
     static int i = 0;
-
+    final public static String SERVER_IP = "142.157.149.34"; //hardcoded ip for server ******
     ServerSocket ss; //Server Socket
     Socket s; //Client socket
     Thread startServer; // DON'T SEND TO SRC CLIENT TWICE
@@ -31,7 +31,7 @@ public class Server implements Runnable{
         // server is listening on port 1234
         try
         {
-            ss = new ServerSocket(1234);
+            ss = new ServerSocket(50000);
             this.css = css;
             startServer = new Thread(this);
             startServer.start();
