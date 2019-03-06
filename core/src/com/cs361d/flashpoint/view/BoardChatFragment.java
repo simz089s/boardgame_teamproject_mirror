@@ -6,10 +6,9 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.List;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
-import com.cs361d.flashpoint.Networking.NetworkManager;
+import com.cs361d.flashpoint.networking.NetworkManager;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import static com.cs361d.flashpoint.view.FlashPointScreen.skinUI;
 

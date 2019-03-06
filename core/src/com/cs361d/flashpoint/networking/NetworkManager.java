@@ -1,4 +1,4 @@
-package com.cs361d.flashpoint.Networking;
+package com.cs361d.flashpoint.networking;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;

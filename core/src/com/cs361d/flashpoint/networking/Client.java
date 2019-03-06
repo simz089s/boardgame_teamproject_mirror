@@ -1,13 +1,11 @@
-package com.cs361d.flashpoint.Networking;
+package com.cs361d.flashpoint.networking;
 
 //import com.cs361d.flashpoint.view.ChatClientScreen;
 import com.cs361d.flashpoint.view.FlashPointGame;
-import kotlin.jvm.Synchronized;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
