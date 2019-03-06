@@ -80,7 +80,7 @@ public class LobbyScreen extends FlashPointScreen {
         ArrayList<String> savedGames = listFilesOfSavedGames();
         String[] savedGamesArr = savedGames.toArray(new String[savedGames.size()]);
         createSavedGamesList(savedGamesArr);
-        
+
         // exit button
         createLogoutButton();
 

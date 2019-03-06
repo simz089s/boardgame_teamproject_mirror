@@ -72,8 +72,7 @@ public class BoardScreen extends FlashPointScreen {
   @Override
   public void show() {
 
-    //DBHandler.createBoardDBFamilyVersion(MapKind.MAP1); // generate start board
-    //CreateNewGameManager.createNewGame("",4, MapKind.MAP1, Difficulty.FAMILLY);
+    //DBHandler.createBoard(MapKind.MAP1); // generate initial map
 
     // background music
     myMusic = Gdx.audio.newMusic(Gdx.files.internal("playlist/sound1.mp3"));
@@ -233,14 +232,15 @@ public class BoardScreen extends FlashPointScreen {
       return;
 
     } else if (obs.isDoor()) { // door
+
       if (obs.isDestroyed()) {
         gameUnit = new Image(new Texture("game_units/walls/Destroyed_Door.png"));
-      }
-      else if (obs.isOpen()) {
+      } else if (obs.isOpen()) {
         gameUnit = new Image(new Texture("game_units/walls/Open_Door.png"));
       } else {
         gameUnit = new Image(new Texture("game_units/walls/Closed_Door.png"));
       }
+
       gameUnit.setHeight(20);
       gameUnit.setWidth(20);
 
