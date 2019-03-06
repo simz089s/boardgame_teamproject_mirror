@@ -5,12 +5,12 @@ import com.badlogic.gdx.Screen;
 
 public class FlashPointGame extends Game {
 
-    public Screen loginScreen;
-    public Screen lobbyScreen;
-    public Screen createGameScreen;
-    public Screen chatScreen;
-    public Screen statsScreen;
-    public Screen boardScreen;
+    Screen loginScreen;
+    Screen lobbyScreen;
+    Screen createGameScreen;
+    Screen chatScreen;
+    Screen statsScreen;
+    Screen boardScreen;
 
     @Override
     public void create() {
@@ -23,4 +23,18 @@ public class FlashPointGame extends Game {
 
         this.setScreen(lobbyScreen);
     }
+
+    public Screen getLoginScreen() { return loginScreen; }
+
+    public Screen getLobbyScreen() { return lobbyScreen; }
+
+    public Screen getCreateGameScreen() { return createGameScreen; }
+
+    public Screen getChatScreen() { return chatScreen; }
+
+    public Screen getStatsScreen() { return statsScreen; }
+
+    public Screen getBoardScreen() { return boardScreen; }
+
+
 }
