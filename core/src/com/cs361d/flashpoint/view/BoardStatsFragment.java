@@ -69,21 +69,20 @@ public class BoardStatsFragment {
 
         ArrayList<String> gamesStatsArrList = new ArrayList<String>();
 
-        gamesStatsArrList.add(BoardManager.getInstance().getGameName()); 
+        gamesStatsArrList.add(BoardManager.getInstance().getGameName());
         gamesStatsArrList.add("");
         gamesStatsArrList.add("[Team stats]");
-        gamesStatsArrList.add("Walls left: X");
-        gamesStatsArrList.add("Victims saved: Y");
-        gamesStatsArrList.add("Victims lost: Z");
+        gamesStatsArrList.add("Walls left: " + BoardManager.getInstance().getTotalWallDamageLeft());
+        gamesStatsArrList.add("Victims saved: " + BoardManager.getInstance().getNumVictimSaved());
+        gamesStatsArrList.add("Victims lost: " + BoardManager.getInstance().getNumVictimDead());
         gamesStatsArrList.add("");
 
         // TODO: get number of firefighters
         for (int i = 0; i < 3; i++){
             gamesStatsArrList.add("[RED]");
-            gamesStatsArrList.add("Accumulated AP: 1");
+            gamesStatsArrList.add("Accumulated AP: ");
             gamesStatsArrList.add("Special AP: 0");
             gamesStatsArrList.add("Specialist: Fire Captain");
-            gamesStatsArrList.add("# victims saved: 2");
             gamesStatsArrList.add("");
         }
 

@@ -538,7 +538,7 @@ public class BoardScreen extends FlashPointScreen {
                 Dialog dialog = new Dialog("Warning", skinUI, "dialog") {
                   public void result(Object obj) {
                     if ((Boolean) obj){
-                      Gdx.app.exit();
+                      game.setScreen(game.lobbyScreen);
                     }
                   }
                 };
