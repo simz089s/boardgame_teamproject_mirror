@@ -68,9 +68,9 @@ public class Client {
                                 else if(type.equals("wait")) {
                                     // update messages array
                                     if (!msg.equals("")) {
-//                                        ccs.msgs.add(msg);
+//                                        clientFPGame.chatScreen.msgs.add(msg);
 //                                        String[] newMsg = clientFPGame.chatScreen.msgs.toArray(new String[ccs.msgs.size()]);
-//                                        ccs.lstMsg.setItems(newMsg);
+//                                        clientFPGame.chatScreen.lstMsg.setItems(newMsg);
                                     }
                                 }
                                 // Update chat message from game area

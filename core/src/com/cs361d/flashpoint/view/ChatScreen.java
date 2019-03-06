@@ -23,7 +23,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class ChatScreen extends FlashPointScreen {
-
     Stage stage;
     SpriteBatch batch;
     Texture txtrBG;
@@ -42,8 +41,13 @@ public class ChatScreen extends FlashPointScreen {
     ScrollPane scrollPaneMsg;
     ScrollPane.ScrollPaneStyle scrollStyle;
 
+    public ArrayList<String> getMsgs()
+    {
+        return msgs;
+    }
+
     // store raw messages from player
-    public ArrayList<String> msgs = new ArrayList<String>();
+    protected static ArrayList<String> msgs = new ArrayList<String>();
 
     // input message field
     TextField textFieldMsg;
@@ -54,6 +58,9 @@ public class ChatScreen extends FlashPointScreen {
     // Get the current network
     NetworkManager myNetwork = NetworkManager.getInstance();
 
+    public void addMsg(String msg) {
+        msgs.add(msg);
+    }
 
     ChatScreen(Game pGame) {
         super(pGame);
@@ -120,7 +127,7 @@ public class ChatScreen extends FlashPointScreen {
 
                     if(!messageInputed.equals("") && !messageInputed.equals(" ")){
                         textFieldMsg.setText("");
-                        myNetwork.sendChatMessage(messageInputed); //send message over network
+                        myNetwork.sendChatMessage("wait-"+messageInputed); //send message over network
                         msgs.add("Jacques:  " + messageInputed);
                         String[] newMsg = msgs.toArray(new String[msgs.size()]);
                         lstMsg.setItems(newMsg);
