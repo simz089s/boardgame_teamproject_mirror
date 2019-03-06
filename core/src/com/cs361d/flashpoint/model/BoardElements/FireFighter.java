@@ -14,7 +14,6 @@ public class FireFighter {
   private static final int ACTION_POINTS_PER_TURN = 4;
   private int actionPoints;
   private Tile currentTile;
-  protected int apPointsToExtenguish;
 
   private FireFighter(FireFighterColor color, int actionPoints) {
     if (actionPoints > MAX_ACTION_POINTS) {
@@ -26,7 +25,7 @@ public class FireFighter {
   }
 
   public static FireFighter createFireFighter(
-      FireFighterColor color, int numVictimsSaved, int actionPoints) {
+      FireFighterColor color, int actionPoints) {
     FireFighter f;
     if (FIREFIGHTERS.containsKey(color)) {
       f = FIREFIGHTERS.get(color);

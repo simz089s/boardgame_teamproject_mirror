@@ -131,8 +131,8 @@ public class BoardManager implements Iterable<Tile> {
   }
 
   public void addFireFighter(
-      int i, int j, FireFighterColor color, int numVictimsSaved, int actionPoints) {
-    FireFighter f = FireFighter.createFireFighter(color, numVictimsSaved, actionPoints);
+      int i, int j, FireFighterColor color, int actionPoints) {
+    FireFighter f = FireFighter.createFireFighter(color, actionPoints);
     if (f.getTile() != null) {
       throw new IllegalArgumentException();
     }
@@ -462,12 +462,15 @@ public class BoardManager implements Iterable<Tile> {
   }
 
   protected void knockedDown(int i, int j) {
-    if (TILE_MAP[i][j].canContainAmbulance()) {
+    if (!TILE_MAP[i][j].hasFire()) {
       return;
     }
     ArrayList<Tile> tiles = getClosestAmbulanceTile(i, j);
     FireFighter f = TILE_MAP[i][j].getFirefighters().get(0);
       if (tiles.size() == 1) {
+        if (tiles.get(0).hasFire()) {
+          throw new IllegalArgumentException("Issue with tile at location " + i + " " + j + "It shoul not have fire");
+        }
         f.setTile(tiles.get(0));
       } else if (tiles.size() > 1) {
         BoardScreen.addFilterOnKnockDownChoosePos(f, tiles);
