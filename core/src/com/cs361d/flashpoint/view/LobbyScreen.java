@@ -14,6 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.List;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.cs361d.flashpoint.manager.DBHandler;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -85,8 +86,9 @@ public class LobbyScreen extends FlashPointScreen {
         createAvailableGamesList(availableGames);
 
         //create saved games list (TO LOAD)
-        String[] savedGames = {"Saved game 1", "Saved game 2", "Saved game 3"};
-        createSavedGamesList(savedGames);
+        ArrayList<String> savedGames = listFilesForFolder();
+        String[] savedGamesArr = savedGames.toArray(new String[savedGames.size()]);
+        createSavedGamesList(savedGamesArr);
 
         // button listeners
         btnLogout.addListener(
@@ -111,7 +113,8 @@ public class LobbyScreen extends FlashPointScreen {
                 new ClickListener() {
                     @Override
                     public void clicked(InputEvent event, float x, float y) {
-                        game.setScreen(game.chatScreen);
+                        DBHandler.loadBoardFromDB(lstLoadGames.getSelected());
+                        game.setScreen(game.boardScreen);
                     }
                 });
 
@@ -286,14 +289,24 @@ public class LobbyScreen extends FlashPointScreen {
                 Gdx.graphics.getHeight() - scrollPaneLoadGameList.getHeight() - 45);
     }
 
+
+    // get saved games from file system
+
+
+
     public ArrayList<String> listFilesForFolder() {
 
         ArrayList<String> filesArr = new ArrayList<String>();
         File folder = new File("db");
 
         for (final File fileEntry : folder.listFiles()) {
-            if (fileEntry.isFile()) {
-                filesArr.add(fileEntry.getName());
+            String filename = fileEntry.getName();
+            if (fileEntry.isFile() && !filename.equals("map1.json") && !filename.equals("map2.json")) {
+                int pos = filename.lastIndexOf(".");
+                if (pos > 0) {
+                    filename = filename.substring(0, pos);
+                }
+                filesArr.add(filename);
             }
         }
 

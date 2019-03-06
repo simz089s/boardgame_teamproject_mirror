@@ -229,6 +229,8 @@ public class DBHandler {
 
                 JSONObject currentTile = new JSONObject();
 
+                currentTile.put("position_id", i + "-" + j);
+
                 // walls
                 currentTile.put("top_wall", boardManager.getTiles()[i][j].getObstacle(Direction.TOP).getHealth());
                 currentTile.put("bottom_wall", boardManager.getTiles()[i][j].getObstacle(Direction.BOTTOM).getHealth());
@@ -260,6 +262,10 @@ public class DBHandler {
                         pointOfInterestObj.put("status", 1);
                     }
 
+                    currentTile.put("POI", pointOfInterestObj);
+                } else {
+                    pointOfInterestObj.put("revealed", false);
+                    pointOfInterestObj.put("status", -1);
                     currentTile.put("POI", pointOfInterestObj);
                 }
 
@@ -323,6 +329,14 @@ public class DBHandler {
                 }
 
                 currentTile.put("right_wall_door", rightDoorObject);
+
+                if (boardManager.getTiles()[i][j].canContainAmbulance()){
+                    currentTile.put("engine", "ambulance");
+                } else if (boardManager.getTiles()[i][j].canContainFireTruck()){
+                    currentTile.put("engine", "firetruck");
+                } else {
+                    currentTile.put("engine", "empty");
+                }
 
                 newTilesList.add(currentTile);
                 count ++;
@@ -475,6 +489,7 @@ public class DBHandler {
 //                } else {
 //                    pointOfInterest.put("status", -1);
 //                }
+                pointOfInterest.put("revealed", false);
                 pointOfInterest.put("status", -1);
                 currentTile.put("POI", pointOfInterest);
 
