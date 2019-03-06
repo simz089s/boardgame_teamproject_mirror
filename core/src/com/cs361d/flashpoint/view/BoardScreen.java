@@ -72,7 +72,7 @@ public class BoardScreen extends FlashPointScreen {
   @Override
   public void show() {
 
-   // DBHandler.createBoardDBFamilyVersion(MapKind.MAP1); // generate start board
+    //DBHandler.createBoardDBFamilyVersion(MapKind.MAP1); // generate start board
     //CreateNewGameManager.createNewGame("",4, MapKind.MAP1, Difficulty.FAMILLY);
 
     // background music
