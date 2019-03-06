@@ -148,7 +148,7 @@ public class BoardScreen extends FlashPointScreen {
                     if (activateKnockDownChoosePos && isClickableTileOnKnockDown(i_pos, j_pos)){
                       clearAllGameUnits();
 
-                      BoardManager.getInstance().chooseForKnowckedDown(BoardManager.getInstance().getTiles()[i_pos][j_pos], knockedDownFirefigher);
+                      BoardManager.getInstance().chooseForKnockedDown(BoardManager.getInstance().getTiles()[i_pos][j_pos], knockedDownFirefigher);
 
                       activateKnockDownChoosePos = false;
 

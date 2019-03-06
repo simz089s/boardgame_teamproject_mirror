@@ -16,7 +16,8 @@ public class Tile {
     private final Map<Direction, Obstacle> OBSTACLES = new HashMap<Direction, Obstacle>();
     private final int I;
     private final int J;
-
+    private boolean hasHazmat = false;
+    private boolean hasHotSpot = false;
     public Tile(FireStatus fireStatus, int i, int j){
         this.fireStatus = fireStatus;
         this.victim = NullVictim.getInstance();
@@ -24,6 +25,24 @@ public class Tile {
         this.J = j;
         this.carrierStatus = CarrierStatus.EMPTY;
     }
+
+    public boolean hasHazmat() {
+        return this.hasHazmat;
+    }
+
+    public boolean hasHotSpot()
+    {
+        return this.hasHazmat;
+    }
+
+    public void setHasHazmat(boolean value) {
+        this.hasHazmat = value;
+    }
+
+    public void addHotSpot() {
+        this.hasHotSpot = true;
+    }
+
 
     public void setCarrierStatus(CarrierStatus s) {
         carrierStatus = s;

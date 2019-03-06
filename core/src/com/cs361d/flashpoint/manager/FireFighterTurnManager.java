@@ -1,12 +1,15 @@
 package com.cs361d.flashpoint.manager;
 
 import com.cs361d.flashpoint.model.BoardElements.*;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-public class FireFighterTurnManager {
+public class FireFighterTurnManager implements Iterable<FireFighter> {
+
   private final int MAX_NUMBER_OF_PLAYERS = 6;
   private final LinkedList<FireFighter> FIREFIGHTERS = new LinkedList<FireFighter>();
   private static FireFighterTurnManager instance =
@@ -239,4 +242,9 @@ public class FireFighterTurnManager {
 //    return false; // false if ap >= 2, you can always extenguish fire first
   }
 
+  @NotNull
+  @Override
+  public Iterator<FireFighter> iterator() {
+    return FIREFIGHTERS.iterator();
+  }
 }

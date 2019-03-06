@@ -2,13 +2,15 @@ package com.cs361d.flashpoint.manager;
 
 public enum Difficulty {
   FAMILLY("familly"),
-  EXPERIENCED("experienced");
+  RECRUIT("recruit"),
+  VETERAN("veteran"),
+  HEROIC("heroid");
+
+  private String text;
 
   Difficulty(String text) {
     this.text = text;
   }
-
-  private String text;
 
   public String getText() {
     return this.text;
