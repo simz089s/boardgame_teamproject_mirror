@@ -7,8 +7,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.List;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.cs361d.flashpoint.manager.BoardManager;
 import com.cs361d.flashpoint.manager.FireFighterTurnManager;
+import com.cs361d.flashpoint.model.BoardElements.FireFighter;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 public class BoardStatsFragment {
 
@@ -69,21 +71,21 @@ public class BoardStatsFragment {
 
         ArrayList<String> gamesStatsArrList = new ArrayList<String>();
 
-        gamesStatsArrList.add(BoardManager.getInstance().getGameName()); 
+        gamesStatsArrList.add(BoardManager.getInstance().getGameName());
         gamesStatsArrList.add("");
         gamesStatsArrList.add("[Team stats]");
-        gamesStatsArrList.add("Walls left: X");
-        gamesStatsArrList.add("Victims saved: Y");
-        gamesStatsArrList.add("Victims lost: Z");
+        gamesStatsArrList.add("Walls left: " + BoardManager.getInstance().getTotalWallDamageLeft());
+        gamesStatsArrList.add("Victims saved: " + BoardManager.getInstance().getNumVictimSaved());
+        gamesStatsArrList.add("Victims lost: " + BoardManager.getInstance().getNumVictimDead());
         gamesStatsArrList.add("");
 
-        // TODO: get number of firefighters
-        for (int i = 0; i < 3; i++){
-            gamesStatsArrList.add("[RED]");
-            gamesStatsArrList.add("Accumulated AP: 1");
+        Iterator<FireFighter> it = FireFighterTurnManager.getInstance().iterator();
+        while(it.hasNext()) {
+            FireFighter f = it.next();
+            gamesStatsArrList.add("" + f.getColor());
+            gamesStatsArrList.add("Accumulated AP: " + f.getActionPointsLeft());
             gamesStatsArrList.add("Special AP: 0");
             gamesStatsArrList.add("Specialist: Fire Captain");
-            gamesStatsArrList.add("# victims saved: 2");
             gamesStatsArrList.add("");
         }
 

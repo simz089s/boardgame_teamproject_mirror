@@ -6,6 +6,7 @@ import com.cs361d.flashpoint.model.BoardElements.Tile;
 public class CreateNewGameManager {
 
   public static void createNewGame(String gameName, int numPlayers, MapKind map, Difficulty diff) {
+    BoardManager.getInstance().reset();
     switch (diff) {
       case FAMILLY:
         createFamilyGame(map);
@@ -19,7 +20,6 @@ public class CreateNewGameManager {
   }
 
   private static void createFamilyGame(MapKind map) {
-    BoardManager.getInstance().reset();
     switch (map) {
       case MAP1:
         DBHandler.loadBoardFromDB("map1");
@@ -30,6 +30,7 @@ public class CreateNewGameManager {
   }
 
   public static void loadSavedGame(String name) {
+    BoardManager.getInstance().reset();
     DBHandler.loadBoardFromDB(name);
   }
 
@@ -67,8 +68,8 @@ public class CreateNewGameManager {
     mg.addHotspot(width, height);
     switch (height) {
       case 7:
-          height = 2;
-          break;
+        height = 2;
+        break;
       case 6:
         height = 3;
         break;
@@ -76,25 +77,33 @@ public class CreateNewGameManager {
         height = 4;
         break;
       case 4:
-          height = 5;
-          break;
+        height = 5;
+        break;
       case 3:
-          height = 6;
-          break;
+        height = 6;
+        break;
       case 2:
-          height = 7;
-          break;
+        height = 7;
+        break;
       case 1:
         height = 8;
         break;
-        default:
-            throw new IllegalArgumentException();
+      default:
+        throw new IllegalArgumentException();
     }
     do {
-          width = 1 + (int) (Math.random() * (BoardManager.HEIGHT - 3));
+      width = 1 + (int) (Math.random() * (BoardManager.HEIGHT - 3));
+    } while (tiles[width][height].hasFire());
+    mg.explosion(width, height);
+    mg.addHotspot(width, height);
+
+    if (diff == Difficulty.HEROIC) {
+      do {
+        width = 1 + (int) (Math.random() * (BoardManager.HEIGHT - 3));
+        height = 1 + (int) (Math.random() * (BoardManager.WIDTH - 3));
       } while (tiles[width][height].hasFire());
       mg.explosion(width, height);
       mg.addHotspot(width, height);
-
+    }
   }
 }
