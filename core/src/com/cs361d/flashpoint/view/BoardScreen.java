@@ -72,7 +72,7 @@ public class BoardScreen extends FlashPointScreen {
   @Override
   public void show() {
 
-    //DBHandler.createBoard(MapKind.MAP1); // generate initial map
+    //DBHandler.createBoard(MapKind.MAP2); // generate initial map
 
     // background music
     myMusic = Gdx.audio.newMusic(Gdx.files.internal("playlist/sound1.mp3"));

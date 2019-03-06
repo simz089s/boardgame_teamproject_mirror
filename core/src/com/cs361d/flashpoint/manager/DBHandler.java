@@ -7,10 +7,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.util.Iterator;
 
 public class DBHandler {
@@ -200,13 +197,7 @@ public class DBHandler {
                     }
                 }
 
-                String fireStatus = "" + object.get("fire_status");
-
-                if(fireStatus.equals("smoke")){
-                    myBoardManager.addFireStatus(i, j, FireStatus.SMOKE);
-                } else if (fireStatus.equals("fire")){
-                    myBoardManager.addFireStatus(i, j, FireStatus.FIRE);
-                }
+                myBoardManager.addFireStatus(i, j, FireStatus.fromString("" + object.get("fire_status")));
 
                 j ++;
                 count ++;
@@ -297,13 +288,8 @@ public class DBHandler {
                 }
 
                 // fire_status
-                if (boardManager.getTiles()[i][j].hasFire()){
-                    currentTile.put("fire_status", "fire");
-                } else if (boardManager.getTiles()[i][j].hasSmoke()){
-                    currentTile.put("fire_status", "smoke");
-                } else {
-                    currentTile.put("fire_status", "none");
-                }
+                String fireStatus = boardManager.getTiles()[i][j].getFireStatusString();
+                currentTile.put("fire_status", fireStatus);
 
                 // top door
                 JSONObject topDoorObject = new JSONObject();
@@ -490,11 +476,11 @@ public class DBHandler {
 
                 // engines
                 if (isPresentInArr(AMBULANCE_POS_MAP1, i + "-" + j)){
-                    currentTile.put("engine", "ambulance");
+                    currentTile.put("engine", "canhaveambulance");
                 }
 
                 if (isPresentInArr(FIRETRUCK_POS_MAP1, i + "-" + j)){
-                    currentTile.put("engine", "firetruck");
+                    currentTile.put("engine", "canhavefiretruck");
                 }
 
                 if (!isPresentInArr(AMBULANCE_POS_MAP1, i + "-" + j) && !isPresentInArr(FIRETRUCK_POS_MAP1, i + "-" + j)){
@@ -516,7 +502,7 @@ public class DBHandler {
 
                 // Fire status
 
-                currentTile.put("fire_status", "none");
+                currentTile.put("fire_status", "empty");
 
                 newTilesList.add(currentTile);
                 count ++;
@@ -626,11 +612,11 @@ public class DBHandler {
 
                 // engines
                 if (isPresentInArr(AMBULANCE_POS_MAP2, i + "-" + j)){
-                    currentTile.put("engine", "ambulance");
+                    currentTile.put("engine", "canhaveambulance");
                 }
 
                 if (isPresentInArr(FIRETRUCK_POS_MAP2, i + "-" + j)){
-                    currentTile.put("engine", "firetruck");
+                    currentTile.put("engine", "canhavefiretruck");
                 }
 
                 if (!isPresentInArr(AMBULANCE_POS_MAP2, i + "-" + j) && !isPresentInArr(FIRETRUCK_POS_MAP2, i + "-" + j)){
@@ -652,7 +638,7 @@ public class DBHandler {
 
                 // Fire status
 
-                currentTile.put("fire_status", "none");
+                currentTile.put("fire_status", "empty");
 
                 newTilesList.add(currentTile);
                 count ++;
@@ -677,6 +663,14 @@ public class DBHandler {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public static void removeGameFile(String filename){
+        if (filename.equalsIgnoreCase("map1") ||filename.equalsIgnoreCase("map1") ) {
+            throw new IllegalArgumentException("Cannot delete the main maps from db");
+        }
+        File file = new File("db/" + filename + ".json");
+        file.delete();
     }
 
 
