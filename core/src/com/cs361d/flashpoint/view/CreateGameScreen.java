@@ -97,7 +97,10 @@ public class CreateGameScreen extends FlashPointScreen {
                 new ClickListener() {
                     @Override
                     public void clicked(InputEvent event, float x, float y) {
-                        if (!gameNameField.getText().isEmpty()) {
+
+                        boolean isInvalidName = gameNameField.getText().equals("map1") || gameNameField.getText().equals("map2");
+
+                        if (!gameNameField.getText().isEmpty() && !isInvalidName) {
 
                             int numPlayers = Integer.parseInt(lstNumPlayers.getSelected());
 
@@ -108,6 +111,7 @@ public class CreateGameScreen extends FlashPointScreen {
                             if (mapSelected.equals("MAP 2")){
                                 mk = MapKind.MAP2;
                             }
+                            // TODO
 //                            else if (mapSelected.equals("RANDOM")){
 //                                mk = MapKind.RANDOM;
 //                            }
@@ -117,7 +121,7 @@ public class CreateGameScreen extends FlashPointScreen {
                             game.setScreen(game.boardScreen);
 
                         } else {
-                            createDialog("Warning", "Invalid: enter a game name.");
+                            createDialog("Warning", "Invalid or empty game name!");
                         }
                     }
                 });

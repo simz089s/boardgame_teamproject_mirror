@@ -116,7 +116,7 @@ public class BoardManager implements Iterable<Tile> {
       throw new IllegalArgumentException("Max num of player is 6");
     }
     for (int i = 0; i < count; i++) {
-      FireFighter f = FireFighter.createFireFighter(colorList.removeFirst(), 0, 4);
+      FireFighter f = FireFighter.createFireFighter(colorList.removeFirst(), 4);
       FireFighterTurnManager.getInstance().addFireFighter(f);
     }
   }

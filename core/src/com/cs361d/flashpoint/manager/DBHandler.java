@@ -8,6 +8,7 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.Iterator;
 
 public class DBHandler {
@@ -80,13 +81,19 @@ public class DBHandler {
             int j = 0;
             int count = 0;
 
-            JSONObject gameStats = (JSONObject) jsonObject.get("gameStats");
+            JSONObject gameParams = (JSONObject) jsonObject.get("gameParams");
+            String gameName = "" + gameParams.get("gameName");
+            int numVictimsLost = Integer.parseInt("" + gameParams.get("numVictimsLost"));
+            int numVictimsSaved = Integer.parseInt("" + gameParams.get("numVictimsSaved"));
+            int numFalseAlarmRemoved = Integer.parseInt("" + gameParams.get("numFalseAlarmRemoved"));
+            int numDamageLeft = Integer.parseInt("" + gameParams.get("numDamageLeft"));
 
-            String gameName = "" + gameStats.get("gameName");
-            int numVictimsLost = Integer.parseInt("" + gameStats.get("numVictimsLost"));
-            int numVictimsSaved = Integer.parseInt("" + gameStats.get("numVictimsSaved"));
-            int numFalseAlarmRemoved = Integer.parseInt("" + gameStats.get("numFalseAlarmRemoved"));
-            int numDamageLeft = Integer.parseInt("" + gameStats.get("numDamageLeft"));
+            JSONArray playersOrderingArr = (JSONArray) gameParams.get("playersOrdering");
+            Iterator<JSONObject> playersOrderingIter = playersOrderingArr.iterator();
+            ArrayList<FireFighterColor> playersColorOrderArr = new ArrayList<FireFighterColor>();
+            while (playersOrderingIter.hasNext()) {
+                playersColorOrderArr.add(FireFighterColor.fromString("" + playersOrderingIter.next()));
+            }
 
             BoardManager.getInstance().setGameName(gameName);
             BoardManager.getInstance().setGameAtStart(numFalseAlarmRemoved, numVictimsLost, numVictimsSaved, numDamageLeft);
@@ -167,12 +174,12 @@ public class DBHandler {
                 // firefighters
                 JSONArray firefightersArr = (JSONArray) object.get("firefighters");
                 if (!firefightersArr.isEmpty()) {
-                    Iterator<String> firefighterIter = firefightersArr.iterator();
+                    Iterator<JSONObject> firefighterIter = firefightersArr.iterator();
                     while (firefighterIter.hasNext()) {
-                        String firefighterColor = firefighterIter.next();
-                        // create a firefighter object by retrieving its data from DB using its unique color id
-                        //FireFighter f = getFirefighterFromDB(firefighterColor);
-                        myBoardManager.addFireFighter(i, j, getEnumFromString(firefighterColor), 0, 8);
+                        JSONObject firefighterParams =  firefighterIter.next();
+                        FireFighterColor fc = FireFighterColor.fromString("" + firefighterParams.get("color"));
+                        int numAP = Integer.parseInt("" + firefighterParams.get("numAP"));
+                        myBoardManager.addFireFighter(i, j, fc, numAP);
                     }
 
                 }
@@ -203,6 +210,8 @@ public class DBHandler {
                 count ++;
             }
 
+            FireFighterTurnManager.getInstance().setOrder(playersColorOrderArr);
+
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -227,14 +236,21 @@ public class DBHandler {
         JSONObject newObj = new JSONObject();
         JSONArray newTilesList = new JSONArray();
 
-        JSONParser parser = new JSONParser();
+        JSONObject gameParams = new JSONObject();
+        JSONArray playersOrdering = new JSONArray();
+        Iterator<FireFighter> it = FireFighterTurnManager.getInstance().iterator();
+        while(it.hasNext()) {
+            FireFighter f = it.next();
+            playersOrdering.add("" + f.getColor());
+        }
 
-        JSONObject gameStats = new JSONObject();
-        gameStats.put("gameName", fileName);
-        gameStats.put("numVictimsLost", BoardManager.getInstance().getNumVictimDead());
-        gameStats.put("numVictimsSaved", BoardManager.getInstance().getNumVictimSaved());
-        gameStats.put("numFalseAlarmRemoved", BoardManager.getInstance().getNumFalseAlarmRemoved());
-        gameStats.put("numDamageLeft", BoardManager.getInstance().getTotalWallDamageLeft());
+        gameParams.put("gameName", fileName);
+        gameParams.put("numVictimsLost", BoardManager.getInstance().getNumVictimDead());
+        gameParams.put("numVictimsSaved", BoardManager.getInstance().getNumVictimSaved());
+        gameParams.put("numFalseAlarmRemoved", BoardManager.getInstance().getNumFalseAlarmRemoved());
+        gameParams.put("numDamageLeft", BoardManager.getInstance().getTotalWallDamageLeft());
+
+        gameParams.put("playersOrdering", playersOrdering);
 
         try {
 
@@ -259,7 +275,10 @@ public class DBHandler {
                 JSONArray newFirefightersList = new JSONArray();
                 if (boardManager.getTiles()[i][j].getFirefighters() != null) {
                     for (FireFighter f : boardManager.getTiles()[i][j].getFirefighters()) {
-                        newFirefightersList.add(f.getColor().toString());
+                        JSONObject firefighterParams = new JSONObject();
+                        firefighterParams.put("color", f.getColor().toString());
+                        firefighterParams.put("numAP", f.getActionPointsLeft());
+                        newFirefightersList.add(firefighterParams);
                     }
                 }
 
@@ -353,7 +372,7 @@ public class DBHandler {
 
             }
 
-            newObj.put("gameStats", gameStats);
+            newObj.put("gameParams", gameParams);
             newObj.put("tiles", newTilesList);
 
             // create save board json file
@@ -399,12 +418,15 @@ public class DBHandler {
         JSONObject newObj = new JSONObject();
         JSONArray newTilesList = new JSONArray();
 
-        JSONObject gameStats = new JSONObject();
-        gameStats.put("gameName", MapKind.MAP1.getText());
-        gameStats.put("numVictimsLost", 0);
-        gameStats.put("numVictimsSaved", 0);
-        gameStats.put("numFalseAlarmRemoved", 0);
-        gameStats.put("numDamageLeft", 24);
+        JSONObject gameParams = new JSONObject();
+        JSONArray playersOrdering = new JSONArray();
+        gameParams.put("gameName", MapKind.MAP1.getText());
+        gameParams.put("numVictimsLost", 0);
+        gameParams.put("numVictimsSaved", 0);
+        gameParams.put("numFalseAlarmRemoved", 0);
+        gameParams.put("numDamageLeft", 24);
+
+        gameParams.put("playersOrdering", playersOrdering);
 
         try {
 
@@ -510,7 +532,7 @@ public class DBHandler {
             }
 
 
-            newObj.put("gameStats", gameStats);
+            newObj.put("gameParams", gameParams);
             newObj.put("tiles", newTilesList);
 
             // create empty board json file
@@ -535,12 +557,15 @@ public class DBHandler {
         JSONObject newObj = new JSONObject();
         JSONArray newTilesList = new JSONArray();
 
-        JSONObject gameStats = new JSONObject();
-        gameStats.put("gameName", MapKind.MAP2.getText());
-        gameStats.put("numVictimsLost", 0);
-        gameStats.put("numVictimsSaved", 0);
-        gameStats.put("numFalseAlarmRemoved", 0);
-        gameStats.put("numDamageLeft", 24);
+        JSONObject gameParams = new JSONObject();
+        JSONArray playersOrdering = new JSONArray();
+        gameParams.put("gameName", MapKind.MAP2.getText());
+        gameParams.put("numVictimsLost", 0);
+        gameParams.put("numVictimsSaved", 0);
+        gameParams.put("numFalseAlarmRemoved", 0);
+        gameParams.put("numDamageLeft", 24);
+
+        gameParams.put("playersOrdering", playersOrdering);
 
         try {
 
@@ -646,7 +671,7 @@ public class DBHandler {
             }
 
 
-            newObj.put("gameStats", gameStats);
+            newObj.put("gameParams", gameParams);
             newObj.put("tiles", newTilesList);
 
             // create empty board json file
@@ -679,10 +704,6 @@ public class DBHandler {
 
 
 
-    private static FireFighterColor getEnumFromString(String color){
-        return FireFighterColor.fromString(color);
-
-    }
 
     public static boolean isPresentInArr(String[] arr, String str){
         for (int i = 0; i < arr.length; i++){
