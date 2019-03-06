@@ -136,9 +136,9 @@ public class ChatScreen extends FlashPointScreen {
 //                            c.substring(command[0].length()));
 //                        }
                         myNetwork.sendChatMessage("wait-"+messageInputed); //send message over network
-                        msgs.add("Jacques:  " + messageInputed);
-                        String[] newMsg = msgs.toArray(new String[msgs.size()]);
-                        lstMsg.setItems(newMsg);
+//                        msgs.add("Jacques:  " + messageInputed);
+//                        String[] newMsg = msgs.toArray(new String[msgs.size()]);
+//                        lstMsg.setItems(newMsg);
 
                         scrollPaneMsg.setActor(lstMsg);
                         scrollPaneMsg.layout();
