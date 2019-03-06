@@ -25,10 +25,6 @@ public class FireFighter {
     this.actionPoints = actionPoints;
   }
 
-  public static FireFighter createFireFighter(FireFighterColor color) {
-    return createFireFighter(color, 0, 4);
-  }
-
   public static FireFighter createFireFighter(
       FireFighterColor color, int numVictimsSaved, int actionPoints) {
     FireFighter f;
@@ -70,14 +66,6 @@ public class FireFighter {
     return actionPoints;
   }
 
-  public boolean removeActionPoints(int a) {
-    if (a < 1 || this.actionPoints < a) {
-      return false;
-    } else {
-      this.actionPoints -= a;
-      return true;
-    }
-  }
 
   public boolean canEscape(Tile t) {
       return true;
