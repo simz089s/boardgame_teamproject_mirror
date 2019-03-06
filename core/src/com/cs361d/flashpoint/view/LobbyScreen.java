@@ -58,6 +58,8 @@ public class LobbyScreen extends FlashPointScreen {
 
     @Override
     public void show() {
+
+        stage = new Stage();
         batch = new SpriteBatch();
 
         txtrBG = new Texture("lobby.png");
@@ -70,6 +72,15 @@ public class LobbyScreen extends FlashPointScreen {
         createAvailGameLabel();
         createLoadGameLabel();
 
+        //create available games list (TO JOIN)
+        String[] availableGames = {"No available game to join"};
+        createAvailableGamesList(availableGames);
+
+        //create saved games list (TO LOAD)
+        ArrayList<String> savedGames = listFilesOfSavedGames();
+        String[] savedGamesArr = savedGames.toArray(new String[savedGames.size()]);
+        createSavedGamesList(savedGamesArr);
+        
         // exit button
         createLogoutButton();
 
@@ -81,61 +92,6 @@ public class LobbyScreen extends FlashPointScreen {
 
         // create game button
         createCreateGameButton();
-
-        //create available games list (TO JOIN)
-        String[] availableGames = {"Available game A", "Available game B"};
-        createAvailableGamesList(availableGames);
-
-        //create saved games list (TO LOAD)
-        ArrayList<String> savedGames = listFilesForFolder();
-        String[] savedGamesArr = savedGames.toArray(new String[savedGames.size()]);
-        createSavedGamesList(savedGamesArr);
-
-        // button listeners
-        btnLogout.addListener(
-                new ClickListener() {
-                    @Override
-                    public void clicked(InputEvent event, float x, float y) {
-                        game.setScreen(game.loginScreen);
-                    }
-                });
-
-        btnJoin.addListener(
-                new ClickListener() {
-                    @Override
-                    public void clicked(InputEvent event, float x, float y) {
-                        game.setScreen(game.chatScreen);
-                        btnJoin.setText("Joining...");
-                        loadGamesLabel.setText(lstJoinGames.getSelected());
-                    }
-                });
-
-        btnLoad.addListener(
-                new ClickListener() {
-                    @Override
-                    public void clicked(InputEvent event, float x, float y) {
-                        CreateNewGameManager.loadSavedGame(lstLoadGames.getSelected());
-                        game.setScreen(game.boardScreen);
-                    }
-                });
-
-        btnCreateGame.addListener(
-                new ClickListener() {
-                    @Override
-                    public void clicked(InputEvent event, float x, float y) {
-                        game.setScreen(game.createGameScreen);
-                    }
-                });
-
-        stage = new Stage();
-        stage.addActor(btnLogout);
-        stage.addActor(scrollPaneJoinGameList);
-        stage.addActor(scrollPaneLoadGameList);
-        stage.addActor(btnJoin);
-        stage.addActor(btnLoad);
-        stage.addActor(btnCreateGame);
-        stage.addActor(availableGamesLabel);
-        stage.addActor(loadGamesLabel);
 
         Gdx.input.setInputProcessor(stage);
     }
@@ -177,6 +133,13 @@ public class LobbyScreen extends FlashPointScreen {
         stage.dispose();
     }
 
+
+
+    // labels
+
+
+
+
     private void createAvailGameLabel() {
 
         availableGamesLabel = new Label("Available games:", skinUI);
@@ -184,6 +147,8 @@ public class LobbyScreen extends FlashPointScreen {
                 5,
                 (Gdx.graphics.getHeight() - debugLbl.getHeight() - 40));
         availableGamesLabel.setColor(Color.BLACK);
+
+        stage.addActor(availableGamesLabel);
     }
 
     private void createLoadGameLabel() {
@@ -192,7 +157,16 @@ public class LobbyScreen extends FlashPointScreen {
                 Gdx.graphics.getWidth() / 2,
                 (Gdx.graphics.getHeight() - debugLbl.getHeight() - 40));
         loadGamesLabel.setColor(Color.BLACK);
+
+        stage.addActor(loadGamesLabel);
     }
+
+
+
+    // buttons
+
+
+
 
     private void createLogoutButton() {
         btnLogout = new TextButton("Logout", skinUI, "default");
@@ -201,34 +175,87 @@ public class LobbyScreen extends FlashPointScreen {
         btnLogout.setPosition(
                 (Gdx.graphics.getWidth() - btnLogout.getWidth() - 8),
                 (Gdx.graphics.getHeight() - btnLogout.getHeight() - 8));
+
+        btnLogout.addListener(
+                new ClickListener() {
+                    @Override
+                    public void clicked(InputEvent event, float x, float y) {
+                        game.setScreen(game.loginScreen);
+                    }
+                });
+
+        stage.addActor(btnLogout);
     }
 
     private void createJoinGameButton() {
         btnJoin = new TextButton("Join game", skinUI, "default");
-        btnJoin.setWidth(100);
-        btnJoin.setHeight(25);
+        btnJoin.setWidth(150);
+        btnJoin.setHeight(50);
+        btnJoin.setColor(Color.ROYAL);
         btnJoin.setPosition(
                 Gdx.graphics.getWidth() / 4 - btnJoin.getWidth() / 2,
                 Gdx.graphics.getHeight() / 5f - (btnJoin.getHeight() / 2));
+
+        btnJoin.addListener(
+                new ClickListener() {
+                    @Override
+                    public void clicked(InputEvent event, float x, float y) {
+                        //btnJoin.setText("Joining...");
+                        //game.setScreen(game.chatScreen);
+                        //loadGamesLabel.setText(lstJoinGames.getSelected());
+                    }
+                });
+
+        stage.addActor(btnJoin);
     }
 
     private void createLoadGameButton() {
         btnLoad = new TextButton("Load game", skinUI, "default");
-        btnLoad.setWidth(100);
-        btnLoad.setHeight(25);
+        btnLoad.setWidth(150);
+        btnLoad.setHeight(50);
+        btnLoad.setColor(Color.GOLDENROD);
         btnLoad.setPosition(
                 Gdx.graphics.getWidth() / 2 + Gdx.graphics.getWidth() / 4 - btnJoin.getWidth() / 2,
                 Gdx.graphics.getHeight() / 5f - (btnLoad.getHeight() / 2));
+
+        btnLoad.addListener(
+                new ClickListener() {
+                    @Override
+                    public void clicked(InputEvent event, float x, float y) {
+                        CreateNewGameManager.loadSavedGame(lstLoadGames.getSelected());
+                        game.setScreen(game.boardScreen);
+                    }
+                });
+
+        stage.addActor(btnLoad);
     }
 
     private void createCreateGameButton() {
         btnCreateGame = new TextButton("Create game", skinUI, "default");
-        btnCreateGame.setWidth(150);
-        btnCreateGame.setHeight(25);
+        btnCreateGame.setWidth(200);
+        btnCreateGame.setHeight(50);
+        btnCreateGame.setColor(Color.FIREBRICK);
         btnCreateGame.setPosition(
                 (Gdx.graphics.getWidth() - btnCreateGame.getWidth()) / 2,
-                Gdx.graphics.getHeight() / 5f - (btnCreateGame.getHeight() / 2) - 40);
+                75);
+
+        btnCreateGame.addListener(
+                new ClickListener() {
+                    @Override
+                    public void clicked(InputEvent event, float x, float y) {
+                        game.setScreen(game.createGameScreen);
+                    }
+                });
+
+        stage.addActor(btnCreateGame);
     }
+
+
+
+    // lists
+
+
+
 
     private void createAvailableGamesList(String[] messages) {
         // list style
@@ -258,6 +285,8 @@ public class LobbyScreen extends FlashPointScreen {
         scrollPaneJoinGameList.setPosition(
                 10,
                 Gdx.graphics.getHeight() - scrollPaneJoinGameList.getHeight() - 45);
+
+        stage.addActor(scrollPaneJoinGameList);
     }
 
     private void createSavedGamesList(String[] messages) {
@@ -288,14 +317,18 @@ public class LobbyScreen extends FlashPointScreen {
         scrollPaneLoadGameList.setPosition(
                 Gdx.graphics.getWidth() / 2,
                 Gdx.graphics.getHeight() - scrollPaneLoadGameList.getHeight() - 45);
+
+        stage.addActor(scrollPaneLoadGameList);
     }
 
 
+
+    // helper
+
+
+
     // get saved games from file system
-
-
-
-    public ArrayList<String> listFilesForFolder() {
+    public ArrayList<String> listFilesOfSavedGames() {
 
         ArrayList<String> filesArr = new ArrayList<String>();
         File folder = new File("db");

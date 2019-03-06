@@ -186,9 +186,6 @@ public class BoardScreen extends FlashPointScreen {
       btnResume.remove();
     }
 
-    stage.addActor(btnExit);
-    stage.addActor(gameInfoLabel);
-
     Gdx.input.setInputProcessor(stage);
   }
 
@@ -467,6 +464,8 @@ public class BoardScreen extends FlashPointScreen {
     gameInfoLabel.setPosition(
             850,
             Gdx.graphics.getHeight() - 100);
+
+    stage.addActor(gameInfoLabel);
   }
 
   public static void updateGameInfoLabel(){
@@ -538,6 +537,7 @@ public class BoardScreen extends FlashPointScreen {
                 Dialog dialog = new Dialog("Warning", skinUI, "dialog") {
                   public void result(Object obj) {
                     if ((Boolean) obj){
+                      myMusic.stop();
                       game.setScreen(game.lobbyScreen);
                     }
                   }
@@ -549,6 +549,8 @@ public class BoardScreen extends FlashPointScreen {
                 dialog.show(stage);
               }
             });
+
+    stage.addActor(btnExit);
   }
 
   private void createCheatSButton() {

@@ -16,6 +16,8 @@ import com.cs361d.flashpoint.manager.MapKind;
 
 public class CreateGameScreen extends FlashPointScreen {
 
+    final private int PADDING_LEFT = 75;
+
     SpriteBatch batch;
 
     Texture txtrBG;
@@ -116,12 +118,11 @@ public class CreateGameScreen extends FlashPointScreen {
                 String boardNum = "" + (lstGameBoard.getSelectedIndex() + 1);
 
                 gameBoardImg = new Image(new Texture("board" + boardNum + ".png"));
-                gameBoardImg.setHeight(180);
-                gameBoardImg.setWidth(240);
+                gameBoardImg.setHeight(360);
+                gameBoardImg.setWidth(480);
                 gameBoardImg.setPosition(
-                        Gdx.graphics.getWidth() / 2,
-                        Gdx.graphics.getHeight() - gameNameField.getHeight() - difficultyLabel.getHeight()
-                                - numPlayersMenu.getHeight() - 80 - gameBoardImg.getHeight());
+                        Gdx.graphics.getWidth() / 2 + PADDING_LEFT,
+                        200);
 
                 stage.addActor(gameBoardImg);
                 return true;
@@ -207,7 +208,7 @@ public class CreateGameScreen extends FlashPointScreen {
     private void createGameNameLabel() {
         gameNameLabel = new Label("Game name:", skinUI);
         gameNameLabel.setPosition(
-                70,
+                70 + PADDING_LEFT,
                 Gdx.graphics.getHeight() - 70);
         gameNameLabel.setColor(Color.BLACK);
     }
@@ -219,7 +220,7 @@ public class CreateGameScreen extends FlashPointScreen {
         gameNameField.setHeight(25);
         gameNameField.setMaxLength(20);
         gameNameField.setPosition(
-                80 + gameNameLabel.getWidth(),
+                80 + gameNameLabel.getWidth() + PADDING_LEFT,
                 Gdx.graphics.getHeight() - 70);
     }
 
@@ -232,7 +233,7 @@ public class CreateGameScreen extends FlashPointScreen {
     private void createNumPlayersLabel() {
         numPlayersLabel = new Label("Number of players:", skinUI);
         numPlayersLabel.setPosition(
-                70,
+                70 + PADDING_LEFT,
                 Gdx.graphics.getHeight() - gameNameField.getHeight() - 100);
         numPlayersLabel.setColor(Color.BLACK);
     }
@@ -245,7 +246,7 @@ public class CreateGameScreen extends FlashPointScreen {
 
         numPlayersMenu.setWidth(100);
         numPlayersMenu.setPosition(
-                70,
+                70 + PADDING_LEFT,
                 Gdx.graphics.getHeight() - gameNameField.getHeight()
                         - numPlayersLabel.getHeight() - numPlayersMenu.getHeight() - 80);
     }
@@ -259,8 +260,8 @@ public class CreateGameScreen extends FlashPointScreen {
     private void createDifficultyLabel() {
         difficultyLabel = new Label("Game difficulty:", skinUI);
         difficultyLabel.setPosition(
-                Gdx.graphics.getWidth() / 2 + 30,
-                Gdx.graphics.getHeight() - gameNameField.getHeight() - 90);
+                Gdx.graphics.getWidth() / 2 - 250 + PADDING_LEFT,
+                Gdx.graphics.getHeight() - gameNameField.getHeight() - 100);
         difficultyLabel.setColor(Color.BLACK);
     }
 
@@ -271,9 +272,9 @@ public class CreateGameScreen extends FlashPointScreen {
         difficultyMenu = new ScrollPane(lstDifficulty);
 
         difficultyMenu.setPosition(
-                Gdx.graphics.getWidth() / 2 + 30,
+                Gdx.graphics.getWidth() / 2 - 250 + PADDING_LEFT,
                 Gdx.graphics.getHeight() - gameNameField.getHeight()
-                        - difficultyLabel.getHeight() - numPlayersMenu.getHeight() - 70);
+                        - difficultyLabel.getHeight() - numPlayersMenu.getHeight() - 80);
     }
 
 
@@ -285,32 +286,31 @@ public class CreateGameScreen extends FlashPointScreen {
     private void createGameBoardLabel() {
         gameBoardLabel = new Label("Game board:", skinUI);
         gameBoardLabel.setPosition(
-                70,
-                Gdx.graphics.getHeight() - gameNameField.getHeight() - numPlayersMenu.getHeight() - 100);
+                70 + PADDING_LEFT,
+                Gdx.graphics.getHeight() - gameNameField.getHeight() - numPlayersMenu.getHeight() - 140);
         gameBoardLabel.setColor(Color.BLACK);
     }
 
     private void createGameBoardList() {
         lstGameBoard = new List<String>(skinUI);
-        String[] gameBoards = {"Game board 1", "Game board 2", "Game board 3"};
+        String[] gameBoards = {"MAP 1", "MAP 2", "RANDOM"};
         lstGameBoard.setItems(gameBoards);
         gameBoardMenu = new ScrollPane(lstGameBoard);
 
         gameBoardMenu.setPosition(
-                70,
+                70 + PADDING_LEFT,
                 Gdx.graphics.getHeight() - gameNameField.getHeight() - numPlayersMenu.getHeight()
-                    - gameBoardLabel.getHeight() - gameBoardMenu.getHeight() - 80);
+                    - gameBoardLabel.getHeight() - gameBoardMenu.getHeight() - 120);
     }
 
     private void createGameBoardImg() {
 
         gameBoardImg = new Image(new Texture("board1.png"));
-        gameBoardImg.setHeight(180);
-        gameBoardImg.setWidth(240);
+        gameBoardImg.setHeight(360);
+        gameBoardImg.setWidth(480);
         gameBoardImg.setPosition(
-                Gdx.graphics.getWidth() / 2,
-                Gdx.graphics.getHeight() - gameNameField.getHeight()
-                        - difficultyLabel.getHeight() - numPlayersMenu.getHeight() - 80 - gameBoardImg.getHeight());
+                Gdx.graphics.getWidth() / 2 + PADDING_LEFT,
+                200);
     }
 
 
@@ -322,10 +322,11 @@ public class CreateGameScreen extends FlashPointScreen {
     private void createStartGameButton() {
         btnStartGame = new TextButton("Start game", skinUI, "default");
         btnStartGame.setWidth(150);
-        btnStartGame.setHeight(25);
+        btnStartGame.setHeight(50);
+        btnStartGame.setColor(Color.FIREBRICK);
         btnStartGame.setPosition(
                 (Gdx.graphics.getWidth() - btnStartGame.getWidth()) / 2,
-                10);
+                75);
     }
 
 
