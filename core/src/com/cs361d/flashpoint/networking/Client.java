@@ -60,45 +60,22 @@ public class Client {
                                 String type = msg.split("-")[0];
                                 String msgToSend = msg.substring(type.length()+1);
 
-                                // Update stats
-                                if (type.equals("stat")) {
-                                    //TODO
-                                }
                                 Commands c = Commands.fromString(type);
                                 switch (c) {
                                     case CHATWAIT:
                                         if (!msg.equals("")) {
 //                                            ChatScreen.addMessageToGui(msgToSend);
-
                                         }
                                     case CHATGAME:
                                         if (!msg.equals("")) {
 //                                            BoardChatFragment.addMessageToGui(msgToSend);
-
                                         }
+                                    case GAMESTATE:
+                                        //TODO
                                         default:
-
+                                        throw new IllegalArgumentException();
                                 }
-//                                // Update chat message from waiting area
-//                                else if(type.equals("wait")) {
-//                                    // update messages array
-//
-//                                }
-//                                // Update chat message from game area
-//                                else if(type.equals("play")) {
-//                                    // update messages array
-//                                    if (!msg.equals(""))
-//                                    {
-////                                        ccs.msgs.add(msg);
-////                                        String[] newMsg = clientFPGame.boardChatFragment.msgs.toArray(new String[ccs.msgs.size()]);
-////                                        ccs.lstMsg.setItems(newMsg);
-//                                    }
-//                                }
-//
-//                                // update Game State
-//                                else {
-//                                    //TODO
-//                                }
+
 
 
 
