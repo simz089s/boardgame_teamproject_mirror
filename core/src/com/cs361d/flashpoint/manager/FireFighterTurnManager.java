@@ -4,15 +4,15 @@ import com.cs361d.flashpoint.model.BoardElements.*;
 import com.cs361d.flashpoint.view.BoardScreen;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.LinkedList;
+import java.awt.*;
+import java.util.*;
 import java.util.List;
+import java.util.logging.Filter;
 
 public class FireFighterTurnManager implements Iterable<FireFighter> {
 
   private final int MAX_NUMBER_OF_PLAYERS = 6;
-  private final LinkedList<FireFighter> FIREFIGHTERS = new LinkedList<FireFighter>();
+  private LinkedList<FireFighter> FIREFIGHTERS = new LinkedList<FireFighter>();
   private static FireFighterTurnManager instance =
       new FireFighterTurnManager();
 
@@ -209,10 +209,25 @@ public class FireFighterTurnManager implements Iterable<FireFighter> {
     t.addFirefighter(f);
   }
 
-  /*
-  TODO
-   */
-  public void knockedDownReapearChoice(FireFighter f, List<Tile> tiles) {}
+  public void setOrder(List<FireFighterColor> list) {
+    LinkedList<FireFighter> newList = new LinkedList<FireFighter>();
+    if (list.isEmpty()) {
+      return;
+    }
+    else {
+      for (FireFighterColor c : list) {
+        for (FireFighter f : FIREFIGHTERS) {
+          if (f.getColor() == c) {
+            newList.add(f);
+          }
+        }
+      }
+    }
+    if (FIREFIGHTERS.size() != newList.size()) {
+      throw new IllegalArgumentException("Not all colors of the list existed as fireFighters");
+    }
+    FIREFIGHTERS = newList;
+  }
 
   @NotNull
   @Override

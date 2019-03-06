@@ -129,4 +129,17 @@ public class FireFighter {
   public static void reset() {
     FIREFIGHTERS.clear();
   }
+
+  @Override
+  public boolean equals(Object o) {
+    if (!(o instanceof   FireFighter)) {
+      return false;
+    }
+    else if( o == this) {
+      return true;
+    }
+    else {
+      return this.getColor() == ((FireFighter) o).getColor();
+    }
+  }
 }

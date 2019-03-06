@@ -350,7 +350,7 @@ public class BoardManager implements Iterable<Tile> {
         if (t.hasRealVictim()) {
           this.numVictimDead++;
           if (numVictimDead > 3) {
-            BoardScreen.createEndGameDialog("GAME OVER", "You lost the game more than 3 victims died");
+            endGame("GAME OVER", "You lost the game more than 3 victims died");
           }
         }
         else {
@@ -513,14 +513,14 @@ public class BoardManager implements Iterable<Tile> {
       }
     }
     if (numVictimSaved >= NUM_VICTIM_SAVED_TO_WIN) {
-      BoardScreen.createEndGameDialog("GAME OVER", "Congratulation you won the game saving 7 victims!!!");
+      endGame("GAME OVER", "Congratulation you won the game saving 7 victims!!!");
     }
   }
 
   public void useDamageMarker() {
     this.totalWallDamageLeft--;
     if (this.totalWallDamageLeft <= 0) {
-      BoardScreen.createEndGameDialog("GAME OVER", "You lost the game the building collapsed");
+      endGame("GAME OVER", "You lost the game the building collapsed)");
     }
   }
 
@@ -558,5 +558,10 @@ public class BoardManager implements Iterable<Tile> {
       }
     }
     return tiles.iterator();
+  }
+
+  protected void endGame(String title, String msg) {
+    BoardScreen.createEndGameDialog(title, msg);
+    DBHandler.removeGameFile(gameName);
   }
 }

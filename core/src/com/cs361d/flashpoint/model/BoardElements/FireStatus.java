@@ -21,6 +21,6 @@ public enum FireStatus {
                 return f;
             }
         }
-        return null;
+        throw new IllegalArgumentException("The String " + text + " does not correspond to any Direction ENUM");
     }
 }

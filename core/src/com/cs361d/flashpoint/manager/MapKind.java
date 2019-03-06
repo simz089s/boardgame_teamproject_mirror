@@ -22,6 +22,6 @@ public enum MapKind {
                 return b;
             }
         }
-        return null;
+        throw new IllegalArgumentException("The String " + text + " does not correspond to any Direction ENUM");
     }
 }
