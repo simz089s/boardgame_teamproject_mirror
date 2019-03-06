@@ -101,7 +101,18 @@ public class CreateGameScreen extends FlashPointScreen {
 
                             int numPlayers = Integer.parseInt(lstNumPlayers.getSelected());
 
-                            CreateNewGameManager.createNewGame(gameNameField.getText(), numPlayers, MapKind.MAP1, Difficulty.FAMILLY);
+                            String mapSelected = lstGameBoard.getSelected();
+
+                            MapKind mk = MapKind.MAP1;
+
+                            if (mapSelected.equals("MAP 2")){
+                                mk = MapKind.MAP2;
+                            }
+//                            else if (mapSelected.equals("RANDOM")){
+//                                mk = MapKind.RANDOM;
+//                            }
+
+                            CreateNewGameManager.createNewGame(gameNameField.getText(), numPlayers, mk, Difficulty.FAMILLY);
 
                             game.setScreen(game.boardScreen);
 

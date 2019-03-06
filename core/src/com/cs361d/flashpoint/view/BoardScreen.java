@@ -72,7 +72,7 @@ public class BoardScreen extends FlashPointScreen {
   @Override
   public void show() {
 
-    //DBHandler.createBoard(MapKind.MAP1); // generate initial map
+    //DBHandler.createBoard(MapKind.MAP2); // generate initial map
 
     // background music
     myMusic = Gdx.audio.newMusic(Gdx.files.internal("playlist/sound1.mp3"));
@@ -249,7 +249,6 @@ public class BoardScreen extends FlashPointScreen {
           gameUnit.setPosition(
                   myTile.getX() + myTile.getWidth() / 2 - gameUnit.getHeight() / 2,
                   myTile.getY() + myTile.getHeight() - gameUnit.getHeight() / 2);
-
           break;
 
         case BOTTOM:
@@ -262,7 +261,6 @@ public class BoardScreen extends FlashPointScreen {
           gameUnit.setPosition(
                   myTile.getX() - gameUnit.getWidth() / 2,
                   myTile.getY() + myTile.getHeight() / 2 - gameUnit.getHeight() / 2);
-
           break;
 
         case RIGHT:
@@ -315,7 +313,6 @@ public class BoardScreen extends FlashPointScreen {
           gameUnit.setPosition(
                   myTile.getX() - WALL_THICKNESS,
                   myTile.getY());
-
           break;
 
         case RIGHT:
@@ -332,6 +329,7 @@ public class BoardScreen extends FlashPointScreen {
                   myTile.getX() + myTile.getWidth(),
                   myTile.getY());
           break;
+
         default:
           throw new IllegalArgumentException("That argument does not exist");
       }

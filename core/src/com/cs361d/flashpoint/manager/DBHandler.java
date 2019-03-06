@@ -42,16 +42,25 @@ public class DBHandler {
 
     // MAP 2
     // TODO
-    private static final String[] TOP_WALL_TILE_MAP2 = {};
-    private static final String[] LEFT_WALL_TILE_MAP2 = {};
-    private static final String[] TOP_DOOR_TILE_MAP2 = {};
-    private static final String[] LEFT_DOOR_TILE_MAP2 = {};
+    private static final String[] TOP_WALL_TILE_MAP2 = {"1-1", "1-2", "1-3", "1-4", "1-5","1-6", "1-7", "1-8",
+            "2-4", "2-5",
+            "3-1", "3-2", "4-4", "4-5", "4-6", "4-7", "4-8",
+            "5-1", "5-2", "5-3", "5-4", "5-5", "5-6",
+            "7-1", "7-2", "7-3", "7-4", "7-5", "7-6", "7-7", "7-8"
+    };
+    private static final String[] LEFT_WALL_TILE_MAP2 = {"1-1", "2-1", "3-1", "4-1", "5-1", "6-1",
+            "1-9", "2-9", "3-9", "4-9", "5-9", "6-9",
+            "1-4", "2-4", "3-4", "1-6", "2-6", "3-6", "4-7",
+            "5-4", "6-4", "5-7", "6-7"
+    };
+    private static final String[] TOP_DOOR_TILE_MAP2 = {"4-5", "4-6", "5-3", "5-6"};
+    private static final String[] LEFT_DOOR_TILE_MAP2 = {"1-6", "3-6", "4-7"};
 
-    private static final String[] TOP_DOOR_TILE_DESTROYED_MAP2 = {};
-    private static final String[] LEFT_DOOR_TILE_DESTROYED_MAP2 = {};
+    private static final String[] TOP_DOOR_TILE_DESTROYED_MAP2 = {"7-3"};
+    private static final String[] LEFT_DOOR_TILE_DESTROYED_MAP2 = {"3-1"};
 
-    private static final String[] AMBULANCE_POS_MAP2 = {};
-    private static final String[] FIRETRUCK_POS_MAP2 = {};
+    private static final String[] AMBULANCE_POS_MAP2 = {"2-0", "3-0", "0-5", "0-6", "4-9", "5-9", "7-3", "7-4"};
+    private static final String[] FIRETRUCK_POS_MAP2 = {"4-0", "5-0", "0-3", "0-4", "2-9", "3-9", "7-5", "7-6"};
 
 
 
@@ -394,8 +403,8 @@ public class DBHandler {
     public static void createBoard(MapKind mk){
         if(mk == MapKind.MAP1){
             createMap1Board();
-        } else if (mk == MapKind.MAP1){
-
+        } else if (mk == MapKind.MAP2){
+            createMap2Board();
         } else if (mk == MapKind.RANDOM){
 
         }
@@ -408,7 +417,7 @@ public class DBHandler {
         JSONArray newTilesList = new JSONArray();
 
         JSONObject gameStats = new JSONObject();
-        gameStats.put("gameName", MapKind.MAP1);
+        gameStats.put("gameName", MapKind.MAP1.getText());
         gameStats.put("numVictimsLost", 0);
         gameStats.put("numVictimsSaved", 0);
         gameStats.put("numFalseAlarmRemoved", 0);
@@ -447,12 +456,12 @@ public class DBHandler {
 
                 // doors
                 JSONObject doorProperties = new JSONObject();
-                doorProperties.put("health", 2);
+                doorProperties.put("health", 1);
                 doorProperties.put("status", -1);
 
                 if (isPresentInArr(TOP_DOOR_TILE_MAP1, i + "-" + j)){
                     JSONObject openedDoorObject = new JSONObject();
-                    openedDoorObject.put("health", 2);
+                    openedDoorObject.put("health", 1);
                     openedDoorObject.put("status", 0);
                     currentTile.put("top_wall_door", openedDoorObject);
                 } else if (isPresentInArr(TOP_DOOR_TILE_DESTROYED_MAP1, i + "-" + j)){
@@ -466,7 +475,7 @@ public class DBHandler {
 
                 if (isPresentInArr(LEFT_DOOR_TILE_MAP1, i + "-" + j)){
                     JSONObject openedDoorObject = new JSONObject();
-                    openedDoorObject.put("health", 2);
+                    openedDoorObject.put("health", 1);
                     openedDoorObject.put("status", 0);
                     currentTile.put("left_wall_door", openedDoorObject);
                 } else if(isPresentInArr(LEFT_DOOR_TILE_DESTROYED_MAP1, i + "-" + j)){
@@ -523,7 +532,7 @@ public class DBHandler {
 
             // create empty board json file
 
-            FileWriter file = new FileWriter("db/" + MapKind.MAP1 + ".json");
+            FileWriter file = new FileWriter("db/" + MapKind.MAP1.getText() + ".json");
             file.write(newObj.toJSONString());
             file.flush();
 
@@ -537,8 +546,140 @@ public class DBHandler {
         }
     }
 
+
     public static void createMap2Board(){
-        // TODO
+
+        JSONObject newObj = new JSONObject();
+        JSONArray newTilesList = new JSONArray();
+
+        JSONObject gameStats = new JSONObject();
+        gameStats.put("gameName", MapKind.MAP2.getText());
+        gameStats.put("numVictimsLost", 0);
+        gameStats.put("numVictimsSaved", 0);
+        gameStats.put("numFalseAlarmRemoved", 0);
+        gameStats.put("numDamageLeft", 24);
+
+        try {
+
+            int count = 0;
+
+            while (count < 80) {
+
+                int i = count / 10;
+                int j = count % 10;
+
+                // modification here
+                JSONObject currentTile = new JSONObject();
+
+                currentTile.put("position_id", i + "-" + j);
+
+                // walls
+                if (isPresentInArr(TOP_WALL_TILE_MAP2, i + "-" + j) && !isPresentInArr(TOP_DOOR_TILE_MAP2, i + "-" + j)){
+                    currentTile.put("top_wall", 2);
+                } else {
+                    currentTile.put("top_wall", -1);
+                }
+
+                if (isPresentInArr(LEFT_WALL_TILE_MAP2, i + "-" + j) && !isPresentInArr(LEFT_DOOR_TILE_MAP2, i + "-" + j)){
+                    currentTile.put("left_wall", 2);
+                } else {
+                    currentTile.put("left_wall", -1);
+                }
+
+                currentTile.put("bottom_wall", -1);
+                currentTile.put("right_wall", -1);
+
+
+                // doors
+                JSONObject doorProperties = new JSONObject();
+                doorProperties.put("health", 1);
+                doorProperties.put("status", -1);
+
+                if (isPresentInArr(TOP_DOOR_TILE_MAP2, i + "-" + j)){
+                    JSONObject openedDoorObject = new JSONObject();
+                    openedDoorObject.put("health", 1);
+                    openedDoorObject.put("status", 0);
+                    currentTile.put("top_wall_door", openedDoorObject);
+                } else if (isPresentInArr(TOP_DOOR_TILE_DESTROYED_MAP2, i + "-" + j)){
+                    JSONObject openedDoorObject = new JSONObject();
+                    openedDoorObject.put("health", 0);
+                    openedDoorObject.put("status", 1);
+                    currentTile.put("top_wall_door", openedDoorObject);
+                } else {
+                    currentTile.put("top_wall_door", doorProperties);
+                }
+
+                if (isPresentInArr(LEFT_DOOR_TILE_MAP2, i + "-" + j)){
+                    JSONObject openedDoorObject = new JSONObject();
+                    openedDoorObject.put("health", 1);
+                    openedDoorObject.put("status", 0);
+                    currentTile.put("left_wall_door", openedDoorObject);
+                } else if(isPresentInArr(LEFT_DOOR_TILE_DESTROYED_MAP2, i + "-" + j)){
+                    JSONObject openedDoorObject = new JSONObject();
+                    openedDoorObject.put("health", 0);
+                    openedDoorObject.put("status", 1);
+                    currentTile.put("left_wall_door", openedDoorObject);
+                } else {
+                    currentTile.put("left_wall_door", doorProperties);
+                }
+
+
+                currentTile.put("bottom_wall_door", doorProperties);
+                currentTile.put("right_wall_door", doorProperties);
+
+                // engines
+                if (isPresentInArr(AMBULANCE_POS_MAP2, i + "-" + j)){
+                    currentTile.put("engine", "ambulance");
+                }
+
+                if (isPresentInArr(FIRETRUCK_POS_MAP2, i + "-" + j)){
+                    currentTile.put("engine", "firetruck");
+                }
+
+                if (!isPresentInArr(AMBULANCE_POS_MAP2, i + "-" + j) && !isPresentInArr(FIRETRUCK_POS_MAP2, i + "-" + j)){
+                    currentTile.put("engine", "empty");
+                }
+
+                // firefighters
+                JSONArray newFirefightersList = new JSONArray();
+                currentTile.put("firefighters", newFirefightersList);
+
+
+                // POI
+
+                JSONObject pointOfInterest = new JSONObject();
+                pointOfInterest.put("revealed", false);
+                pointOfInterest.put("status", -1);
+                currentTile.put("POI", pointOfInterest);
+
+
+                // Fire status
+
+                currentTile.put("fire_status", "none");
+
+                newTilesList.add(currentTile);
+                count ++;
+
+            }
+
+
+            newObj.put("gameStats", gameStats);
+            newObj.put("tiles", newTilesList);
+
+            // create empty board json file
+
+            FileWriter file = new FileWriter("db/" + MapKind.MAP2.getText() + ".json");
+            file.write(newObj.toJSONString());
+            file.flush();
+
+
+            loadBoardFromDB(MapKind.MAP2.getText());
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 

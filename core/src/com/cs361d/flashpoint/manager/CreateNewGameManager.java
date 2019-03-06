@@ -28,12 +28,12 @@ public class CreateNewGameManager {
     switch (map) {
       case MAP1:
         DBHandler.loadBoardFromDB("map1");
+        break;
       case MAP2:
         DBHandler.loadBoardFromDB("map2");
         break;
       default:
         }
-    }
   }
   public static void loadSavedGame(String name) {
     BoardManager.getInstance().reset();
