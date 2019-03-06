@@ -30,6 +30,7 @@ public class Server implements Runnable{
     Socket s;           //Client socket
     Thread startServer; // DON'T SEND TO SRC CLIENT TWICE
 
+    public Server() {}
 
     public Server(int serverPort) {
         // server is listening on port 1234
