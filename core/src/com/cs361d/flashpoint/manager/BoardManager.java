@@ -2,27 +2,34 @@ package com.cs361d.flashpoint.manager;
 
 import com.cs361d.flashpoint.model.BoardElements.*;
 import com.cs361d.flashpoint.view.BoardScreen;
-
-import java.lang.reflect.Array;
 import java.util.*;
 import java.util.List;
 
 public class BoardManager {
+  protected Difficulty difficulty;
   private final LinkedList<FireFighterColor> colorList = new LinkedList<FireFighterColor>();
   public final static int NUM_VICTIM_SAVED_TO_WIN = 7;
   public final static int MAX_WALL_DAMAGE_POSSIBLE = 24;
   public static final int WIDTH = 10;
   public static final int HEIGHT = 8;
-  private final Tile[][] TILE_MAP = new Tile[HEIGHT][WIDTH];
-  private int totalWallDamageLeft = MAX_WALL_DAMAGE_POSSIBLE;
-  private int numVictimSaved = 0;
-  private int numVictimDead = 0;
-  private int numFalseAlarmRemoved = 0;
-  private String gameName = "defaultName";
-  private List<AbstractVictim> victims = new ArrayList<AbstractVictim>(18);
+  protected final Tile[][] TILE_MAP = new Tile[HEIGHT][WIDTH];
+  protected int totalWallDamageLeft = MAX_WALL_DAMAGE_POSSIBLE;
+  protected int numVictimSaved = 0;
+  protected int numVictimDead = 0;
+  protected int numFalseAlarmRemoved = 0;
+  protected String gameName = "defaultName";
+  protected List<AbstractVictim> victims = new ArrayList<AbstractVictim>(18);
 
   // create an object of SingleObject
-  private static BoardManager instance = new BoardManager();
+  protected static BoardManager instance = new BoardManager();
+
+  public Difficulty getDifficulty() {
+    return this.difficulty;
+  }
+
+  public void setDifficulty(Difficulty diff) {
+    this.difficulty = difficulty;
+  }
 
   // Get the only object available
   public static BoardManager getInstance() {
@@ -30,7 +37,7 @@ public class BoardManager {
   }
 
   // make the constructor private so that this class cannot be instantiated
-  private BoardManager() {
+  protected BoardManager() {
     for (int i = 0; i < HEIGHT; i++) {
       for (int j = 0; j < WIDTH; j++) {
         Tile newTile = new Tile(FireStatus.EMPTY, i, j);
@@ -201,7 +208,7 @@ public class BoardManager {
     FireFighter.reset();
   }
   // Spread the fire in a specific direction after an explosion
-  private void explosionFireSpread(int i, int j, Direction d) {
+  protected void explosionFireSpread(int i, int j, Direction d) {
     Tile hitLocation = TILE_MAP[i][j];
     if (!hitLocation.hasFire()) {
       hitLocation.setFireStatus(FireStatus.FIRE);
@@ -245,7 +252,7 @@ public class BoardManager {
   }
 
   // Create an explosion at the specified location and propagates fire
-  private void explosion(int i, int j) {
+  protected void explosion(int i, int j) {
     Tile hitLocation = TILE_MAP[i][j];
     hitLocation.setFireStatus(FireStatus.FIRE);
     if (i > 0) {
@@ -283,7 +290,7 @@ public class BoardManager {
   }
 
   // Ensure that all the tiles with smoke catch fire at the end of turn
-  private void updateSmoke() {
+  protected void updateSmoke() {
     boolean repeat = false;
     for (int i = 0; i < HEIGHT; i++) {
       for (int j = 0; j < WIDTH; j++) {
@@ -299,7 +306,7 @@ public class BoardManager {
     }
   }
 
-  private boolean hasFireNextToTile(int i, int j) {
+  protected boolean hasFireNextToTile(int i, int j) {
     if (i > 0 && TILE_MAP[i - 1][j].hasFire()) {
       Obstacle obs = TILE_MAP[i][j].getObstacle(Direction.TOP);
       if (obs.isDestroyed() || (obs.isDoor() && obs.isOpen())) {
@@ -332,7 +339,7 @@ public class BoardManager {
   }
 
   // removes victims that are in a place with fire at the end of turn as well as knockdown player
-  private void updateVictimAndFireFighter(List<Tile> tiles) throws IllegalAccessException {
+  protected void updateVictimAndFireFighter(List<Tile> tiles) throws IllegalAccessException {
     for (Tile t : tiles) {
       if (t.hasFireFighters()) {
         knockedDown(t.getI(), t.getJ());
@@ -450,7 +457,7 @@ public class BoardManager {
     return tiles;
   }
 
-  private void knockedDown(int i, int j) throws IllegalAccessException {
+  protected void knockedDown(int i, int j) {
     if (TILE_MAP[i][j].canContainAmbulance()) {
       return;
     }
@@ -468,7 +475,7 @@ public class BoardManager {
       }
   }
 
-  public void chooseForKnowckedDown(Tile t, FireFighter f) {
+  public void chooseForKnockedDown(Tile t, FireFighter f) {
     if (!t.canContainAmbulance()) {
       throw new IllegalArgumentException("Cannot place firefighter outside of ambulance tile after knocked down");
     }
@@ -529,4 +536,11 @@ public class BoardManager {
     return numFalseAlarmRemoved;
   }
 
+  public static void useExperienceGameManager() {
+    instance = new BoardManagerAdvanced();
+  }
+
+  public static void useFamillyGameManager() {
+    instance = new BoardManager();
+  }
 }
