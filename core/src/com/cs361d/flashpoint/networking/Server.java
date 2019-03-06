@@ -125,7 +125,6 @@ public class Server implements Runnable{
 
 
 
-
 //    static ServerSocket s;
 //    static DataInputStream din;  // input from client
 //    static DataOutputStream dout;// output to client

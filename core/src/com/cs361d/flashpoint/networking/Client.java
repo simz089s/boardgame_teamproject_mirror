@@ -1,6 +1,7 @@
 package com.cs361d.flashpoint.networking;
 
 //import com.cs361d.flashpoint.view.ChatClientScreen;
+import com.cs361d.flashpoint.view.ChatScreen;
 import com.cs361d.flashpoint.view.FlashPointGame;
 
 import java.io.DataInputStream;
@@ -62,30 +63,38 @@ public class Client {
                                 if (type.equals("stat")) {
                                     //TODO
                                 }
-                                // Update chat message from waiting area
-                                else if(type.equals("wait")) {
-                                    // update messages array
-                                    if (!msg.equals("")) {
-//                                        clientFPGame.chatScreen.msgs.add(msg);
-//                                        String[] newMsg = clientFPGame.chatScreen.msgs.toArray(new String[ccs.msgs.size()]);
-//                                        clientFPGame.chatScreen.lstMsg.setItems(newMsg);
-                                    }
-                                }
-                                // Update chat message from game area
-                                else if(type.equals("play")) {
-                                    // update messages array
-                                    if (!msg.equals(""))
-                                    {
-//                                        ccs.msgs.add(msg);
-//                                        String[] newMsg = clientFPGame.boardChatFragment.msgs.toArray(new String[ccs.msgs.size()]);
-//                                        ccs.lstMsg.setItems(newMsg);
-                                    }
-                                }
-
-                                // update Game State
-                                else {
-                                    //TODO
-                                }
+                                Commands c = Commands.fromString(type);
+//                                switch (c) {
+//                                    case CHATWAIT:
+//                                        if (!msg.equals("")) {
+//                                            ChatScreen.addMsg(msg);
+//                                            //clientFPGame.getChatScreen().msgs.add(msg);
+////                                            String[] newMsg = clientFPGame.chatScreen.msgs.toArray(new String[ccs.msgs.size()]);
+////                                            clientFPGame.chatScreen.lstMsg.setItems(newMsg);
+//                                        }
+//                                        default:
+//
+//                                }
+//                                // Update chat message from waiting area
+//                                else if(type.equals("wait")) {
+//                                    // update messages array
+//
+//                                }
+//                                // Update chat message from game area
+//                                else if(type.equals("play")) {
+//                                    // update messages array
+//                                    if (!msg.equals(""))
+//                                    {
+////                                        ccs.msgs.add(msg);
+////                                        String[] newMsg = clientFPGame.boardChatFragment.msgs.toArray(new String[ccs.msgs.size()]);
+////                                        ccs.lstMsg.setItems(newMsg);
+//                                    }
+//                                }
+//
+//                                // update Game State
+//                                else {
+//                                    //TODO
+//                                }
 
 
 

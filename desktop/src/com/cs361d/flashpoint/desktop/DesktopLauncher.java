@@ -10,7 +10,7 @@ public class DesktopLauncher {
         LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
         new LwjglApplication(new FlashPointGame(), config);
 
-        NetworkManager myNetwork = NetworkManager.getInstance(); // Create a single network
+//        NetworkManager myNetwork = NetworkManager.getInstance(); // Create a single network
 
     //Check if you should connect as a server or a client
 //        if(myNetwork.getMyPublicIP().equals(myNetwork.SERVER_IP)){

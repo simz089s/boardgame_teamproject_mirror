@@ -58,7 +58,7 @@ public class ChatScreen extends FlashPointScreen {
     // Get the current network
     NetworkManager myNetwork = NetworkManager.getInstance();
 
-    public void addMsg(String msg) {
+    public static void addMsg(String msg) {
         msgs.add(msg);
     }
 
@@ -127,6 +127,12 @@ public class ChatScreen extends FlashPointScreen {
 
                     if(!messageInputed.equals("") && !messageInputed.equals(" ")){
                         textFieldMsg.setText("");
+//                        String c = "wait-fakfls-;djfdfj";
+//                        String[] command = c.split("-");
+//                        for (int i = 0; i < command.length; i++)
+//                        {
+//                            c.substring(command[0].length()));
+//                        }
                         myNetwork.sendChatMessage("wait-"+messageInputed); //send message over network
                         msgs.add("Jacques:  " + messageInputed);
                         String[] newMsg = msgs.toArray(new String[msgs.size()]);
