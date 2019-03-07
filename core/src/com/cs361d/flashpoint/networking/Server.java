@@ -19,45 +19,35 @@ public class Server implements Runnable
     // Server has an instance of the game
     public FlashPointGame serverFPGame = new FlashPointGame();
 
-    // Vector to store active clients
-    static Vector<ClientHandler> clients = new Vector<ClientHandler>();
+    // Vector to store active client threads
+    static HashMap<String, ClientHandler> clientThreads = new HashMap<String, ClientHandler>();
 
-    // counter for clients
+    // counter for clientThreads
     static int i = 0;
 
     ServerSocket ss;    //Server Socket
     Socket s;           //Client socket
     Thread startServer; // DON'T SEND TO SRC CLIENT TWICE
 
-    public Server()
-    {
-    }
+    public Server() {}
 
-    public Server(int serverPort)
-    {
+    public Server(int serverPort) {
         // server is listening on port 1234
-        try
-        {
+        try {
             ss = new ServerSocket(serverPort);
             startServer = new Thread(this);
             startServer.start();
 
-        } catch (IOException e)
-        {
-            e.printStackTrace();
-        }
+        } catch (IOException e) { e.printStackTrace(); }
 
     }
 
     @Override
-    public void run()
-    {
+    public void run() {
         // running infinite loop for getting client request
-        while (true)
-        {
+        while (true) {
             // Accept the incoming request
-            try
-            {
+            try {
                 s = ss.accept(); // s is the client socket
                 System.out.println("New client request received : " + s);
 
@@ -75,8 +65,8 @@ public class Server implements Runnable
 
                 System.out.println("Adding this client to active client list");
 
-                // add this client to active clients list
-                clients.add(clientObserver);
+                // add this client to active clientThreads list
+                clientThreads.put(s.getInetAddress().toString(), clientObserver);
 
                 // start the thread for the client.
                 t.start();
@@ -85,10 +75,7 @@ public class Server implements Runnable
                 // i is used for naming only, and can be replaced by any naming scheme
                 i++;
 
-            } catch (IOException e)
-            {
-                e.printStackTrace();
-            }
+            } catch (IOException e) { e.printStackTrace(); }
         }
     }
 
@@ -96,7 +83,7 @@ public class Server implements Runnable
     /* Send a message to from server */
     public synchronized void sendMsg(String msg) {
         try {
-            for (ClientHandler mc : Server.clients) {
+            for (ClientHandler mc : Server.clientThreads.values()) {
                 mc.dout.writeUTF(msg);
             }
             updateServerGui(msg); //update your own Gui
@@ -130,6 +117,4 @@ public class Server implements Runnable
         return hostname;
     }
 
-    public void addNewClient(Client client) {
-    }
 }

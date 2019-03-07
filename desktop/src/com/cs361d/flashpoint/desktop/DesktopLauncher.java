@@ -23,7 +23,6 @@ public class DesktopLauncher {
         }
         else {
             Client client = new Client(NetworkManager.SERVER_IP, NetworkManager.SERVER_PORT);
-            server.addNewClient(client);
             myNetwork.addNewClient(client);
             new LwjglApplication(client.clientFPGame, config);
         }

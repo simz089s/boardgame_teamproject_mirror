@@ -49,7 +49,7 @@ class ClientHandler extends Server implements Runnable {
                 this.updateServerGui(messageToSend);
 
                 // Send string to every client
-                for (ClientHandler mc : Server.clients) {
+                for (ClientHandler mc : Server.clientThreads.values()) {
                     mc.dout.writeUTF(messageToSend);
                 }
             } catch (IOException e) {
