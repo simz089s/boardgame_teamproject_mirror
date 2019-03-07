@@ -10,6 +10,7 @@ import com.cs361d.flashpoint.view.BoardChatFragment;
 import com.cs361d.flashpoint.view.BoardScreen;
 import com.cs361d.flashpoint.view.ChatScreen;
 
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
@@ -19,6 +20,8 @@ import java.net.InetAddress;
 import java.net.URL;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 public class NetworkManager {
 
@@ -170,7 +173,13 @@ public class NetworkManager {
                     break;
 
                 case JOINGAME:
-                    FireFighterTurnManager.getInstance().removeAssignedFireFighter(FireFighterColor.fromString(message));
+                    JSONArray tilesArr = (JSONArray) jsonObject.get("message");
+                    Iterator<JSONObject> iterator = tilesArr.iterator();
+                    List<FireFighterColor> colorList = new ArrayList<FireFighterColor>();
+                    while (iterator.hasNext()) {
+                        colorList.add(FireFighterColor.fromString(iterator.next().toString()));
+                    }
+                    FireFighterTurnManager.getInstance().setNotYetAssigned(colorList);
                     break;
                 default:
             }

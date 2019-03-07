@@ -24,6 +24,9 @@ public class FireFighterTurnManager implements Iterable<FireFighter> {
     return instance;
   }
 
+  public void setNotYetAssigned(List<FireFighterColor> list) {
+    this.notYetAssigned = list;
+  }
   protected void addFireFighter(FireFighter f) {
     if (FIREFIGHTERS.contains(f)) {
       throw new IllegalArgumentException();
@@ -39,16 +42,13 @@ public class FireFighterTurnManager implements Iterable<FireFighter> {
     if (notYetAssigned.isEmpty()) {
       throw new IllegalArgumentException("There are no firefighter available to join the game");
     }
-    FireFighterColor c = notYetAssigned.get(0);
+    FireFighterColor c = notYetAssigned.remove(0);
     u.assignFireFighter(c);
-    NetworkManager.getInstance().sendCommand(Commands.JOINGAME,c.toString());
-  }
-
-  public void removeAssignedFireFighter(FireFighterColor c) {
-    if (notYetAssigned.isEmpty()) {
-      throw new IllegalArgumentException("Cannot remove fireFighterFromList because it is empty");
+    JSONArray array = new JSONArray();
+    for (FireFighterColor col : notYetAssigned) {
+        array.add(col.toString());
     }
-    notYetAssigned.remove(c);
+    NetworkManager.getInstance().sendCommand(Commands.JOINGAME,array.toString());
   }
 
   public boolean chooseInitialPosition(Tile t) throws IllegalAccessException {
