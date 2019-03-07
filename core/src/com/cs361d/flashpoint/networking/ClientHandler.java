@@ -34,16 +34,20 @@ class ClientHandler extends Server implements Runnable {
     // Constantly ready to read a new msg
     public void run() {
 
-        String MsgToSend;
+        String messageToSend = "";
         while (true)
         {
             try
             {
+                String newMsg = din.readUTF();
                 // receive the string
-                MsgToSend = din.readUTF();
-                System.out.println(MsgToSend);
+                if (messageToSend.equals(newMsg)) {
+                    continue;
+                }
+                messageToSend = newMsg;
+                System.out.println(messageToSend);
 
-                this.updateServerGui(MsgToSend);
+                this.updateServerGui(messageToSend);
 
 //
 //                if(received.equals("logout")){
@@ -54,15 +58,15 @@ class ClientHandler extends Server implements Runnable {
 
                 // break the string into message and recipient part
 //                StringTokenizer st = new StringTokenizer(received, "#");
-//                String MsgToSend = st.nextToken();
+//                String messageToSend = st.nextToken();
 //                String recipient = st.nextToken();
 
                 // search for the recipient in the connected devices list.
                 // ar is the vector storing client of active users
 
                 // update messages array for server's chat
-//                if (!MsgToSend.equals("")) {
-//                    fpg.chatScreen.msgs.add(MsgToSend);
+//                if (!messageToSend.equals("")) {
+//                    fpg.chatScreen.msgs.add(messageToSend);
 //                    String[] newMsg = fpg.chatScreen.msgs.toArray(new String[css.msgs.size()]);
 //                    fpg.chatScreen.lstMsg.setItems(newMsg);
 //                }
@@ -73,10 +77,10 @@ class ClientHandler extends Server implements Runnable {
                     // output stream
 //                    if (mc.name.equals(recipient) && mc.isloggedin==true)
 //                    {
-//                        mc.dos.writeUTF(this.name+" : "+MsgToSend);
+//                        mc.dos.writeUTF(this.name+" : "+messageToSend);
 //                        break;
 //                    }
-                    mc.dout.writeUTF(MsgToSend);
+                    mc.dout.writeUTF(messageToSend);
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -87,7 +91,6 @@ class ClientHandler extends Server implements Runnable {
 
                 } catch(IOException ee) { ee.printStackTrace();  }
             }
-
         }
 
     }

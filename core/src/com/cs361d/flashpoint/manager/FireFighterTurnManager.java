@@ -215,7 +215,6 @@ public class FireFighterTurnManager implements Iterable<FireFighter> {
     addFireFighter(f);
     f.setTile(t);
     t.addFirefighter(f);
-    sendChangeToNetwork();
   }
 
   public void setOrder(List<FireFighterColor> list) {
@@ -236,7 +235,6 @@ public class FireFighterTurnManager implements Iterable<FireFighter> {
       throw new IllegalArgumentException("Not all colors of the list existed as fireFighters");
     }
     FIREFIGHTERS = newList;
-    sendChangeToNetwork();
   }
 
   private void sendChangeToNetwork() {
