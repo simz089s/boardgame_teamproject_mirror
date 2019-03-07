@@ -106,7 +106,7 @@ public class DBHandler {
             BoardManager.getInstance().setNumPlayerLeftToJoin(numPlayersLeftToJoin);
 
             // loop array
-            JSONArray tilesArr = (JSONArray) jsonObject.get("tiles");
+            JSONArray tilesArr = (JSONArray) jsonObject.get(" ");
             Iterator<JSONObject> iterator = tilesArr.iterator();
             while (iterator.hasNext()) {
 
