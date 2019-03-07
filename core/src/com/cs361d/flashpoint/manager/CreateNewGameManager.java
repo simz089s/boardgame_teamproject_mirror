@@ -22,7 +22,7 @@ public class CreateNewGameManager {
     BoardManager.useFamillyGameManager();
     FireFighterTurnManager.useFireFighterGameManagerFamily();
     loadMap(map);
-    populateFamillyMap();
+    populateFamilyMap();
   }
 
   private static void loadMap(MapKind map) {
@@ -48,7 +48,7 @@ public class CreateNewGameManager {
     populateExperiencedMap(diff, numPlayers);
   }
 
-  private static void populateFamillyMap() {
+  private static void populateFamilyMap() {
     BoardManager bm = BoardManager.getInstance();
     bm.addNewPointInterest(2, 4);
     bm.addNewPointInterest(5, 1);
