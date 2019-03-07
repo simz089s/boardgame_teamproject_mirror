@@ -11,7 +11,8 @@ public enum Commands {
     ASSIGNFIREFIGHTER("assignedFireFighter"),
     SERVERDISCONNECT("serverdisconnect"),
     CLIENTDISCONNECT("clientdisconnect"),
-    LOADGAME("loadgame");
+    LOADGAME("loadgame"),
+    GETGAME("getGame");
     private String text;
 
     Commands(String text) {
