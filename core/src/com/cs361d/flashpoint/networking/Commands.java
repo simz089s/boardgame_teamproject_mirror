@@ -9,9 +9,10 @@ public enum Commands {
     GAMECREATED("gamecreated"),
     JOINGAME("joingame"),
     ASSIGNFIREFIGHTER("assignedFireFighter"),
-    SERVERDISCONNECT("serverdisconnect"),
-    CLIENTDISCONNECT("clientdisconnect"),
-    LOADGAME("loadgame");
+    DISCONNECT("disconnect"),
+    LOADGAME("loadgame"),
+    GETGAME("getgame");
+
     private String text;
 
     Commands(String text) {

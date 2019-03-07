@@ -1,6 +1,7 @@
 package com.cs361d.flashpoint.networking;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Net;
 import com.cs361d.flashpoint.manager.BoardManager;
 import com.cs361d.flashpoint.manager.CreateNewGameManager;
 import com.cs361d.flashpoint.manager.DBHandler;
@@ -185,8 +186,13 @@ public class NetworkManager {
                 case LOADGAME:
                     CreateNewGameManager.loadGameFromString(message);
                     break;
-                case SERVERDISCONNECT:
-                    instance.server.closeServer();
+                case DISCONNECT:
+                    if(instance.getMyPublicIP().equals(SERVER_IP))
+                        instance.server.closeServer(); // disconnect all the clients
+                    break;
+                case GETGAME:
+                    if (!NetworkManager.SERVER_IP.equals(NetworkManager.getInstance().getMyPublicIP()))
+                        NetworkManager.getInstance().sendCommand(Commands.LOADGAME, DBHandler.getBoardAsString());
                     break;
                     
                 default:

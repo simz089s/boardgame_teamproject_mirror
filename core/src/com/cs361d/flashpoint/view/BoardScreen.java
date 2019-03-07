@@ -15,6 +15,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.cs361d.flashpoint.manager.*;
 import com.cs361d.flashpoint.model.BoardElements.*;
+import com.cs361d.flashpoint.networking.Commands;
+import com.cs361d.flashpoint.networking.NetworkManager;
 
 import java.util.ArrayList;
 
@@ -539,9 +541,10 @@ public class BoardScreen extends FlashPointScreen {
               public void clicked(InputEvent event, float x, float y) {
                 Dialog dialog = new Dialog("Warning", skinUI, "dialog") {
                   public void result(Object obj) {
-                    if ((Boolean) obj){
-                      myMusic.stop();
-                      game.setScreen(game.lobbyScreen);
+                    if ((Boolean) obj) {
+                        NetworkManager.getInstance().sendCommand(Commands.DISCONNECT,"");
+                        myMusic.stop();
+                        game.setScreen(game.lobbyScreen);
                     }
                   }
                 };
