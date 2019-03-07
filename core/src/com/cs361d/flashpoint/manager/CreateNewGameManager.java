@@ -71,8 +71,8 @@ public class CreateNewGameManager {
     mg.explosion(width, height);
     mg.addHotspot(width, height);
     do {
-      width = 1 + (int) (Math.random() * (BoardManager.WIDTH - 2));
-      height = 1 + (int) (Math.random() * (BoardManager.HEIGHT - 2));
+      width = 1 + (int) (Math.random() * (BoardManager.COLUMNS - 2));
+      height = 1 + (int) (Math.random() * (BoardManager.ROWS - 2));
     } while (tiles[width][height].hasFire());
     mg.explosion(width, height);
     mg.addHotspot(width, height);
@@ -102,7 +102,7 @@ public class CreateNewGameManager {
         throw new IllegalArgumentException();
     }
     do {
-      width = 1 + (int) (Math.random() * (BoardManager.WIDTH - 2));
+      width = 1 + (int) (Math.random() * (BoardManager.COLUMNS - 2));
     } while (tiles[width][height].hasFire());
     mg.explosion(width, height);
     mg.addHotspot(width, height);
@@ -111,8 +111,8 @@ public class CreateNewGameManager {
     switch (diff) {
       case HEROIC:
         do {
-        width = 1 + (int) (Math.random() * (BoardManager.WIDTH - 2));
-        height = 1 + (int) (Math.random() * (BoardManager.HEIGHT - 2));
+        width = 1 + (int) (Math.random() * (BoardManager.COLUMNS - 2));
+        height = 1 + (int) (Math.random() * (BoardManager.ROWS - 2));
         } while (tiles[width][height].hasFire());
         mg.explosion(width, height);
         mg.addHotspot(width, height);
@@ -141,15 +141,15 @@ public class CreateNewGameManager {
     }
     while (numExtraHazmat > 0) {
       do {
-        width = 1 + (int) (Math.random() * (BoardManager.WIDTH - 2));
-        height = 1 + (int) (Math.random() * (BoardManager.HEIGHT - 2));
+        width = 1 + (int) (Math.random() * (BoardManager.COLUMNS - 2));
+        height = 1 + (int) (Math.random() * (BoardManager.ROWS - 2));
       } while (tiles[width][height].hasFire());
       mg.addHazmat(width, height);
       numExtraHazmat--;
     }
     while (numExtraHotSpot > 0) {
-      width = 1 + (int) (Math.random() * (BoardManager.WIDTH - 2));
-      height = 1 + (int) (Math.random() * (BoardManager.HEIGHT - 2));
+      width = 1 + (int) (Math.random() * (BoardManager.COLUMNS - 2));
+      height = 1 + (int) (Math.random() * (BoardManager.ROWS - 2));
       mg.addHotspot(width, height);
     }
 

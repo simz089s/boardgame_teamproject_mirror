@@ -37,9 +37,9 @@ public class FireFighter {
     return f;
   }
 
-  public void removeFromBoard() throws IllegalAccessException {
+  public void removeFromBoard() {
       if (currentTile == null) {
-          throw new IllegalAccessException("This method cannot remove a FireFighter from the board if it has no current tile");
+          throw new IllegalStateException("This method cannot remove a FireFighter from the board if it has no current tile");
       }
       currentTile.removeFirefighter(this);
       currentTile = null;
