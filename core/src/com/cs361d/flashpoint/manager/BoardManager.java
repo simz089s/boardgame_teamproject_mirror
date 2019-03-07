@@ -21,6 +21,8 @@ public class BoardManager implements Iterable<Tile> {
   protected int numFalseAlarmRemoved = 0;
   protected String gameName = "defaultName";
   protected List<AbstractVictim> victims = new ArrayList<AbstractVictim>(18);
+  protected int TOTAL_NUM_PLAYER_NEEDED = 0;
+  protected int numPlayerLeftToJoin = 0;
 
   // create an object of SingleObject
   protected static BoardManager instance = new BoardManager();
@@ -88,6 +90,23 @@ public class BoardManager implements Iterable<Tile> {
     colorList.add(FireFighterColor.YELLOW);
 
   }
+
+  public void setTotalPlayerNeeded(int num) {
+    TOTAL_NUM_PLAYER_NEEDED = num;
+  }
+
+  public void setNumPlayerLeftToJoin(int num) {
+    numPlayerLeftToJoin = num;
+  }
+
+  public int getTotalPlayer() {
+    return TOTAL_NUM_PLAYER_NEEDED;
+  }
+
+  public int getNumPlayerLeftToJoin() {
+    return numPlayerLeftToJoin;
+  }
+
 
   public void setGameName(String name) {
       this.gameName = name;

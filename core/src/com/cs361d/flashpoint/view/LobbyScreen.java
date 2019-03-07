@@ -16,6 +16,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.cs361d.flashpoint.manager.CreateNewGameManager;
 import com.cs361d.flashpoint.manager.DBHandler;
+import com.cs361d.flashpoint.manager.FireFighterTurnManager;
+import com.cs361d.flashpoint.manager.User;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -196,15 +198,13 @@ public class LobbyScreen extends FlashPointScreen {
                 Gdx.graphics.getWidth() / 4 - btnJoin.getWidth() / 2,
                 Gdx.graphics.getHeight() / 5f - (btnJoin.getHeight() / 2));
 
-        btnJoin.addListener(
-                new ClickListener() {
-                    @Override
-                    public void clicked(InputEvent event, float x, float y) {
-                        //btnJoin.setText("Joining...");
-                        //game.setScreen(game.chatScreen);
-                        //loadGamesLabel.setText(lstJoinGames.getSelected());
-                    }
-                });
+    btnJoin.addListener(
+        new ClickListener() {
+          @Override
+          public void clicked(InputEvent event, float x, float y) {
+            FireFighterTurnManager.getInstance().assignUserToFireFighter(User.getInstance());
+          }
+        });
 
         stage.addActor(btnJoin);
     }
@@ -224,6 +224,7 @@ public class LobbyScreen extends FlashPointScreen {
                     public void clicked(InputEvent event, float x, float y) {
                         if (lstLoadGames.getSelected() != null ){
                             CreateNewGameManager.loadSavedGame(lstLoadGames.getSelected());
+                            FireFighterTurnManager.getInstance().assignUserToFireFighter(User.getInstance());
                             game.setScreen(game.boardScreen);
                         }
                     }

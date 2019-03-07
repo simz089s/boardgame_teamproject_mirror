@@ -4,6 +4,8 @@ import com.badlogic.gdx.Gdx;
 import com.cs361d.flashpoint.manager.BoardManager;
 import com.cs361d.flashpoint.manager.CreateNewGameManager;
 import com.cs361d.flashpoint.manager.DBHandler;
+import com.cs361d.flashpoint.manager.FireFighterTurnManager;
+import com.cs361d.flashpoint.model.BoardElements.FireFighterColor;
 import com.cs361d.flashpoint.view.BoardChatFragment;
 import com.cs361d.flashpoint.view.BoardScreen;
 import com.cs361d.flashpoint.view.ChatScreen;
@@ -165,9 +167,10 @@ public class NetworkManager {
                     DBHandler.saveBoardToDB(BoardManager.getInstance().getGameName());
                     break;
                 case GAMECREATED:
+                    break;
 
                 case JOINGAME:
-
+                    FireFighterTurnManager.getInstance().removeAssignedFireFighter(FireFighterColor.fromString(msg));
                     break;
                 default:
             }

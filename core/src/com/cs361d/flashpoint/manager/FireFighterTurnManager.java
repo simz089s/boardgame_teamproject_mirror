@@ -5,6 +5,8 @@ import com.cs361d.flashpoint.networking.Commands;
 import com.cs361d.flashpoint.view.BoardScreen;
 import org.jetbrains.annotations.NotNull;
 import com.cs361d.flashpoint.networking.NetworkManager;
+import org.json.simple.JSONArray;
+import sun.nio.ch.Net;
 
 import java.util.*;
 import java.util.List;
@@ -13,6 +15,7 @@ public class FireFighterTurnManager implements Iterable<FireFighter> {
 
   protected final int MAX_NUMBER_OF_PLAYERS = 6;
   protected LinkedList<FireFighter> FIREFIGHTERS = new LinkedList<FireFighter>();
+  protected List<FireFighterColor> notYetAssigned = new ArrayList<FireFighterColor>();
   protected boolean allAssigned = false;
   protected static FireFighterTurnManager instance =
       new FireFighterTurnManager();
@@ -28,6 +31,22 @@ public class FireFighterTurnManager implements Iterable<FireFighter> {
     FIREFIGHTERS.add(f);
     if (FIREFIGHTERS.size() > MAX_NUMBER_OF_PLAYERS) {
       throw new IllegalStateException();
+    }
+    notYetAssigned.add(f.getColor());
+  }
+
+  public void assignUserToFireFighter(User u) {
+    if (notYetAssigned.isEmpty()) {
+      throw new IllegalArgumentException("There are no firefighter available to join the game");
+    }
+    FireFighterColor c = notYetAssigned.get(0);
+    u.assignFireFighter(c);
+    NetworkManager.getInstance().sendCommand(Commands.JOINGAME,c.toString());
+  }
+
+  public void removeAssignedFireFighter(FireFighterColor c) {
+    if (notYetAssigned.isEmpty() || notYetAssigned.remove(0) != c) {
+      throw new IllegalArgumentException("Cannot remove fireFighterFromList");
     }
   }
 
