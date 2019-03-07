@@ -153,7 +153,7 @@ public class NetworkManager {
                             new Runnable() {
                                 @Override
                                 public void run() {
-                                    BoardScreen.redrawBoardEntierly();
+                                    BoardScreen.redrawBoardEntirely();
                                 }
                             });
                     break;

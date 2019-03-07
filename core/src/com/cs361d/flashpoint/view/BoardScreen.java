@@ -772,7 +772,7 @@ public class BoardScreen extends FlashPointScreen {
       }
     }
   }
-  public static void redrawBoardEntierly() {
+  public static void redrawBoardEntirely() {
     game.setScreen(game.boardScreen);
   }
 }

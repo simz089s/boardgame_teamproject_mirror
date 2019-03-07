@@ -11,10 +11,10 @@ import java.util.List;
 
 public class FireFighterTurnManager implements Iterable<FireFighter> {
 
-  private final int MAX_NUMBER_OF_PLAYERS = 6;
-  private LinkedList<FireFighter> FIREFIGHTERS = new LinkedList<FireFighter>();
-  private boolean allAssigned = false;
-  private static FireFighterTurnManager instance =
+  protected final int MAX_NUMBER_OF_PLAYERS = 6;
+  protected LinkedList<FireFighter> FIREFIGHTERS = new LinkedList<FireFighter>();
+  protected boolean allAssigned = false;
+  protected static FireFighterTurnManager instance =
       new FireFighterTurnManager();
 
   public static FireFighterTurnManager getInstance() {
@@ -239,6 +239,13 @@ public class FireFighterTurnManager implements Iterable<FireFighter> {
 
   private void sendChangeToNetwork() {
     NetworkManager.getInstance().sendCommand(Commands.GAMESTATE.toString(), DBHandler.getBoardAsString());
+  }
+
+  public static void useFireFighterGameManagerAdvanced() {
+      instance = new FireFighterTurnManagerAdvance();
+  }
+  public static void useFireFighterGameManagerFamily() {
+      instance = new FireFighterTurnManager();
   }
 
   @NotNull

@@ -20,7 +20,7 @@ public class CreateNewGameManager {
 
   private static void createFamilyGame(MapKind map) {
     BoardManager.useFamillyGameManager();
-    FireFighterTurnManager.useFireFighterTurnManager();
+    FireFighterTurnManager.useFireFighterGameManagerFamily();
     loadMap(map);
     populateFamillyMap();
   }
@@ -43,7 +43,7 @@ public class CreateNewGameManager {
 
   private static void createExperienceGame(MapKind map, Difficulty diff, int numPlayers) {
     BoardManager.useExperienceGameManager();
-    FireFighterTurnManager.useFireFighterTurnManagerAdvanced();
+    FireFighterTurnManager.useFireFighterGameManagerAdvanced();
     loadMap(map);
     populateExperiencedMap(diff, numPlayers);
   }
