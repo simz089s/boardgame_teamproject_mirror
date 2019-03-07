@@ -12,7 +12,7 @@ public class CreateNewGameManager {
         createFamilyGame(map);
         break;
       default:
-        creatExperienceGame(map, diff, numPlayers);
+        createExperienceGame(map, diff, numPlayers);
     }
     BoardManager.getInstance().setGameName(gameName);
     BoardManager.getInstance().setFireFighterNumber(numPlayers);
@@ -40,7 +40,7 @@ public class CreateNewGameManager {
     DBHandler.loadBoardFromDB(name);
   }
 
-  private static void creatExperienceGame(MapKind map, Difficulty diff, int numPlayers) {
+  private static void createExperienceGame(MapKind map, Difficulty diff, int numPlayers) {
     BoardManager.useExperienceGameManager();
     loadMap(map);
     populateExperiencedMap(diff, numPlayers);
@@ -63,6 +63,10 @@ public class CreateNewGameManager {
     bm.addFireStatus(6, 6, FireStatus.FIRE);
   }
 
+  public static void loadGameFromString(String game) {
+    BoardManager.getInstance().reset();
+    DBHandler.loadBoardFromString(game);
+  }
   private static void populateExperiencedMap(Difficulty diff, int numPlayers) {
     BoardManagerAdvanced mg = (BoardManagerAdvanced) BoardManager.getInstance();
     Tile[][] tiles = mg.getTiles();

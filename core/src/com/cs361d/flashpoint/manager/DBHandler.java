@@ -66,7 +66,7 @@ public class DBHandler {
 
 
 
-    public static void loadBoardFromDB(String fileName) {
+    protected static void loadBoardFromDB(String fileName) {
         BoardManager myBoardManager = BoardManager.getInstance();
 
         JSONParser parser = new JSONParser();
@@ -410,7 +410,7 @@ public class DBHandler {
     }
 
 
-    public static void createMap1Board(){
+    protected static void createMap1Board(){
 
         JSONObject newObj = new JSONObject();
         JSONArray newTilesList = new JSONArray();
@@ -687,7 +687,7 @@ public class DBHandler {
         }
     }
 
-    public static void removeGameFile(String filename){
+    protected static void removeGameFile(String filename){
         if (filename.equalsIgnoreCase("map1") ||filename.equalsIgnoreCase("map1") ) {
             throw new IllegalArgumentException("Cannot delete the main maps from db");
         }
@@ -706,7 +706,7 @@ public class DBHandler {
 
 
 
-    public static void loadBoardFromString(String jsonString) {
+    protected static void loadBoardFromString(String jsonString) {
         BoardManager myBoardManager = BoardManager.getInstance();
 
         JSONParser parser = new JSONParser();

@@ -94,18 +94,4 @@ public class BoardManagerAdvanced extends BoardManager {
     }
   }
 
-    public void verifyVictimRescueStatus(Tile t) {
-        int i = t.getI();
-        int j = t.getJ();
-        if (i == 0 || i == ROWS -1 || j == 0 || j == COLUMNS -1 ) {
-            if (t.hasRealVictim()) {
-                numVictimSaved++;
-                t.setNullVictim();
-                addNewPointInterest();
-            }
-        }
-        if (numVictimSaved >= NUM_VICTIM_SAVED_TO_WIN) {
-            BoardScreen.createEndGameDialog("GAME OVER", "Congratulation you won the game saving 7 victims!!!");
-        }
-    }
 }
