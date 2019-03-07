@@ -19,7 +19,7 @@ public class CreateNewGameManager {
   }
 
   private static void createFamilyGame(MapKind map) {
-    BoardManager.useFamillyGameManager();
+    BoardManager.useFamilyGameManager();
     FireFighterTurnManager.useFireFighterGameManagerFamily();
     loadMap(map);
     populateFamilyMap();

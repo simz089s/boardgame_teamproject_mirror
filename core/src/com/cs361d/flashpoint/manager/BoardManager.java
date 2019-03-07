@@ -548,7 +548,7 @@ public class BoardManager implements Iterable<Tile> {
     instance = new BoardManagerAdvanced();
   }
 
-  public static void useFamillyGameManager() {
+  public static void useFamilyGameManager() {
     instance = new BoardManager();
   }
 
