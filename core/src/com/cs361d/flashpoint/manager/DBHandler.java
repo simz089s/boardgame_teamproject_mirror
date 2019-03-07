@@ -19,6 +19,7 @@ public class DBHandler {
             "3-3", "3-4", "3-5", "3-6", "3-7","3-8",
             "5-1", "5-2", "5-3", "5-4", "5-5","5-6", "5-7", "5-8"
     };
+
     private static final String[] LEFT_WALL_TILE_MAP1 = {"1-1", "2-1", "4-1", "5-1", "6-1",
             "1-9", "2-9", "3-9", "5-9", "6-9",
             "1-4", "2-4", "1-6", "2-6",
@@ -95,8 +96,14 @@ public class DBHandler {
                 playersColorOrderArr.add(FireFighterColor.fromString("" + playersOrderingIter.next()));
             }
 
+            int numPlayersNeededToPlay = Integer.parseInt("" + gameParams.get("numPlayersNeededToPlay"));
+            int numPlayersLeftToJoin = Integer.parseInt("" + gameParams.get("numPlayersLeftToJoin"));
+
             BoardManager.getInstance().setGameName(gameName);
             BoardManager.getInstance().setGameAtStart(numFalseAlarmRemoved, numVictimsLost, numVictimsSaved, numDamageLeft);
+
+            BoardManager.getInstance().setTotalPlayerNeeded(numPlayersNeededToPlay);
+            BoardManager.getInstance().setNumPlayerLeftToJoin(numPlayersLeftToJoin);
 
             // loop array
             JSONArray tilesArr = (JSONArray) jsonObject.get("tiles");
@@ -248,6 +255,8 @@ public class DBHandler {
         gameParams.put("numDamageLeft", BoardManager.getInstance().getTotalWallDamageLeft());
 
         gameParams.put("playersOrdering", playersOrdering);
+        gameParams.put("numPlayersNeededToPlay", BoardManager.getInstance().getTotalPlayer());
+        gameParams.put("numPlayersLeftToJoin", BoardManager.getInstance().getNumPlayerLeftToJoin());
 
         try {
 
@@ -424,6 +433,8 @@ public class DBHandler {
         gameParams.put("numDamageLeft", 24);
 
         gameParams.put("playersOrdering", playersOrdering);
+        gameParams.put("numPlayersNeededToPlay", 3);
+        gameParams.put("numPlayersLeftToJoin", 3);
 
         try {
 
@@ -563,6 +574,8 @@ public class DBHandler {
         gameParams.put("numDamageLeft", 24);
 
         gameParams.put("playersOrdering", playersOrdering);
+        gameParams.put("numPlayersNeededToPlay", 3);
+        gameParams.put("numPlayersLeftToJoin", 3);
 
         try {
 
@@ -733,8 +746,14 @@ public class DBHandler {
                 playersColorOrderArr.add(FireFighterColor.fromString("" + playersOrderingIter.next()));
             }
 
+            int numPlayersNeededToPlay = Integer.parseInt("" + gameParams.get("numPlayersNeededToPlay"));
+            int numPlayersLeftToJoin = Integer.parseInt("" + gameParams.get("numPlayersLeftToJoin"));
+
             BoardManager.getInstance().setGameName(gameName);
             BoardManager.getInstance().setGameAtStart(numFalseAlarmRemoved, numVictimsLost, numVictimsSaved, numDamageLeft);
+
+            BoardManager.getInstance().setTotalPlayerNeeded(numPlayersNeededToPlay);
+            BoardManager.getInstance().setNumPlayerLeftToJoin(numPlayersLeftToJoin);
 
             // loop array
             JSONArray tilesArr = (JSONArray) jsonObject.get("tiles");
@@ -876,6 +895,8 @@ public class DBHandler {
         gameParams.put("numDamageLeft", BoardManager.getInstance().getTotalWallDamageLeft());
 
         gameParams.put("playersOrdering", playersOrdering);
+        gameParams.put("numPlayersNeededToPlay", BoardManager.getInstance().getTotalPlayer());
+        gameParams.put("numPlayersLeftToJoin", BoardManager.getInstance().getNumPlayerLeftToJoin());
 
 
         int count = 0;
