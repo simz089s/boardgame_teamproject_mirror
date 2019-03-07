@@ -5,7 +5,6 @@ import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.cs361d.flashpoint.networking.Client;
 import com.cs361d.flashpoint.networking.NetworkManager;
 import com.cs361d.flashpoint.networking.Server;
-import com.cs361d.flashpoint.view.FlashPointGame;
 
 public class DesktopLauncher {
     public static void main(String[] arg) {

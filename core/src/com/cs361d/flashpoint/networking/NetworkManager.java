@@ -2,24 +2,19 @@ package com.cs361d.flashpoint.networking;
 
 import com.badlogic.gdx.Gdx;
 import com.cs361d.flashpoint.manager.CreateNewGameManager;
-import com.cs361d.flashpoint.manager.FireFighterTurnManager;
-import com.cs361d.flashpoint.model.BoardElements.FireFighter;
 import com.cs361d.flashpoint.view.BoardChatFragment;
 import com.cs361d.flashpoint.view.BoardScreen;
 import com.cs361d.flashpoint.view.ChatScreen;
-import org.json.simple.JSONArray;
+
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
 import java.io.BufferedReader;
-import java.io.DataInput;
-import java.io.DataInputStream;
 import java.io.InputStreamReader;
 import java.net.InetAddress;
 import java.net.URL;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
-import java.util.Iterator;
 
 public class NetworkManager {
 
@@ -152,6 +147,7 @@ public class NetworkManager {
                     if (!msg.equals("")) BoardChatFragment.addMessageToGui(message);
                     break;
                 case GAMESTATE:
+                    // Transfer the redraw call to the main thread (that has openGL and GDX)
                     CreateNewGameManager.loadGameFromString(message);
                     Gdx.app.postRunnable(
                             new Runnable() {
