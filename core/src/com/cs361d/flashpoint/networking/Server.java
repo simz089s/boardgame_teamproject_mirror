@@ -32,7 +32,7 @@ public class Server implements Runnable
     public Server() {}
 
     public Server(int serverPort) {
-        // server is listening on port 1234
+
         try {
             ss = new ServerSocket(serverPort);
             startServer = new Thread(this);
@@ -106,8 +106,7 @@ public class Server implements Runnable
     /* Get info about the server's machine */
     public static String getMyHostName() {
         String hostname = null;
-        try
-        {
+        try {
             InetAddress addr = InetAddress.getLocalHost();
             hostname = addr.getHostName();
             System.out.println("Host Name = " + hostname);
@@ -116,5 +115,20 @@ public class Server implements Runnable
 
         return hostname;
     }
+
+    public void closeServer(){
+        try {
+            // Close every client and redirect to login page
+            for (ClientHandler mc : Server.clientThreads.values()) {
+                mc.s.close();
+                mc.din.close();
+                mc.dout.close();
+                mc.fpg.setScreen(mc.fpg.getLoginScreen());
+            }
+
+        } catch (IOException e) { e.printStackTrace(); }
+
+    }
+
 
 }
