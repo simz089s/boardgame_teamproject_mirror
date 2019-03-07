@@ -160,6 +160,7 @@ public class NetworkManager {
                             });
                     break;
                 case SAVE:
+                    CreateNewGameManager.loadGameFromString(message);
                     DBHandler.saveBoardToDB(BoardManager.getInstance().getGameName());
                 default:
             }
