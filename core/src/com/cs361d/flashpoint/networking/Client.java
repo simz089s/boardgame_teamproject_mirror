@@ -3,6 +3,7 @@ package com.cs361d.flashpoint.networking;
 import com.cs361d.flashpoint.manager.CreateNewGameManager;
 import com.cs361d.flashpoint.manager.DBHandler;
 import com.cs361d.flashpoint.view.BoardChatFragment;
+import com.cs361d.flashpoint.view.BoardScreen;
 import com.cs361d.flashpoint.view.ChatScreen;
 import com.cs361d.flashpoint.view.FlashPointGame;
 import netscape.javascript.JSObject;
@@ -74,6 +75,7 @@ public class Client {
                                         break;
                                     case GAMESTATE:
                                         CreateNewGameManager.loadGameFromString(message);
+                                        BoardScreen.redrawGameUnitsOnTile();
                                         break;
                                         default:
                                         throw new IllegalArgumentException();
