@@ -12,7 +12,7 @@ public class NetworkManager {
     private static NetworkManager instance = null;
 //    final public String SERVER_IP = getMyIPAddress(); //hardcoded ip for server ******
     final public static String SERVER_IP = "142.157.149.34"; //public ip address
-    final public static int SERVER_PORT = 987654321;
+    final public static int SERVER_PORT = 54590;
 
     // variable of type String
     public Server server;
@@ -39,11 +39,11 @@ public class NetworkManager {
     }
 
     public void sendChatMessage(String msg) {
-        if(getMyIPAddress().equals(SERVER_IP))
-            server.sendMsg("chat-"+msg);
+        if(getMyPublicIP().equals(SERVER_IP))
+            server.sendMsg(msg);
 
         else
-            clientList.get(0).sendMsg("chat-"+msg);
+            clientList.get(0).sendMsg(msg);
 
     }
 

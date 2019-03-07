@@ -105,7 +105,7 @@ public class BoardChatFragment {
 
                     if(!messageInputed.equals("") && !messageInputed.equals(" ")){
                         textFieldMsg.setText("");
-                        myNetwork.sendChatMessage(messageInputed); //send message over network
+                        myNetwork.sendChatMessage("chatgame-"+messageInputed); //send message over network
 //                        messagesArrList.add("Y: " + messageInputed);
 //                        String[] newMsg = messagesArrList.toArray(new String[messagesArrList.size()]);
 //                        lstMsg.setItems(newMsg);
