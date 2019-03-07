@@ -43,7 +43,7 @@ public class NetworkManager {
 
     public void sendCommand(String command, String msg) {
         String jsonMsg = createJSON(command, msg);
-        if(getMyIPAddress().equals(SERVER_IP))
+        if(getMyPublicIP().equals(SERVER_IP))
             server.sendMsg(jsonMsg);
 
         else
