@@ -1,5 +1,14 @@
 package com.cs361d.flashpoint.networking;
 
+import com.badlogic.gdx.Gdx;
+import com.cs361d.flashpoint.manager.CreateNewGameManager;
+import com.cs361d.flashpoint.view.BoardChatFragment;
+import com.cs361d.flashpoint.view.BoardScreen;
+import com.cs361d.flashpoint.view.ChatScreen;
+
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.InetAddress;
@@ -9,9 +18,10 @@ import java.util.ArrayList;
 
 public class NetworkManager {
 
-    private static NetworkManager instance = null;
+    private static NetworkManager instance = new NetworkManager();
 //    final public String SERVER_IP = getMyIPAddress(); //hardcoded ip for server ******
     final public static String SERVER_IP = "142.157.149.34"; //public ip address
+    final public static int SERVER_PORT = 54590;
 
     // variable of type String
     public Server server;
@@ -23,9 +33,6 @@ public class NetworkManager {
 
     // static method to create instance of Singleton class
     public static NetworkManager getInstance() {
-        if (instance == null)
-            instance = new NetworkManager();
-
         return instance;
     }
 
@@ -37,30 +44,25 @@ public class NetworkManager {
         this.clientList.add(c);
     }
 
-    public void sendChatMessage(String msg) {
-        if(getMyIPAddress().equals(SERVER_IP))
-            server.sendMsg("chat-"+msg);
+    public void sendCommand(String command, String msg) {
+        String jsonMsg = createJSON(command, msg);
+        if(getMyPublicIP().equals(SERVER_IP))
+            server.sendMsg(jsonMsg);
 
         else
-            clientList.get(0).sendMsg("chat-"+msg);
+            for (Client c : clientList) {
+                c.sendMsg(jsonMsg);
+            }
 
     }
 
-    public void sendUpdatedGameState(String msg) {
-        if(getMyIPAddress().equals(SERVER_IP))
-            server.sendMsg("game-"+msg);
 
-        else
-            clientList.get(0).sendMsg("game-"+msg);
-    }
+    private String createJSON(String command, String msg){
 
-
-    public void sendUpdatedStats(String msg) {
-        if(getMyIPAddress().equals(SERVER_IP))
-            server.sendMsg("stat-"+msg);
-
-        else
-            clientList.get(0).sendMsg("stat-"+msg);
+        JSONObject message = new JSONObject();
+        message.put("command", command);
+        message.put("message", msg);
+        return message.toString();
 
     }
 
@@ -124,4 +126,42 @@ public class NetworkManager {
         return hostname;
     }
 
+    public static void ExecuteCommand(String msg) {
+        try {
+            /* Get the command from the string read
+             * CHATWAIT: waiting screen chat changes
+             * CHATGAME: in-game chat changes
+             * GAMESTATE: gameState changes
+             * */
+
+            JSONParser parser = new JSONParser();
+
+            JSONObject jsonObject = (JSONObject) parser.parse(msg);
+            Commands c = Commands.fromString(jsonObject.get("command").toString());
+            String message = jsonObject.get("message").toString();
+            switch (c) {
+                case CHATWAIT:
+                    if (!msg.equals("")) ChatScreen.addMessageToGui(message);
+                    break;
+                case CHATGAME:
+                    if (!msg.equals("")) BoardChatFragment.addMessageToGui(message);
+                    break;
+                case GAMESTATE:
+                    // Transfer the redraw call to the main thread (that has openGL and GDX)
+                    CreateNewGameManager.loadGameFromString(message);
+                    Gdx.app.postRunnable(
+                            new Runnable() {
+                                @Override
+                                public void run() {
+                                    BoardScreen.redrawBoardEntierly();
+                                }
+                            });
+                    break;
+                default:
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }

@@ -24,5 +24,7 @@ public enum Direction {
         }
         throw new IllegalArgumentException("The String " + s + " does not correspond to any Direction ENUM");
     }
-    Direction(String text){}
+    Direction(String text){
+        this.text = text;
+    }
 }

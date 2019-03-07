@@ -1,25 +1,27 @@
 package com.cs361d.flashpoint.manager;
 
 import com.cs361d.flashpoint.model.BoardElements.*;
+import com.cs361d.flashpoint.networking.Commands;
 import com.cs361d.flashpoint.view.BoardScreen;
 import org.jetbrains.annotations.NotNull;
+import com.cs361d.flashpoint.networking.NetworkManager;
 
 import java.util.*;
 import java.util.List;
 
 public class FireFighterTurnManager implements Iterable<FireFighter> {
 
-  protected final int MAX_NUMBER_OF_PLAYERS = 6;
-  protected LinkedList<FireFighter> FIREFIGHTERS = new LinkedList<FireFighter>();
-  boolean allAssigned = false;
-  protected static FireFighterTurnManager instance =
+  private final int MAX_NUMBER_OF_PLAYERS = 6;
+  private LinkedList<FireFighter> FIREFIGHTERS = new LinkedList<FireFighter>();
+  private boolean allAssigned = false;
+  private static FireFighterTurnManager instance =
       new FireFighterTurnManager();
 
   public static FireFighterTurnManager getInstance() {
     return instance;
   }
 
-  public void addFireFighter(FireFighter f) {
+  protected void addFireFighter(FireFighter f) {
     if (FIREFIGHTERS.contains(f)) {
       throw new IllegalArgumentException();
     }
@@ -49,7 +51,7 @@ public class FireFighterTurnManager implements Iterable<FireFighter> {
     return allAssigned;
   }
 
-  public void removeFireFighter(FireFighter f) throws IllegalAccessException {
+  public void removeFireFighter(FireFighter f) {
     FIREFIGHTERS.remove(f);
     f.removeFromBoard();
   }
@@ -62,6 +64,7 @@ public class FireFighterTurnManager implements Iterable<FireFighter> {
       last.resetActionPoints();
       FIREFIGHTERS.addLast(last);
       BoardManager.getInstance().endTurnFireSpread();
+      sendChangeToNetwork();
     }
     else {
       BoardScreen.createDialog("Cannot end turn", "You cannot end turn as you are currently on a tile with fire");
@@ -82,6 +85,7 @@ public class FireFighterTurnManager implements Iterable<FireFighter> {
           BoardManager.getInstance().addNewPointInterest();
         }
       }
+      sendChangeToNetwork();
     }
   }
 
@@ -95,6 +99,7 @@ public class FireFighterTurnManager implements Iterable<FireFighter> {
       newTile.setVictim(v);
       f.setTile(newTile);
       BoardManager.getInstance().verifyVictimRescueStatus(newTile);
+      sendChangeToNetwork();
     }
   }
 
@@ -113,6 +118,7 @@ public class FireFighterTurnManager implements Iterable<FireFighter> {
     }
     if (getCurrentFireFighter().chopAP()) {
       o.applyDamage();
+      sendChangeToNetwork();
     }
   }
 
@@ -131,6 +137,7 @@ public class FireFighterTurnManager implements Iterable<FireFighter> {
     }
     if (getCurrentFireFighter().openCloseDoorAP()) {
       o.interactWithDoor();
+      sendChangeToNetwork();
     }
   }
 
@@ -152,6 +159,7 @@ public class FireFighterTurnManager implements Iterable<FireFighter> {
       } else if (tileToExtinguish.hasSmoke()) {
         tileToExtinguish.setFireStatus(FireStatus.EMPTY);
       }
+      sendChangeToNetwork();
     }
   }
 
@@ -159,7 +167,7 @@ public class FireFighterTurnManager implements Iterable<FireFighter> {
     return f == FIREFIGHTERS.peek();
   }
 
-  protected boolean canMove(Direction d) {
+  private boolean canMove(Direction d) {
 
     // Don't allow a move if ap < 3 and moving into fire
     Tile t = getCurrentFireFighter().getTile().getAdjacentTile(d);
@@ -175,7 +183,7 @@ public class FireFighterTurnManager implements Iterable<FireFighter> {
     return true;
   }
 
-  protected boolean canMoveWithVictim(Direction d) {
+  private boolean canMoveWithVictim(Direction d) {
     Tile currentTile = getCurrentFireFighter().getTile();
     Tile adjacentTile = currentTile.getAdjacentTile(d);
     if (!currentTile.hasRealVictim()
@@ -190,14 +198,14 @@ public class FireFighterTurnManager implements Iterable<FireFighter> {
     return FIREFIGHTERS.peek();
   }
 
-  public void reset() {
+  protected void reset() {
     instance = new FireFighterTurnManager();
   }
 
   public void placeInitialFireFighter(FireFighter f, Tile t) {
     int i = t.getI();
     int j = t.getJ();
-    if (i > 0 || i > BoardManager.ROWS -2 || j > 0 || j > BoardManager.COLUMNS -2) {
+    if (i > 0 || i > BoardManager.ROWS - 2 || j > 0 || j > BoardManager.COLUMNS - 2) {
       return;
     }
     // if the fireFighter already had a tile that means it was already one the board so we cannot place it initially.
@@ -229,17 +237,13 @@ public class FireFighterTurnManager implements Iterable<FireFighter> {
     FIREFIGHTERS = newList;
   }
 
+  private void sendChangeToNetwork() {
+    NetworkManager.getInstance().sendCommand(Commands.GAMESTATE.toString(), DBHandler.getBoardAsString());
+  }
+
   @NotNull
   @Override
   public Iterator<FireFighter> iterator() {
     return FIREFIGHTERS.iterator();
-  }
-
-  public static void useFireFighterTurnManager() {
-    instance = new FireFighterTurnManager();
-  }
-
-  public static void useFireFighterTurnManagerAdvanced() {
-    instance = new FireFighterTurnManagerAdvance();
   }
 }

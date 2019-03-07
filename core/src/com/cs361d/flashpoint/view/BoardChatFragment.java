@@ -6,6 +6,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.List;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
+import com.cs361d.flashpoint.networking.Commands;
 import com.cs361d.flashpoint.networking.NetworkManager;
 
 import java.util.ArrayList;
@@ -17,7 +18,7 @@ public class BoardChatFragment {
     Stage stage;
 
     // chat message list
-    List<String> lstMsg;
+    static List<String> lstMsg;
     List.ListStyle listStyle;
     ScrollPane scrollPaneMsg;
     ScrollPane.ScrollPaneStyle scrollStyle;
@@ -26,7 +27,7 @@ public class BoardChatFragment {
     TextField textFieldMsg;
 
     // messages list
-    ArrayList<String> messagesArrList = new ArrayList<String>();
+    static ArrayList<String> messagesArrList = new ArrayList<String>();
 
 
     ArrayList<ScrollPane> msgListSP = new ArrayList<ScrollPane>();
@@ -34,6 +35,12 @@ public class BoardChatFragment {
 
     // Get the current network
     NetworkManager myNetwork = NetworkManager.getInstance();
+
+    public static void addMessageToGui(String msg) {
+        messagesArrList.add(msg);
+        String[] newMsg = messagesArrList.toArray(new String[messagesArrList.size()]);
+        lstMsg.setItems(newMsg);
+    }
 
     // constructor
     public BoardChatFragment(Stage stage){
@@ -99,10 +106,10 @@ public class BoardChatFragment {
 
                     if(!messageInputed.equals("") && !messageInputed.equals(" ")){
                         textFieldMsg.setText("");
-                        myNetwork.sendChatMessage(messageInputed); //send message over network
-                        messagesArrList.add("Y: " + messageInputed);
-                        String[] newMsg = messagesArrList.toArray(new String[messagesArrList.size()]);
-                        lstMsg.setItems(newMsg);
+                        myNetwork.sendCommand(Commands.CHATGAME.toString(),messageInputed); //send message over network
+//                        messagesArrList.add("Y: " + messageInputed);
+//                        String[] newMsg = messagesArrList.toArray(new String[messagesArrList.size()]);
+//                        lstMsg.setItems(newMsg);
 
                         scrollPaneMsg.setActor(lstMsg);
                         scrollPaneMsg.layout();
