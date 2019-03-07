@@ -52,18 +52,18 @@ public class BoardScreen extends FlashPointScreen {
 
   private Music myMusic;
 
-  BoardMovesPanel boardMovesPanel;
-  BoardChatFragment boardChatFragment;
-  BoardCheatSFragment boardCheatSFragment;
-  BoardStatsFragment boardStatsFragment;
+  static BoardMovesPanel boardMovesPanel;
+  static BoardChatFragment boardChatFragment;
+  static BoardCheatSFragment boardCheatSFragment;
+  static BoardStatsFragment boardStatsFragment;
 
-  TextButton btnExit;
+  static TextButton btnExit;
+  static Label gameInfoLabel;
+  static ImageButton btnResume;
   TextButton btnChat;
-  ImageButton btnResume;
   TextButton btnCheatS;
   TextButton btnStats;
   ImageButton btnMusicSound;
-  static Label gameInfoLabel;
 
   BoardScreen(Game pGame) {
     super(pGame);
@@ -623,7 +623,7 @@ public class BoardScreen extends FlashPointScreen {
   }
 
   // show MovesAndDirectionsPanel on resume
-  private void createResumeButton(){
+  private static void createResumeButton(){
 
     Texture myTexture = new Texture(Gdx.files.internal("icons/myResumeBtn.png"));
     TextureRegion myTextureRegion = new TextureRegion(myTexture);
@@ -725,7 +725,7 @@ public class BoardScreen extends FlashPointScreen {
     gameUnits.clear();
   }
 
-  private void removeAllPrevFragments(){
+  private static void removeAllPrevFragments(){
     boardMovesPanel.removeMovesAndDirectionsPanel();
     boardChatFragment.removeChatFragment();
     boardCheatSFragment.removeCheatSFragment();
@@ -774,9 +774,13 @@ public class BoardScreen extends FlashPointScreen {
       }
     }
   }
+
   public static void redrawBoardEntirely() {
     clearAllGameUnits();
     redrawGameUnitsOnTile();
     updateGameInfoLabel();
+
+    createResumeButton();
+    boardMovesPanel.createMovesAndDirectionsPanel();
   }
 }
