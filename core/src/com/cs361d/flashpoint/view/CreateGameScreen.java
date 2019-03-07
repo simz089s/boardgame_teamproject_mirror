@@ -10,9 +10,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.cs361d.flashpoint.manager.CreateNewGameManager;
-import com.cs361d.flashpoint.manager.Difficulty;
-import com.cs361d.flashpoint.manager.MapKind;
+import com.cs361d.flashpoint.manager.*;
 
 public class CreateGameScreen extends FlashPointScreen {
 
@@ -93,38 +91,40 @@ public class CreateGameScreen extends FlashPointScreen {
                     }
                 });
 
-        btnStartGame.addListener(
-                new ClickListener() {
-                    @Override
-                    public void clicked(InputEvent event, float x, float y) {
+    btnStartGame.addListener(
+        new ClickListener() {
+          @Override
+          public void clicked(InputEvent event, float x, float y) {
 
-                        boolean isInvalidName = gameNameField.getText().equals("map1") || gameNameField.getText().equals("map2");
+            boolean isInvalidName =
+                gameNameField.getText().equals("map1") || gameNameField.getText().equals("map2");
 
-                        if (!gameNameField.getText().isEmpty() && !isInvalidName) {
+            if (!gameNameField.getText().isEmpty() && !isInvalidName) {
 
-                            int numPlayers = Integer.parseInt(lstNumPlayers.getSelected());
+              int numPlayers = Integer.parseInt(lstNumPlayers.getSelected());
 
-                            String mapSelected = lstGameBoard.getSelected();
+              String mapSelected = lstGameBoard.getSelected();
 
-                            MapKind mk = MapKind.MAP1;
+              MapKind mk = MapKind.MAP1;
 
-                            if (mapSelected.equals("MAP 2")){
-                                mk = MapKind.MAP2;
-                            }
-                            // TODO
-//                            else if (mapSelected.equals("RANDOM")){
-//                                mk = MapKind.RANDOM;
-//                            }
+              if (mapSelected.equals("MAP 2")) {
+                mk = MapKind.MAP2;
+              }
+              // TODO
+              //                            else if (mapSelected.equals("RANDOM")){
+              //                                mk = MapKind.RANDOM;
+              //                            }
 
-                            CreateNewGameManager.createNewGame(gameNameField.getText(), numPlayers, mk, Difficulty.FAMILLY);
+              CreateNewGameManager.createNewGame(
+                  gameNameField.getText(), numPlayers, mk, Difficulty.FAMILLY);
+              FireFighterTurnManager.getInstance().assignUserToFireFighter(User.getInstance());
+              game.setScreen(game.boardScreen);
 
-                            game.setScreen(game.boardScreen);
-
-                        } else {
-                            createDialog("Warning", "Invalid or empty game name!");
-                        }
-                    }
-                });
+            } else {
+              createDialog("Warning", "Invalid or empty game name!");
+            }
+          }
+        });
 
         lstGameBoard.addListener(new InputListener() {
             @Override
