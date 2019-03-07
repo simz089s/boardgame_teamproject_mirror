@@ -38,8 +38,8 @@ public class BoardManagerAdvanced extends BoardManager {
     int numExec = -1;
     do {
         numExec++;
-      int i = 1 + (int) (Math.random() * (HEIGHT - 2));
-      int j = 1 + (int) (Math.random() * (WIDTH - 2));
+      int i = 1 + (int) (Math.random() * (ROWS - 2));
+      int j = 1 + (int) (Math.random() * (COLUMNS - 2));
       hitLocation = TILE_MAP[i][j];
       if (hitLocation.hasNoFireAndNoSmoke()) {
         hitLocation.setFireStatus(FireStatus.SMOKE);
@@ -88,7 +88,7 @@ public class BoardManagerAdvanced extends BoardManager {
   private void verifyRemoveHazmat() {
     List<Tile> hazMatTile = getHazMatTile();
     for (Tile t : hazMatTile) {
-      if (t.getI() == 0 || t.getI() == WIDTH - 1 || t.getJ() == 0 || t.getJ() == HEIGHT - 1) {
+      if (t.getI() == 0 || t.getI() == COLUMNS - 1 || t.getJ() == 0 || t.getJ() == ROWS - 1) {
         t.setHasHazmat(false);
       }
     }
@@ -97,7 +97,7 @@ public class BoardManagerAdvanced extends BoardManager {
     public void verifyVictimRescueStatus(Tile t) {
         int i = t.getI();
         int j = t.getJ();
-        if (i == 0 || i == HEIGHT-1 || j == 0 || j == WIDTH-1 ) {
+        if (i == 0 || i == ROWS -1 || j == 0 || j == COLUMNS -1 ) {
             if (t.hasRealVictim()) {
                 numVictimSaved++;
                 t.setNullVictim();

@@ -4,15 +4,14 @@ import com.cs361d.flashpoint.model.BoardElements.*;
 import com.cs361d.flashpoint.view.BoardScreen;
 import org.jetbrains.annotations.NotNull;
 
-import java.awt.*;
 import java.util.*;
 import java.util.List;
-import java.util.logging.Filter;
 
 public class FireFighterTurnManager implements Iterable<FireFighter> {
 
   private final int MAX_NUMBER_OF_PLAYERS = 6;
   private LinkedList<FireFighter> FIREFIGHTERS = new LinkedList<FireFighter>();
+  boolean allAssigned = false;
   private static FireFighterTurnManager instance =
       new FireFighterTurnManager();
 
@@ -43,10 +42,11 @@ public class FireFighterTurnManager implements Iterable<FireFighter> {
   public boolean allAssigned() {
     for (FireFighter f : FIREFIGHTERS) {
       if (f.getTile() == null) {
-        return false;
+        return allAssigned;
       }
     }
-    return true;
+    allAssigned = true;
+    return allAssigned;
   }
 
   public void removeFireFighter(FireFighter f) throws IllegalAccessException {
@@ -197,7 +197,7 @@ public class FireFighterTurnManager implements Iterable<FireFighter> {
   public void placeInitialFireFighter(FireFighter f, Tile t) {
     int i = t.getI();
     int j = t.getJ();
-    if (i > 0 || i > BoardManager.HEIGHT-2 || j > 0 || j > BoardManager.WIDTH-2) {
+    if (i > 0 || i > BoardManager.ROWS -2 || j > 0 || j > BoardManager.COLUMNS -2) {
       return;
     }
     // if the fireFighter already had a tile that means it was already one the board so we cannot place it initially.

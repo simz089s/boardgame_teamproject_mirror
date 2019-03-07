@@ -22,8 +22,8 @@ public class BoardScreen extends FlashPointScreen {
 
   String BOARD_TO_DISPLAY_FILE = "boards/tile.png";
 
-  static final int NUMBER_OF_ROWS = BoardManager.HEIGHT;
-  static final int NUMBER_OF_COLS = BoardManager.WIDTH;
+  static final int NUMBER_OF_ROWS = BoardManager.ROWS;
+  static final int NUMBER_OF_COLS = BoardManager.COLUMNS;
 
   static final int WALL_THICKNESS = 5;
   static final int TILE_SIZE = 75;
@@ -350,12 +350,12 @@ public class BoardScreen extends FlashPointScreen {
     drawObstacles(myTile, top, Direction.TOP);
     drawObstacles(myTile, left, Direction.LEFT);
 
-    if (j == BoardManager.WIDTH - 1) {
+    if (j == BoardManager.COLUMNS - 1) {
       Obstacle right = tiles[i][j].getObstacle(Direction.RIGHT);
       drawObstacles(myTile, right, Direction.RIGHT);
     }
 
-    if (i == BoardManager.HEIGHT - 1) {
+    if (i == BoardManager.ROWS - 1) {
       Obstacle bottom = tiles[i][j].getObstacle(Direction.BOTTOM);
       drawObstacles(myTile, bottom, Direction.BOTTOM);
     }

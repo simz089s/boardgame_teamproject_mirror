@@ -12,9 +12,9 @@ public class BoardManager implements Iterable<Tile> {
   private final LinkedList<FireFighterColor> colorList = new LinkedList<FireFighterColor>();
   public final static int NUM_VICTIM_SAVED_TO_WIN = 7;
   public final static int MAX_WALL_DAMAGE_POSSIBLE = 24;
-  public static final int WIDTH = 10;
-  public static final int HEIGHT = 8;
-  protected final Tile[][] TILE_MAP = new Tile[HEIGHT][WIDTH];
+  public static final int COLUMNS = 10;
+  public static final int ROWS = 8;
+  protected final Tile[][] TILE_MAP = new Tile[ROWS][COLUMNS];
   protected int totalWallDamageLeft = MAX_WALL_DAMAGE_POSSIBLE;
   protected int numVictimSaved = 0;
   protected int numVictimDead = 0;
@@ -40,8 +40,8 @@ public class BoardManager implements Iterable<Tile> {
 
   // make the constructor private so that this class cannot be instantiated
   protected BoardManager() {
-    for (int i = 0; i < HEIGHT; i++) {
-      for (int j = 0; j < WIDTH; j++) {
+    for (int i = 0; i < ROWS; i++) {
+      for (int j = 0; j < COLUMNS; j++) {
         Tile newTile = new Tile(FireStatus.EMPTY, i, j);
         TILE_MAP[i][j] = newTile;
         Obstacle top = new Obstacle(-1);
@@ -61,11 +61,11 @@ public class BoardManager implements Iterable<Tile> {
         /*
          Add wall to the right of the final tile or the bottom of the final tiles
         */
-        if (j == WIDTH - 1) {
+        if (j == COLUMNS - 1) {
           Obstacle right = new Obstacle(-1);
           newTile.addObstacle(Direction.RIGHT, right);
         }
-        if (i == HEIGHT - 1) {
+        if (i == ROWS - 1) {
           Obstacle bottom = new Obstacle(-1);
           newTile.addObstacle(Direction.BOTTOM, bottom);
         }
@@ -187,8 +187,8 @@ public class BoardManager implements Iterable<Tile> {
 
   // Spread the fire at the end of the turn
   public void endTurnFireSpread() throws IllegalAccessException {
-    int i = 1+(int) (Math.random()*(HEIGHT-2));
-    int j = 1+(int) (Math.random()*(WIDTH-2));
+    int i = 1+(int) (Math.random()*(ROWS -2));
+    int j = 1+(int) (Math.random()*(COLUMNS -2));
     Tile hitLocation = TILE_MAP[i][j];
     if (hitLocation.hasNoFireAndNoSmoke()) {
       hitLocation.setFireStatus(FireStatus.SMOKE);
@@ -225,7 +225,7 @@ public class BoardManager implements Iterable<Tile> {
             explosionFireSpread(i - 1, j, d);
             break;
           case BOTTOM:
-            if (i > HEIGHT - 2) {
+            if (i > ROWS - 2) {
               return;
             }
             explosionFireSpread(i + 1, j, d);
@@ -237,7 +237,7 @@ public class BoardManager implements Iterable<Tile> {
             explosionFireSpread(i, j - 1, d);
             break;
           case RIGHT:
-            if (j > WIDTH - 2) {
+            if (j > COLUMNS - 2) {
               return;
             }
             explosionFireSpread(i, j + 1, d);
@@ -265,7 +265,7 @@ public class BoardManager implements Iterable<Tile> {
         top.applyDamage();
       }
     }
-    if (i < HEIGHT - 1) {
+    if (i < ROWS - 1) {
       Obstacle bottom = hitLocation.getObstacle(Direction.BOTTOM);
       if (bottom.isDestroyed() || (bottom.isDoor() && bottom.isOpen())) {
         explosionFireSpread(i + 1, j, Direction.BOTTOM);
@@ -281,7 +281,7 @@ public class BoardManager implements Iterable<Tile> {
         left.applyDamage();
       }
     }
-    if (j < WIDTH - 1) {
+    if (j < COLUMNS - 1) {
       Obstacle right = hitLocation.getObstacle(Direction.RIGHT);
       if (right.isDestroyed() || (right.isDoor() && right.isOpen())) {
         explosionFireSpread(i, j + 1, Direction.RIGHT);
@@ -294,8 +294,8 @@ public class BoardManager implements Iterable<Tile> {
   // Ensure that all the tiles with smoke catch fire at the end of turn
   protected void updateSmoke() {
     boolean repeat = false;
-    for (int i = 0; i < HEIGHT; i++) {
-      for (int j = 0; j < WIDTH; j++) {
+    for (int i = 0; i < ROWS; i++) {
+      for (int j = 0; j < COLUMNS; j++) {
         if (TILE_MAP[i][j].hasSmoke() && hasFireNextToTile(i, j)) {
           TILE_MAP[i][j].setFireStatus(FireStatus.FIRE);
           repeat = true;
@@ -316,7 +316,7 @@ public class BoardManager implements Iterable<Tile> {
       }
     }
 
-    if (i < HEIGHT - 1 && TILE_MAP[i + 1][j].hasFire()) {
+    if (i < ROWS - 1 && TILE_MAP[i + 1][j].hasFire()) {
       Obstacle obs = TILE_MAP[i][j].getObstacle(Direction.BOTTOM);
       if (obs.isDestroyed() || (obs.isDoor() && obs.isOpen())) {
         return true;
@@ -330,7 +330,7 @@ public class BoardManager implements Iterable<Tile> {
       }
     }
 
-    if (i < HEIGHT - 1 && TILE_MAP[i][j + 1].hasFire()) {
+    if (i < ROWS - 1 && TILE_MAP[i][j + 1].hasFire()) {
       Obstacle obs = TILE_MAP[i][j].getObstacle(Direction.RIGHT);
       if (obs.isDestroyed() || (obs.isDoor() && obs.isOpen())) {
         return true;
@@ -372,8 +372,8 @@ public class BoardManager implements Iterable<Tile> {
     int height;
     do
     {
-      width = 1+(int) (Math.random()*(HEIGHT-2));
-      height = 1+(int) (Math.random()*(WIDTH-2));
+      width = 1+(int) (Math.random()*(ROWS -2));
+      height = 1+(int) (Math.random()*(COLUMNS -2));
 
     }
       while (TILE_MAP[width][height].hasPointOfInterest());
@@ -398,13 +398,13 @@ public class BoardManager implements Iterable<Tile> {
   }
   // removes the fire outside the building
   protected void removeEdgeFire() {
-    for (int i = 0; i < HEIGHT; i++) {
+    for (int i = 0; i < ROWS; i++) {
       TILE_MAP[i][0].setFireStatus(FireStatus.EMPTY);
-      TILE_MAP[i][WIDTH - 1].setFireStatus(FireStatus.EMPTY);
+      TILE_MAP[i][COLUMNS - 1].setFireStatus(FireStatus.EMPTY);
     }
-    for (int j = 0; j < WIDTH; j++) {
+    for (int j = 0; j < COLUMNS; j++) {
       TILE_MAP[0][j].setFireStatus(FireStatus.EMPTY);
-      TILE_MAP[HEIGHT - 1][j].setFireStatus(FireStatus.EMPTY);
+      TILE_MAP[ROWS - 1][j].setFireStatus(FireStatus.EMPTY);
     }
   }
 
@@ -418,7 +418,7 @@ public class BoardManager implements Iterable<Tile> {
         }
         break;
       case BOTTOM:
-        if (i < BoardManager.HEIGHT - 1) {
+        if (i < BoardManager.ROWS - 1) {
           return TILE_MAP[i + 1][j];
         }
         break;
@@ -428,7 +428,7 @@ public class BoardManager implements Iterable<Tile> {
         }
         break;
       case RIGHT:
-        if (j < BoardManager.WIDTH - 1) {
+        if (j < BoardManager.COLUMNS - 1) {
           return TILE_MAP[i][j + 1];
         }
         break;
@@ -444,8 +444,8 @@ public class BoardManager implements Iterable<Tile> {
   public ArrayList<Tile> getClosestAmbulanceTile(int i, int j) {
     ArrayList<Tile> tiles = new ArrayList<Tile>();
     double currentSmallestDistance = Double.MAX_VALUE;
-    for (int k = 0; k < HEIGHT; k++) {
-      for (int l = 0; l < WIDTH; l++) {
+    for (int k = 0; k < ROWS; k++) {
+      for (int l = 0; l < COLUMNS; l++) {
         if (TILE_MAP[k][l].canContainAmbulance()) {
           double squareDistance = Math.pow(i - k, 2) + Math.pow(j - l, 2);
           if (squareDistance < currentSmallestDistance) {
@@ -474,6 +474,7 @@ public class BoardManager implements Iterable<Tile> {
         f.setTile(tiles.get(0));
       } else if (tiles.size() > 1) {
         BoardScreen.addFilterOnKnockDownChoosePos(f, tiles);
+        f.removeFromBoard();
       } else {
         throw new IllegalStateException();
       }
@@ -508,7 +509,7 @@ public class BoardManager implements Iterable<Tile> {
   public void verifyVictimRescueStatus(Tile t) {
     int i = t.getI();
     int j = t.getJ();
-    if (i == 0 || i == HEIGHT-1 || j == 0 || j == WIDTH-1 ) {
+    if (i == 0 || i == ROWS -1 || j == 0 || j == COLUMNS -1 ) {
       if (t.hasRealVictim()) {
         numVictimSaved++;
         t.setNullVictim();
@@ -555,8 +556,8 @@ public class BoardManager implements Iterable<Tile> {
   @Override
   public Iterator<Tile> iterator() {
     List<Tile> tiles = new ArrayList<Tile>();
-    for (int i = 0; i < WIDTH; i++) {
-      for (int j = 0; j < HEIGHT; j++) {
+    for (int i = 0; i < COLUMNS; i++) {
+      for (int j = 0; j < ROWS; j++) {
         tiles.add(TILE_MAP[i][j]);
       }
     }
