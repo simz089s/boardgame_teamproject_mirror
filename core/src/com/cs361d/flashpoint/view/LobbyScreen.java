@@ -203,6 +203,7 @@ public class LobbyScreen extends FlashPointScreen {
           @Override
           public void clicked(InputEvent event, float x, float y) {
             FireFighterTurnManager.getInstance().assignUserToFireFighter(User.getInstance());
+            game.setScreen(game.boardScreen);
           }
         });
 
