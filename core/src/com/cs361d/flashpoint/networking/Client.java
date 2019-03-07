@@ -75,7 +75,7 @@ public class Client {
                                         break;
                                     case GAMESTATE:
                                         CreateNewGameManager.loadGameFromString(message);
-                                        BoardScreen.redrawGameUnitsOnTile();
+                                        BoardScreen.redrawBoardEntierly();
                                         break;
                                         default:
                                         throw new IllegalArgumentException();
