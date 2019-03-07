@@ -182,7 +182,9 @@ public class NetworkManager {
                     }
                     FireFighterTurnManager.getInstance().setNotYetAssigned(colorList);
                     break;
-
+                case LOADGAME:
+                    CreateNewGameManager.loadGameFromString(message);
+                    break;
                 case SERVERDISCONNECT:
                     instance.server.closeServer();
                     break;

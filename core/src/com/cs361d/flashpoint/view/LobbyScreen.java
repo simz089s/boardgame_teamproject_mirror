@@ -18,6 +18,8 @@ import com.cs361d.flashpoint.manager.CreateNewGameManager;
 import com.cs361d.flashpoint.manager.DBHandler;
 import com.cs361d.flashpoint.manager.FireFighterTurnManager;
 import com.cs361d.flashpoint.manager.User;
+import com.cs361d.flashpoint.networking.Commands;
+import com.cs361d.flashpoint.networking.NetworkManager;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -227,6 +229,7 @@ public class LobbyScreen extends FlashPointScreen {
                             CreateNewGameManager.loadSavedGame(lstLoadGames.getSelected());
                             FireFighterTurnManager.getInstance().assignUserToFireFighter(User.getInstance());
                             game.setScreen(game.boardScreen);
+                            NetworkManager.getInstance().sendCommand(Commands.LOADGAME, DBHandler.getBoardAsString());
                         }
                     }
                 });
