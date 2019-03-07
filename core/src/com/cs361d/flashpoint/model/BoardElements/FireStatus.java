@@ -5,5 +5,22 @@ public enum FireStatus {
     SMOKE("smoke"),
     EMPTY("empty");
 
-    FireStatus(String text){}
+    private String text;
+
+    FireStatus(String text){
+        this.text = text;
+    }
+
+    public String toString() {
+        return this.text;
+    }
+
+    public static FireStatus fromString(String text) {
+        for (FireStatus f : FireStatus.values()) {
+            if (f.text.equalsIgnoreCase(text)) {
+                return f;
+            }
+        }
+        throw new IllegalArgumentException("The String " + text + " does not correspond to any Direction ENUM");
+    }
 }

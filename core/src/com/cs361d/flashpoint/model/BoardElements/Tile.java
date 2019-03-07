@@ -25,7 +25,9 @@ public class Tile {
         this.J = j;
         this.carrierStatus = CarrierStatus.EMPTY;
     }
-
+    public String getCarrierStatusString() {
+        return this.carrierStatus.toString();
+    }
     public boolean hasHazmat() {
         return this.hasHazmat;
     }
@@ -178,11 +180,15 @@ public class Tile {
     }
 
     public boolean canContainAmbulance() {
-        return this.carrierStatus == CarrierStatus.AMBULANCE;
+        return this.carrierStatus == CarrierStatus.CANHAVEAMBULANCE;
     }
-    public boolean canContainFireTruck() {return this.carrierStatus == CarrierStatus.FIRETRUCK;}
+    public boolean canContainFireTruck() {return this.carrierStatus == CarrierStatus.CANHAVEFIRETRUCK;}
 
     public boolean hasFireFighters() {
         return FIREFIGHTERS.size() > 0;
+    }
+
+    public String getFireStatusString() {
+        return this.fireStatus.toString();
     }
 }

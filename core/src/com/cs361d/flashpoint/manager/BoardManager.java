@@ -2,17 +2,19 @@ package com.cs361d.flashpoint.manager;
 
 import com.cs361d.flashpoint.model.BoardElements.*;
 import com.cs361d.flashpoint.view.BoardScreen;
+import org.jetbrains.annotations.NotNull;
+
 import java.util.*;
 import java.util.List;
 
-public class BoardManager {
+public class BoardManager implements Iterable<Tile> {
   protected Difficulty difficulty;
   private final LinkedList<FireFighterColor> colorList = new LinkedList<FireFighterColor>();
   public final static int NUM_VICTIM_SAVED_TO_WIN = 7;
   public final static int MAX_WALL_DAMAGE_POSSIBLE = 24;
-  public static final int WIDTH = 10;
-  public static final int HEIGHT = 8;
-  protected final Tile[][] TILE_MAP = new Tile[HEIGHT][WIDTH];
+  public static final int COLUMNS = 10;
+  public static final int ROWS = 8;
+  protected final Tile[][] TILE_MAP = new Tile[ROWS][COLUMNS];
   protected int totalWallDamageLeft = MAX_WALL_DAMAGE_POSSIBLE;
   protected int numVictimSaved = 0;
   protected int numVictimDead = 0;
@@ -38,8 +40,8 @@ public class BoardManager {
 
   // make the constructor private so that this class cannot be instantiated
   protected BoardManager() {
-    for (int i = 0; i < HEIGHT; i++) {
-      for (int j = 0; j < WIDTH; j++) {
+    for (int i = 0; i < ROWS; i++) {
+      for (int j = 0; j < COLUMNS; j++) {
         Tile newTile = new Tile(FireStatus.EMPTY, i, j);
         TILE_MAP[i][j] = newTile;
         Obstacle top = new Obstacle(-1);
@@ -59,11 +61,11 @@ public class BoardManager {
         /*
          Add wall to the right of the final tile or the bottom of the final tiles
         */
-        if (j == WIDTH - 1) {
+        if (j == COLUMNS - 1) {
           Obstacle right = new Obstacle(-1);
           newTile.addObstacle(Direction.RIGHT, right);
         }
-        if (i == HEIGHT - 1) {
+        if (i == ROWS - 1) {
           Obstacle bottom = new Obstacle(-1);
           newTile.addObstacle(Direction.BOTTOM, bottom);
         }
@@ -114,7 +116,7 @@ public class BoardManager {
       throw new IllegalArgumentException("Max num of player is 6");
     }
     for (int i = 0; i < count; i++) {
-      FireFighter f = FireFighter.createFireFighter(colorList.removeFirst(), 0, 4);
+      FireFighter f = FireFighter.createFireFighter(colorList.removeFirst(), 4);
       FireFighterTurnManager.getInstance().addFireFighter(f);
     }
   }
@@ -129,8 +131,8 @@ public class BoardManager {
   }
 
   public void addFireFighter(
-      int i, int j, FireFighterColor color, int numVictimsSaved, int actionPoints) {
-    FireFighter f = FireFighter.createFireFighter(color, numVictimsSaved, actionPoints);
+      int i, int j, FireFighterColor color, int actionPoints) {
+    FireFighter f = FireFighter.createFireFighter(color, actionPoints);
     if (f.getTile() != null) {
       throw new IllegalArgumentException();
     }
@@ -185,8 +187,8 @@ public class BoardManager {
 
   // Spread the fire at the end of the turn
   public void endTurnFireSpread() throws IllegalAccessException {
-    int i = 1+(int) (Math.random()*(HEIGHT-3));
-    int j = 1+(int) (Math.random()*(WIDTH-3));
+    int i = 1+(int) (Math.random()*(ROWS -2));
+    int j = 1+(int) (Math.random()*(COLUMNS -2));
     Tile hitLocation = TILE_MAP[i][j];
     if (hitLocation.hasNoFireAndNoSmoke()) {
       hitLocation.setFireStatus(FireStatus.SMOKE);
@@ -223,7 +225,7 @@ public class BoardManager {
             explosionFireSpread(i - 1, j, d);
             break;
           case BOTTOM:
-            if (i > HEIGHT - 2) {
+            if (i > ROWS - 2) {
               return;
             }
             explosionFireSpread(i + 1, j, d);
@@ -235,7 +237,7 @@ public class BoardManager {
             explosionFireSpread(i, j - 1, d);
             break;
           case RIGHT:
-            if (j > WIDTH - 2) {
+            if (j > COLUMNS - 2) {
               return;
             }
             explosionFireSpread(i, j + 1, d);
@@ -263,7 +265,7 @@ public class BoardManager {
         top.applyDamage();
       }
     }
-    if (i < HEIGHT - 1) {
+    if (i < ROWS - 1) {
       Obstacle bottom = hitLocation.getObstacle(Direction.BOTTOM);
       if (bottom.isDestroyed() || (bottom.isDoor() && bottom.isOpen())) {
         explosionFireSpread(i + 1, j, Direction.BOTTOM);
@@ -279,7 +281,7 @@ public class BoardManager {
         left.applyDamage();
       }
     }
-    if (j < WIDTH - 1) {
+    if (j < COLUMNS - 1) {
       Obstacle right = hitLocation.getObstacle(Direction.RIGHT);
       if (right.isDestroyed() || (right.isDoor() && right.isOpen())) {
         explosionFireSpread(i, j + 1, Direction.RIGHT);
@@ -292,8 +294,8 @@ public class BoardManager {
   // Ensure that all the tiles with smoke catch fire at the end of turn
   protected void updateSmoke() {
     boolean repeat = false;
-    for (int i = 0; i < HEIGHT; i++) {
-      for (int j = 0; j < WIDTH; j++) {
+    for (int i = 0; i < ROWS; i++) {
+      for (int j = 0; j < COLUMNS; j++) {
         if (TILE_MAP[i][j].hasSmoke() && hasFireNextToTile(i, j)) {
           TILE_MAP[i][j].setFireStatus(FireStatus.FIRE);
           repeat = true;
@@ -314,7 +316,7 @@ public class BoardManager {
       }
     }
 
-    if (i < HEIGHT - 1 && TILE_MAP[i + 1][j].hasFire()) {
+    if (i < ROWS - 1 && TILE_MAP[i + 1][j].hasFire()) {
       Obstacle obs = TILE_MAP[i][j].getObstacle(Direction.BOTTOM);
       if (obs.isDestroyed() || (obs.isDoor() && obs.isOpen())) {
         return true;
@@ -328,7 +330,7 @@ public class BoardManager {
       }
     }
 
-    if (i < HEIGHT - 1 && TILE_MAP[i][j + 1].hasFire()) {
+    if (i < ROWS - 1 && TILE_MAP[i][j + 1].hasFire()) {
       Obstacle obs = TILE_MAP[i][j].getObstacle(Direction.RIGHT);
       if (obs.isDestroyed() || (obs.isDoor() && obs.isOpen())) {
         return true;
@@ -348,28 +350,30 @@ public class BoardManager {
         if (t.hasRealVictim()) {
           this.numVictimDead++;
           if (numVictimDead > 3) {
-            BoardScreen.createEndGameDialog("GAME OVER", "You lost the game more than 3 victims died");
-          }
-          else {
-            addNewPointInterest();
+            endGame("GAME OVER", "You lost the game more than 3 victims died");
           }
         }
         else {
           numFalseAlarmRemoved++;
         }
+        addNewPointInterest();
         t.setNullVictim();
       }
     }
   }
 
   protected void addNewPointInterest() {
+    if (victims.isEmpty()) {
+//      throw new IllegalStateException("we cannot add a new point of interest if the list is empty");
+      return;
+    }
     AbstractVictim v = victims.remove(0);
     int width;
     int height;
     do
     {
-      width = 1+(int) (Math.random()*(HEIGHT-3));
-      height = 1+(int) (Math.random()*(WIDTH-3));
+      width = 1+(int) (Math.random()*(ROWS -2));
+      height = 1+(int) (Math.random()*(COLUMNS -2));
 
     }
       while (TILE_MAP[width][height].hasPointOfInterest());
@@ -388,19 +392,19 @@ public class BoardManager {
       }
   }
 
-  protected void addNewPointInterest(int width, int height) {
+  protected void addNewPointInterest(int i, int j) {
     AbstractVictim v = victims.get(0);
-    TILE_MAP[width][height].setVictim(v);
+    TILE_MAP[i][j].setVictim(v);
   }
   // removes the fire outside the building
-  private void removeEdgeFire() {
-    for (int i = 0; i < HEIGHT; i++) {
+  protected void removeEdgeFire() {
+    for (int i = 0; i < ROWS; i++) {
       TILE_MAP[i][0].setFireStatus(FireStatus.EMPTY);
-      TILE_MAP[i][WIDTH - 1].setFireStatus(FireStatus.EMPTY);
+      TILE_MAP[i][COLUMNS - 1].setFireStatus(FireStatus.EMPTY);
     }
-    for (int j = 0; j < WIDTH; j++) {
+    for (int j = 0; j < COLUMNS; j++) {
       TILE_MAP[0][j].setFireStatus(FireStatus.EMPTY);
-      TILE_MAP[HEIGHT - 1][j].setFireStatus(FireStatus.EMPTY);
+      TILE_MAP[ROWS - 1][j].setFireStatus(FireStatus.EMPTY);
     }
   }
 
@@ -414,7 +418,7 @@ public class BoardManager {
         }
         break;
       case BOTTOM:
-        if (i < BoardManager.HEIGHT - 1) {
+        if (i < BoardManager.ROWS - 1) {
           return TILE_MAP[i + 1][j];
         }
         break;
@@ -424,7 +428,7 @@ public class BoardManager {
         }
         break;
       case RIGHT:
-        if (j < BoardManager.WIDTH - 1) {
+        if (j < BoardManager.COLUMNS - 1) {
           return TILE_MAP[i][j + 1];
         }
         break;
@@ -440,8 +444,8 @@ public class BoardManager {
   public ArrayList<Tile> getClosestAmbulanceTile(int i, int j) {
     ArrayList<Tile> tiles = new ArrayList<Tile>();
     double currentSmallestDistance = Double.MAX_VALUE;
-    for (int k = 0; k < HEIGHT; k++) {
-      for (int l = 0; l < WIDTH; l++) {
+    for (int k = 0; k < ROWS; k++) {
+      for (int l = 0; l < COLUMNS; l++) {
         if (TILE_MAP[k][l].canContainAmbulance()) {
           double squareDistance = Math.pow(i - k, 2) + Math.pow(j - l, 2);
           if (squareDistance < currentSmallestDistance) {
@@ -458,15 +462,19 @@ public class BoardManager {
   }
 
   protected void knockedDown(int i, int j) {
-    if (TILE_MAP[i][j].canContainAmbulance()) {
+    if (!TILE_MAP[i][j].hasFire()) {
       return;
     }
     ArrayList<Tile> tiles = getClosestAmbulanceTile(i, j);
     FireFighter f = TILE_MAP[i][j].getFirefighters().get(0);
       if (tiles.size() == 1) {
+        if (tiles.get(0).hasFire()) {
+          throw new IllegalArgumentException("Issue with tile at location " + i + " " + j + "It shoul not have fire");
+        }
         f.setTile(tiles.get(0));
       } else if (tiles.size() > 1) {
         BoardScreen.addFilterOnKnockDownChoosePos(f, tiles);
+        f.removeFromBoard();
       } else {
         throw new IllegalStateException();
       }
@@ -501,7 +509,7 @@ public class BoardManager {
   public void verifyVictimRescueStatus(Tile t) {
     int i = t.getI();
     int j = t.getJ();
-    if (i == 0 || i == HEIGHT-1 || j == 0 || j == WIDTH-1 ) {
+    if (i == 0 || i == ROWS -1 || j == 0 || j == COLUMNS -1 ) {
       if (t.hasRealVictim()) {
         numVictimSaved++;
         t.setNullVictim();
@@ -509,14 +517,14 @@ public class BoardManager {
       }
     }
     if (numVictimSaved >= NUM_VICTIM_SAVED_TO_WIN) {
-      BoardScreen.createEndGameDialog("GAME OVER", "Congratulation you won the game saving 7 victims!!!");
+      endGame("GAME OVER", "Congratulation you won the game saving 7 victims!!!");
     }
   }
 
   public void useDamageMarker() {
     this.totalWallDamageLeft--;
     if (this.totalWallDamageLeft <= 0) {
-      BoardScreen.createEndGameDialog("GAME OVER", "You lost the game the building collapsed");
+      endGame("GAME OVER", "You lost the game the building collapsed)");
     }
   }
 
@@ -542,5 +550,22 @@ public class BoardManager {
 
   public static void useFamillyGameManager() {
     instance = new BoardManager();
+  }
+
+  @NotNull
+  @Override
+  public Iterator<Tile> iterator() {
+    List<Tile> tiles = new ArrayList<Tile>();
+    for (int i = 0; i < COLUMNS; i++) {
+      for (int j = 0; j < ROWS; j++) {
+        tiles.add(TILE_MAP[i][j]);
+      }
+    }
+    return tiles.iterator();
+  }
+
+  protected void endGame(String title, String msg) {
+    BoardScreen.createEndGameDialog(title, msg);
+    DBHandler.removeGameFile(gameName);
   }
 }

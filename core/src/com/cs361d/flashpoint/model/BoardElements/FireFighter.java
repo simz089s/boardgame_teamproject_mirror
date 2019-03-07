@@ -14,7 +14,6 @@ public class FireFighter {
   private static final int ACTION_POINTS_PER_TURN = 4;
   private int actionPoints;
   private Tile currentTile;
-  protected int apPointsToExtenguish;
 
   private FireFighter(FireFighterColor color, int actionPoints) {
     if (actionPoints > MAX_ACTION_POINTS) {
@@ -25,12 +24,8 @@ public class FireFighter {
     this.actionPoints = actionPoints;
   }
 
-  public static FireFighter createFireFighter(FireFighterColor color) {
-    return createFireFighter(color, 0, 4);
-  }
-
   public static FireFighter createFireFighter(
-      FireFighterColor color, int numVictimsSaved, int actionPoints) {
+      FireFighterColor color, int actionPoints) {
     FireFighter f;
     if (FIREFIGHTERS.containsKey(color)) {
       f = FIREFIGHTERS.get(color);
@@ -42,9 +37,9 @@ public class FireFighter {
     return f;
   }
 
-  public void removeFromBoard() throws IllegalAccessException {
+  public void removeFromBoard() {
       if (currentTile == null) {
-          throw new IllegalAccessException("This method cannot remove a FireFighter from the board if it has no current tile");
+          throw new IllegalStateException("This method cannot remove a FireFighter from the board if it has no current tile");
       }
       currentTile.removeFirefighter(this);
       currentTile = null;
@@ -70,14 +65,6 @@ public class FireFighter {
     return actionPoints;
   }
 
-  public boolean removeActionPoints(int a) {
-    if (a < 1 || this.actionPoints < a) {
-      return false;
-    } else {
-      this.actionPoints -= a;
-      return true;
-    }
-  }
 
   public boolean canEscape(Tile t) {
       return true;
@@ -140,5 +127,18 @@ public class FireFighter {
 
   public static void reset() {
     FIREFIGHTERS.clear();
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (!(o instanceof   FireFighter)) {
+      return false;
+    }
+    else if( o == this) {
+      return true;
+    }
+    else {
+      return this.getColor() == ((FireFighter) o).getColor();
+    }
   }
 }

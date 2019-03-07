@@ -222,8 +222,10 @@ public class LobbyScreen extends FlashPointScreen {
                 new ClickListener() {
                     @Override
                     public void clicked(InputEvent event, float x, float y) {
-                        CreateNewGameManager.loadSavedGame(lstLoadGames.getSelected());
-                        game.setScreen(game.boardScreen);
+                        if (lstLoadGames.getSelected() != null ){
+                            CreateNewGameManager.loadSavedGame(lstLoadGames.getSelected());
+                            game.setScreen(game.boardScreen);
+                        }
                     }
                 });
 

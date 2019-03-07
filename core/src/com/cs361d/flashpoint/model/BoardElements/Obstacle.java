@@ -54,6 +54,14 @@ public class Obstacle {
   }
 
     public void setHealth(int health) {
+        if (health > MAX_HEALTH) {
+            throw new IllegalArgumentException("The health of an obstacle cannot exceed 2");
+        }
+        else if (isDoor && health > 1) {
+            this.health = 1;
+//            throw new IllegalArgumentException("The health of a door cannot exceed 1");
+            return;
+        }
         this.health = health;
     }
 
@@ -71,6 +79,9 @@ public class Obstacle {
 
     public void makeDoor() {
       isDoor = true;
+      if (health > 1) {
+           this.health = 1;
+      }
     }
 
     public void setOpen(boolean isOpen) {
