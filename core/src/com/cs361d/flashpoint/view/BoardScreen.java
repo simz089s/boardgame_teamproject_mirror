@@ -458,6 +458,9 @@ public class BoardScreen extends FlashPointScreen {
 
   private void createGameInfoLabel() {
 
+    if ( FireFighterTurnManager.getInstance().getCurrentFireFighter() == null) {
+      return;
+    }
     int numAP = FireFighterTurnManager.getInstance().getCurrentFireFighter().getActionPointsLeft();
     FireFighterColor color = FireFighterTurnManager.getInstance().getCurrentFireFighter().getColor();
     gameInfoLabel = new Label("Current turn: " + color + "\nAP left: " + numAP, skinUI);
