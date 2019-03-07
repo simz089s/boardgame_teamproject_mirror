@@ -545,7 +545,6 @@ public class BoardScreen extends FlashPointScreen {
                 Dialog dialog = new Dialog("Warning", skinUI, "dialog") {
                   public void result(Object obj) {
                     if ((Boolean) obj) {
-                        NetworkManager.getInstance().sendCommand(Commands.DISCONNECT,"");
                         myMusic.stop();
                         game.setScreen(game.lobbyScreen);
                     }
@@ -788,5 +787,6 @@ public class BoardScreen extends FlashPointScreen {
 
     createResumeButton();
     boardMovesPanel.createMovesAndDirectionsPanel();
+    game.setScreen(game.boardScreen);
   }
 }
