@@ -1,6 +1,6 @@
 package com.cs361d.flashpoint.model.FireFighterRoles;
 
-class CAFSFirefighter implements Card {
+class CAFSFirefighter {
 
   private String name = "CAFSFirefighter";
 

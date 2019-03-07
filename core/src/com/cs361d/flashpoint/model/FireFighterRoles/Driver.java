@@ -1,26 +1,13 @@
 package com.cs361d.flashpoint.model.FireFighterRoles;
 
-class Driver implements Card {
+import com.cs361d.flashpoint.model.BoardElements.FireFighterAdvanced;
+import com.cs361d.flashpoint.model.BoardElements.FireFighterColor;
 
-  private String name = "Driver";
+class Driver extends FireFighterAdvanced {
 
   // create an object of SingleObject
-  private static Driver instance = new Driver();
-
-  // make the constructor private so that this class cannot be instantiated
-  private Driver() {
-    // TODO
+  protected Driver(FireFighterColor color, int actionPoints) {
+    super(color, actionPoints);
   }
 
-  // Get the only object available
-  public static Driver getInstance() {
-    return instance;
-  }
-
-  //    @Override
-  //    public void specialAction() {
-  //        //TODO
-  //        //Print No special action except extra AP pts
-  //        return;
-  //    }
 }

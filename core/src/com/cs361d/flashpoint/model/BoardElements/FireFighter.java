@@ -1,21 +1,19 @@
 package com.cs361d.flashpoint.model.BoardElements;
 
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.Map;
-import java.util.Queue;
 
 public class FireFighter {
 
-  private static final Map<FireFighterColor, FireFighter> FIREFIGHTERS =
+  protected static final Map<FireFighterColor, FireFighter> FIREFIGHTERS =
       new HashMap<FireFighterColor, FireFighter>();
-  private final FireFighterColor color;
-  private static final int MAX_ACTION_POINTS = 8;
-  private static final int ACTION_POINTS_PER_TURN = 4;
-  private int actionPoints;
-  private Tile currentTile;
+  protected final FireFighterColor color;
+  protected static final int MAX_ACTION_POINTS = 8;
+  protected int actionsPointPerTurn = 4;
+  protected int actionPoints;
+  protected Tile currentTile;
 
-  private FireFighter(FireFighterColor color, int actionPoints) {
+  protected FireFighter(FireFighterColor color, int actionPoints) {
     if (actionPoints > MAX_ACTION_POINTS) {
       throw new IllegalStateException(
           "Action points cannot exceed " + MAX_ACTION_POINTS + " was: " + actionPoints);
@@ -73,7 +71,7 @@ public class FireFighter {
   }
 
   public void resetActionPoints() {
-    this.actionPoints += ACTION_POINTS_PER_TURN;
+    this.actionPoints += actionsPointPerTurn;
     if (this.actionPoints > MAX_ACTION_POINTS) {
       this.actionPoints = MAX_ACTION_POINTS;
     }

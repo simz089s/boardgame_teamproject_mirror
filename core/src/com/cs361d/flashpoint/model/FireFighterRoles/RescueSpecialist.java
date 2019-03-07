@@ -1,6 +1,6 @@
 package com.cs361d.flashpoint.model.FireFighterRoles;
 
-class RescueSpecialist implements Card {
+class RescueSpecialist {
 
   private String name = "RescueSpecialist";
 

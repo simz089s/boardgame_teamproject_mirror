@@ -9,10 +9,10 @@ import java.util.List;
 
 public class FireFighterTurnManager implements Iterable<FireFighter> {
 
-  private final int MAX_NUMBER_OF_PLAYERS = 6;
-  private LinkedList<FireFighter> FIREFIGHTERS = new LinkedList<FireFighter>();
+  protected final int MAX_NUMBER_OF_PLAYERS = 6;
+  protected LinkedList<FireFighter> FIREFIGHTERS = new LinkedList<FireFighter>();
   boolean allAssigned = false;
-  private static FireFighterTurnManager instance =
+  protected static FireFighterTurnManager instance =
       new FireFighterTurnManager();
 
   public static FireFighterTurnManager getInstance() {
@@ -159,7 +159,7 @@ public class FireFighterTurnManager implements Iterable<FireFighter> {
     return f == FIREFIGHTERS.peek();
   }
 
-  private boolean canMove(Direction d) {
+  protected boolean canMove(Direction d) {
 
     // Don't allow a move if ap < 3 and moving into fire
     Tile t = getCurrentFireFighter().getTile().getAdjacentTile(d);
@@ -175,7 +175,7 @@ public class FireFighterTurnManager implements Iterable<FireFighter> {
     return true;
   }
 
-  private boolean canMoveWithVictim(Direction d) {
+  protected boolean canMoveWithVictim(Direction d) {
     Tile currentTile = getCurrentFireFighter().getTile();
     Tile adjacentTile = currentTile.getAdjacentTile(d);
     if (!currentTile.hasRealVictim()
@@ -233,5 +233,13 @@ public class FireFighterTurnManager implements Iterable<FireFighter> {
   @Override
   public Iterator<FireFighter> iterator() {
     return FIREFIGHTERS.iterator();
+  }
+
+  public static void useFireFighterTurnManager() {
+    instance = new FireFighterTurnManager();
+  }
+
+  public static void useFireFighterTurnManagerAdvanced() {
+    instance = new FireFighterTurnManagerAdvance();
   }
 }
