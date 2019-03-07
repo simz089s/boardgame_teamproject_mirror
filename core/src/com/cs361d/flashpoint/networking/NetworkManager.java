@@ -64,6 +64,7 @@ public class NetworkManager {
         JSONObject message = new JSONObject();
         message.put("command", command);
         message.put("message", msg);
+        message.put("IP", getMyPublicIP());
         return message.toString();
 
     }
@@ -162,6 +163,12 @@ public class NetworkManager {
                 case SAVE:
                     CreateNewGameManager.loadGameFromString(message);
                     DBHandler.saveBoardToDB(BoardManager.getInstance().getGameName());
+                    break;
+                case GAMECREATED:
+
+                case JOINGAME:
+
+                    break;
                 default:
             }
 

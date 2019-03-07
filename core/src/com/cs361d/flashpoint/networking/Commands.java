@@ -5,7 +5,10 @@ public enum Commands {
     CHATGAME("chatgame"),
     ADDMSG("addmsg"),
     GAMESTATE("gamestate"),
-    SAVE("save");
+    SAVE("save"),
+    GAMECREATED("gamecreated"),
+    JOINGAME("joingame"),
+    ASSIGNFIREFIGHTER("assignedFireFighter");
     private String text;
 
     Commands(String text) {

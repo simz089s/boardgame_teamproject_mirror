@@ -349,4 +349,10 @@ public class LobbyScreen extends FlashPointScreen {
         return filesArr;
     }
 
+    public static void resetLobbyScreen() {
+        if (game.getScreen() == game.lobbyScreen) {
+            game.setScreen(game.lobbyScreen);
+        }
+    }
+
 }

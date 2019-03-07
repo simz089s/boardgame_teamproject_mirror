@@ -39,7 +39,7 @@ class ClientHandler extends Server implements Runnable {
             try
             {
                 String newMsg = din.readUTF();
-                // receive the string
+                // Don`r send the same string more than once
                 if (messageToSend.equals(newMsg)) {
                     continue;
                 }
