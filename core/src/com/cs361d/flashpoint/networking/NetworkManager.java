@@ -1,7 +1,9 @@
 package com.cs361d.flashpoint.networking;
 
 import com.badlogic.gdx.Gdx;
+import com.cs361d.flashpoint.manager.BoardManager;
 import com.cs361d.flashpoint.manager.CreateNewGameManager;
+import com.cs361d.flashpoint.manager.DBHandler;
 import com.cs361d.flashpoint.view.BoardChatFragment;
 import com.cs361d.flashpoint.view.BoardScreen;
 import com.cs361d.flashpoint.view.ChatScreen;
@@ -44,8 +46,8 @@ public class NetworkManager {
         this.clientList.add(c);
     }
 
-    public void sendCommand(String command, String msg) {
-        String jsonMsg = createJSON(command, msg);
+    public void sendCommand(Commands command, String msg) {
+        String jsonMsg = createJSON(command.toString(), msg);
         if(getMyPublicIP().equals(SERVER_IP))
             server.sendMsg(jsonMsg);
 
@@ -157,6 +159,8 @@ public class NetworkManager {
                                 }
                             });
                     break;
+                case SAVE:
+                    DBHandler.saveBoardToDB(BoardManager.getInstance().getGameName());
                 default:
             }
 

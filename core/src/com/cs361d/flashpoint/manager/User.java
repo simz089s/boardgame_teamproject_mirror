@@ -16,11 +16,12 @@ public class User {
     }
 
     public boolean isMyTurn() {
-        if (myFireFigheter == null) {
-            return false;
-        }
-        else {
-            return myFireFigheter.equals(FireFighterTurnManager.getInstance().getCurrentFireFighter());
-        }
+//        if (myFireFigheter == null) {
+//            return false;
+//        }
+//        else {
+//            return myFireFigheter.equals(FireFighterTurnManager.getInstance().getCurrentFireFighter());
+//        }
+        return true;
     }
 }

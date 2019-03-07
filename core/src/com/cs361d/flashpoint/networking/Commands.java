@@ -4,7 +4,8 @@ public enum Commands {
     CHATWAIT("chatwait"),
     CHATGAME("chatgame"),
     ADDMSG("addmsg"),
-    GAMESTATE("gamestate");
+    GAMESTATE("gamestate"),
+    SAVE("save");
     private String text;
 
     Commands(String text) {
