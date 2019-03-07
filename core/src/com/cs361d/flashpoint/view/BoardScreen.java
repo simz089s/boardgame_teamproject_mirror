@@ -647,7 +647,9 @@ public class BoardScreen extends FlashPointScreen {
               }
             });
 
-    stage.addActor(btnResume);
+    if (User.getInstance().isMyTurn()){
+      stage.addActor(btnResume);
+    }
   }
 
   private void createSoundButton(){
