@@ -18,7 +18,9 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 public class LoginScreen extends FlashPointScreen {
 
-    static final String FLASHPOINT = "Flash Point";
+    static final String FLASHPOINT = "FLASH POINT";
+
+    Stage stage;
 
     SpriteBatch batch;
 
@@ -32,14 +34,9 @@ public class LoginScreen extends FlashPointScreen {
 
     TextField fdUname;
     TextField fdPwd;
-
     CheckBox signUpCheck;
-
     TextButton btnLogin;
-
     Label errorMsgLabel;
-
-    Stage stage;
 
     LoginScreen(Game pGame) {
         super(pGame);
@@ -47,11 +44,10 @@ public class LoginScreen extends FlashPointScreen {
 
     @Override
     public void show() {
+
+        stage = new Stage();
         batch = new SpriteBatch();
 
-        debugLbl.setPosition(10, 10);
-        debugLbl.setColor(Color.PURPLE);
-        debugLbl.setText(Gdx.graphics.getWidth() + " " + Gdx.graphics.getHeight());
 
         txtrBG = new Texture("login.png");
         spriteBG = new Sprite(txtrBG);
@@ -59,13 +55,13 @@ public class LoginScreen extends FlashPointScreen {
         spriteBG.setPosition(
                 0, 0);
 
-        generator =
-                new FreeTypeFontGenerator(Gdx.files.internal("data/Capture_it.ttf"));
+        generator = new FreeTypeFontGenerator(Gdx.files.internal("data/Capture_it.ttf"));
         parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
         parameter.size = 72;
         fontCaptureIt = generator.generateFont(parameter);
         fontCaptureIt.setColor(Color.CORAL);
         gl = new GlyphLayout(fontCaptureIt, FLASHPOINT);
+
 
         createUsernameTextField();
 
@@ -77,43 +73,6 @@ public class LoginScreen extends FlashPointScreen {
 
         createErrorMsgLabel();
 
-        signUpCheck.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                if (signUpCheck.isChecked()) {
-                    btnLogin.setText("Sign up");
-                } else {
-                    btnLogin.setText("Login");
-                }
-            }
-        });
-
-        btnLogin.addListener(
-                new ClickListener() {
-                    @Override
-                    public void clicked(InputEvent event, float x, float y) {
-                        String usr = fdUname.getText();
-                        String pwd = fdPwd.getText();
-
-                        if (usr.isEmpty() || pwd.isEmpty()){
-                            errorMsgLabel.setText("Error: empty fields");
-                        } else {
-                            //if (searchDB(usr, pwd)) {
-                                game.setScreen(game.lobbyScreen);
-                            /*} else {
-                                btnLogin.setText("Wrong");
-                            }*/
-                        }
-                    }
-                });
-
-        stage = new Stage();
-        stage.addActor(fdUname);
-        stage.addActor(fdPwd);
-        stage.addActor(signUpCheck);
-        stage.addActor(btnLogin);
-        stage.addActor(errorMsgLabel);
-        stage.addActor(debugLbl);
 
         Gdx.input.setInputProcessor(stage);
     }
@@ -163,6 +122,12 @@ public class LoginScreen extends FlashPointScreen {
         stage.dispose();
     }
 
+
+
+    // text fields
+
+
+
     public void createUsernameTextField(){
         fdUname = new TextField("", skinUI, "default");
         fdUname.setMessageText("Username");
@@ -171,6 +136,8 @@ public class LoginScreen extends FlashPointScreen {
         fdUname.setPosition(
                 (Gdx.graphics.getWidth() - fdUname.getWidth()) / 2,
                 Gdx.graphics.getHeight() * 3 / 5f - (fdUname.getHeight() / 2));
+
+        stage.addActor(fdUname);
     }
 
     public void createPasswordTextField(){
@@ -183,7 +150,15 @@ public class LoginScreen extends FlashPointScreen {
         fdPwd.setPosition(
                 (Gdx.graphics.getWidth() - fdUname.getWidth()) / 2,
                 Gdx.graphics.getHeight() / 2f - (fdUname.getHeight() / 2) + 10);
+
+        stage.addActor(fdPwd);
     }
+
+
+
+    // sign up check box
+
+
 
 
     public void createSignUpCheckbox(){
@@ -191,7 +166,26 @@ public class LoginScreen extends FlashPointScreen {
         signUpCheck.setPosition(
                 Gdx.graphics.getWidth() / 2 - signUpCheck.getWidth() / 2,
                 Gdx.graphics.getHeight() / 2f - (fdUname.getHeight() / 2) - 20);
+
+        signUpCheck.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                if (signUpCheck.isChecked()) {
+                    btnLogin.setText("Sign up");
+                } else {
+                    btnLogin.setText("Login");
+                }
+            }
+        });
+
+        stage.addActor(signUpCheck);
     }
+
+
+
+    // button
+
+
 
     public void createLoginBtn(){
         btnLogin = new TextButton("Login", skinUI, "default");
@@ -200,7 +194,31 @@ public class LoginScreen extends FlashPointScreen {
         btnLogin.setPosition(
                 (Gdx.graphics.getWidth() - btnLogin.getWidth()) / 2,
                 Gdx.graphics.getHeight() / 3f - (btnLogin.getHeight() / 2));
+
+        btnLogin.addListener(
+                new ClickListener() {
+                    @Override
+                    public void clicked(InputEvent event, float x, float y) {
+                        String usr = fdUname.getText();
+                        String pwd = fdPwd.getText();
+
+                        if (usr.isEmpty() || pwd.isEmpty()){
+                            errorMsgLabel.setText("Error: empty fields");
+                        } else {
+
+                            game.setScreen(game.lobbyScreen);
+                        }
+                    }
+                });
+
+        stage.addActor(btnLogin);
     }
+
+
+
+    // error msg label
+
+
 
     public void createErrorMsgLabel(){
         errorMsgLabel = new Label("", skinUI);
@@ -208,5 +226,7 @@ public class LoginScreen extends FlashPointScreen {
                 Gdx.graphics.getWidth() / 2 - 70,
                 (Gdx.graphics.getHeight() / 3f - (btnLogin.getHeight() / 2)) / 2);
         errorMsgLabel.setColor(Color.RED);
+
+        stage.addActor(errorMsgLabel);
     }
 }
