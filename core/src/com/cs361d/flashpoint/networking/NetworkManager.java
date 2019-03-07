@@ -13,7 +13,6 @@ import com.cs361d.flashpoint.view.ChatScreen;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.InetAddress;
@@ -27,7 +26,8 @@ public class NetworkManager {
 
     private static NetworkManager instance = new NetworkManager();
 //    final public String SERVER_IP = getMyIPAddress(); //hardcoded ip for server ******
-    final public static String SERVER_IP = "142.157.67.193"; //public ip address
+//    final public static String SERVER_IP = "142.157.67.193"; //Elvric public ip address
+    final public static String SERVER_IP = "142.157.149.34";
     final public static int SERVER_PORT = 54590;
 
     // variable of type String
@@ -147,6 +147,7 @@ public class NetworkManager {
             JSONObject jsonObject = (JSONObject) parser.parse(msg);
             Commands c = Commands.fromString(jsonObject.get("command").toString());
             String message = jsonObject.get("message").toString();
+            System.out.println(message);
             switch (c) {
                 case CHATWAIT:
                     if (!msg.equals("")) ChatScreen.addMessageToGui(message);
@@ -173,14 +174,19 @@ public class NetworkManager {
                     break;
 
                 case JOINGAME:
-                    JSONArray tilesArr = (JSONArray) jsonObject.get("message");
-                    Iterator<JSONObject> iterator = tilesArr.iterator();
+                    JSONArray tilesArr = (JSONArray) parser.parse(message);
+                    Iterator<String> iterator = tilesArr.iterator();
                     List<FireFighterColor> colorList = new ArrayList<FireFighterColor>();
                     while (iterator.hasNext()) {
-                        colorList.add(FireFighterColor.fromString(iterator.next().toString()));
+                        colorList.add(FireFighterColor.fromString(iterator.next()));
                     }
                     FireFighterTurnManager.getInstance().setNotYetAssigned(colorList);
                     break;
+
+                case SERVERDISCONNECT:
+                    instance.server.closeServer();
+                    break;
+                    
                 default:
             }
 

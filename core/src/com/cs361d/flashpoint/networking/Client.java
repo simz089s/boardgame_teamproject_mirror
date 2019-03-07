@@ -8,6 +8,8 @@ import java.io.IOException;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
+import static java.lang.System.exit;
+
 public class Client
 {
 
@@ -17,14 +19,12 @@ public class Client
     Socket s;
     DataInputStream din;      // input stream
     DataOutputStream dout;    // output stream
-    String ip;                // getting Server's ip
 
     public Client(String serverIP, int serverPort) {
         try {
-            ip = serverIP;
 
-            // establish the connection
-            s = new Socket(ip, serverPort);
+            // Attempt to connect to server
+            s = new Socket(serverIP, serverPort);
 
             // obtaining input and out streams
             din = new DataInputStream(s.getInputStream());

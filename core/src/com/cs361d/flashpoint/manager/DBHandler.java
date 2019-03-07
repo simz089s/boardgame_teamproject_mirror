@@ -1040,5 +1040,8 @@ public class DBHandler {
         return false;
     }
 
+    public static JSONArray testHere(JSONObject jsp) {
+        return (JSONArray) jsp.get("message");
+    }
 
 }
