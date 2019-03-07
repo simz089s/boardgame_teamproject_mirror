@@ -19,6 +19,6 @@ public enum FireFighterColor {
           return b;
         }
       }
-      return null;
+      throw new IllegalArgumentException("The string " + text + "corresponds to no enum" );
     }
   }

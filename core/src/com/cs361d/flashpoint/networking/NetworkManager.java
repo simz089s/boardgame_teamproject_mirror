@@ -170,7 +170,7 @@ public class NetworkManager {
                     break;
 
                 case JOINGAME:
-                    FireFighterTurnManager.getInstance().removeAssignedFireFighter(FireFighterColor.fromString(msg));
+                    FireFighterTurnManager.getInstance().removeAssignedFireFighter(FireFighterColor.fromString(message));
                     break;
                 default:
             }
