@@ -1,8 +1,13 @@
 package com.cs361d.flashpoint.networking;
 
+import com.cs361d.flashpoint.manager.CreateNewGameManager;
+import com.cs361d.flashpoint.manager.DBHandler;
 import com.cs361d.flashpoint.view.BoardChatFragment;
 import com.cs361d.flashpoint.view.ChatScreen;
 import com.cs361d.flashpoint.view.FlashPointGame;
+import netscape.javascript.JSObject;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -52,27 +57,29 @@ public class Client {
                                 * CHATGAME: in-game chat changes
                                 * GAMESTATE: gameState changes
                                 * */
-                                String type = msg.split("-")[0];
-                                String msgToSend = msg.substring(type.length()+1);
 
-                                Commands c = Commands.fromString(type);
+                                JSONParser parser = new JSONParser();
+
+                                JSONObject jsonObject = (JSONObject) parser.parse(msg);
+                                Commands c = Commands.fromString(jsonObject.get("command").toString());
+                                String message = jsonObject.get("message").toString();
                                 switch (c) {
                                     case CHATWAIT:
                                         if (!msg.equals(""))
-                                            ChatScreen.addMessageToGui(msgToSend);
+                                            ChatScreen.addMessageToGui(message);
                                         break;
                                     case CHATGAME:
                                         if (!msg.equals(""))
-                                            BoardChatFragment.addMessageToGui(msgToSend);
+                                            BoardChatFragment.addMessageToGui(message);
                                         break;
                                     case GAMESTATE:
-                                        //TODO
+                                        CreateNewGameManager.loadGameFromString(message);
                                         break;
                                         default:
                                         throw new IllegalArgumentException();
                                 }
 
-                            } catch (IOException e) { e.printStackTrace(); }
+                            } catch (Exception e) { e.printStackTrace(); }
                         }
                     }
                 });

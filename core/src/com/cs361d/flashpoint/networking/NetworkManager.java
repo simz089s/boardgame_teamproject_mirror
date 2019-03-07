@@ -1,11 +1,17 @@
 package com.cs361d.flashpoint.networking;
 
+import com.cs361d.flashpoint.manager.FireFighterTurnManager;
+import com.cs361d.flashpoint.model.BoardElements.FireFighter;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.InetAddress;
 import java.net.URL;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 public class NetworkManager {
 
@@ -39,7 +45,8 @@ public class NetworkManager {
     }
 
     public void sendChatMessage(String msg) {
-        if(getMyPublicIP().equals(SERVER_IP))
+
+        if(getMyIPAddress().equals(SERVER_IP))
             server.sendMsg(msg);
 
         else
@@ -62,6 +69,15 @@ public class NetworkManager {
 
         else
             clientList.get(0).sendMsg("stat-"+msg);
+
+    }
+
+    private String createJSON(String command, String msg){
+
+        JSONObject message = new JSONObject();
+        message.put("command", command);
+        message.put("message", msg);
+        return message.toString();
 
     }
 
