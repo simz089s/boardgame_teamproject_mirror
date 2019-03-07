@@ -15,6 +15,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.cs361d.flashpoint.manager.BoardManager;
 import com.cs361d.flashpoint.manager.DBHandler;
 import com.cs361d.flashpoint.manager.FireFighterTurnManager;
+import com.cs361d.flashpoint.manager.User;
 import com.cs361d.flashpoint.model.BoardElements.Direction;
 
 import java.util.ArrayList;
@@ -71,91 +72,95 @@ public class BoardMovesPanel {
 
 
     public void createMovesAndDirectionsPanel() {
-        // list style
-        listStyleMoveOptions = new List.ListStyle();
-        listStyleMoveOptions.font = Font.get(25); // font size
-        listStyleMoveOptions.fontColorUnselected = Color.BLACK;
-        listStyleMoveOptions.fontColorSelected = Color.BLACK;
-        listStyleMoveOptions.selection = TextureLoader.getDrawable(50, 100, Color.SKY );
 
-        lstMoveOptions = new List<String>(listStyleMoveOptions);
-        lstMoveOptions.setItems(getMovesArrForDisplay());
+        if (User.getInstance().isMyTurn()) {
 
-        // scrollPane style
-        scrollStyle = new ScrollPane.ScrollPaneStyle();
-        scrollStyle.vScrollKnob = TextureLoader.getDrawable(15, 15, Color.DARK_GRAY);
-        scrollStyle.vScroll = TextureLoader.getDrawable(15, 15, Color.LIGHT_GRAY);
+            // list style
+            listStyleMoveOptions = new List.ListStyle();
+            listStyleMoveOptions.font = Font.get(25); // font size
+            listStyleMoveOptions.fontColorUnselected = Color.BLACK;
+            listStyleMoveOptions.fontColorSelected = Color.BLACK;
+            listStyleMoveOptions.selection = TextureLoader.getDrawable(50, 100, Color.SKY);
 
-        scrollPaneMoveOptions = new ScrollPane(lstMoveOptions, scrollStyle);
-        scrollPaneMoveOptions.setOverscroll(false, false);
-        scrollPaneMoveOptions.setFadeScrollBars(false);
-        scrollPaneMoveOptions.setScrollingDisabled(true, false);
-        scrollPaneMoveOptions.setTransform(true);
-        scrollPaneMoveOptions.setScale(1.0f);
-        scrollPaneMoveOptions.setWidth(300);
-        scrollPaneMoveOptions.setHeight(200);
-        //scrollMessage.setBounds(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight() + 100);
-        scrollPaneMoveOptions.setPosition(
-                850,
-                Gdx.graphics.getHeight() - scrollPaneMoveOptions.getHeight() - 150);
+            lstMoveOptions = new List<String>(listStyleMoveOptions);
+            lstMoveOptions.setItems(getMovesArrForDisplay());
 
-        lstMoveOptions.addListener(new InputListener() {
-            @Override
-            public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+            // scrollPane style
+            scrollStyle = new ScrollPane.ScrollPaneStyle();
+            scrollStyle.vScrollKnob = TextureLoader.getDrawable(15, 15, Color.DARK_GRAY);
+            scrollStyle.vScroll = TextureLoader.getDrawable(15, 15, Color.LIGHT_GRAY);
 
-                String moveSelected = lstMoveOptions.getSelected();
+            scrollPaneMoveOptions = new ScrollPane(lstMoveOptions, scrollStyle);
+            scrollPaneMoveOptions.setOverscroll(false, false);
+            scrollPaneMoveOptions.setFadeScrollBars(false);
+            scrollPaneMoveOptions.setScrollingDisabled(true, false);
+            scrollPaneMoveOptions.setTransform(true);
+            scrollPaneMoveOptions.setScale(1.0f);
+            scrollPaneMoveOptions.setWidth(300);
+            scrollPaneMoveOptions.setHeight(200);
+            //scrollMessage.setBounds(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight() + 100);
+            scrollPaneMoveOptions.setPosition(
+                    850,
+                    Gdx.graphics.getHeight() - scrollPaneMoveOptions.getHeight() - 150);
 
-                if (moveSelected.equals("MOVE")) {
-                    removeTableDirectionsPanel();
-                    createDirectionsPanelTable(moveSelected);
-                    stage.addActor(directionTable);
+            lstMoveOptions.addListener(new InputListener() {
+                @Override
+                public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
 
-                } else if (moveSelected.equals("EXTINGUISH")) {
-                    removeTableDirectionsPanel();
-                    createDirectionsPanelTable(moveSelected);
-                    stage.addActor(directionTable);
+                    String moveSelected = lstMoveOptions.getSelected();
 
-                } else if (moveSelected.equals("CHOP")) {
-                    removeTableDirectionsPanel();
-                    createDirectionsPanelTable(moveSelected);
-                    stage.addActor(directionTable);
+                    if (moveSelected.equals("MOVE")) {
+                        removeTableDirectionsPanel();
+                        createDirectionsPanelTable(moveSelected);
+                        stage.addActor(directionTable);
 
-                } else if (moveSelected.equals("MOVE WITH VICTIM")) {
-                    removeTableDirectionsPanel();
-                    createDirectionsPanelTable(moveSelected);
-                    stage.addActor(directionTable);
+                    } else if (moveSelected.equals("EXTINGUISH")) {
+                        removeTableDirectionsPanel();
+                        createDirectionsPanelTable(moveSelected);
+                        stage.addActor(directionTable);
 
-                } else if (moveSelected.equals("INTERACT WITH DOOR")) {
-                    removeTableDirectionsPanel();
-                    createDirectionsPanelTable(moveSelected);
-                    stage.addActor(directionTable);
+                    } else if (moveSelected.equals("CHOP")) {
+                        removeTableDirectionsPanel();
+                        createDirectionsPanelTable(moveSelected);
+                        stage.addActor(directionTable);
 
-                } else if (moveSelected.equals("END TURN")) {
-                    clearAllGameUnits();
-                    try {
-                        fireFighterTurnManager.endTurn();
-                    } catch (IllegalAccessException e) {
-                        e.printStackTrace();
+                    } else if (moveSelected.equals("MOVE WITH VICTIM")) {
+                        removeTableDirectionsPanel();
+                        createDirectionsPanelTable(moveSelected);
+                        stage.addActor(directionTable);
+
+                    } else if (moveSelected.equals("INTERACT WITH DOOR")) {
+                        removeTableDirectionsPanel();
+                        createDirectionsPanelTable(moveSelected);
+                        stage.addActor(directionTable);
+
+                    } else if (moveSelected.equals("END TURN")) {
+                        clearAllGameUnits();
+                        try {
+                            fireFighterTurnManager.endTurn();
+                        } catch (IllegalAccessException e) {
+                            e.printStackTrace();
+                        }
+
+                        redrawGameUnitsOnTile();
+                        gameInfoLabel.setColor(Color.BLACK);
+                        updateGameInfoLabel();
+
+                    } else if (moveSelected.equals("SAVE")) {
+                        DBHandler.saveBoardToDB(BoardManager.getInstance().getGameName());
+                        createDialog("Save", "Your game has been successfully saved.");
+                    } else {
+                        //debugLbl.setText("failed action");
                     }
 
-                    redrawGameUnitsOnTile();
-                    gameInfoLabel.setColor(Color.BLACK);
-                    updateGameInfoLabel();
-
-                }  else if (moveSelected.equals("SAVE")) {
-                    DBHandler.saveBoardToDB(BoardManager.getInstance().getGameName());
-                      createDialog("Save", "Your game has been successfully saved.");
-                }  else {
-                    //debugLbl.setText("failed action");
+                    return true;
                 }
+            });
 
-                return true;
-            }
-        });
+            movesList.add(scrollPaneMoveOptions);
 
-        movesList.add(scrollPaneMoveOptions);
-
-        stage.addActor(scrollPaneMoveOptions);
+            stage.addActor(scrollPaneMoveOptions);
+        }
     }
 
 

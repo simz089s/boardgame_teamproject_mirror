@@ -647,7 +647,9 @@ public class BoardScreen extends FlashPointScreen {
               }
             });
 
-    stage.addActor(btnResume);
+    if (User.getInstance().isMyTurn()){
+      stage.addActor(btnResume);
+    }
   }
 
   private void createSoundButton(){
@@ -773,6 +775,8 @@ public class BoardScreen extends FlashPointScreen {
     }
   }
   public static void redrawBoardEntirely() {
-    game.setScreen(game.boardScreen);
+    clearAllGameUnits();
+    redrawGameUnitsOnTile();
+    updateGameInfoLabel();
   }
 }
