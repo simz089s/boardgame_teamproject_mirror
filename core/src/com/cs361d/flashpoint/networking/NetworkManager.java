@@ -13,7 +13,6 @@ import com.cs361d.flashpoint.view.ChatScreen;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.InetAddress;
@@ -147,6 +146,7 @@ public class NetworkManager {
             JSONObject jsonObject = (JSONObject) parser.parse(msg);
             Commands c = Commands.fromString(jsonObject.get("command").toString());
             String message = jsonObject.get("message").toString();
+            System.out.println(message);
             switch (c) {
                 case CHATWAIT:
                     if (!msg.equals("")) ChatScreen.addMessageToGui(message);
@@ -173,11 +173,11 @@ public class NetworkManager {
                     break;
 
                 case JOINGAME:
-                    JSONArray tilesArr = (JSONArray) jsonObject.get("message");
-                    Iterator<JSONObject> iterator = tilesArr.iterator();
+                    JSONArray tilesArr = (JSONArray) parser.parse(message);
+                    Iterator<String> iterator = tilesArr.iterator();
                     List<FireFighterColor> colorList = new ArrayList<FireFighterColor>();
                     while (iterator.hasNext()) {
-                        colorList.add(FireFighterColor.fromString(iterator.next().toString()));
+                        colorList.add(FireFighterColor.fromString(iterator.next()));
                     }
                     FireFighterTurnManager.getInstance().setNotYetAssigned(colorList);
                     break;
