@@ -4,6 +4,8 @@ package com.cs361d.flashpoint.networking;
 import com.cs361d.flashpoint.view.BoardChatFragment;
 import com.cs361d.flashpoint.view.ChatScreen;
 import com.cs361d.flashpoint.view.FlashPointGame;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -104,24 +106,32 @@ public class Server implements Runnable{
          * CHATGAME: in-game chat changes
          * GAMESTATE: gameState changes
          * */
-        String type = msg.split("-")[0];
-        String msgToSend = msg.substring(type.length()+1);
+        try
+        {
+            JSONParser parser = new JSONParser();
 
-        Commands c = Commands.fromString(type);
-        switch (c) {
-            case CHATWAIT:
-                if (!msg.equals(""))
-                    ChatScreen.addMessageToGui(msgToSend);
-                break;
-            case CHATGAME:
-                if (!msg.equals(""))
-                    BoardChatFragment.addMessageToGui(msgToSend);
-                break;
-            case GAMESTATE:
-                //TODO
-                break;
-            default:
-                throw new IllegalArgumentException();
+            JSONObject jsonObject = (JSONObject) parser.parse(msg);
+            Commands c = Commands.fromString(jsonObject.get("command").toString());
+            String message = jsonObject.get("message").toString();
+            switch (c)
+            {
+                case CHATWAIT:
+                    if (!msg.equals(""))
+                        ChatScreen.addMessageToGui(message);
+                    break;
+                case CHATGAME:
+                    if (!msg.equals(""))
+                        BoardChatFragment.addMessageToGui(message);
+                    break;
+                case GAMESTATE:
+                    //TODO
+                    break;
+                default:
+                    throw new IllegalArgumentException();
+            }
+        }
+        catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
