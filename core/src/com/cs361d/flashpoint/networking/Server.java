@@ -123,7 +123,6 @@ public class Server implements Runnable
                 mc.din.close(); //close client input stream
                 mc.dout.close();//close client output stream
                 mc.s.close();   //close client socket
-                mc.fpg.setScreen(mc.fpg.getLoginScreen());
             }
             ss.close();         //close server socket
 
