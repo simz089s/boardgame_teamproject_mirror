@@ -773,6 +773,8 @@ public class BoardScreen extends FlashPointScreen {
     }
   }
   public static void redrawBoardEntirely() {
-    game.setScreen(game.boardScreen);
+    clearAllGameUnits();
+    redrawGameUnitsOnTile();
+    updateGameInfoLabel();
   }
 }
