@@ -120,11 +120,12 @@ public class Server implements Runnable
         try {
             // Close every client and redirect to login page
             for (ClientHandler mc : Server.clientThreads.values()) {
-                mc.s.close();
-                mc.din.close();
-                mc.dout.close();
+                mc.din.close(); //close client input stream
+                mc.dout.close();//close client output stream
+                mc.s.close();   //close client socket
                 mc.fpg.setScreen(mc.fpg.getLoginScreen());
             }
+            ss.close();         //close server socket
 
         } catch (IOException e) { e.printStackTrace(); }
 

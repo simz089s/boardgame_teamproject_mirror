@@ -185,8 +185,9 @@ public class NetworkManager {
                 case LOADGAME:
                     CreateNewGameManager.loadGameFromString(message);
                     break;
-                case SERVERDISCONNECT:
-                    instance.server.closeServer();
+                case DISCONNECT:
+                    if(instance.getMyPublicIP().equals(SERVER_IP))
+                        instance.server.closeServer(); // disconnect all the clients
                     break;
                     
                 default:
