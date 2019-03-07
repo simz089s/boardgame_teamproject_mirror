@@ -66,7 +66,7 @@ public class DBHandler {
 
 
 
-    public static BoardManager loadBoardFromDB(String fileName) {
+    public static void loadBoardFromDB(String fileName) {
         BoardManager myBoardManager = BoardManager.getInstance();
 
         JSONParser parser = new JSONParser();
@@ -218,8 +218,6 @@ public class DBHandler {
         } catch (ParseException e) {
             e.printStackTrace();
         }
-
-        return myBoardManager;
     }
 
 
@@ -697,6 +695,313 @@ public class DBHandler {
         file.delete();
     }
 
+
+
+
+
+
+    // network
+
+
+
+
+
+    public static void loadBoardFromString(String jsonString) {
+        BoardManager myBoardManager = BoardManager.getInstance();
+
+        JSONParser parser = new JSONParser();
+
+        try {
+
+            JSONObject jsonObject = (JSONObject) parser.parse(jsonString);
+
+            int i = 0;
+            int j = 0;
+            int count = 0;
+
+            JSONObject gameParams = (JSONObject) jsonObject.get("gameParams");
+            String gameName = "" + gameParams.get("gameName");
+            int numVictimsLost = Integer.parseInt("" + gameParams.get("numVictimsLost"));
+            int numVictimsSaved = Integer.parseInt("" + gameParams.get("numVictimsSaved"));
+            int numFalseAlarmRemoved = Integer.parseInt("" + gameParams.get("numFalseAlarmRemoved"));
+            int numDamageLeft = Integer.parseInt("" + gameParams.get("numDamageLeft"));
+
+            JSONArray playersOrderingArr = (JSONArray) gameParams.get("playersOrdering");
+            Iterator<JSONObject> playersOrderingIter = playersOrderingArr.iterator();
+            ArrayList<FireFighterColor> playersColorOrderArr = new ArrayList<FireFighterColor>();
+            while (playersOrderingIter.hasNext()) {
+                playersColorOrderArr.add(FireFighterColor.fromString("" + playersOrderingIter.next()));
+            }
+
+            BoardManager.getInstance().setGameName(gameName);
+            BoardManager.getInstance().setGameAtStart(numFalseAlarmRemoved, numVictimsLost, numVictimsSaved, numDamageLeft);
+
+            // loop array
+            JSONArray tilesArr = (JSONArray) jsonObject.get("tiles");
+            Iterator<JSONObject> iterator = tilesArr.iterator();
+            while (iterator.hasNext()) {
+
+                JSONObject object = iterator.next();
+
+                if (count % 10 == 0 & count != 0){
+                    i ++;
+                    j = 0;
+                }
+
+                // doors
+                JSONObject topDoor = (JSONObject) object.get("top_wall_door");
+                if (Integer.parseInt("" + topDoor.get("status")) > -1){
+                    int health = Integer.parseInt("" + topDoor.get("health"));
+                    if (Integer.parseInt("" + topDoor.get("status")) == 0){
+                        myBoardManager.addDoor(i, j, Direction.TOP, health, false);
+                    } else if (Integer.parseInt("" + topDoor.get("status")) == 1){
+                        myBoardManager.addDoor(i, j, Direction.TOP, health, true);
+                    }
+                }
+
+                JSONObject bottomDoor = (JSONObject) object.get("bottom_wall_door");
+                if (Integer.parseInt("" + bottomDoor.get("status")) > -1){
+                    int health = Integer.parseInt("" + bottomDoor.get("health"));
+                    if (Integer.parseInt("" + bottomDoor.get("status")) == 0){
+                        myBoardManager.addDoor(i, j, Direction.BOTTOM, health, false);
+                    } else if (Integer.parseInt("" + bottomDoor.get("status")) == 1){
+                        myBoardManager.addDoor(i, j, Direction.BOTTOM, health, true);
+                    }
+                }
+
+                JSONObject leftDoor = (JSONObject) object.get("left_wall_door");
+                if (Integer.parseInt("" + leftDoor.get("status")) > - 1){
+                    int health = Integer.parseInt("" + leftDoor.get("health"));
+                    if (Integer.parseInt("" + leftDoor.get("status")) == 0){
+                        myBoardManager.addDoor(i, j, Direction.LEFT, health, false);
+                    } else if (Integer.parseInt("" + leftDoor.get("status")) == 1){
+                        myBoardManager.addDoor(i, j, Direction.LEFT, health, true);
+                    }
+                }
+
+                JSONObject rightDoor = (JSONObject) object.get("right_wall_door");
+                if (Integer.parseInt("" + rightDoor.get("status")) > - 1){
+                    int health = Integer.parseInt("" + rightDoor.get("health"));
+                    if (Integer.parseInt("" + rightDoor.get("status")) == 0){
+                        myBoardManager.addDoor(i, j, Direction.RIGHT, health, false);
+                    } else if (Integer.parseInt("" + rightDoor.get("status")) == 1){
+                        myBoardManager.addDoor(i, j, Direction.RIGHT, health, true);
+                    }
+                }
+
+                // walls
+                if (Integer.parseInt("" + object.get("top_wall")) > -1){
+                    myBoardManager.addWall(i, j, Direction.TOP, Integer.parseInt("" + object.get("top_wall")));
+                }
+
+                if (Integer.parseInt("" + object.get("bottom_wall")) > -1){
+                    myBoardManager.addWall(i, j, Direction.BOTTOM, Integer.parseInt("" + object.get("bottom_wall")));
+                }
+
+                if (Integer.parseInt("" + object.get("left_wall")) > -1){
+                    myBoardManager.addWall(i, j, Direction.LEFT, Integer.parseInt("" + object.get("left_wall")));
+                }
+
+                if (Integer.parseInt("" + object.get("right_wall")) > -1){
+                    myBoardManager.addWall(i, j, Direction.RIGHT, Integer.parseInt("" + object.get("right_wall")));
+                }
+
+                // engine
+                myBoardManager.setCarrierStatus(i, j, CarrierStatus.fromString("" + object.get("engine")));
+
+                // firefighters
+                JSONArray firefightersArr = (JSONArray) object.get("firefighters");
+                if (!firefightersArr.isEmpty()) {
+                    Iterator<JSONObject> firefighterIter = firefightersArr.iterator();
+                    while (firefighterIter.hasNext()) {
+                        JSONObject firefighterParams =  firefighterIter.next();
+                        FireFighterColor fc = FireFighterColor.fromString("" + firefighterParams.get("color"));
+                        int numAP = Integer.parseInt("" + firefighterParams.get("numAP"));
+                        myBoardManager.addFireFighter(i, j, fc, numAP);
+                    }
+                }
+
+                // POI
+
+                JSONObject pointOfInterest = (JSONObject) object.get("POI");
+                int POIStatus = Integer.parseInt("" + pointOfInterest.get("status"));
+                if (POIStatus > -1){
+                    if ((Boolean) pointOfInterest.get("revealed")){
+                        if (POIStatus == 0) {
+                            myBoardManager.addVictim(i, j, true, false, true);
+                        } else if (POIStatus == 1){
+                            myBoardManager.addVictim(i, j, true, false, false);
+                        }
+                    } else {
+                        if (POIStatus == 0) {
+                            myBoardManager.addVictim(i, j, false, false, true);
+                        } else if (POIStatus == 1){
+                            myBoardManager.addVictim(i, j, false, false, false);
+                        }
+                    }
+                }
+
+                myBoardManager.addFireStatus(i, j, FireStatus.fromString("" + object.get("fire_status")));
+
+                j ++;
+                count ++;
+            }
+
+            FireFighterTurnManager.getInstance().setOrder(playersColorOrderArr);
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static String getBoardAsString (){
+
+        BoardManager boardManager = BoardManager.getInstance();
+
+        JSONObject newObj = new JSONObject();
+        JSONArray newTilesList = new JSONArray();
+
+        JSONObject gameParams = new JSONObject();
+        JSONArray playersOrdering = new JSONArray();
+        Iterator<FireFighter> it = FireFighterTurnManager.getInstance().iterator();
+        while(it.hasNext()) {
+            FireFighter f = it.next();
+            playersOrdering.add("" + f.getColor());
+        }
+
+        gameParams.put("gameName", boardManager.getInstance().getGameName());
+        gameParams.put("numVictimsLost", BoardManager.getInstance().getNumVictimDead());
+        gameParams.put("numVictimsSaved", BoardManager.getInstance().getNumVictimSaved());
+        gameParams.put("numFalseAlarmRemoved", BoardManager.getInstance().getNumFalseAlarmRemoved());
+        gameParams.put("numDamageLeft", BoardManager.getInstance().getTotalWallDamageLeft());
+
+        gameParams.put("playersOrdering", playersOrdering);
+
+
+        int count = 0;
+
+        while (count < 80) {
+
+            int i = count / 10;
+            int j = count % 10;
+
+            JSONObject currentTile = new JSONObject();
+
+            currentTile.put("position_id", i + "-" + j);
+
+            // walls
+            currentTile.put("top_wall", boardManager.getTiles()[i][j].getObstacle(Direction.TOP).getHealth());
+            currentTile.put("bottom_wall", boardManager.getTiles()[i][j].getObstacle(Direction.BOTTOM).getHealth());
+            currentTile.put("left_wall", boardManager.getTiles()[i][j].getObstacle(Direction.LEFT).getHealth());
+            currentTile.put("right_wall", boardManager.getTiles()[i][j].getObstacle(Direction.RIGHT).getHealth());
+
+            // firefighters
+            JSONArray newFirefightersList = new JSONArray();
+            if (boardManager.getTiles()[i][j].getFirefighters() != null) {
+                for (FireFighter f : boardManager.getTiles()[i][j].getFirefighters()) {
+                    JSONObject firefighterParams = new JSONObject();
+                    firefighterParams.put("color", f.getColor().toString());
+                    firefighterParams.put("numAP", f.getActionPointsLeft());
+                    newFirefightersList.add(firefighterParams);
+                }
+            }
+
+            currentTile.put("firefighters", newFirefightersList);
+
+            // POI
+            JSONObject pointOfInterestObj = new JSONObject();
+            if (boardManager.getTiles()[i][j].hasPointOfInterest()){
+                if (boardManager.getTiles()[i][j].getVictim().isRevealed()) {
+                    pointOfInterestObj.put("revealed", true);
+                } else {
+                    pointOfInterestObj.put("revealed", false);
+                }
+
+                if (boardManager.getTiles()[i][j].getVictim().isFalseAlarm()){
+                    pointOfInterestObj.put("status", 0);
+                } else if (!boardManager.getTiles()[i][j].getVictim().isFalseAlarm()){
+                    pointOfInterestObj.put("status", 1);
+                }
+
+                currentTile.put("POI", pointOfInterestObj);
+            } else {
+                pointOfInterestObj.put("revealed", false);
+                pointOfInterestObj.put("status", -1);
+                currentTile.put("POI", pointOfInterestObj);
+            }
+
+            // fire_status
+            String fireStatus = boardManager.getTiles()[i][j].getFireStatusString();
+            currentTile.put("fire_status", fireStatus);
+
+            // top door
+            JSONObject topDoorObject = new JSONObject();
+            if (boardManager.getTiles()[i][j].getObstacle(Direction.TOP).isDoor()){
+                topDoorObject.put("health", boardManager.getTiles()[i][j].getObstacle(Direction.TOP).getHealth());
+                int status = boardManager.getTiles()[i][j].getObstacle(Direction.TOP).isOpen() ? 1 : 0;
+                topDoorObject.put("status", status);
+            } else {
+                topDoorObject.put("health", 2);
+                topDoorObject.put("status", -1);
+            }
+
+            currentTile.put("top_wall_door", topDoorObject);
+
+            // bottom door
+            JSONObject bottomDoorObject = new JSONObject();
+            if (boardManager.getTiles()[i][j].getObstacle(Direction.BOTTOM).isDoor()){
+                bottomDoorObject.put("health", boardManager.getTiles()[i][j].getObstacle(Direction.BOTTOM).getHealth());
+                int status = boardManager.getTiles()[i][j].getObstacle(Direction.BOTTOM).isOpen() ? 1 : 0;
+                bottomDoorObject.put("status", status);
+            } else {
+                bottomDoorObject.put("health", 2);
+                bottomDoorObject.put("status", -1);
+            }
+
+            currentTile.put("bottom_wall_door", bottomDoorObject);
+
+            // left door
+            JSONObject leftDoorObject = new JSONObject();
+            if (boardManager.getTiles()[i][j].getObstacle(Direction.LEFT).isDoor()){
+                leftDoorObject.put("health", boardManager.getTiles()[i][j].getObstacle(Direction.LEFT).getHealth());
+                int status = boardManager.getTiles()[i][j].getObstacle(Direction.LEFT).isOpen() ? 1 : 0;
+                leftDoorObject.put("status", status);
+            } else {
+                leftDoorObject.put("health", 2);
+                leftDoorObject.put("status", -1);
+            }
+
+            currentTile.put("left_wall_door", leftDoorObject);
+
+            // right door
+            JSONObject rightDoorObject = new JSONObject();
+            if (boardManager.getTiles()[i][j].getObstacle(Direction.RIGHT).isDoor()){
+                rightDoorObject.put("health", boardManager.getTiles()[i][j].getObstacle(Direction.RIGHT).getHealth());
+                int status = boardManager.getTiles()[i][j].getObstacle(Direction.RIGHT).isOpen() ? 1 : 0;
+                rightDoorObject.put("status", status);
+            } else {
+                rightDoorObject.put("health", 2);
+                rightDoorObject.put("status", -1);
+            }
+
+            currentTile.put("right_wall_door", rightDoorObject);
+
+
+            // engine
+            String carrier = boardManager.getTiles()[i][j].getCarrierStatusString();
+            currentTile.put("engine", carrier);
+
+            newTilesList.add(currentTile);
+            count ++;
+
+        }
+
+        newObj.put("gameParams", gameParams);
+        newObj.put("tiles", newTilesList);
+
+
+        return newObj.toJSONString();
+    }
 
 
     // helper
