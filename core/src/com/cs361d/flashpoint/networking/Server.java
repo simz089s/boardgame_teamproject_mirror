@@ -68,6 +68,8 @@ public class Server implements Runnable
                 // add this client to active clientThreads list
                 clientThreads.put(s.getInetAddress().toString(), clientObserver);
 
+                System.out.println("Client Ip is: " + s.getInetAddress().toString());
+
                 // start the thread for the client.
                 t.start();
 
@@ -89,6 +91,20 @@ public class Server implements Runnable
             updateServerGui(msg); //update your own Gui
 
         } catch (IOException e) { e.printStackTrace(); }
+    }
+
+    public synchronized void sendMsgSpecificClient(String ip, String msg){
+        try {
+            // Get the specific client handler
+            ClientHandler client = clientThreads.get(ip);
+
+            client.dout.writeUTF(msg);
+
+            // updateServerGui(msg);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /* Update GUI of the Server based on sent String*/
