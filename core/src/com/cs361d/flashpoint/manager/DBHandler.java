@@ -181,7 +181,6 @@ public class DBHandler {
                         int numAP = Integer.parseInt("" + firefighterParams.get("numAP"));
                         myBoardManager.addFireFighter(i, j, fc, numAP);
                     }
-
                 }
 
                 // POI
