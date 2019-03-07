@@ -43,51 +43,25 @@ public class Client {
       //                this.ccs = ccs;
       // readMessage thread constantly listening
       Thread readMessage =
-          new Thread(
-              new Runnable() {
-                @Override
-                public void run() {
+          new Thread(new Runnable()
+          {
+              @Override
+              public void run()
+              {
                   while (true) {
-                    try {
-                      // read the message sent to this client
-                      String msg = din.readUTF();
-                      /* Get the command from the string read
-                       * CHATWAIT: waiting screen chat changes
-                       * CHATGAME: in-game chat changes
-                       * GAMESTATE: gameState changes
-                       * */
-
-                      JSONParser parser = new JSONParser();
-
-                      JSONObject jsonObject = (JSONObject) parser.parse(msg);
-                      Commands c = Commands.fromString(jsonObject.get("command").toString());
-                      String message = jsonObject.get("message").toString();
-                      switch (c) {
-                        case CHATWAIT:
-                          if (!msg.equals("")) ChatScreen.addMessageToGui(message);
-                          break;
-                        case CHATGAME:
-                          if (!msg.equals("")) BoardChatFragment.addMessageToGui(message);
-                          break;
-                        case GAMESTATE:
-                          CreateNewGameManager.loadGameFromString(message);
-                          Gdx.app.postRunnable(
-                              new Runnable() {
-                                @Override
-                                public void run() {
-                                  BoardScreen.redrawBoardEntierly();
-                                }
-                              });
-                          break;
-                        default:
+                      String msg = null;
+                      try
+                      {
+                          // read the message sent to this client
+                          msg = din.readUTF();
+                          NetworkManager.ExecuteCommand(msg);
+                      } catch (IOException e)
+                      {
+                          e.printStackTrace();
                       }
-
-                    } catch (Exception e) {
-                      e.printStackTrace();
-                    }
                   }
-                }
-              });
+              }
+          });
 
       readMessage.start();
 

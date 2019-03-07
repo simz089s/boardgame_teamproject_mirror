@@ -106,30 +106,7 @@ public class Server implements Runnable{
          * CHATGAME: in-game chat changes
          * GAMESTATE: gameState changes
          * */
-        try
-        {
-            JSONParser parser = new JSONParser();
-
-            JSONObject jsonObject = (JSONObject) parser.parse(msg);
-            Commands c = Commands.fromString(jsonObject.get("command").toString());
-            String message = jsonObject.get("message").toString();
-            switch (c)
-            {
-                case CHATWAIT:
-                    if (!msg.equals(""))
-                        ChatScreen.addMessageToGui(message);
-                    break;
-                case CHATGAME:
-                    if (!msg.equals(""))
-                        BoardChatFragment.addMessageToGui(message);
-                    break;
-                case GAMESTATE:
-                    //TODO
-                    break;
-                default:
-                    throw new IllegalArgumentException();
-            }
-        }
+        try { NetworkManager.ExecuteCommand(msg);  }
         catch (Exception e) {
             e.printStackTrace();
         }

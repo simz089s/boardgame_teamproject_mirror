@@ -1,11 +1,19 @@
 package com.cs361d.flashpoint.networking;
 
+import com.badlogic.gdx.Gdx;
+import com.cs361d.flashpoint.manager.CreateNewGameManager;
 import com.cs361d.flashpoint.manager.FireFighterTurnManager;
 import com.cs361d.flashpoint.model.BoardElements.FireFighter;
+import com.cs361d.flashpoint.view.BoardChatFragment;
+import com.cs361d.flashpoint.view.BoardScreen;
+import com.cs361d.flashpoint.view.ChatScreen;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 
 import java.io.BufferedReader;
+import java.io.DataInput;
+import java.io.DataInputStream;
 import java.io.InputStreamReader;
 import java.net.InetAddress;
 import java.net.URL;
@@ -123,4 +131,41 @@ public class NetworkManager {
         return hostname;
     }
 
+    public static void ExecuteCommand(String msg) {
+        try {
+            /* Get the command from the string read
+             * CHATWAIT: waiting screen chat changes
+             * CHATGAME: in-game chat changes
+             * GAMESTATE: gameState changes
+             * */
+
+            JSONParser parser = new JSONParser();
+
+            JSONObject jsonObject = (JSONObject) parser.parse(msg);
+            Commands c = Commands.fromString(jsonObject.get("command").toString());
+            String message = jsonObject.get("message").toString();
+            switch (c) {
+                case CHATWAIT:
+                    if (!msg.equals("")) ChatScreen.addMessageToGui(message);
+                    break;
+                case CHATGAME:
+                    if (!msg.equals("")) BoardChatFragment.addMessageToGui(message);
+                    break;
+                case GAMESTATE:
+                    CreateNewGameManager.loadGameFromString(message);
+                    Gdx.app.postRunnable(
+                            new Runnable() {
+                                @Override
+                                public void run() {
+                                    BoardScreen.redrawBoardEntierly();
+                                }
+                            });
+                    break;
+                default:
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }
