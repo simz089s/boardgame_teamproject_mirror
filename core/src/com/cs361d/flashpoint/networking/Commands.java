@@ -17,6 +17,6 @@ public enum Commands {
                 return c;
             }
         }
-        throw new IllegalArgumentException("The string " + text + "does not exist");
+        throw new IllegalArgumentException("The string " + text + " does not exist");
     }
 }
