@@ -45,9 +45,10 @@ public class FireFighterTurnManager implements Iterable<FireFighter> {
   }
 
   public void removeAssignedFireFighter(FireFighterColor c) {
-    if (notYetAssigned.isEmpty() || notYetAssigned.remove(0) != c) {
-      throw new IllegalArgumentException("Cannot remove fireFighterFromList because color does not match" + c.toString());
+    if (notYetAssigned.isEmpty()) {
+      throw new IllegalArgumentException("Cannot remove fireFighterFromList because it is empty");
     }
+    notYetAssigned.remove(c);
   }
 
   public boolean chooseInitialPosition(Tile t) throws IllegalAccessException {
