@@ -3,6 +3,7 @@ package com.cs361d.flashpoint.manager;
 import com.cs361d.flashpoint.model.BoardElements.*;
 import com.cs361d.flashpoint.view.BoardScreen;
 import org.jetbrains.annotations.NotNull;
+import com.cs361d.flashpoint.networking.NetworkManager;
 
 import java.util.*;
 import java.util.List;
@@ -83,6 +84,7 @@ public class FireFighterTurnManager implements Iterable<FireFighter> {
         }
       }
     }
+    NetworkManager.getInstance().sendCommand("gamestate", DBHandler.getBoardAsString());
   }
 
   public void moveWithVictim(Direction d) {

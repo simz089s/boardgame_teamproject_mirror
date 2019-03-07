@@ -15,7 +15,7 @@ import java.util.Iterator;
 
 public class NetworkManager {
 
-    private static NetworkManager instance = null;
+    private static NetworkManager instance = new NetworkManager();
 //    final public String SERVER_IP = getMyIPAddress(); //hardcoded ip for server ******
     final public static String SERVER_IP = "142.157.149.34"; //public ip address
     final public static int SERVER_PORT = 54590;
@@ -30,9 +30,6 @@ public class NetworkManager {
 
     // static method to create instance of Singleton class
     public static NetworkManager getInstance() {
-        if (instance == null)
-            instance = new NetworkManager();
-
         return instance;
     }
 
@@ -44,33 +41,16 @@ public class NetworkManager {
         this.clientList.add(c);
     }
 
-    public void sendChatMessage(String msg) {
-
+    public void sendCommand(String command, String msg) {
+        String jsonMsg = createJSON(command, msg);
         if(getMyIPAddress().equals(SERVER_IP))
-            server.sendMsg(msg);
+            server.sendMsg(jsonMsg);
 
         else
-            clientList.get(0).sendMsg(msg);
+            clientList.get(0).sendMsg(jsonMsg);
 
     }
 
-    public void sendUpdatedGameState(String msg) {
-        if(getMyIPAddress().equals(SERVER_IP))
-            server.sendMsg("game-"+msg);
-
-        else
-            clientList.get(0).sendMsg("game-"+msg);
-    }
-
-
-    public void sendUpdatedStats(String msg) {
-        if(getMyIPAddress().equals(SERVER_IP))
-            server.sendMsg("stat-"+msg);
-
-        else
-            clientList.get(0).sendMsg("stat-"+msg);
-
-    }
 
     private String createJSON(String command, String msg){
 
