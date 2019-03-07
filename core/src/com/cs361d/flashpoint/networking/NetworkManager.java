@@ -47,7 +47,9 @@ public class NetworkManager {
             server.sendMsg(jsonMsg);
 
         else
-            clientList.get(0).sendMsg(jsonMsg);
+            for (Client c : clientList) {
+                c.sendMsg(jsonMsg);
+            }
 
     }
 
