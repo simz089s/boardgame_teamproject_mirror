@@ -17,6 +17,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.List.ListStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.cs361d.flashpoint.networking.Commands;
 import com.cs361d.flashpoint.networking.NetworkManager;
 
 import java.util.ArrayList;
@@ -135,7 +136,7 @@ public class ChatScreen extends FlashPointScreen {
 //                        {
 //                            c.substring(command[0].length()));
 //                        }
-                        myNetwork.sendCommand("chatwait",messageInputed); //send message over network
+                        myNetwork.sendCommand(Commands.CHATWAIT,messageInputed); //send message over network
 //                        msgs.add("Jacques:  " + messageInputed);
 //                        String[] newMsg = msgs.toArray(new String[msgs.size()]);
 //                        lstMsg.setItems(newMsg);

@@ -238,7 +238,7 @@ public class FireFighterTurnManager implements Iterable<FireFighter> {
   }
 
   private void sendChangeToNetwork() {
-    NetworkManager.getInstance().sendCommand(Commands.GAMESTATE.toString(), DBHandler.getBoardAsString());
+    NetworkManager.getInstance().sendCommand(Commands.GAMESTATE, DBHandler.getBoardAsString());
   }
 
   public static void useFireFighterGameManagerAdvanced() {
