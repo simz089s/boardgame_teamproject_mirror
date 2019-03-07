@@ -180,7 +180,7 @@ public class BoardScreen extends FlashPointScreen {
     boardMovesPanel.createMovesAndDirectionsPanel();
 
     // Choose init pos
-    if (!FireFighterTurnManager.getInstance().allAssigned()){
+    if (!FireFighterTurnManager.getInstance().allAssigned() && User.getInstance().isMyTurn()){
       createDialog("Ready, set, go!", "Choose your initial position on the board (green tiles).");
       addFilterOnTileForChooseInitPos();
       removeAllPrevFragments();
