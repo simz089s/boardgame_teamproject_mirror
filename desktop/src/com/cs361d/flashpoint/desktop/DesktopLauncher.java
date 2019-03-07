@@ -12,16 +12,18 @@ public class DesktopLauncher {
 //        new LwjglApplication(new FlashPointGame(), config);
 
         NetworkManager myNetwork = NetworkManager.getInstance(); // Create a single network
+        Server server = null;
 
         //Check if you should connect as a server or a client
         if(myNetwork.getMyPublicIP().equals(myNetwork.SERVER_IP)){
             //start server with its Game instance
-            Server server = new Server(NetworkManager.SERVER_PORT);
+            server = new Server(NetworkManager.SERVER_PORT);
             myNetwork.addServer(server);
             new LwjglApplication(server.serverFPGame, config);
         }
         else {
             Client client = new Client(NetworkManager.SERVER_IP, NetworkManager.SERVER_PORT);
+            server.addNewClient(client);
             myNetwork.addNewClient(client);
             new LwjglApplication(client.clientFPGame, config);
         }

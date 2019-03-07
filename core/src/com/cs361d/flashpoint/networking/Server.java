@@ -94,43 +94,30 @@ public class Server implements Runnable
 
 
     /* Send a message to from server */
-    public synchronized void sendMsg(String msg)
-    {
-        try
-        {
-            for (ClientHandler mc : Server.clients)
-            {
+    public synchronized void sendMsg(String msg) {
+        try {
+            for (ClientHandler mc : Server.clients) {
                 mc.dout.writeUTF(msg);
             }
             updateServerGui(msg); //update your own Gui
 
-        } catch (IOException e)
-        {
-            e.printStackTrace();
-        }
+        } catch (IOException e) { e.printStackTrace(); }
     }
 
     /* Update GUI of the Server based on sent String*/
-    public void updateServerGui(String msg)
-    {
+    public void updateServerGui(String msg) {
         /* Get the command from the string read
          * CHATWAIT: waiting screen chat changes
          * CHATGAME: in-game chat changes
          * GAMESTATE: gameState changes
          * */
-        try
-        {
-            NetworkManager.ExecuteCommand(msg);
-        } catch (Exception e)
-        {
-            e.printStackTrace();
-        }
+        try { NetworkManager.ExecuteCommand(msg); }
+        catch (Exception e) { e.printStackTrace(); }
     }
 
 
     /* Get info about the server's machine */
-    public static String getMyHostName()
-    {
+    public static String getMyHostName() {
         String hostname = null;
         try
         {
@@ -138,11 +125,11 @@ public class Server implements Runnable
             hostname = addr.getHostName();
             System.out.println("Host Name = " + hostname);
 
-        } catch (UnknownHostException e)
-        {
-            e.printStackTrace();
-        }
+        } catch (UnknownHostException e) { e.printStackTrace(); }
 
         return hostname;
+    }
+
+    public void addNewClient(Client client) {
     }
 }
