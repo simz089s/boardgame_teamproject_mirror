@@ -52,7 +52,7 @@ public class BoardScreen extends FlashPointScreen {
   Sprite spriteBG;
   static Stage stage;
 
-  private Music myMusic;
+  private Music myMusic = Gdx.audio.newMusic(Gdx.files.internal("playlist/battle_normal01.mp3"));
 
   static BoardMovesPanel boardMovesPanel;
   static BoardChatFragment boardChatFragment;
@@ -69,6 +69,7 @@ public class BoardScreen extends FlashPointScreen {
 
   BoardScreen(Game pGame) {
     super(pGame);
+    myMusic.setLooping(true);
   }
 
   @Override
@@ -76,9 +77,6 @@ public class BoardScreen extends FlashPointScreen {
 
     // DBHandler.createBoard(MapKind.MAP2); // generate initial map
 
-    // background music
-    myMusic = Gdx.audio.newMusic(Gdx.files.internal("playlist/sound1.mp3"));
-    myMusic.setLooping(true);
     myMusic.play();
 
 

@@ -2,6 +2,7 @@ package com.cs361d.flashpoint.view;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
@@ -56,12 +57,17 @@ public class LobbyScreen extends FlashPointScreen {
 
     Stage stage;
 
+    private Music myMusic = Gdx.audio.newMusic(Gdx.files.internal("playlist/void.mp3"));
+
     LobbyScreen(Game pGame) {
         super(pGame);
+        myMusic.setLooping(true);
     }
 
     @Override
     public void show() {
+
+        myMusic.play();
 
         stage = new Stage();
         batch = new SpriteBatch();
@@ -184,6 +190,7 @@ public class LobbyScreen extends FlashPointScreen {
                 new ClickListener() {
                     @Override
                     public void clicked(InputEvent event, float x, float y) {
+                        myMusic.stop();
                         game.setScreen(game.loginScreen);
                     }
                 });
@@ -212,6 +219,7 @@ public class LobbyScreen extends FlashPointScreen {
                   e.printStackTrace();
               }
             FireFighterTurnManager.getInstance().assignUserToFireFighter(User.getInstance());
+            myMusic.stop();
             game.setScreen(game.boardScreen);
           }
         });
@@ -236,6 +244,7 @@ public class LobbyScreen extends FlashPointScreen {
                             CreateNewGameManager.loadSavedGame(lstLoadGames.getSelected());
                             NetworkManager.getInstance().sendCommand(Commands.LOADGAME, DBHandler.getBoardAsString());
                             FireFighterTurnManager.getInstance().assignUserToFireFighter(User.getInstance());
+                            myMusic.stop();
                             game.setScreen(game.boardScreen);
                         }
                     }
@@ -257,6 +266,7 @@ public class LobbyScreen extends FlashPointScreen {
                 new ClickListener() {
                     @Override
                     public void clicked(InputEvent event, float x, float y) {
+                        myMusic.stop();
                         game.setScreen(game.createGameScreen);
                     }
                 });

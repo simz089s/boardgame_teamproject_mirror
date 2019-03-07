@@ -2,6 +2,7 @@ package com.cs361d.flashpoint.view;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
@@ -44,12 +45,17 @@ public class CreateGameScreen extends FlashPointScreen {
 
     static Stage stage;
 
+    private Music myMusic = Gdx.audio.newMusic(Gdx.files.internal("playlist/tech.mp3"));
+
     CreateGameScreen(Game pGame) {
         super(pGame);
+        myMusic.setLooping(true);
     }
 
     @Override
     public void show() {
+
+        myMusic.play();
 
         batch = new SpriteBatch();
 
@@ -87,6 +93,7 @@ public class CreateGameScreen extends FlashPointScreen {
                 new ClickListener() {
                     @Override
                     public void clicked(InputEvent event, float x, float y) {
+                        myMusic.stop();
                         game.setScreen(game.lobbyScreen);
                     }
                 });
@@ -118,6 +125,7 @@ public class CreateGameScreen extends FlashPointScreen {
               CreateNewGameManager.createNewGame(
                   gameNameField.getText(), numPlayers, mk, Difficulty.FAMILLY);
               FireFighterTurnManager.getInstance().assignUserToFireFighter(User.getInstance());
+              myMusic.stop();
               game.setScreen(game.boardScreen);
 
             } else {
