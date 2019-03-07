@@ -191,8 +191,6 @@ public class NetworkManager {
                         instance.server.closeServer(); // disconnect all the clients
                     break;
                 case GETGAME:
-                    if (!NetworkManager.SERVER_IP.equals(NetworkManager.getInstance().getMyPublicIP()))
-                        NetworkManager.getInstance().sendCommand(Commands.LOADGAME, DBHandler.getBoardAsString());
                     break;
                     
                 default:

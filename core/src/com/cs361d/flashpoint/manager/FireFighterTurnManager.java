@@ -42,9 +42,13 @@ public class FireFighterTurnManager implements Iterable<FireFighter> {
     }
     FireFighterColor c = notYetAssigned.remove(0);
     u.assignFireFighter(c);
+    updateOtherDevicesOfChoice();
+  }
+
+  public void updateOtherDevicesOfChoice() {
     JSONArray array = new JSONArray();
     for (FireFighterColor col : notYetAssigned) {
-        array.add(col.toString());
+      array.add(col.toString());
     }
     NetworkManager.getInstance().sendCommand(Commands.JOINGAME,array.toString());
   }
