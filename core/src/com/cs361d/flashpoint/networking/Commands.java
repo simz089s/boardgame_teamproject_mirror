@@ -8,7 +8,10 @@ public enum Commands {
     SAVE("save"),
     GAMECREATED("gamecreated"),
     JOINGAME("joingame"),
-    ASSIGNFIREFIGHTER("assignedFireFighter");
+    ASSIGNFIREFIGHTER("assignedFireFighter"),
+    SERVERDISCONNECT("serverdisconnect"),
+    CLIENTDISCONNECT("clientdisconnect");
+
     private String text;
 
     Commands(String text) {
