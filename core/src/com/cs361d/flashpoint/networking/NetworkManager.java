@@ -5,8 +5,8 @@ import com.cs361d.flashpoint.manager.*;
 import com.cs361d.flashpoint.model.BoardElements.FireFighterColor;
 import com.cs361d.flashpoint.screen.BoardChatFragment;
 import com.cs361d.flashpoint.screen.BoardScreen;
-import com.cs361d.flashpoint.screen.ChatScreen;
 
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
@@ -16,6 +16,9 @@ import java.net.InetAddress;
 import java.net.URL;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.Iterator;
+
+import static com.cs361d.flashpoint.networking.Commands.GAMESTATE;
 
 public class NetworkManager {
 
@@ -42,7 +45,7 @@ public class NetworkManager {
   public static NetworkManager getInstance() {
     if (instance == null) {
       instance =
-          new NetworkManager(NetworkManager.DEFAULT_SERVER_IP, NetworkManager.DEFAULT_SERVER_PORT);
+              new NetworkManager(NetworkManager.DEFAULT_SERVER_IP, NetworkManager.DEFAULT_SERVER_PORT);
     }
     return instance;
   }
@@ -137,7 +140,7 @@ public class NetworkManager {
     try {
       /* Get the command from the string read
        * CHATWAIT: waiting screen chat changes
-       * CHATGAME: in-game chat changes
+       * ADD_CHAT_MESSAGE: in-game chat changes
        * GAMESTATE: gameState changes
        * */
 
@@ -149,20 +152,41 @@ public class NetworkManager {
       String ip = jsonObject.get("IP").toString();
       System.out.println(message);
       switch (c) {
-        case CHATWAIT:
-          if (!msg.equals("")) ChatScreen.addMessageToGui(message);
-          if (Server.amIServer()) {
-            for (ClientHandler mc : Server.clientThreads.values()) {
-              mc.dout.writeUTF(msg);
-            }
+        case ADD_CHAT_MESSAGE:
+          if (!message.equals("") && Server.amIServer()) {
+            Server.addMessage(message);
+            // TODO if I watch the chat only then refresh
+            BoardChatFragment.addMessageToChat(message);
+          } else {
+            // TODO if I watch the chat only then refresh
+            BoardChatFragment.addMessageToChat(message);
           }
           break;
 
-        case CHATGAME:
-          if (!message.equals("")) BoardChatFragment.addMessageToGui(message);
+        case GET_CHAT_MESSAGES:
           if (Server.amIServer()) {
-            for (ClientHandler mc : Server.clientThreads.values()) {
-              mc.dout.writeUTF(msg);
+            NetworkManager.getInstance().sendCommand(Commands.SEND_CHAT_MESSAGES, "");
+            JSONArray jsa = new JSONArray();
+            Iterator<String> it = Server.iteratorForChat();
+            while (it.hasNext()) {
+              jsa.add(it.next());
+            }
+            Server.getServer()
+                    .sendMsgSpecificClient(ip, Commands.SEND_CHAT_MESSAGES, jsa.toJSONString());
+          }
+          break;
+
+        case SEND_CHAT_MESSAGES:
+          if (Server.amIServer()) {
+            Iterator<String> it = Server.iteratorForChat();
+            while (it.hasNext()) {
+              BoardChatFragment.addMessageToChat(it.next());
+            }
+          } else {
+            JSONArray jsa = (JSONArray) parser.parse(message);
+            for (Object a : jsa) {
+              String newMessage = a.toString();
+              BoardChatFragment.addMessageToChat(newMessage);
             }
           }
           break;
@@ -171,12 +195,12 @@ public class NetworkManager {
           // Transfer the redraw call to the main thread (that has openGL and GDX)
           CreateNewGameManager.loadGameFromString(message);
           Gdx.app.postRunnable(
-              new Runnable() {
-                @Override
-                public void run() {
-                  BoardScreen.redrawBoard();
-                }
-              });
+                  new Runnable() {
+                    @Override
+                    public void run() {
+                      BoardScreen.redrawBoard();
+                    }
+                  });
           if (Server.amIServer()) {
             for (ClientHandler mc : Server.clientThreads.values()) {
               mc.dout.writeUTF(msg);
@@ -223,12 +247,12 @@ public class NetworkManager {
 
         case EXITGAME:
           Gdx.app.postRunnable(
-              new Runnable() {
-                @Override
-                public void run() {
-                  BoardScreen.setLobbyPage();
-                }
-              });
+                  new Runnable() {
+                    @Override
+                    public void run() {
+                      BoardScreen.setLobbyPage();
+                    }
+                  });
           if (Server.amIServer()) {
             Server.getServer().changeLoadedStatus(false);
             for (ClientHandler mc : Server.clientThreads.values()) {
@@ -238,18 +262,21 @@ public class NetworkManager {
           break;
 
         case JOIN:
-          if (Server.amIServer() && !ip.equals(DEFAULT_SERVER_IP) && Server.getServer().getLoadedOrCreatedStatus()) {
+          if (Server.amIServer()
+                  && !ip.equals(DEFAULT_SERVER_IP)
+                  && Server.getServer().getLoadedOrCreatedStatus()) {
             if (!Server.getServer().noMorePlayer()
-                && Server.getServer().getLoadedOrCreatedStatus()) {
+                    && Server.getServer().getLoadedOrCreatedStatus()) {
               Server.getServer().assignFireFighterToClient(ip);
-              Server.getServer()
-                  .sendMsgSpecificClient(ip, Commands.GAMESTATE, DBHandler.getBoardAsString());
+              Server.getServer().sendMsgSpecificClient(ip, GAMESTATE, DBHandler.getBoardAsString());
               Server.getServer().sendMsgSpecificClient(ip, Commands.SETBOARDSCREEN, "");
             }
-          } else if (Server.amIServer() && Server.getServer().getLoadedOrCreatedStatus() && !Server.getServer().isEmpty()) {
-              Server.getServer().assignFireFighterToClient(ip);
-              BoardScreen.setBoardScreen();
-            }
+          } else if (Server.amIServer()
+                  && Server.getServer().getLoadedOrCreatedStatus()
+                  && !Server.getServer().isEmpty()) {
+            Server.getServer().assignFireFighterToClient(ip);
+            BoardScreen.setBoardScreen();
+          }
           break;
 
         case SETBOARDSCREEN:

@@ -36,7 +36,7 @@ public class BoardChatFragment {
     // Get the current network
     NetworkManager myNetwork = NetworkManager.getInstance();
 
-    public static void addMessageToGui(String msg) {
+    public static void addMessageToChat(String msg) {
         messagesArrList.add(msg);
         String[] newMsg = messagesArrList.toArray(new String[messagesArrList.size()]);
         lstMsg.setItems(newMsg);
@@ -106,7 +106,7 @@ public class BoardChatFragment {
 
                     if(!messageInputed.equals("") && !messageInputed.equals(" ")){
                         textFieldMsg.setText("");
-                        myNetwork.sendCommand(Commands.CHATGAME,messageInputed); //send message over network
+                        myNetwork.sendCommand(Commands.ADD_CHAT_MESSAGE,messageInputed); //send message over network
 //                        messagesArrList.add("Y: " + messageInputed);
 //                        String[] newMsg = messagesArrList.toArray(new String[messagesArrList.size()]);
 //                        lstMsg.setItems(newMsg);

@@ -28,6 +28,7 @@ public class Server implements Runnable
     static HashMap<String, ClientHandler> clientThreads = new HashMap<String, ClientHandler>();
     private static Server instance;
     private boolean gameAlreadyLoadedorCreated = false;
+    private static List<String> messages = new ArrayList<String>();
     // counter for clientThreads
     static int i = 0;
 
@@ -53,7 +54,7 @@ public class Server implements Runnable
 
     public static Server getServer() {
         if (instance == null) {
-           throw new IllegalArgumentException("You are not the server you should not ask to access it");
+            throw new IllegalArgumentException("You are not the server you should not ask to access it");
         }
         return instance;
     }
@@ -131,7 +132,7 @@ public class Server implements Runnable
     public void updateServerGui(String msg) {
         /* Get the command from the string read
          * CHATWAIT: waiting screen chat changes
-         * CHATGAME: in-game chat changes
+         * ADD_CHAT_MESSAGE: in-game chat changes
          * GAMESTATE: gameState changes
          * */
         try { NetworkManager.executeCommand(msg); }
@@ -175,7 +176,7 @@ public class Server implements Runnable
             User.getInstance().assignFireFighter(color);
         }
         else {
-           sendMsgSpecificClient(IP, Commands.ASSIGN_FIREFIGHTER, color.toString());
+            sendMsgSpecificClient(IP, Commands.ASSIGN_FIREFIGHTER, color.toString());
         }
     }
     public static boolean amIServer() {
@@ -196,6 +197,15 @@ public class Server implements Runnable
     public boolean isEmpty() {
         return notYetAssigned.isEmpty();
     }
+
+    public static Iterator<String> iteratorForChat() {
+        return messages.iterator();
+    }
+
+    public synchronized static void addMessage(String msg) {
+        messages.add(msg);
+    }
+
     public void changeLoadedStatus(boolean status) {
         gameAlreadyLoadedorCreated = status;
     }
