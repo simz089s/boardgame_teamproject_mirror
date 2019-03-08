@@ -184,6 +184,7 @@ public class LobbyScreen extends FlashPointScreen {
                 new ClickListener() {
                     @Override
                     public void clicked(InputEvent event, float x, float y) {
+                        NetworkManager.getInstance().sendCommand(Commands.DISCONNECT,"");
                         game.setScreen(game.loginScreen);
                     }
                 });
@@ -211,8 +212,7 @@ public class LobbyScreen extends FlashPointScreen {
               catch (Exception e) {
                   e.printStackTrace();
               }
-            FireFighterTurnManager.getInstance().assignUserToFireFighter(User.getInstance());
-            game.setScreen(game.boardScreen);
+              NetworkManager.getInstance().sendCommand(Commands.JOIN,"");
           }
         });
 
@@ -236,7 +236,6 @@ public class LobbyScreen extends FlashPointScreen {
                         if (lstLoadGames.getSelected() != null){
                             CreateNewGameManager.loadSavedGame(lstLoadGames.getSelected());
                             NetworkManager.getInstance().sendCommand(Commands.LOADGAME, DBHandler.getBoardAsString());
-                            FireFighterTurnManager.getInstance().assignUserToFireFighter(User.getInstance());
                             game.setScreen(game.boardScreen);
                         }
                     }

@@ -17,7 +17,7 @@ public class DesktopLauncher {
         //Check if you should connect as a server or a client
         if(myNetwork.getMyPublicIP().equals(myNetwork.SERVER_IP)){
             //start server with its Game instance
-            server = new Server(NetworkManager.SERVER_PORT);
+            server = Server.createServer(NetworkManager.SERVER_PORT);
             myNetwork.addServer(server);
             new LwjglApplication(server.serverFPGame, config);
         }

@@ -556,6 +556,7 @@ public class BoardScreen extends FlashPointScreen {
                 dialog.button("Yes", true); //sends "true" as the result
                 dialog.button("No", false); //sends "false" as the result
                 dialog.show(stage);
+                NetworkManager.getInstance().sendCommand(Commands.EXITGAME, "");
               }
             });
 
@@ -792,5 +793,9 @@ public class BoardScreen extends FlashPointScreen {
 //    boardMovesPanel.createMovesAndDirectionsPanel();
 
     game.setScreen(game.boardScreen);
+  }
+
+  public static void setLobbyPage() {
+    game.setScreen(game.lobbyScreen);
   }
 }
