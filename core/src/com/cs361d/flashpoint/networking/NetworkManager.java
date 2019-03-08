@@ -147,7 +147,6 @@ public class NetworkManager {
        * */
 
       JSONParser parser = new JSONParser();
-
       JSONObject jsonObject = (JSONObject) parser.parse(msg);
       Commands c = Commands.fromString(jsonObject.get("command").toString());
       String message = jsonObject.get("message").toString();
