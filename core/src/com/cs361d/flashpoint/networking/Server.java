@@ -111,6 +111,9 @@ public class Server implements Runnable
     public synchronized void sendMsgSpecificClient(String ip, Commands command, String message){
         try {
             // Get the specific client handler
+            if (ip.equals(NetworkManager.getInstance().getMyPublicIP())) {
+                return;
+            }
             ClientHandler client = clientThreads.get(ip);
 
             String msg = NetworkManager.getInstance().createJSON(command, message);

@@ -222,10 +222,14 @@ public class NetworkManager {
           break;
 
         case JOIN:
-          if (Server.amIServer() && !Server.getServer().noMorePlayer()) {
+          if (Server.amIServer() && !Server.getServer().noMorePlayer() && !ip.equals(SERVER_IP)) {
             Server.getServer()
                 .sendMsgSpecificClient(ip, Commands.GAMESTATE, DBHandler.getBoardAsString());
             Server.getServer().assignFireFighterToClient(ip);
+          }
+          else {
+              Server.getServer().assignFireFighterToClient(ip);
+              BoardScreen.redrawBoardEntirely();
           }
           break;
         default:
