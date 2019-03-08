@@ -80,7 +80,8 @@ public class Server implements Runnable
                 System.out.println("Adding this client to active client list");
 
                 // add this client to active clientThreads list
-                clientThreads.put(s.getInetAddress().toString(), clientObserver);
+                String ip = s.getInetAddress().toString().replace("/","");
+                clientThreads.put(ip, clientObserver);
 
                 System.out.println("Client Ip is: " + s.getInetAddress().toString());
 
@@ -186,6 +187,10 @@ public class Server implements Runnable
             FireFighter f = it.next();
             notYetAssigned.add(f.getColor());
         }
+    }
+
+    public boolean noMorePlayer() {
+        return notYetAssigned.isEmpty();
     }
 
 }

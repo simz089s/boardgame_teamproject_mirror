@@ -218,8 +218,11 @@ public class FireFighterTurnManager implements Iterable<FireFighter> {
 
   public void setOrder(List<FireFighterColor> list) {
     LinkedList<FireFighter> newList = new LinkedList<FireFighter>();
-    if (list.isEmpty()) {
-      return;
+    if (FIREFIGHTERS.isEmpty()) {
+      for (FireFighterColor c : list) {
+        FireFighter f = FireFighter.createFireFighter(c, 4);
+        newList.add(f);
+      }
     }
     else {
       for (FireFighterColor c : list) {
@@ -230,7 +233,7 @@ public class FireFighterTurnManager implements Iterable<FireFighter> {
         }
       }
     }
-    if (FIREFIGHTERS.size() != newList.size()) {
+    if (FIREFIGHTERS.size() != newList.size() && FIREFIGHTERS.size() != 0) {
       throw new IllegalArgumentException("Not all colors of the list existed as fireFighters");
     }
     FIREFIGHTERS = newList;

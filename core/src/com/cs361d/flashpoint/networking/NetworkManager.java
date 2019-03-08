@@ -10,6 +10,8 @@ import com.cs361d.flashpoint.view.ChatScreen;
 import com.cs361d.flashpoint.view.FlashPointGame;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import sun.jvm.hotspot.debugger.win32.coff.COMDATSelectionTypes;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.InetAddress;
@@ -221,11 +223,10 @@ public class NetworkManager {
           break;
 
         case JOIN:
-          if (Server.amIServer()) {
+          if (Server.amIServer() && !Server.getServer().noMorePlayer()) {
             Server.getServer()
                 .sendMsgSpecificClient(ip, Commands.GAMESTATE, DBHandler.getBoardAsString());
-            //                  Server.getServer().sendMsgSpecificClient(ip,
-            // Commands.ASSIGN_FIREFIGHTER, );
+            Server.getServer().assignFireFighterToClient(ip);
           }
           break;
         default:
