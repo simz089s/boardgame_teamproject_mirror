@@ -133,7 +133,7 @@ public class NetworkManager {
     return hostname;
   }
 
-  public static void ExecuteCommand(String msg) {
+  public static void executeCommand(String msg) {
     try {
       /* Get the command from the string read
        * CHATWAIT: waiting screen chat changes
@@ -246,12 +246,10 @@ public class NetworkManager {
                   .sendMsgSpecificClient(ip, Commands.GAMESTATE, DBHandler.getBoardAsString());
               Server.getServer().sendMsgSpecificClient(ip, Commands.SETBOARDSCREEN, "");
             }
-          } else {
-            if (Server.getServer().getLoadedOrCreatedStatus()) {
+          } else if (Server.amIServer() && Server.getServer().getLoadedOrCreatedStatus()) {
               Server.getServer().assignFireFighterToClient(ip);
               BoardScreen.setBoardScreen();
             }
-          }
           break;
 
         case SETBOARDSCREEN:

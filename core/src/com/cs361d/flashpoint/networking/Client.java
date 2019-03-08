@@ -42,7 +42,7 @@ public class Client
                                 {
                                     // read the message sent to this client
                                     msg = din.readUTF();
-                                    NetworkManager.ExecuteCommand(msg);
+                                    NetworkManager.executeCommand(msg);
                                 } catch (IOException e)
                                 {
                                     e.printStackTrace();

@@ -46,7 +46,7 @@ class ClientHandler implements Runnable {
                 messageToSend = newMsg;
                 System.out.println(messageToSend);
 
-                NetworkManager.ExecuteCommand(messageToSend);
+                NetworkManager.executeCommand(messageToSend);
             } catch (IOException e) {
                 e.printStackTrace();
                 try {

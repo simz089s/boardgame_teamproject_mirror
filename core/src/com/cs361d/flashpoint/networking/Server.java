@@ -134,7 +134,7 @@ public class Server implements Runnable
          * CHATGAME: in-game chat changes
          * GAMESTATE: gameState changes
          * */
-        try { NetworkManager.ExecuteCommand(msg); }
+        try { NetworkManager.executeCommand(msg); }
         catch (Exception e) { e.printStackTrace(); }
     }
 
