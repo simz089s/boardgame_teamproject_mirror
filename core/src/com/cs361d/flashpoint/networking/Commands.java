@@ -12,6 +12,7 @@ public enum Commands {
     DISCONNECT("disconnect"),
     JOIN("join"),
     SETBOARDSCREEN("SETBOARDSCREEN"),
+    DISPLAY_MESSAGE("displaymessage"),
     EXITGAME("exitgame");
 
     private String text;

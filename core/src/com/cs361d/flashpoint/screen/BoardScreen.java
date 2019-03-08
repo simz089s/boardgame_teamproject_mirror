@@ -622,7 +622,6 @@ public class BoardScreen extends FlashPointScreen {
               @Override
               public void clicked(InputEvent event, float x, float y) {
                 NetworkManager.getInstance().sendCommand(Commands.GET_CHAT_MESSAGES,"");
-                setSideFragment(Fragment.CHAT);
               }
             });
 

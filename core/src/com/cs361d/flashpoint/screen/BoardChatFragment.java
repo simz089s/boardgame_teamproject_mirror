@@ -39,6 +39,9 @@ public class BoardChatFragment {
 
     public static void addMessageToChat(String msg) {
         messagesArrList.add(msg);
+        lstMsg.clearItems();
+        String[] msgArr = messagesArrList.toArray(new String[messagesArrList.size()]);
+        lstMsg.setItems(msgArr);
     }
 
     // constructor

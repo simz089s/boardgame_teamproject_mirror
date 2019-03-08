@@ -6,6 +6,7 @@ import com.cs361d.flashpoint.model.BoardElements.FireFighterColor;
 import com.cs361d.flashpoint.screen.BoardChatFragment;
 import com.cs361d.flashpoint.screen.BoardScreen;
 
+import com.cs361d.flashpoint.screen.Fragment;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -46,7 +47,7 @@ public class NetworkManager {
   public static NetworkManager getInstance() {
     if (instance == null) {
       instance =
-              new NetworkManager(NetworkManager.DEFAULT_SERVER_IP, NetworkManager.DEFAULT_SERVER_PORT);
+          new NetworkManager(NetworkManager.DEFAULT_SERVER_IP, NetworkManager.DEFAULT_SERVER_PORT);
     }
     return instance;
   }
@@ -165,24 +166,29 @@ public class NetworkManager {
           break;
 
         case GET_CHAT_MESSAGES:
-          if (Server.amIServer()) {
+          if (Server.amIServer() && !ip.equals(DEFAULT_SERVER_IP)) {
             JSONArray jsa = new JSONArray();
             Iterator<String> it = Server.iteratorForChat();
             while (it.hasNext()) {
               jsa.add(it.next());
             }
             Server.getServer()
-                    .sendMsgSpecificClient(ip, Commands.SEND_CHAT_MESSAGES, jsa.toJSONString());
+                .sendMsgSpecificClient(ip, Commands.SEND_CHAT_MESSAGES, jsa.toJSONString());
+          }
+          else if (Server.amIServer()) {
+            BoardScreen.setSideFragment(Fragment.CHAT);
+            Iterator<String> it = Server.iteratorForChat();
+            while (it.hasNext()) {
+              BoardChatFragment.addMessageToChat(it.next());
+            }
           }
           break;
 
         case SEND_CHAT_MESSAGES:
           if (Server.amIServer()) {
-            Iterator<String> it = Server.iteratorForChat();
-            while (it.hasNext()) {
-              BoardChatFragment.addMessageToChat(it.next());
-            }
+
           } else {
+            BoardScreen.setSideFragment(Fragment.CHAT);
             JSONArray jsa = (JSONArray) parser.parse(message);
             for (Object a : jsa) {
               String newMessage = a.toString();
@@ -195,12 +201,12 @@ public class NetworkManager {
           // Transfer the redraw call to the main thread (that has openGL and GDX)
           CreateNewGameManager.loadGameFromString(message);
           Gdx.app.postRunnable(
-                  new Runnable() {
-                    @Override
-                    public void run() {
-                      BoardScreen.redrawBoard();
-                    }
-                  });
+              new Runnable() {
+                @Override
+                public void run() {
+                  BoardScreen.redrawBoard();
+                }
+              });
           if (Server.amIServer()) {
             for (ClientHandler mc : Server.clientThreads.values()) {
               mc.dout.writeUTF(msg);
@@ -247,12 +253,12 @@ public class NetworkManager {
 
         case EXITGAME:
           Gdx.app.postRunnable(
-                  new Runnable() {
-                    @Override
-                    public void run() {
-                      BoardScreen.setLobbyPage();
-                    }
-                  });
+              new Runnable() {
+                @Override
+                public void run() {
+                  BoardScreen.setLobbyPage();
+                }
+              });
           if (Server.amIServer()) {
             Server.getServer().changeLoadedStatus(false);
             for (ClientHandler mc : Server.clientThreads.values()) {
@@ -262,32 +268,42 @@ public class NetworkManager {
           break;
 
         case JOIN:
-          if (Server.amIServer()
-                  && !ip.equals(DEFAULT_SERVER_IP)
-                  && Server.getServer().getLoadedOrCreatedStatus()) {
+          if (Server.amIServer() && !ip.equals(DEFAULT_SERVER_IP)) {
             if (!Server.getServer().noMorePlayer()
-                    && Server.getServer().getLoadedOrCreatedStatus()) {
+                && Server.getServer().getLoadedOrCreatedStatus()) {
               Server.getServer().assignFireFighterToClient(ip);
               Server.getServer().sendMsgSpecificClient(ip, GAMESTATE, DBHandler.getBoardAsString());
               Server.getServer().sendMsgSpecificClient(ip, Commands.SETBOARDSCREEN, "");
             }
+            else {
+
+            }
           } else if (Server.amIServer()
-                  && Server.getServer().getLoadedOrCreatedStatus()
-                  && !Server.getServer().isEmpty()) {
+              && Server.getServer().getLoadedOrCreatedStatus()
+              && !Server.getServer().isEmpty()) {
             Server.getServer().assignFireFighterToClient(ip);
             BoardScreen.setBoardScreen();
           }
-          break;
 
         case SETBOARDSCREEN:
           Gdx.app.postRunnable(
-                  new Runnable() {
-                    @Override
-                    public void run() {
-                      BoardScreen.setBoardScreen();
-                    }
-                  });
-
+              new Runnable() {
+                @Override
+                public void run() {
+                  BoardScreen.setBoardScreen();
+                }
+              });
+          break;
+        case DISPLAY_MESSAGE:
+          final JSONArray jsarr = (JSONArray) parser.parse(message);
+          Gdx.app.postRunnable(
+              new Runnable() {
+                @Override
+                public void run() {
+                  BoardScreen.createDialog(jsarr.get(0).toString(), jsarr.get(1).toString());
+                }
+              });
+          break;
         default:
       }
 
