@@ -1,7 +1,7 @@
 package com.cs361d.flashpoint.manager;
 
 import com.cs361d.flashpoint.model.BoardElements.*;
-import com.cs361d.flashpoint.view.BoardScreen;
+import com.cs361d.flashpoint.screen.BoardScreen;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;

@@ -3,9 +3,9 @@ package com.cs361d.flashpoint.networking;
 import com.badlogic.gdx.Gdx;
 import com.cs361d.flashpoint.manager.*;
 import com.cs361d.flashpoint.model.BoardElements.FireFighterColor;
-import com.cs361d.flashpoint.view.BoardChatFragment;
-import com.cs361d.flashpoint.view.BoardScreen;
-import com.cs361d.flashpoint.view.ChatScreen;
+import com.cs361d.flashpoint.screen.BoardChatFragment;
+import com.cs361d.flashpoint.screen.BoardScreen;
+import com.cs361d.flashpoint.screen.ChatScreen;
 
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -15,15 +15,15 @@ import java.io.InputStreamReader;
 import java.net.InetAddress;
 import java.net.URL;
 import java.net.UnknownHostException;
-import java.rmi.ServerError;
 import java.util.ArrayList;
 
 public class NetworkManager {
 
   private static NetworkManager instance;
-  //    final public String DEFAULT_SERVER_IP = getMyIPAddress(); //CHANGE THIS TO WORK OUTSIDE MCGILL WORLD
- // public static final String DEFAULT_SERVER_IP = "142.157.74.18"; // Simon public ip address
-  public static final String DEFAULT_SERVER_IP = "132.216.235.158"; // Elvric public ip address
+  //    final public String DEFAULT_SERVER_IP = getMyIPAddress(); //CHANGE THIS TO WORK OUTSIDE
+  // MCGILL WORLD
+  // public static final String DEFAULT_SERVER_IP = "142.157.74.18"; // Simon public ip address
+  public static final String DEFAULT_SERVER_IP = "132.216.235.209"; // Elvric public ip address
   // final public static String DEFAULT_SERVER_IP = "142.157.149.34"; // DC public ip
   public static final int DEFAULT_SERVER_PORT = 54590;
 
@@ -35,15 +35,16 @@ public class NetworkManager {
 
   // private constructor restricted to this class itself
   private NetworkManager(String pServerIP, int pServerPort) {
-      serverIP = pServerIP;
+    serverIP = pServerIP;
   }
 
   // static method to create instance of Singleton class
   public static NetworkManager getInstance() {
-      if (instance == null) {
-          instance = new NetworkManager(NetworkManager.DEFAULT_SERVER_IP, NetworkManager.DEFAULT_SERVER_PORT);
-      }
-      return instance;
+    if (instance == null) {
+      instance =
+          new NetworkManager(NetworkManager.DEFAULT_SERVER_IP, NetworkManager.DEFAULT_SERVER_PORT);
+    }
+    return instance;
   }
 
   public void addServer(Server s) {
@@ -173,7 +174,7 @@ public class NetworkManager {
               new Runnable() {
                 @Override
                 public void run() {
-                  BoardScreen.redrawBoardEntirely();
+                  BoardScreen.redrawBoard();
                 }
               });
           if (Server.amIServer()) {
@@ -195,14 +196,14 @@ public class NetworkManager {
 
         case SEND_NEWLY_CREATED_BOARD:
           if (Server.amIServer() && !Server.getServer().getLoadedOrCreatedStatus()) {
-              Server.getServer().changeLoadedStatus(true);
+            Server.getServer().changeLoadedStatus(true);
             CreateNewGameManager.loadGameFromString(message);
             Server.getServer().setFireFighterAssignArray();
             Server.getServer().assignFireFighterToClient(ip);
             if (ip.equals(NetworkManager.getInstance().getMyPublicIP())) {
-                BoardScreen.setBoardScreen();
+              BoardScreen.setBoardScreen();
             } else {
-              Server.getServer().sendMsgSpecificClient(ip,Commands.SETBOARDSCREEN, "");
+              Server.getServer().sendMsgSpecificClient(ip, Commands.SETBOARDSCREEN, "");
             }
           }
           break;
@@ -229,7 +230,7 @@ public class NetworkManager {
                 }
               });
           if (Server.amIServer()) {
-              Server.getServer().changeLoadedStatus(false);
+            Server.getServer().changeLoadedStatus(false);
             for (ClientHandler mc : Server.clientThreads.values()) {
               mc.dout.writeUTF(msg);
             }
@@ -238,18 +239,18 @@ public class NetworkManager {
 
         case JOIN:
           if (Server.amIServer() && !ip.equals(DEFAULT_SERVER_IP)) {
-            if (!Server.getServer().noMorePlayer() && Server.getServer().getLoadedOrCreatedStatus()) {
+            if (!Server.getServer().noMorePlayer()
+                && Server.getServer().getLoadedOrCreatedStatus()) {
               Server.getServer().assignFireFighterToClient(ip);
-              Server.getServer().sendMsgSpecificClient(ip,Commands.SETBOARDSCREEN, "");
+              Server.getServer().sendMsgSpecificClient(ip, Commands.SETBOARDSCREEN, "");
               Server.getServer()
                   .sendMsgSpecificClient(ip, Commands.GAMESTATE, DBHandler.getBoardAsString());
             }
-          }
-          else {
+          } else {
             if (Server.getServer().getLoadedOrCreatedStatus()) {
               Server.getServer().assignFireFighterToClient(ip);
               BoardScreen.setBoardScreen();
-              }
+            }
           }
           break;
 

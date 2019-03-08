@@ -5,7 +5,7 @@ import com.cs361d.flashpoint.manager.FireFighterTurnManager;
 import com.cs361d.flashpoint.manager.User;
 import com.cs361d.flashpoint.model.BoardElements.FireFighter;
 import com.cs361d.flashpoint.model.BoardElements.FireFighterColor;
-import com.cs361d.flashpoint.view.FlashPointGame;
+import com.cs361d.flashpoint.screen.FlashPointGame;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
