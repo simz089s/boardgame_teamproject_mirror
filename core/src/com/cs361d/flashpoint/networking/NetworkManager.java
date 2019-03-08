@@ -165,7 +165,6 @@ public class NetworkManager {
 
         case GET_CHAT_MESSAGES:
           if (Server.amIServer()) {
-            NetworkManager.getInstance().sendCommand(Commands.SEND_CHAT_MESSAGES, "");
             JSONArray jsa = new JSONArray();
             Iterator<String> it = Server.iteratorForChat();
             while (it.hasNext()) {
