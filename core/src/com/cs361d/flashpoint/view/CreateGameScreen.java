@@ -11,6 +11,8 @@ import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.cs361d.flashpoint.manager.*;
+import com.cs361d.flashpoint.networking.Commands;
+import com.cs361d.flashpoint.networking.NetworkManager;
 
 public class CreateGameScreen extends FlashPointScreen {
 
@@ -117,6 +119,8 @@ public class CreateGameScreen extends FlashPointScreen {
 
               CreateNewGameManager.createNewGame(
                   gameNameField.getText(), numPlayers, mk, Difficulty.FAMILLY);
+              NetworkManager.getInstance()
+                  .sendCommand(Commands.SEND_NEWLY_CREATED_BOARD, DBHandler.getBoardAsString());
               game.setScreen(game.boardScreen);
 
             } else {

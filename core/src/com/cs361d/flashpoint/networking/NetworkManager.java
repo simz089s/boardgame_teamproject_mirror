@@ -141,10 +141,20 @@ public class NetworkManager {
       switch (c) {
         case CHATWAIT:
           if (!msg.equals("")) ChatScreen.addMessageToGui(message);
+          if (Server.amIServer()) {
+            for (ClientHandler mc : Server.clientThreads.values()) {
+              mc.dout.writeUTF(msg);
+            }
+          }
           break;
 
         case CHATGAME:
           if (!msg.equals("")) BoardChatFragment.addMessageToGui(message);
+          if (Server.amIServer()) {
+            for (ClientHandler mc : Server.clientThreads.values()) {
+              mc.dout.writeUTF(msg);
+            }
+          }
           break;
 
         case GAMESTATE:
@@ -157,17 +167,27 @@ public class NetworkManager {
                   BoardScreen.redrawBoardEntirely();
                 }
               });
+          if (Server.amIServer()) {
+            for (ClientHandler mc : Server.clientThreads.values()) {
+              mc.dout.writeUTF(msg);
+            }
+          }
           break;
 
         case SAVE:
           CreateNewGameManager.loadGameFromString(message);
           DBHandler.saveBoardToDB(BoardManager.getInstance().getGameName());
+          if (Server.amIServer()) {
+            for (ClientHandler mc : Server.clientThreads.values()) {
+              mc.dout.writeUTF(msg);
+            }
+          }
           break;
 
         case SEND_NEWLY_CREATED_BOARD:
           CreateNewGameManager.loadGameFromString(message);
           if (Server.amIServer()) {
-              Server.getServer().setFireFighterAssigneArray();
+            Server.getServer().setFireFighterAssigneArray();
           }
 
           break;
@@ -184,15 +204,30 @@ public class NetworkManager {
         case ASSIGN_FIREFIGHTER:
           User.getInstance().assignFireFighter(FireFighterColor.fromString(message));
           break;
-          case EXITGAME:
-              Gdx.app.postRunnable(
-                      new Runnable() {
-                          @Override
-                          public void run() {
-                              BoardScreen.setLobbyPage();
-                          }
-                      });
-              break;
+
+        case EXITGAME:
+          Gdx.app.postRunnable(
+              new Runnable() {
+                @Override
+                public void run() {
+                  BoardScreen.setLobbyPage();
+                }
+              });
+          if (Server.amIServer()) {
+            for (ClientHandler mc : Server.clientThreads.values()) {
+              mc.dout.writeUTF(msg);
+            }
+          }
+          break;
+
+        case JOIN:
+          if (Server.amIServer()) {
+            Server.getServer()
+                .sendMsgSpecificClient(ip, Commands.GAMESTATE, DBHandler.getBoardAsString());
+            //                  Server.getServer().sendMsgSpecificClient(ip,
+            // Commands.ASSIGN_FIREFIGHTER, );
+          }
+          break;
         default:
       }
 

@@ -212,7 +212,7 @@ public class LobbyScreen extends FlashPointScreen {
               catch (Exception e) {
                   e.printStackTrace();
               }
-            game.setScreen(game.boardScreen);
+              NetworkManager.getInstance().sendCommand(Commands.JOIN,"");
           }
         });
 

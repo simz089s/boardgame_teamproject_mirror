@@ -47,11 +47,6 @@ class ClientHandler implements Runnable {
                 System.out.println(messageToSend);
 
                 NetworkManager.ExecuteCommand(messageToSend);
-
-                // Send string to every client
-                for (ClientHandler mc : Server.clientThreads.values()) {
-                    mc.dout.writeUTF(messageToSend);
-                }
             } catch (IOException e) {
                 e.printStackTrace();
                 try {
