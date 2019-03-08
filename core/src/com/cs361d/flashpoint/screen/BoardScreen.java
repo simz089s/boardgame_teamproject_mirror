@@ -1422,7 +1422,6 @@ public class BoardScreen extends FlashPointScreen {
           @Override
           public void clicked(InputEvent event, float x, float y) {
             removeAllPrevFragments();
-            NetworkManager.getInstance().sendCommand(Commands.GET_CHAT_MESSAGES,"");
             boardChatFragment.createChatFragment();
           }
         });
@@ -1579,10 +1578,6 @@ public class BoardScreen extends FlashPointScreen {
   public static void setBoardScreen() {
     BGM.stop();
     game.setScreen(game.boardScreen);
-  }
-
-  public static boolean IamOnBoardScreen() {
-    return game.getScreen() == game.boardScreen;
   }
 }
 >>>>>>> 62f1b997978f7697bd075094acebd8b875fe3095:core/src/com/cs361d/flashpoint/screen/BoardScreen.java
