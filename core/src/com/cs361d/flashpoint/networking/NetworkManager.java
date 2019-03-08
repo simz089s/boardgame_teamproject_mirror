@@ -149,17 +149,26 @@ public class NetworkManager {
       JSONParser parser = new JSONParser();
       JSONObject jsonObject = (JSONObject) parser.parse(msg);
       Commands c = Commands.fromString(jsonObject.get("command").toString());
-      String message = jsonObject.get("message").toString();
-      String ip = jsonObject.get("IP").toString();
+      final String message = jsonObject.get("message").toString();
+      final String ip = jsonObject.get("IP").toString();
       System.out.println(message);
       switch (c) {
         case ADD_CHAT_MESSAGE:
           if (!message.equals("") && Server.amIServer()) {
             Server.addMessage(message);
-            // TODO if I watch the chat only then refresh
-            BoardChatFragment.addMessageToChat(message);
+            if (BoardScreen.isChatFragment()) {
+              BoardChatFragment.addMessageToChat(message);
+            }
           } else {
-            // TODO if I watch the chat only then refresh
+            Gdx.app.postRunnable(
+                    new Runnable() {
+                      @Override
+                      public void run() {
+                        if (BoardScreen.isChatFragment()) {
+                          BoardChatFragment.addMessageToChat(message);
+                        }
+                      }
+                    });
             BoardChatFragment.addMessageToChat(message);
           }
           break;
