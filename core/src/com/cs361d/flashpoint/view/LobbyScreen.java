@@ -212,7 +212,6 @@ public class LobbyScreen extends FlashPointScreen {
               catch (Exception e) {
                   e.printStackTrace();
               }
-            FireFighterTurnManager.getInstance().assignUserToFireFighter(User.getInstance());
             game.setScreen(game.boardScreen);
           }
         });
@@ -236,7 +235,6 @@ public class LobbyScreen extends FlashPointScreen {
                         if (lstLoadGames.getSelected() != null ){
                             CreateNewGameManager.loadSavedGame(lstLoadGames.getSelected());
                             NetworkManager.getInstance().sendCommand(Commands.LOADGAME, DBHandler.getBoardAsString());
-                            FireFighterTurnManager.getInstance().assignUserToFireFighter(User.getInstance());
                             game.setScreen(game.boardScreen);
                         }
                     }

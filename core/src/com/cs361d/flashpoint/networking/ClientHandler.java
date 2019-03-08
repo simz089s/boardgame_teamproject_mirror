@@ -8,7 +8,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 
-class ClientHandler extends Server implements Runnable {
+class ClientHandler implements Runnable {
     private String name;
     final DataInputStream din;
     final DataOutputStream dout;
@@ -46,7 +46,7 @@ class ClientHandler extends Server implements Runnable {
                 messageToSend = newMsg;
                 System.out.println(messageToSend);
 
-                this.updateServerGui(messageToSend);
+                NetworkManager.ExecuteCommand(messageToSend);
 
                 // Send string to every client
                 for (ClientHandler mc : Server.clientThreads.values()) {

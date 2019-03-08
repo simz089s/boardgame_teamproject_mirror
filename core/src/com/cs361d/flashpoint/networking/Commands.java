@@ -6,12 +6,13 @@ public enum Commands {
     ADDMSG("addmsg"),
     GAMESTATE("gamestate"),
     SAVE("save"),
-    GAMECREATED("gamecreated"),
-    JOINGAME("joingame"),
-    ASSIGNFIREFIGHTER("assignedFireFighter"),
+    SEND_NEWLY_CREATED_BOARD("gamecreated"),
+    ASSIGN_FIREFIGHTER("assignedFireFighter"),
+    ASK_TO_GET_ASSIGN_FIREFIGHTER("asktogetassignedFireFighter"),
     DISCONNECT("disconnect"),
     LOADGAME("loadgame"),
-    GETGAME("getgame");
+    GETGAME("getgame"),
+    EXITGAME("exitgame");
 
     private String text;
 

@@ -117,7 +117,6 @@ public class CreateGameScreen extends FlashPointScreen {
 
               CreateNewGameManager.createNewGame(
                   gameNameField.getText(), numPlayers, mk, Difficulty.FAMILLY);
-              FireFighterTurnManager.getInstance().assignUserToFireFighter(User.getInstance());
               game.setScreen(game.boardScreen);
 
             } else {
