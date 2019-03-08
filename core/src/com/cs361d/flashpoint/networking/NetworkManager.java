@@ -187,7 +187,13 @@ public class NetworkManager {
           if (Server.amIServer()) {
 
           } else {
-            BoardScreen.setSideFragment(Fragment.CHAT);
+            Gdx.app.postRunnable(
+                    new Runnable() {
+                      @Override
+                      public void run() {
+                        BoardScreen.setSideFragment(Fragment.CHAT);
+                      }
+                    });
             JSONArray jsa = (JSONArray) parser.parse(message);
             for (Object a : jsa) {
               final String newMessage = a.toString();
