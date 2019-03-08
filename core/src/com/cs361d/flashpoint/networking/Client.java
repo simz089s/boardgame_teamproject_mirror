@@ -1,14 +1,12 @@
 package com.cs361d.flashpoint.networking;
 
-import com.cs361d.flashpoint.view.FlashPointGame;
+import com.cs361d.flashpoint.screen.FlashPointGame;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.net.UnknownHostException;
-
-import static java.lang.System.exit;
 
 public class Client
 {
@@ -44,7 +42,7 @@ public class Client
                                 {
                                     // read the message sent to this client
                                     msg = din.readUTF();
-                                    NetworkManager.ExecuteCommand(msg);
+                                    NetworkManager.executeCommand(msg);
                                 } catch (IOException e)
                                 {
                                     e.printStackTrace();

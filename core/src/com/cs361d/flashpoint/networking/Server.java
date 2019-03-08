@@ -5,7 +5,7 @@ import com.cs361d.flashpoint.manager.FireFighterTurnManager;
 import com.cs361d.flashpoint.manager.User;
 import com.cs361d.flashpoint.model.BoardElements.FireFighter;
 import com.cs361d.flashpoint.model.BoardElements.FireFighterColor;
-import com.cs361d.flashpoint.view.FlashPointGame;
+import com.cs361d.flashpoint.screen.FlashPointGame;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -27,6 +27,8 @@ public class Server implements Runnable
     // Vector to store active client threads
     static HashMap<String, ClientHandler> clientThreads = new HashMap<String, ClientHandler>();
     private static Server instance;
+    private boolean gameAlreadyLoadedorCreated = false;
+    private static List<String> messages = new ArrayList<String>();
     // counter for clientThreads
     static int i = 0;
 
@@ -130,10 +132,10 @@ public class Server implements Runnable
     public void updateServerGui(String msg) {
         /* Get the command from the string read
          * CHATWAIT: waiting screen chat changes
-         * CHATGAME: in-game chat changes
+         * ADD_CHAT_MESSAGE: in-game chat changes
          * GAMESTATE: gameState changes
          * */
-        try { NetworkManager.ExecuteCommand(msg); }
+        try { NetworkManager.executeCommand(msg); }
         catch (Exception e) { e.printStackTrace(); }
     }
 
@@ -181,7 +183,8 @@ public class Server implements Runnable
         return instance != null;
     }
 
-    public void setFireFighterAssigneArray() {
+    public void setFireFighterAssignArray() {
+        notYetAssigned.clear();
         Iterator<FireFighter> it = FireFighterTurnManager.getInstance().iterator();
         if (!it.hasNext()) {
             throw new IllegalArgumentException("Cannot call this function if the game board has not been initialized");
@@ -191,7 +194,24 @@ public class Server implements Runnable
             notYetAssigned.add(f.getColor());
         }
     }
+    public boolean isEmpty() {
+        return notYetAssigned.isEmpty();
+    }
 
+    public static Iterator<String> iteratorForChat() {
+        return messages.iterator();
+    }
+
+    public synchronized static void addMessage(String msg) {
+        messages.add(msg);
+    }
+
+    public void changeLoadedStatus(boolean status) {
+        gameAlreadyLoadedorCreated = status;
+    }
+    public boolean getLoadedOrCreatedStatus() {
+        return gameAlreadyLoadedorCreated;
+    }
     public boolean noMorePlayer() {
         return notYetAssigned.isEmpty();
     }

@@ -2,7 +2,7 @@ package com.cs361d.flashpoint.manager;
 
 import com.cs361d.flashpoint.model.BoardElements.*;
 import com.cs361d.flashpoint.networking.Commands;
-import com.cs361d.flashpoint.view.BoardScreen;
+import com.cs361d.flashpoint.screen.BoardScreen;
 import org.jetbrains.annotations.NotNull;
 import com.cs361d.flashpoint.networking.NetworkManager;
 import java.util.*;
@@ -13,8 +13,7 @@ public class FireFighterTurnManager implements Iterable<FireFighter> {
   protected final int MAX_NUMBER_OF_PLAYERS = 6;
   protected LinkedList<FireFighter> FIREFIGHTERS = new LinkedList<FireFighter>();
   protected boolean allAssigned = false;
-  protected static FireFighterTurnManager instance =
-      new FireFighterTurnManager();
+  protected static FireFighterTurnManager instance = new FireFighterTurnManager();
 
   public static FireFighterTurnManager getInstance() {
     return instance;
@@ -32,11 +31,12 @@ public class FireFighterTurnManager implements Iterable<FireFighter> {
 
   public boolean chooseInitialPosition(Tile t) throws IllegalAccessException {
     FireFighter f = FIREFIGHTERS.removeFirst();
+    FIREFIGHTERS.addLast(f);
     if (f.getTile() != null) {
-        throw new IllegalAccessException("The FireFighter has already been assigned a tile");
+      throw new IllegalAccessException("The FireFighter has already been assigned a tile");
     }
     f.setTile(t);
-    FIREFIGHTERS.addLast(f);
+    sendChangeToNetwork();
     return FIREFIGHTERS.getFirst().getTile() != null;
   }
 
@@ -58,15 +58,15 @@ public class FireFighterTurnManager implements Iterable<FireFighter> {
   public void endTurn() throws IllegalAccessException {
 
     FireFighter fireFighter = getCurrentFireFighter();
-    if(!fireFighter.getTile().hasFire()) {
+    if (!fireFighter.getTile().hasFire()) {
       FireFighter last = FIREFIGHTERS.removeFirst();
       last.resetActionPoints();
       FIREFIGHTERS.addLast(last);
       BoardManager.getInstance().endTurnFireSpread();
       sendChangeToNetwork();
-    }
-    else {
-      BoardScreen.createDialog("Cannot end turn", "You cannot end turn as you are currently on a tile with fire");
+    } else {
+      BoardScreen.createDialog(
+          "Cannot end turn", "You cannot end turn as you are currently on a tile with fire");
     }
   }
 
@@ -105,9 +105,9 @@ public class FireFighterTurnManager implements Iterable<FireFighter> {
   public void chopWall(Direction d) {
 
     // Don't let him chop wall if ap < 3
-    if((getCurrentFireFighter().getTile().hasFire()) && (getCurrentFireFighter().getActionPointsLeft() < 3))
-      return;
-    
+    if ((getCurrentFireFighter().getTile().hasFire())
+        && (getCurrentFireFighter().getActionPointsLeft() < 3)) return;
+
     Obstacle o = getCurrentFireFighter().getTile().getObstacle(d);
     if (o.isDoor()) {
       return;
@@ -124,8 +124,8 @@ public class FireFighterTurnManager implements Iterable<FireFighter> {
   public void interactWithDoor(Direction d) {
 
     // Don't let him interact with door if ap < 2
-    if((getCurrentFireFighter().getTile().hasFire()) && (getCurrentFireFighter().getActionPointsLeft() < 2))
-      return;
+    if ((getCurrentFireFighter().getTile().hasFire())
+        && (getCurrentFireFighter().getActionPointsLeft() < 2)) return;
 
     Obstacle o = getCurrentFireFighter().getTile().getObstacle(d);
     if (!o.isDoor()) {
@@ -143,13 +143,15 @@ public class FireFighterTurnManager implements Iterable<FireFighter> {
   public void extinguishFire(Direction d) {
 
     // Don't let him extenguish another Tile's fire or smoke if ap < 2
-    if((getCurrentFireFighter().getTile().hasFire()) && (getCurrentFireFighter().getActionPointsLeft() < 2) && (!d.equals(Direction.NODIRECTION)))
-      return;
+    if ((getCurrentFireFighter().getTile().hasFire())
+        && (getCurrentFireFighter().getActionPointsLeft() < 2)
+        && (!d.equals(Direction.NODIRECTION))) return;
 
     Tile tileToExtinguish = getCurrentFireFighter().getTile().getAdjacentTile(d);
     if (tileToExtinguish == null) {
       return;
-    } else if (tileToExtinguish.hasNoFireAndNoSmoke() || getCurrentFireFighter().getTile().hasObstacle(d)) {
+    } else if (tileToExtinguish.hasNoFireAndNoSmoke()
+        || getCurrentFireFighter().getTile().hasObstacle(d)) {
       return;
     }
     if (getCurrentFireFighter().extinguishAP()) {
@@ -170,7 +172,7 @@ public class FireFighterTurnManager implements Iterable<FireFighter> {
 
     // Don't allow a move if ap < 3 and moving into fire
     Tile t = getCurrentFireFighter().getTile().getAdjacentTile(d);
-    if(t != null && t.hasFire() && (getCurrentFireFighter().getActionPointsLeft() < 3))
+    if (t != null && t.hasFire() && (getCurrentFireFighter().getActionPointsLeft() < 3))
       return false;
 
     Tile currentTile = getCurrentFireFighter().getTile();
@@ -207,7 +209,8 @@ public class FireFighterTurnManager implements Iterable<FireFighter> {
     if (i > 0 || i > BoardManager.ROWS - 2 || j > 0 || j > BoardManager.COLUMNS - 2) {
       return;
     }
-    // if the fireFighter already had a tile that means it was already one the board so we cannot place it initially.
+    // if the fireFighter already had a tile that means it was already one the board so we cannot
+    // place it initially.
     if (f.getTile() != null) {
       return;
     }
@@ -218,23 +221,9 @@ public class FireFighterTurnManager implements Iterable<FireFighter> {
 
   public void setOrder(List<FireFighterColor> list) {
     LinkedList<FireFighter> newList = new LinkedList<FireFighter>();
-    if (FIREFIGHTERS.isEmpty()) {
-      for (FireFighterColor c : list) {
-        FireFighter f = FireFighter.createFireFighter(c, 4);
-        newList.add(f);
-      }
-    }
-    else {
-      for (FireFighterColor c : list) {
-        for (FireFighter f : FIREFIGHTERS) {
-          if (f.getColor() == c) {
-            newList.add(f);
-          }
-        }
-      }
-    }
-    if (FIREFIGHTERS.size() != newList.size() && FIREFIGHTERS.size() != 0) {
-      throw new IllegalArgumentException("Not all colors of the list existed as fireFighters");
+    for (FireFighterColor c : list) {
+      FireFighter f = FireFighter.getFireFighter(c);
+      newList.add(f);
     }
     FIREFIGHTERS = newList;
   }
@@ -244,10 +233,11 @@ public class FireFighterTurnManager implements Iterable<FireFighter> {
   }
 
   public static void useFireFighterGameManagerAdvanced() {
-      instance = new FireFighterTurnManagerAdvance();
+    instance = new FireFighterTurnManagerAdvance();
   }
+
   public static void useFireFighterGameManagerFamily() {
-      instance = new FireFighterTurnManager();
+    instance = new FireFighterTurnManager();
   }
 
   @NotNull

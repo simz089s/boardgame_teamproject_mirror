@@ -2,7 +2,6 @@ package com.cs361d.flashpoint.manager;
 
 import com.cs361d.flashpoint.model.BoardElements.FireStatus;
 import com.cs361d.flashpoint.model.BoardElements.Tile;
-import com.cs361d.flashpoint.view.BoardScreen;
 
 import java.util.ArrayList;
 import java.util.Iterator;
