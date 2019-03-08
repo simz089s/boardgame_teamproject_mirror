@@ -464,9 +464,9 @@ public class BoardScreen extends FlashPointScreen {
             FireFighterTurnManager.getInstance().getCurrentFireFighter().getColor();
     gameInfoLabel =
             new Label(
-                    "Player: "
+                    "You: "
                             + User.getInstance().getName()
-                            + "\nPlaying Color: "
+                            + "\nYour Color: "
                             + User.getInstance().getColor()
                             + "\nCurrent turn: "
                             + color
@@ -475,7 +475,7 @@ public class BoardScreen extends FlashPointScreen {
                     skinUI);
     gameInfoLabel.setFontScale(1.2f);
     gameInfoLabel.setColor(Color.BLACK);
-    gameInfoLabel.setPosition(850, Gdx.graphics.getHeight() - 100);
+    gameInfoLabel.setPosition(850, Gdx.graphics.getHeight() - 130);
 
     stage.addActor(gameInfoLabel);
   }
