@@ -26,8 +26,8 @@ public class NetworkManager {
 
     private static NetworkManager instance;
 //    final public String DEFAULT_SERVER_IP = getMyIPAddress(); //CHANGE THIS TO WORK OUTSIDE MCGILL WORLD
-    final public static String DEFAULT_SERVER_IP = "142.157.74.18"; //Simon public ip address
-//    final public static String DEFAULT_SERVER_IP = "142.157.67.193"; //Elvric public ip address
+//    final public static String DEFAULT_SERVER_IP = "142.157.74.18"; //Simon public ip address
+    final public static String DEFAULT_SERVER_IP = "142.157.67.193"; //Elvric public ip address
     //final public static String DEFAULT_SERVER_IP = "142.157.149.34"; // DC public ip
     final public static int DEFAULT_SERVER_PORT = 54590;
 
