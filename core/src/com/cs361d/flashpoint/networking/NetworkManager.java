@@ -190,12 +190,13 @@ public class NetworkManager {
             BoardScreen.setSideFragment(Fragment.CHAT);
             JSONArray jsa = (JSONArray) parser.parse(message);
             for (Object a : jsa) {
-              String newMessage = a.toString();
+              final String newMessage = a.toString();
               Gdx.app.postRunnable(
                   new Runnable() {
                     @Override
                     public void run() {
-                      BoardChatFragment.addMessageToChat(newMessage);
+                      final String msg = newMessage;
+                      BoardChatFragment.addMessageToChat(msg);
                     }
                   });
             }
