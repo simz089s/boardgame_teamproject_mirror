@@ -7,10 +7,8 @@ import com.cs361d.flashpoint.view.BoardChatFragment;
 import com.cs361d.flashpoint.view.BoardScreen;
 import com.cs361d.flashpoint.view.ChatScreen;
 
-import com.cs361d.flashpoint.view.FlashPointGame;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-import sun.jvm.hotspot.debugger.win32.coff.COMDATSelectionTypes;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -21,22 +19,30 @@ import java.util.ArrayList;
 
 public class NetworkManager {
 
-  private static NetworkManager instance = new NetworkManager();
-  //    final public String SERVER_IP = getMyIPAddress(); //CHANGE THIS TO WORK OUTSIDE MCGILL WORLD
-  public static final String SERVER_IP = "142.157.67.193"; // Elvric public ip address
-  // final public static String SERVER_IP = "142.157.149.34"; // DC public ip
-  public static final int SERVER_PORT = 54590;
+  private static NetworkManager instance;
+  //    final public String DEFAULT_SERVER_IP = getMyIPAddress(); //CHANGE THIS TO WORK OUTSIDE MCGILL WORLD
+  public static final String DEFAULT_SERVER_IP = "142.157.74.18"; // Simon public ip address
+//  public static final String DEFAULT_SERVER_IP = "142.157.67.193"; // Elvric public ip address
+  // final public static String DEFAULT_SERVER_IP = "142.157.149.34"; // DC public ip
+  public static final int DEFAULT_SERVER_PORT = 54590;
+
+  private String serverIP;
 
   // variable of type String
   public Server server;
   public ArrayList<Client> clientList = new ArrayList<Client>();
 
   // private constructor restricted to this class itself
-  private NetworkManager() {}
+  private NetworkManager(String pServerIP, int pServerPort) {
+      serverIP = pServerIP;
+  }
 
   // static method to create instance of Singleton class
   public static NetworkManager getInstance() {
-    return instance;
+      if (instance == null) {
+          instance = new NetworkManager(NetworkManager.DEFAULT_SERVER_IP, NetworkManager.DEFAULT_SERVER_PORT);
+      }
+      return instance;
   }
 
   public void addServer(Server s) {
@@ -49,7 +55,7 @@ public class NetworkManager {
 
   public void sendCommand(Commands command, String msg) {
     String jsonMsg = createJSON(command, msg);
-    if (getMyPublicIP().equals(SERVER_IP)) server.sendMsg(jsonMsg);
+    if (getMyPublicIP().equals(DEFAULT_SERVER_IP)) server.sendMsg(jsonMsg);
     else
       for (Client c : clientList) {
         c.sendMsg(jsonMsg);
@@ -195,7 +201,7 @@ public class NetworkManager {
           break;
 
         case DISCONNECT:
-          if (instance.getMyPublicIP().equals(SERVER_IP))
+          if (instance.getMyPublicIP().equals(DEFAULT_SERVER_IP))
             instance.server.closeServer(); // disconnect all the clients
           break;
 
@@ -223,7 +229,7 @@ public class NetworkManager {
           break;
 
         case JOIN:
-          if (Server.amIServer() && !Server.getServer().noMorePlayer() && !ip.equals(SERVER_IP)) {
+          if (Server.amIServer() && !Server.getServer().noMorePlayer() && !ip.equals(DEFAULT_SERVER_IP)) {
             Server.getServer()
                 .sendMsgSpecificClient(ip, Commands.GAMESTATE, DBHandler.getBoardAsString());
             Server.getServer().assignFireFighterToClient(ip);
