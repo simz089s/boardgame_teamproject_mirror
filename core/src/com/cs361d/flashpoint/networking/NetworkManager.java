@@ -15,6 +15,7 @@ import java.io.InputStreamReader;
 import java.net.InetAddress;
 import java.net.URL;
 import java.net.UnknownHostException;
+import java.rmi.ServerError;
 import java.util.ArrayList;
 
 public class NetworkManager {
@@ -22,7 +23,7 @@ public class NetworkManager {
   private static NetworkManager instance;
   //    final public String DEFAULT_SERVER_IP = getMyIPAddress(); //CHANGE THIS TO WORK OUTSIDE MCGILL WORLD
  // public static final String DEFAULT_SERVER_IP = "142.157.74.18"; // Simon public ip address
-  public static final String DEFAULT_SERVER_IP = "132.216.232.133"; // Elvric public ip address
+  public static final String DEFAULT_SERVER_IP = "132.216.232.127"; // Elvric public ip address
   // final public static String DEFAULT_SERVER_IP = "142.157.149.34"; // DC public ip
   public static final int DEFAULT_SERVER_PORT = 54590;
 
@@ -193,9 +194,17 @@ public class NetworkManager {
           break;
 
         case SEND_NEWLY_CREATED_BOARD:
-          if (Server.amIServer()) {
+          if (Server.amIServer() && !Server.getServer().getLoadedOrCreatedStatus()) {
+              Server.getServer().changeLoadedStatus(true);
             CreateNewGameManager.loadGameFromString(message);
             Server.getServer().setFireFighterAssignArray();
+            Server.getServer().assignFireFighterToClient(ip);
+            if (ip.equals(NetworkManager.getInstance().getMyPublicIP())) {
+                BoardScreen.setBoardScreen();
+            } else {
+              Server.getServer()
+                  .sendMsgSpecificClient(ip, Commands.GAMESTATE, DBHandler.getBoardAsString());
+            }
           }
           break;
 
@@ -221,6 +230,7 @@ public class NetworkManager {
                 }
               });
           if (Server.amIServer()) {
+              Server.getServer().changeLoadedStatus(false);
             for (ClientHandler mc : Server.clientThreads.values()) {
               mc.dout.writeUTF(msg);
             }
@@ -228,16 +238,21 @@ public class NetworkManager {
           break;
 
         case JOIN:
-          if (Server.amIServer() && !Server.getServer().noMorePlayer() && !ip.equals(DEFAULT_SERVER_IP)) {
-            Server.getServer()
-                .sendMsgSpecificClient(ip, Commands.GAMESTATE, DBHandler.getBoardAsString());
-            Server.getServer().assignFireFighterToClient(ip);
+          if (Server.amIServer() && !ip.equals(DEFAULT_SERVER_IP)) {
+            if (!Server.getServer().noMorePlayer() && Server.getServer().getLoadedOrCreatedStatus()) {
+              Server.getServer().assignFireFighterToClient(ip);
+              Server.getServer()
+                  .sendMsgSpecificClient(ip, Commands.GAMESTATE, DBHandler.getBoardAsString());
+            }
           }
           else {
+            if (Server.getServer().getLoadedOrCreatedStatus()) {
               Server.getServer().assignFireFighterToClient(ip);
-              BoardScreen.redrawBoardEntirely();
+              BoardScreen.setBoardScreen();
+              }
           }
           break;
+
         default:
       }
 

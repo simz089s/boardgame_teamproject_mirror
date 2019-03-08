@@ -27,6 +27,7 @@ public class Server implements Runnable
     // Vector to store active client threads
     static HashMap<String, ClientHandler> clientThreads = new HashMap<String, ClientHandler>();
     private static Server instance;
+    private boolean gameAlreadyLoadedorCreated = false;
     // counter for clientThreads
     static int i = 0;
 
@@ -193,6 +194,12 @@ public class Server implements Runnable
         }
     }
 
+    public void changeLoadedStatus(boolean status) {
+        gameAlreadyLoadedorCreated = status;
+    }
+    public boolean getLoadedOrCreatedStatus() {
+        return gameAlreadyLoadedorCreated;
+    }
     public boolean noMorePlayer() {
         return notYetAssigned.isEmpty();
     }

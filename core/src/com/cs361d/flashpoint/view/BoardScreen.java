@@ -778,4 +778,8 @@ public class BoardScreen extends FlashPointScreen {
     BGM.stop();
     game.setScreen(game.lobbyScreen);
   }
+  public static void setBoardScreen() {
+    BGM.stop();
+    game.setScreen(game.boardScreen);
+  }
 }

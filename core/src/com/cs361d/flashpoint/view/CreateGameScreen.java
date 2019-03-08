@@ -128,14 +128,7 @@ public class CreateGameScreen extends FlashPointScreen {
                   gameNameField.getText(), numPlayers, mk, Difficulty.FAMILLY);
               NetworkManager.getInstance()
                   .sendCommand(Commands.SEND_NEWLY_CREATED_BOARD, DBHandler.getBoardAsString());
-              NetworkManager.getInstance().sendCommand(Commands.ASK_TO_GET_ASSIGN_FIREFIGHTER, "");
-                try {
-                    Thread.sleep(100);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
                 BGM.stop();
-                game.setScreen(game.boardScreen);
 
             } else {
               createDialog("Warning", "Invalid or empty game name!");
