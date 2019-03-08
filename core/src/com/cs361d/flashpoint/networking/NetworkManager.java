@@ -10,7 +10,6 @@ import com.cs361d.flashpoint.view.ChatScreen;
 import com.cs361d.flashpoint.view.FlashPointGame;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-import sun.jvm.hotspot.debugger.win32.coff.COMDATSelectionTypes;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
