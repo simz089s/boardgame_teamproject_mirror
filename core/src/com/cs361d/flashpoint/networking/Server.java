@@ -181,7 +181,8 @@ public class Server implements Runnable
         return instance != null;
     }
 
-    public void setFireFighterAssigneArray() {
+    public void setFireFighterAssignArray() {
+        notYetAssigned.clear();
         Iterator<FireFighter> it = FireFighterTurnManager.getInstance().iterator();
         if (!it.hasNext()) {
             throw new IllegalArgumentException("Cannot call this function if the game board has not been initialized");

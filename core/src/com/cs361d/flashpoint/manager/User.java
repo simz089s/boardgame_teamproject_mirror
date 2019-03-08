@@ -26,6 +26,9 @@ public class User {
         }
     }
 
+    public FireFighterColor getColor() {
+        return myColor;
+    }
     public String getName() {
         return name;
     }

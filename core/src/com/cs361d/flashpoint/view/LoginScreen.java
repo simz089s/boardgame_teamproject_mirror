@@ -16,6 +16,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.cs361d.flashpoint.manager.User;
 import com.cs361d.flashpoint.networking.NetworkManager;
 
 public class LoginScreen extends FlashPointScreen {
@@ -229,7 +230,7 @@ public class LoginScreen extends FlashPointScreen {
                         if (usr.isEmpty() || pwd.isEmpty()){
                             errorMsgLabel.setText("Error: empty fields");
                         } else {
-
+                            User.getInstance().setName(usr);
                             game.setScreen(game.lobbyScreen);
                         }
                     }
