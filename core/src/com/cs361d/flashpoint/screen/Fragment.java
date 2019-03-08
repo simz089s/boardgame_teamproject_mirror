@@ -3,6 +3,7 @@ package com.cs361d.flashpoint.screen;
 public enum Fragment {
     CHEATSHEET("cheat_sheep"),
     STATS("stats"),
+    EMPTY("empty"),
     CHAT("chat");
 
     private String text;

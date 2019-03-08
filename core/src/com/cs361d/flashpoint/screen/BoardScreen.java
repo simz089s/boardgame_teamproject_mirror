@@ -69,7 +69,7 @@ public class BoardScreen extends FlashPointScreen {
   TextButton btnStats;
   ImageButton btnMusicSound;
 
-  static Fragment currentFragment = Fragment.CHAT;
+  static Fragment currentFragment = Fragment.EMPTY;
 
   BoardScreen(Game pGame) {
     super(pGame);
