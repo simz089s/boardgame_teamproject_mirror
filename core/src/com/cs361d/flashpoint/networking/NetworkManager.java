@@ -242,9 +242,9 @@ public class NetworkManager {
             if (!Server.getServer().noMorePlayer()
                 && Server.getServer().getLoadedOrCreatedStatus()) {
               Server.getServer().assignFireFighterToClient(ip);
-              Server.getServer().sendMsgSpecificClient(ip, Commands.SETBOARDSCREEN, "");
               Server.getServer()
                   .sendMsgSpecificClient(ip, Commands.GAMESTATE, DBHandler.getBoardAsString());
+              Server.getServer().sendMsgSpecificClient(ip, Commands.SETBOARDSCREEN, "");
             }
           } else {
             if (Server.getServer().getLoadedOrCreatedStatus()) {
