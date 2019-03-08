@@ -553,11 +553,6 @@ public class BoardScreen extends FlashPointScreen {
                     }
                   }
                 };
-
-            dialog.text("Are you sure you want to quit?");
-            dialog.button("Yes", true); // sends "true" as the result
-            dialog.button("No", false); // sends "false" as the result
-            dialog.show(stage);
             NetworkManager.getInstance().sendCommand(Commands.EXITGAME, "");
           }
         });

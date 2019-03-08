@@ -238,7 +238,7 @@ public class NetworkManager {
           break;
 
         case JOIN:
-          if (Server.amIServer() && !ip.equals(DEFAULT_SERVER_IP)) {
+          if (Server.amIServer() && !ip.equals(DEFAULT_SERVER_IP) && Server.getServer().getLoadedOrCreatedStatus()) {
             if (!Server.getServer().noMorePlayer()
                 && Server.getServer().getLoadedOrCreatedStatus()) {
               Server.getServer().assignFireFighterToClient(ip);
@@ -246,7 +246,7 @@ public class NetworkManager {
                   .sendMsgSpecificClient(ip, Commands.GAMESTATE, DBHandler.getBoardAsString());
               Server.getServer().sendMsgSpecificClient(ip, Commands.SETBOARDSCREEN, "");
             }
-          } else if (Server.amIServer() && Server.getServer().getLoadedOrCreatedStatus()) {
+          } else if (Server.amIServer() && Server.getServer().getLoadedOrCreatedStatus() && !Server.getServer().isEmpty()) {
               Server.getServer().assignFireFighterToClient(ip);
               BoardScreen.setBoardScreen();
             }

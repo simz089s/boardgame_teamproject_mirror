@@ -193,7 +193,9 @@ public class Server implements Runnable
             notYetAssigned.add(f.getColor());
         }
     }
-
+    public boolean isEmpty() {
+        return notYetAssigned.isEmpty();
+    }
     public void changeLoadedStatus(boolean status) {
         gameAlreadyLoadedorCreated = status;
     }
