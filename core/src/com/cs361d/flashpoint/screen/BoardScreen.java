@@ -19,6 +19,9 @@ import com.cs361d.flashpoint.networking.Commands;
 import com.cs361d.flashpoint.networking.NetworkManager;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 public class BoardScreen extends FlashPointScreen {
 
@@ -65,6 +68,8 @@ public class BoardScreen extends FlashPointScreen {
   TextButton btnCheatS;
   TextButton btnStats;
   ImageButton btnMusicSound;
+
+  static Fragment currentFragment = Fragment.CHAT;
 
   BoardScreen(Game pGame) {
     super(pGame);
@@ -574,8 +579,7 @@ public class BoardScreen extends FlashPointScreen {
             new ClickListener() {
               @Override
               public void clicked(InputEvent event, float x, float y) {
-                removeAllPrevFragments();
-                boardCheatSFragment.createCheatSFragment();
+                setSideFragment(Fragment.CHEATSHEET);
               }
             });
 
@@ -596,8 +600,7 @@ public class BoardScreen extends FlashPointScreen {
             new ClickListener() {
               @Override
               public void clicked(InputEvent event, float x, float y) {
-                removeAllPrevFragments();
-                boardStatsFragment.createStatsFragment();
+                setSideFragment(Fragment.STATS);
               }
             });
 
@@ -619,8 +622,7 @@ public class BoardScreen extends FlashPointScreen {
               @Override
               public void clicked(InputEvent event, float x, float y) {
                 NetworkManager.getInstance().sendCommand(Commands.GET_CHAT_MESSAGES,"");
-                removeAllPrevFragments();
-                boardChatFragment.createChatFragment();
+                setSideFragment(Fragment.CHAT);
               }
             });
 
@@ -776,5 +778,32 @@ public class BoardScreen extends FlashPointScreen {
   public static void setBoardScreen() {
     BGM.stop();
     game.setScreen(game.boardScreen);
+  }
+
+  public static void setSideFragment(Fragment fragment){
+
+    removeAllPrevFragments();
+
+    if (fragment == Fragment.CHEATSHEET){
+      boardCheatSFragment.createCheatSFragment();
+    } else if (fragment == Fragment.STATS){
+      boardStatsFragment.createStatsFragment();
+    } else if (fragment == Fragment.CHAT){
+      boardChatFragment.createChatFragment();
+    }
+
+    currentFragment = fragment;
+  }
+
+  public static boolean isChatFragment() {
+    return currentFragment == Fragment.CHAT;
+  }
+
+  public static boolean isCheatSheetFragment() {
+    return currentFragment == Fragment.CHEATSHEET;
+  }
+
+  public static boolean isStatsFragment() {
+    return currentFragment == Fragment.STATS;
   }
 }

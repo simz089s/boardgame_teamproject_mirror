@@ -38,16 +38,15 @@ public class BoardChatFragment {
     NetworkManager myNetwork = NetworkManager.getInstance();
 
     public static void addMessageToChat(String msg) {
-        String fullMessage = User.getInstance().getName() + ": " + msg;
-        NetworkManager.getInstance().sendCommand(Commands.ADD_CHAT_MESSAGE, fullMessage);
+        messagesArrList.add(msg);
     }
 
     // constructor
     public BoardChatFragment(Stage stage){
         this.stage = stage;
-        messagesArrList.add("R: yo, ready to set fire to the house?");
-        messagesArrList.add("B: let's do it. it's gonna be lit!");
-        messagesArrList.add("G: wait, can't find the explosives");
+//        messagesArrList.add("R: yo, ready to set fire to the house?");
+//        messagesArrList.add("B: let's do it. it's gonna be lit!");
+//        messagesArrList.add("G: wait, can't find the explosives");
     }
 
     public void createChatFragment() {
@@ -59,6 +58,7 @@ public class BoardChatFragment {
         listStyle.selection = TextureLoader.getDrawable(100, 100, Color.CLEAR );
 
         lstMsg = new List<String>(listStyle);
+        messagesArrList.clear();
         String[] messagesStrArr = messagesArrList.toArray(new String[messagesArrList.size()]);
         lstMsg.setItems(messagesStrArr);
 
@@ -106,7 +106,8 @@ public class BoardChatFragment {
 
                     if(!messageInputed.equals("") && !messageInputed.equals(" ")){
                         textFieldMsg.setText("");
-                        addMessageToChat(messageInputed);
+                        String fullMessage = User.getInstance().getName() + ": " + messageInputed;
+                        NetworkManager.getInstance().sendCommand(Commands.ADD_CHAT_MESSAGE, fullMessage);
                         scrollPaneMsg.setActor(lstMsg);
                         scrollPaneMsg.layout();
                         scrollPaneMsg.scrollTo(0, 0, 0, 0);

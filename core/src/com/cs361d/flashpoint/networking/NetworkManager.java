@@ -27,6 +27,7 @@ public class NetworkManager {
   // MCGILL WORLD
   // public static final String DEFAULT_SERVER_IP = "142.157.74.18"; // Simon public ip address
   public static final String DEFAULT_SERVER_IP = "142.157.67.193"; // Elvric public ip address
+  //public static final String DEFAULT_SERVER_IP = "142.157.129.43"; // JZ public ip address
   // final public static String DEFAULT_SERVER_IP = "142.157.149.34"; // DC public ip
   public static final int DEFAULT_SERVER_PORT = 54590;
 
