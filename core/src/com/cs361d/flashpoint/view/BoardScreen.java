@@ -52,7 +52,7 @@ public class BoardScreen extends FlashPointScreen {
   Sprite spriteBG;
   static Stage stage;
 
-  private Music BGM = Gdx.audio.newMusic(Gdx.files.internal("playlist/battle_normal01.mp3"));
+  private static Music BGM = Gdx.audio.newMusic(Gdx.files.internal("playlist/battle_normal01.mp3"));
 
   static BoardMovesPanel boardMovesPanel;
   static BoardChatFragment boardChatFragment;
@@ -78,7 +78,6 @@ public class BoardScreen extends FlashPointScreen {
     // DBHandler.createBoard(MapKind.MAP2); // generate initial map
 
     BGM.play();
-
 
     stage = new Stage();
     batch = new SpriteBatch();
@@ -510,6 +509,7 @@ public class BoardScreen extends FlashPointScreen {
     Dialog dialog = new Dialog(title, skinUI, "dialog") {
       public void result(Object obj) {
         if ((Boolean) obj){
+          BGM.stop();
           game.setScreen(game.lobbyScreen);
         }
       }
@@ -791,6 +791,7 @@ public class BoardScreen extends FlashPointScreen {
   }
 
   public static void setLobbyPage() {
+    BGM.stop();
     game.setScreen(game.lobbyScreen);
   }
 }
