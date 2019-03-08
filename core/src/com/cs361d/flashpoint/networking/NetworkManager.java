@@ -255,7 +255,13 @@ public class NetworkManager {
           break;
 
         case SETBOARDSCREEN:
-          BoardScreen.setBoardScreen();
+          Gdx.app.postRunnable(
+                  new Runnable() {
+                    @Override
+                    public void run() {
+                      BoardScreen.setBoardScreen();
+                    }
+                  });
 
         default:
       }
