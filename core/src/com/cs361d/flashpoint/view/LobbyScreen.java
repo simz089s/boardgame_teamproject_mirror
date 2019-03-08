@@ -235,7 +235,7 @@ public class LobbyScreen extends FlashPointScreen {
                         // TODO: and to condition -> if a player already entered a game, others can only join
                         if (lstLoadGames.getSelected() != null){
                             CreateNewGameManager.loadSavedGame(lstLoadGames.getSelected());
-                            NetworkManager.getInstance().sendCommand(Commands.LOADGAME, DBHandler.getBoardAsString());
+                            NetworkManager.getInstance().sendCommand(Commands.SEND_NEWLY_CREATED_BOARD, DBHandler.getBoardAsString());
                             game.setScreen(game.boardScreen);
                         }
                     }
