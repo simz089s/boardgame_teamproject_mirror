@@ -232,7 +232,8 @@ public class LobbyScreen extends FlashPointScreen {
                 new ClickListener() {
                     @Override
                     public void clicked(InputEvent event, float x, float y) {
-                        if (lstLoadGames.getSelected() != null ){
+                        // TODO: and to condition -> if a player already entered a game, others can only join
+                        if (lstLoadGames.getSelected() != null){
                             CreateNewGameManager.loadSavedGame(lstLoadGames.getSelected());
                             NetworkManager.getInstance().sendCommand(Commands.LOADGAME, DBHandler.getBoardAsString());
                             FireFighterTurnManager.getInstance().assignUserToFireFighter(User.getInstance());
@@ -257,7 +258,10 @@ public class LobbyScreen extends FlashPointScreen {
                 new ClickListener() {
                     @Override
                     public void clicked(InputEvent event, float x, float y) {
-                        game.setScreen(game.createGameScreen);
+                        // TODO: if a player already entered a game, others can only join
+                        if (true) {
+                            game.setScreen(game.createGameScreen);
+                        }
                     }
                 });
 
