@@ -28,7 +28,7 @@ public class NetworkManager {
   // MCGILL WORLD
   // public static final String DEFAULT_SERVER_IP = "142.157.74.18"; // Simon public ip address
   public static final String DEFAULT_SERVER_IP = "142.157.67.193"; // Elvric public ip address
-  //public static final String DEFAULT_SERVER_IP = "142.157.129.43"; // JZ public ip address
+  // public static final String DEFAULT_SERVER_IP = "142.157.129.43"; // JZ public ip address
   // final public static String DEFAULT_SERVER_IP = "142.157.149.34"; // DC public ip
   public static final int DEFAULT_SERVER_PORT = 54590;
 
@@ -174,8 +174,7 @@ public class NetworkManager {
             }
             Server.getServer()
                 .sendMsgSpecificClient(ip, Commands.SEND_CHAT_MESSAGES, jsa.toJSONString());
-          }
-          else if (Server.amIServer()) {
+          } else if (Server.amIServer()) {
             BoardScreen.setSideFragment(Fragment.CHAT);
             Iterator<String> it = Server.iteratorForChat();
             while (it.hasNext()) {
@@ -192,7 +191,13 @@ public class NetworkManager {
             JSONArray jsa = (JSONArray) parser.parse(message);
             for (Object a : jsa) {
               String newMessage = a.toString();
-              BoardChatFragment.addMessageToChat(newMessage);
+              Gdx.app.postRunnable(
+                  new Runnable() {
+                    @Override
+                    public void run() {
+                      BoardChatFragment.addMessageToChat(newMessage);
+                    }
+                  });
             }
           }
           break;
@@ -274,8 +279,7 @@ public class NetworkManager {
               Server.getServer().assignFireFighterToClient(ip);
               Server.getServer().sendMsgSpecificClient(ip, GAMESTATE, DBHandler.getBoardAsString());
               Server.getServer().sendMsgSpecificClient(ip, Commands.SETBOARDSCREEN, "");
-            }
-            else {
+            } else {
 
             }
           } else if (Server.amIServer()
