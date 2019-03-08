@@ -159,7 +159,7 @@ public class NetworkManager {
           break;
 
         case CHATGAME:
-          if (!msg.equals("")) BoardChatFragment.addMessageToGui(message);
+          if (!message.equals("")) BoardChatFragment.addMessageToGui(message);
           if (Server.amIServer()) {
             for (ClientHandler mc : Server.clientThreads.values()) {
               mc.dout.writeUTF(msg);
