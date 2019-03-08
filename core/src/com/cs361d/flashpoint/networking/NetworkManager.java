@@ -159,17 +159,16 @@ public class NetworkManager {
             if (BoardScreen.isChatFragment()) {
               BoardChatFragment.addMessageToChat(message);
             }
-          } else {
+          } else if (!message.equals("")) {
             Gdx.app.postRunnable(
-                    new Runnable() {
-                      @Override
-                      public void run() {
-                        if (BoardScreen.isChatFragment()) {
-                          BoardChatFragment.addMessageToChat(message);
-                        }
-                      }
-                    });
-            BoardChatFragment.addMessageToChat(message);
+                new Runnable() {
+                  @Override
+                  public void run() {
+                    if (BoardScreen.isChatFragment()) {
+                      BoardChatFragment.addMessageToChat(message);
+                    }
+                  }
+                });
           }
           break;
 
@@ -196,12 +195,12 @@ public class NetworkManager {
 
           } else {
             Gdx.app.postRunnable(
-                    new Runnable() {
-                      @Override
-                      public void run() {
-                        BoardScreen.setSideFragment(Fragment.CHAT);
-                      }
-                    });
+                new Runnable() {
+                  @Override
+                  public void run() {
+                    BoardScreen.setSideFragment(Fragment.CHAT);
+                  }
+                });
             JSONArray jsa = (JSONArray) parser.parse(message);
             for (Object a : jsa) {
               final String newMessage = a.toString();
