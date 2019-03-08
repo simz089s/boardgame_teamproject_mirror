@@ -1,7 +1,6 @@
 package com.cs361d.flashpoint.networking;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Net;
 import com.cs361d.flashpoint.manager.BoardManager;
 import com.cs361d.flashpoint.manager.CreateNewGameManager;
 import com.cs361d.flashpoint.manager.DBHandler;
@@ -25,23 +24,34 @@ import java.util.List;
 
 public class NetworkManager {
 
-    private static NetworkManager instance = new NetworkManager();
-//    final public String SERVER_IP = getMyIPAddress(); //CHANGE THIS TO WORK OUTSIDE MCGILL WORLD
-    final public static String SERVER_IP = "142.157.74.18"; //Elvric public ip address
-    //final public static String SERVER_IP = "142.157.149.34"; // DC public ip
-    final public static int SERVER_PORT = 54590;
+    private static NetworkManager instance;
+//    final public String DEFAULT_SERVER_IP = getMyIPAddress(); //CHANGE THIS TO WORK OUTSIDE MCGILL WORLD
+    final public static String DEFAULT_SERVER_IP = "142.157.74.18"; //Simon public ip address
+//    final public static String DEFAULT_SERVER_IP = "142.157.67.193"; //Elvric public ip address
+    //final public static String DEFAULT_SERVER_IP = "142.157.149.34"; // DC public ip
+    final public static int DEFAULT_SERVER_PORT = 54590;
+
+    public String serverIP;
 
     // variable of type String
     public Server server;
     public ArrayList<Client> clientList = new ArrayList<Client>();
 
     // private constructor restricted to this class itself
-    private NetworkManager() {
+    private NetworkManager(String pServerIP) {
+        serverIP = pServerIP;
     }
 
     // static method to create instance of Singleton class
     public static NetworkManager getInstance() {
+        if (instance == null) {
+            instance = new NetworkManager(DEFAULT_SERVER_IP);
+        }
         return instance;
+    }
+
+    public void setServerIP(String pServerIP) {
+        serverIP = pServerIP;
     }
 
     public void addServer(Server s) {
@@ -54,7 +64,7 @@ public class NetworkManager {
 
     public void sendCommand(Commands command, String msg) {
         String jsonMsg = createJSON(command.toString(), msg);
-        if(getMyPublicIP().equals(SERVER_IP))
+        if(getMyPublicIP().equals(serverIP))
             server.sendMsg(jsonMsg);
 
         else
@@ -187,7 +197,7 @@ public class NetworkManager {
                     CreateNewGameManager.loadGameFromString(message);
                     break;
                 case DISCONNECT:
-                    if(instance.getMyPublicIP().equals(SERVER_IP))
+                    if(instance.getMyPublicIP().equals(instance.serverIP))
                         instance.server.closeServer(); // disconnect all the clients
                     break;
                 case GETGAME:

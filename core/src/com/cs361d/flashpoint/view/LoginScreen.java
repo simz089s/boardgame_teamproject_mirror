@@ -15,6 +15,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.cs361d.flashpoint.networking.NetworkManager;
 
 public class LoginScreen extends FlashPointScreen {
 
@@ -34,6 +35,7 @@ public class LoginScreen extends FlashPointScreen {
 
     TextField fdUname;
     TextField fdPwd;
+    TextField fdSrvIP;
     CheckBox signUpCheck;
     TextButton btnLogin;
     Label errorMsgLabel;
@@ -66,6 +68,8 @@ public class LoginScreen extends FlashPointScreen {
         createUsernameTextField();
 
         createPasswordTextField();
+
+        createServerIPTextField();
 
         createSignUpCheckbox();
 
@@ -124,8 +128,8 @@ public class LoginScreen extends FlashPointScreen {
 
 
 
-    // text fields
 
+    // text fields
 
 
     public void createUsernameTextField(){
@@ -152,6 +156,18 @@ public class LoginScreen extends FlashPointScreen {
                 Gdx.graphics.getHeight() / 2f - (fdUname.getHeight() / 2) + 10);
 
         stage.addActor(fdPwd);
+    }
+
+    private void createServerIPTextField() {
+        fdSrvIP = new TextField("", skinUI, "default");
+        fdSrvIP.setMessageText(NetworkManager.DEFAULT_SERVER_IP);
+        fdSrvIP.setWidth(200);
+        fdSrvIP.setHeight(25);
+        fdSrvIP.setPosition(
+                (Gdx.graphics.getWidth() - fdSrvIP.getWidth()) / 2,
+                Gdx.graphics.getHeight() * 1 / 5f - (fdSrvIP.getHeight() / 2));
+//        NetworkManager.getInstance().setServerIP(fdSrvIP.getText());
+        stage.addActor(fdSrvIP);
     }
 
 
