@@ -11,7 +11,7 @@ public enum Commands {
     ASK_TO_GET_ASSIGN_FIREFIGHTER("ASK_TO_GET_ASSIGN_FIREFIGHTER"),
     DISCONNECT("disconnect"),
     JOIN("join"),
-    GETGAME("getgame"),
+    SETBOARDSCREEN("SETBOARDSCREEN"),
     EXITGAME("exitgame");
 
     private String text;

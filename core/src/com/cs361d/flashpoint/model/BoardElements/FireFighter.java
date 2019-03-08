@@ -35,6 +35,19 @@ public class FireFighter {
     return f;
   }
 
+  // If the fireFighter has not yet been Initalized it initialises it with default AP of 4 else it just returns the instance
+  public static FireFighter getFireFighter(FireFighterColor color) {
+    FireFighter f;
+    if (FIREFIGHTERS.containsKey(color)) {
+      f = FIREFIGHTERS.get(color);
+    } else {
+      f = new FireFighter(color, 4);
+      FIREFIGHTERS.put(color, f);
+    }
+    return f;
+
+  }
+
   public void removeFromBoard() {
       if (currentTile == null) {
           throw new IllegalStateException("This method cannot remove a FireFighter from the board if it has no current tile");

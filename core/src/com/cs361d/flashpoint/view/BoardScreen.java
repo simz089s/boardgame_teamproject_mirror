@@ -772,7 +772,8 @@ public class BoardScreen extends FlashPointScreen {
     //
     //    createResumeButton();
     //    boardMovesPanel.createMovesAndDirectionsPanel();
-    game.setScreen(game.boardScreen);
+      if(game.getScreen() == game.boardScreen)
+          game.setScreen(game.boardScreen);
   }
 
   public static void setLobbyPage() {

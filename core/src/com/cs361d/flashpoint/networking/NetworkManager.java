@@ -23,7 +23,7 @@ public class NetworkManager {
   private static NetworkManager instance;
   //    final public String DEFAULT_SERVER_IP = getMyIPAddress(); //CHANGE THIS TO WORK OUTSIDE MCGILL WORLD
  // public static final String DEFAULT_SERVER_IP = "142.157.74.18"; // Simon public ip address
-  public static final String DEFAULT_SERVER_IP = "132.216.232.106"; // Elvric public ip address
+  public static final String DEFAULT_SERVER_IP = "132.216.235.158"; // Elvric public ip address
   // final public static String DEFAULT_SERVER_IP = "142.157.149.34"; // DC public ip
   public static final int DEFAULT_SERVER_PORT = 54590;
 
@@ -202,8 +202,7 @@ public class NetworkManager {
             if (ip.equals(NetworkManager.getInstance().getMyPublicIP())) {
                 BoardScreen.setBoardScreen();
             } else {
-              Server.getServer()
-                  .sendMsgSpecificClient(ip, Commands.GAMESTATE, DBHandler.getBoardAsString());
+              Server.getServer().sendMsgSpecificClient(ip,Commands.SETBOARDSCREEN, "");
             }
           }
           break;
@@ -241,6 +240,7 @@ public class NetworkManager {
           if (Server.amIServer() && !ip.equals(DEFAULT_SERVER_IP)) {
             if (!Server.getServer().noMorePlayer() && Server.getServer().getLoadedOrCreatedStatus()) {
               Server.getServer().assignFireFighterToClient(ip);
+              Server.getServer().sendMsgSpecificClient(ip,Commands.SETBOARDSCREEN, "");
               Server.getServer()
                   .sendMsgSpecificClient(ip, Commands.GAMESTATE, DBHandler.getBoardAsString());
             }
@@ -252,6 +252,9 @@ public class NetworkManager {
               }
           }
           break;
+
+        case SETBOARDSCREEN:
+          BoardScreen.setBoardScreen();
 
         default:
       }
