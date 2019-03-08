@@ -1,9 +1,9 @@
 package com.cs361d.flashpoint.networking;
 
 public enum Commands {
-    CHATWAIT("chatwait"),
-    CHATGAME("chatgame"),
-    ADDMSG("addmsg"),
+    ADD_CHAT_MESSAGE("ADD_CHAT_MESSAGE"),
+    GET_CHAT_MESSAGES("GET_CHAT_MESSAGES"),
+    SEND_CHAT_MESSAGES("SEND_CHAT_MESSAGES"),
     GAMESTATE("gamestate"),
     SAVE("save"),
     SEND_NEWLY_CREATED_BOARD("SEND_NEWLY_CREATED_BOARD"),

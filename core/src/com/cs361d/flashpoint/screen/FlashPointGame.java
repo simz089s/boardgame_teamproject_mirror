@@ -17,8 +17,7 @@ public class FlashPointGame extends Game {
         loginScreen = new LoginScreen(this);
         lobbyScreen = new LobbyScreen(this);
         createGameScreen = new CreateGameScreen(this);
-        chatScreen = new ChatScreen(this);
-        statsScreen = new StatsScreen(this);
+        statsScreen = new StatsScreen(this );
         boardScreen = new BoardScreen(this);
 
         this.setScreen(loginScreen);

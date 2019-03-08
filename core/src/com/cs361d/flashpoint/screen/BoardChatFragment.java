@@ -6,8 +6,10 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.List;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
+import com.cs361d.flashpoint.manager.User;
 import com.cs361d.flashpoint.networking.Commands;
 import com.cs361d.flashpoint.networking.NetworkManager;
+import com.sun.xml.internal.xsom.impl.util.SchemaTreeTraverser;
 
 import java.util.ArrayList;
 
@@ -31,12 +33,12 @@ public class BoardChatFragment {
 
 
     ArrayList<ScrollPane> msgListSP = new ArrayList<ScrollPane>();
-    ArrayList<TextField> msgFieldListTF = new ArrayList<TextField>();
+    public ArrayList<TextField> msgFieldListTF = new ArrayList<TextField>();
 
     // Get the current network
     NetworkManager myNetwork = NetworkManager.getInstance();
 
-    public static void addMessageToGui(String msg) {
+    public static void addMessageToChat(String msg) {
         messagesArrList.add(msg);
         String[] newMsg = messagesArrList.toArray(new String[messagesArrList.size()]);
         lstMsg.setItems(newMsg);
@@ -45,10 +47,8 @@ public class BoardChatFragment {
     // constructor
     public BoardChatFragment(Stage stage){
         this.stage = stage;
-        messagesArrList.add("R: yo, ready to set fire to the house?");
-        messagesArrList.add("B: let's do it. it's gonna be lit!");
-        messagesArrList.add("G: wait, can't find the explosives");
     }
+
 
     public void createChatFragment() {
         // list style
@@ -106,10 +106,8 @@ public class BoardChatFragment {
 
                     if(!messageInputed.equals("") && !messageInputed.equals(" ")){
                         textFieldMsg.setText("");
-                        myNetwork.sendCommand(Commands.CHATGAME,messageInputed); //send message over network
-//                        messagesArrList.add("Y: " + messageInputed);
-//                        String[] newMsg = messagesArrList.toArray(new String[messagesArrList.size()]);
-//                        lstMsg.setItems(newMsg);
+                        String msgWithName = User.getInstance().getName() +": "+ messageInputed;
+                        myNetwork.sendCommand(Commands.ADD_CHAT_MESSAGE,msgWithName); //send message over network
 
                         scrollPaneMsg.setActor(lstMsg);
                         scrollPaneMsg.layout();
