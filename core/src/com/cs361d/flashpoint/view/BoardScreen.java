@@ -176,7 +176,7 @@ public class BoardScreen extends FlashPointScreen {
     boardMovesPanel.createMovesAndDirectionsPanel();
 
     // Choose init pos
-    if (!FireFighterTurnManager.getInstance().allAssigned()){
+    if (!FireFighterTurnManager.getInstance().allAssigned() && User.getInstance().isMyTurn()){
       createDialog("Ready, set, go!", "Choose your initial position on the board (green tiles).");
       addFilterOnTileForChooseInitPos();
       removeAllPrevFragments();
@@ -541,6 +541,7 @@ public class BoardScreen extends FlashPointScreen {
                 Dialog dialog = new Dialog("Warning", skinUI, "dialog") {
                   public void result(Object obj) {
                     if ((Boolean) obj) {
+                        NetworkManager.getInstance().sendCommand(Commands.DISCONNECT,"");
                         BGM.stop();
                         game.setScreen(game.lobbyScreen);
                     }
@@ -551,6 +552,7 @@ public class BoardScreen extends FlashPointScreen {
                 dialog.button("Yes", true); //sends "true" as the result
                 dialog.button("No", false); //sends "false" as the result
                 dialog.show(stage);
+                NetworkManager.getInstance().sendCommand(Commands.EXITGAME, "");
               }
             });
 
@@ -777,12 +779,16 @@ public class BoardScreen extends FlashPointScreen {
   }
 
   public static void redrawBoardEntirely() {
-    clearAllGameUnits();
-    redrawGameUnitsOnTile();
-    updateGameInfoLabel();
-
-    createResumeButton();
-    boardMovesPanel.createMovesAndDirectionsPanel();
+//    clearAllGameUnits();
+//    redrawGameUnitsOnTile();
+//    updateGameInfoLabel();
+//
+//    createResumeButton();
+//    boardMovesPanel.createMovesAndDirectionsPanel();
     game.setScreen(game.boardScreen);
+  }
+
+  public static void setLobbyPage() {
+    game.setScreen(game.lobbyScreen);
   }
 }

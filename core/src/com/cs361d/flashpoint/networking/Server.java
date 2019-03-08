@@ -1,6 +1,10 @@
 package com.cs361d.flashpoint.networking;
 
 
+import com.cs361d.flashpoint.manager.FireFighterTurnManager;
+import com.cs361d.flashpoint.manager.User;
+import com.cs361d.flashpoint.model.BoardElements.FireFighter;
+import com.cs361d.flashpoint.model.BoardElements.FireFighterColor;
 import com.cs361d.flashpoint.view.FlashPointGame;
 
 import java.io.DataInputStream;
@@ -16,12 +20,13 @@ import java.util.*;
 public class Server implements Runnable
 {
 
+    private List<FireFighterColor> notYetAssigned = new ArrayList<FireFighterColor>();
     // Server has an instance of the game
     public FlashPointGame serverFPGame = new FlashPointGame();
 
     // Vector to store active client threads
     static HashMap<String, ClientHandler> clientThreads = new HashMap<String, ClientHandler>();
-
+    private static Server instance;
     // counter for clientThreads
     static int i = 0;
 
@@ -29,9 +34,7 @@ public class Server implements Runnable
     Socket s;           //Client socket
     Thread startServer; // DON'T SEND TO SRC CLIENT TWICE
 
-    public Server() {}
-
-    public Server(int serverPort) {
+    private Server(int serverPort) {
 
         try {
             ss = new ServerSocket(serverPort);
@@ -42,6 +45,17 @@ public class Server implements Runnable
 
     }
 
+    public static Server createServer(int serverPort) {
+        instance = new Server(serverPort);
+        return instance;
+    }
+
+    public static Server getServer() {
+        if (instance == null) {
+           throw new IllegalArgumentException("You are not the server you should not ask to access it");
+        }
+        return instance;
+    }
     @Override
     public void run() {
         // running infinite loop for getting client request
@@ -66,7 +80,10 @@ public class Server implements Runnable
                 System.out.println("Adding this client to active client list");
 
                 // add this client to active clientThreads list
-                clientThreads.put(s.getInetAddress().toString(), clientObserver);
+                String ip = s.getInetAddress().toString().replace("/","");
+                clientThreads.put(ip, clientObserver);
+
+                System.out.println("Client Ip is: " + s.getInetAddress().toString());
 
                 // start the thread for the client.
                 t.start();
@@ -89,6 +106,24 @@ public class Server implements Runnable
             updateServerGui(msg); //update your own Gui
 
         } catch (IOException e) { e.printStackTrace(); }
+    }
+
+    public synchronized void sendMsgSpecificClient(String ip, Commands command, String message){
+        try {
+            // Get the specific client handler
+            if (ip.equals(NetworkManager.getInstance().getMyPublicIP())) {
+                return;
+            }
+            ClientHandler client = clientThreads.get(ip);
+
+            String msg = NetworkManager.getInstance().createJSON(command, message);
+            client.dout.writeUTF(msg);
+
+            // updateServerGui(msg);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /* Update GUI of the Server based on sent String*/
@@ -130,5 +165,35 @@ public class Server implements Runnable
 
     }
 
+    public synchronized void  assignFireFighterToClient(String IP) {
+        if (notYetAssigned.isEmpty()) {
+            return;
+        }
+        FireFighterColor color = notYetAssigned.remove(0);
+        if (IP.equals(NetworkManager.getInstance().getMyPublicIP())) {
+            User.getInstance().assignFireFighter(color);
+        }
+        else {
+           sendMsgSpecificClient(IP, Commands.ASSIGN_FIREFIGHTER, color.toString());
+        }
+    }
+    public static boolean amIServer() {
+        return instance != null;
+    }
+
+    public void setFireFighterAssigneArray() {
+        Iterator<FireFighter> it = FireFighterTurnManager.getInstance().iterator();
+        if (!it.hasNext()) {
+            throw new IllegalArgumentException("Cannot call this function if the game board has not been initialized");
+        }
+        while (it.hasNext()) {
+            FireFighter f = it.next();
+            notYetAssigned.add(f.getColor());
+        }
+    }
+
+    public boolean noMorePlayer() {
+        return notYetAssigned.isEmpty();
+    }
 
 }

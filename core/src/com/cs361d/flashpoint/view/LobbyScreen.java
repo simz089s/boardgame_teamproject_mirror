@@ -21,6 +21,7 @@ import com.cs361d.flashpoint.manager.FireFighterTurnManager;
 import com.cs361d.flashpoint.manager.User;
 import com.cs361d.flashpoint.networking.Commands;
 import com.cs361d.flashpoint.networking.NetworkManager;
+import org.omg.PortableServer.THREAD_POLICY_ID;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -190,6 +191,7 @@ public class LobbyScreen extends FlashPointScreen {
                 new ClickListener() {
                     @Override
                     public void clicked(InputEvent event, float x, float y) {
+                        NetworkManager.getInstance().sendCommand(Commands.DISCONNECT,"");
                         BGM.stop();
                         game.setScreen(game.loginScreen);
                     }
@@ -218,9 +220,8 @@ public class LobbyScreen extends FlashPointScreen {
               catch (Exception e) {
                   e.printStackTrace();
               }
-            FireFighterTurnManager.getInstance().assignUserToFireFighter(User.getInstance());
-            BGM.stop();
-            game.setScreen(game.boardScreen);
+              BGM.stop();
+              NetworkManager.getInstance().sendCommand(Commands.JOIN,"");
           }
         });
 
@@ -242,8 +243,13 @@ public class LobbyScreen extends FlashPointScreen {
                     public void clicked(InputEvent event, float x, float y) {
                         if (lstLoadGames.getSelected() != null ){
                             CreateNewGameManager.loadSavedGame(lstLoadGames.getSelected());
-                            NetworkManager.getInstance().sendCommand(Commands.LOADGAME, DBHandler.getBoardAsString());
-                            FireFighterTurnManager.getInstance().assignUserToFireFighter(User.getInstance());
+                            NetworkManager.getInstance().sendCommand(Commands.SEND_NEWLY_CREATED_BOARD, DBHandler.getBoardAsString());
+                            NetworkManager.getInstance().sendCommand(Commands.ASK_TO_GET_ASSIGN_FIREFIGHTER, "");
+                            try {
+                                Thread.sleep(100);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
                             BGM.stop();
                             game.setScreen(game.boardScreen);
                         }

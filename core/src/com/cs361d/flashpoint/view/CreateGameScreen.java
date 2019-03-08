@@ -12,6 +12,8 @@ import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.cs361d.flashpoint.manager.*;
+import com.cs361d.flashpoint.networking.Commands;
+import com.cs361d.flashpoint.networking.NetworkManager;
 
 public class CreateGameScreen extends FlashPointScreen {
 
@@ -124,9 +126,16 @@ public class CreateGameScreen extends FlashPointScreen {
 
               CreateNewGameManager.createNewGame(
                   gameNameField.getText(), numPlayers, mk, Difficulty.FAMILLY);
-              FireFighterTurnManager.getInstance().assignUserToFireFighter(User.getInstance());
-              BGM.stop();
-              game.setScreen(game.boardScreen);
+              NetworkManager.getInstance()
+                  .sendCommand(Commands.SEND_NEWLY_CREATED_BOARD, DBHandler.getBoardAsString());
+              NetworkManager.getInstance().sendCommand(Commands.ASK_TO_GET_ASSIGN_FIREFIGHTER, "");
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                BGM.stop();
+                game.setScreen(game.boardScreen);
 
             } else {
               createDialog("Warning", "Invalid or empty game name!");

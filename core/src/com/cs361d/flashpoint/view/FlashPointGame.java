@@ -24,17 +24,6 @@ public class FlashPointGame extends Game {
         this.setScreen(loginScreen);
     }
 
-    public Screen getLoginScreen() { return loginScreen; }
-
-    public Screen getLobbyScreen() { return lobbyScreen; }
-
-    public Screen getCreateGameScreen() { return createGameScreen; }
-
-    public Screen getChatScreen() { return chatScreen; }
-
-    public Screen getStatsScreen() { return statsScreen; }
-
-    public Screen getBoardScreen() { return boardScreen; }
-
+    public void setLobbyScreenScreen() { this.setScreen(lobbyScreen); }
 
 }
