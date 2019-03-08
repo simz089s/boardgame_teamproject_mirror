@@ -15,8 +15,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.cs361d.flashpoint.manager.*;
 import com.cs361d.flashpoint.model.BoardElements.*;
-import com.cs361d.flashpoint.networking.Commands;
-import com.cs361d.flashpoint.networking.NetworkManager;
 
 import java.util.ArrayList;
 
@@ -52,7 +50,7 @@ public class BoardScreen extends FlashPointScreen {
   Sprite spriteBG;
   static Stage stage;
 
-  private Music myMusic = Gdx.audio.newMusic(Gdx.files.internal("playlist/battle_normal01.mp3"));
+  private Music BGM = Gdx.audio.newMusic(Gdx.files.internal("playlist/battle_normal01.mp3"));
 
   static BoardMovesPanel boardMovesPanel;
   static BoardChatFragment boardChatFragment;
@@ -69,7 +67,7 @@ public class BoardScreen extends FlashPointScreen {
 
   BoardScreen(Game pGame) {
     super(pGame);
-    myMusic.setLooping(true);
+    BGM.setLooping(true);
   }
 
   @Override
@@ -77,7 +75,7 @@ public class BoardScreen extends FlashPointScreen {
 
     // DBHandler.createBoard(MapKind.MAP2); // generate initial map
 
-    myMusic.play();
+    BGM.play();
 
 
     stage = new Stage();
@@ -543,7 +541,7 @@ public class BoardScreen extends FlashPointScreen {
                 Dialog dialog = new Dialog("Warning", skinUI, "dialog") {
                   public void result(Object obj) {
                     if ((Boolean) obj) {
-                        myMusic.stop();
+                        BGM.stop();
                         game.setScreen(game.lobbyScreen);
                     }
                   }
@@ -674,10 +672,10 @@ public class BoardScreen extends FlashPointScreen {
             new ClickListener() {
               @Override
               public void clicked(InputEvent event, float x, float y) {
-                if (myMusic.isPlaying()){
-                  myMusic.pause();
+                if (BGM.isPlaying()){
+                  BGM.pause();
                 } else {
-                  myMusic.play();
+                  BGM.play();
                 }
               }
             });

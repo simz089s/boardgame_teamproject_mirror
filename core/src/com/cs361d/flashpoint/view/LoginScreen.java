@@ -2,6 +2,7 @@ package com.cs361d.flashpoint.view;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
@@ -40,12 +41,17 @@ public class LoginScreen extends FlashPointScreen {
     TextButton btnLogin;
     Label errorMsgLabel;
 
+    private Music BGM = Gdx.audio.newMusic(Gdx.files.internal("playlist/matrix.mp3"));
+
     LoginScreen(Game pGame) {
         super(pGame);
+        BGM.setLooping(true);
     }
 
     @Override
     public void show() {
+
+        BGM.play();
 
         stage = new Stage();
         batch = new SpriteBatch();
@@ -115,7 +121,9 @@ public class LoginScreen extends FlashPointScreen {
     public void resume() {}
 
     @Override
-    public void hide() {}
+    public void hide() {
+        BGM.stop();
+    }
 
     @Override
     public void dispose() {

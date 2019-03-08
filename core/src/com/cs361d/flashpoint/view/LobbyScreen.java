@@ -57,17 +57,17 @@ public class LobbyScreen extends FlashPointScreen {
 
     Stage stage;
 
-    private Music myMusic = Gdx.audio.newMusic(Gdx.files.internal("playlist/void.mp3"));
+    private Music BGM = Gdx.audio.newMusic(Gdx.files.internal("playlist/void.mp3"));
 
     LobbyScreen(Game pGame) {
         super(pGame);
-        myMusic.setLooping(true);
+        BGM.setLooping(true);
     }
 
     @Override
     public void show() {
 
-        myMusic.play();
+        BGM.play();
 
         stage = new Stage();
         batch = new SpriteBatch();
@@ -190,7 +190,7 @@ public class LobbyScreen extends FlashPointScreen {
                 new ClickListener() {
                     @Override
                     public void clicked(InputEvent event, float x, float y) {
-                        myMusic.stop();
+                        BGM.stop();
                         game.setScreen(game.loginScreen);
                     }
                 });
@@ -219,7 +219,7 @@ public class LobbyScreen extends FlashPointScreen {
                   e.printStackTrace();
               }
             FireFighterTurnManager.getInstance().assignUserToFireFighter(User.getInstance());
-            myMusic.stop();
+            BGM.stop();
             game.setScreen(game.boardScreen);
           }
         });
@@ -244,7 +244,7 @@ public class LobbyScreen extends FlashPointScreen {
                             CreateNewGameManager.loadSavedGame(lstLoadGames.getSelected());
                             NetworkManager.getInstance().sendCommand(Commands.LOADGAME, DBHandler.getBoardAsString());
                             FireFighterTurnManager.getInstance().assignUserToFireFighter(User.getInstance());
-                            myMusic.stop();
+                            BGM.stop();
                             game.setScreen(game.boardScreen);
                         }
                     }
@@ -266,7 +266,7 @@ public class LobbyScreen extends FlashPointScreen {
                 new ClickListener() {
                     @Override
                     public void clicked(InputEvent event, float x, float y) {
-                        myMusic.stop();
+                        BGM.stop();
                         game.setScreen(game.createGameScreen);
                     }
                 });
