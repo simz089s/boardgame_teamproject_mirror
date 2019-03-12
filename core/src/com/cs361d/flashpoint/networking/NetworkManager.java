@@ -27,7 +27,7 @@ public class NetworkManager {
   //    final public String DEFAULT_SERVER_IP = getMyIPAddress(); //CHANGE THIS TO WORK OUTSIDE
   // MCGILL WORLD
   // public static final String DEFAULT_SERVER_IP = "142.157.74.18"; // Simon public ip address
-  public static final String DEFAULT_SERVER_IP = "142.157.67.193"; // Elvric public ip address
+  public static final String DEFAULT_SERVER_IP = "132.216.233.3"; // Elvric public ip address
   // public static final String DEFAULT_SERVER_IP = "142.157.129.43"; // JZ public ip address
   // final public static String DEFAULT_SERVER_IP = "142.157.149.34"; // DC public ip
   public static final int DEFAULT_SERVER_PORT = 54590;
@@ -151,7 +151,6 @@ public class NetworkManager {
       Commands c = Commands.fromString(jsonObject.get("command").toString());
       final String message = jsonObject.get("message").toString();
       final String ip = jsonObject.get("IP").toString();
-      System.out.println(message);
       switch (c) {
         case ADD_CHAT_MESSAGE:
           if (!message.equals("") && Server.amIServer()) {
@@ -302,6 +301,7 @@ public class NetworkManager {
             Server.getServer().assignFireFighterToClient(ip);
             BoardScreen.setBoardScreen();
           }
+          break;
 
         case SETBOARDSCREEN:
           Gdx.app.postRunnable(
@@ -312,6 +312,7 @@ public class NetworkManager {
                 }
               });
           break;
+
         case DISPLAY_MESSAGE:
           final JSONArray jsarr = (JSONArray) parser.parse(message);
           Gdx.app.postRunnable(

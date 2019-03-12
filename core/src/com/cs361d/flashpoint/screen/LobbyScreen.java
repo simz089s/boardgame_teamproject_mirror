@@ -47,7 +47,7 @@ public class LobbyScreen extends FlashPointScreen {
     ScrollPane.ScrollPaneStyle scrollStyle2;
     List<String> lstLoadGames;
     List.ListStyle listStyle2;
-
+    String[] availableGames = {""};
     TextButton btnLogout;
     TextButton btnJoin;
     TextButton btnLoad;
@@ -81,8 +81,7 @@ public class LobbyScreen extends FlashPointScreen {
         createLoadGameLabel();
 
         //create available games list (TO JOIN)
-        String[] availableGames = {"No available game to join"};
-        createAvailableGamesList(availableGames);
+//        createAvailableGamesList(availableGames);
 
         //create saved games list (TO LOAD)
         ArrayList<String> savedGames = listFilesOfSavedGames();

@@ -771,7 +771,9 @@ public class BoardScreen extends FlashPointScreen {
 
   public static void setLobbyPage() {
     BGM.stop();
-    game.setScreen(game.lobbyScreen);
+    if (game.getScreen() == game.boardScreen) {
+      game.setScreen(game.lobbyScreen);
+      }
   }
 
   public static void setBoardScreen() {

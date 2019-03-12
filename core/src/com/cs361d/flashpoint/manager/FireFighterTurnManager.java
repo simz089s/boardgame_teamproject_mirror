@@ -65,40 +65,49 @@ public class FireFighterTurnManager implements Iterable<FireFighter> {
       BoardManager.getInstance().endTurnFireSpread();
       sendChangeToNetwork();
     } else {
-      BoardScreen.createDialog(
-          "Cannot end turn", "You cannot end turn as you are currently on a tile with fire");
+      sendMessageToGui("You cannot end turn as you are currently on a tile with fire");
     }
   }
 
   public void move(Direction d) {
-    if (canMove(d) && getCurrentFireFighter().moveAP(d)) {
-      FireFighter f = getCurrentFireFighter();
-      Tile oldTile = f.getTile();
-      Tile newTile = oldTile.getAdjacentTile(d);
-      f.setTile(newTile);
-      if (newTile.hasPointOfInterest()) {
-        if (newTile.hasRealVictim()) {
-          newTile.getVictim().reveal();
-        } else {
-          newTile.setNullVictim();
-          BoardManager.getInstance().addNewPointInterest();
+    if (canMove(d)) {
+      if (getCurrentFireFighter().moveAP(d)) {
+        FireFighter f = getCurrentFireFighter();
+        Tile oldTile = f.getTile();
+        Tile newTile = oldTile.getAdjacentTile(d);
+        f.setTile(newTile);
+        if (newTile.hasPointOfInterest()) {
+          if (newTile.hasRealVictim()) {
+            newTile.getVictim().reveal();
+          } else {
+            newTile.setNullVictim();
+            BoardManager.getInstance().addNewPointInterest();
+          }
         }
+        sendChangeToNetwork();
+      } else {
+        sendMessageToGui(
+            "You do not have enough AP to move to that spot you need 1 ap to move to a tile with smoke or nothing"
+                + " and 2 to move on a tile with fire");
       }
-      sendChangeToNetwork();
     }
   }
 
   public void moveWithVictim(Direction d) {
-    if (canMoveWithVictim(d) && getCurrentFireFighter().moveWithVictimAP()) {
-      FireFighter f = getCurrentFireFighter();
-      AbstractVictim v = f.getTile().getVictim();
-      Tile oldTile = f.getTile();
-      Tile newTile = oldTile.getAdjacentTile(d);
-      oldTile.setNullVictim();
-      newTile.setVictim(v);
-      f.setTile(newTile);
-      BoardManager.getInstance().verifyVictimRescueStatus(newTile);
-      sendChangeToNetwork();
+    if (canMoveWithVictim(d)) {
+      if (getCurrentFireFighter().moveWithVictimAP()) {
+        FireFighter f = getCurrentFireFighter();
+        AbstractVictim v = f.getTile().getVictim();
+        Tile oldTile = f.getTile();
+        Tile newTile = oldTile.getAdjacentTile(d);
+        oldTile.setNullVictim();
+        newTile.setVictim(v);
+        f.setTile(newTile);
+        BoardManager.getInstance().verifyVictimRescueStatus(newTile);
+        sendChangeToNetwork();
+      } else {
+        sendMessageToGui("You need 2 AP to move with a victim");
+      }
     }
   }
 
@@ -106,18 +115,27 @@ public class FireFighterTurnManager implements Iterable<FireFighter> {
 
     // Don't let him chop wall if ap < 3
     if ((getCurrentFireFighter().getTile().hasFire())
-        && (getCurrentFireFighter().getActionPointsLeft() < 3)) return;
+        && (getCurrentFireFighter().getActionPointsLeft() < 3)) {
+      sendMessageToGui(
+          "You cannot chop a wall if either you have less than 2 AP points"
+              + " and you stand on a tile with fire and have less than 3 ap points");
+      return;
+    }
 
     Obstacle o = getCurrentFireFighter().getTile().getObstacle(d);
     if (o.isDoor()) {
+      sendMessageToGui("Open, close or destroyed doors cannot be chopped");
       return;
     }
     if (o.isDestroyed()) {
+      sendMessageToGui("You cannot chop the air or a wall with 2 damage" + " markers.");
       return;
     }
     if (getCurrentFireFighter().chopAP()) {
       o.applyDamage();
       sendChangeToNetwork();
+    } else {
+      sendMessageToGui("You need 2 ap to chop a wall");
     }
   }
 
@@ -129,9 +147,11 @@ public class FireFighterTurnManager implements Iterable<FireFighter> {
 
     Obstacle o = getCurrentFireFighter().getTile().getObstacle(d);
     if (!o.isDoor()) {
+      sendMessageToGui("You cannot open the air or a wall");
       return;
     }
     if (o.isDestroyed()) {
+      sendMessageToGui("You cannot interact with a destroyed door");
       return;
     }
     if (getCurrentFireFighter().openCloseDoorAP()) {
@@ -145,13 +165,18 @@ public class FireFighterTurnManager implements Iterable<FireFighter> {
     // Don't let him extenguish another Tile's fire or smoke if ap < 2
     if ((getCurrentFireFighter().getTile().hasFire())
         && (getCurrentFireFighter().getActionPointsLeft() < 2)
-        && (!d.equals(Direction.NODIRECTION))) return;
-
-    Tile tileToExtinguish = getCurrentFireFighter().getTile().getAdjacentTile(d);
-    if (tileToExtinguish == null) {
+        && (!d.equals(Direction.NODIRECTION))) {
+      sendMessageToGui(
+          "You cannot end on a tile with fire on it so you cannot perform t"
+              + "hat move since if you did that rule would not be repsected.");
       return;
-    } else if (tileToExtinguish.hasNoFireAndNoSmoke()
+    }
+    Tile tileToExtinguish = getCurrentFireFighter().getTile().getAdjacentTile(d);
+    if (tileToExtinguish == null
+        || tileToExtinguish.hasNoFireAndNoSmoke()
         || getCurrentFireFighter().getTile().hasObstacle(d)) {
+      sendMessageToGui(
+          "The tile you are trying to extinguish does not contain smoke or fire or there is an obstacle blocking the way");
       return;
     }
     if (getCurrentFireFighter().extinguishAP()) {
@@ -161,6 +186,8 @@ public class FireFighterTurnManager implements Iterable<FireFighter> {
         tileToExtinguish.setFireStatus(FireStatus.EMPTY);
       }
       sendChangeToNetwork();
+    } else {
+      sendMessageToGui("You need at least 1 AP to extingish a Tile");
     }
   }
 
@@ -168,28 +195,36 @@ public class FireFighterTurnManager implements Iterable<FireFighter> {
     return f == FIREFIGHTERS.peek();
   }
 
-  private boolean canMove(Direction d) {
+  protected boolean canMove(Direction d) {
 
     // Don't allow a move if ap < 3 and moving into fire
     Tile t = getCurrentFireFighter().getTile().getAdjacentTile(d);
-    if (t != null && t.hasFire() && (getCurrentFireFighter().getActionPointsLeft() < 3))
+    if (t != null && t.hasFire() && (getCurrentFireFighter().getActionPointsLeft() < 3)) {
+      sendMessageToGui("You cannot move on a tile with fire if you have less than 3 AP points");
       return false;
+    }
 
     Tile currentTile = getCurrentFireFighter().getTile();
     // verifies that there is a tile in the direction
     if (currentTile.hasObstacle(d) || currentTile.getAdjacentTile(d) == null) {
+      sendMessageToGui(
+          "You cannot move to that tile as either there is an obstacle obstructing the move or"
+              + " no tile at all at that location");
       return false;
     }
 
     return true;
   }
 
-  private boolean canMoveWithVictim(Direction d) {
+  protected boolean canMoveWithVictim(Direction d) {
     Tile currentTile = getCurrentFireFighter().getTile();
     Tile adjacentTile = currentTile.getAdjacentTile(d);
-    if (!currentTile.hasRealVictim()
-        || adjacentTile.hasFire()
-        || adjacentTile.hasPointOfInterest()) {
+    if (!currentTile.hasRealVictim()) {
+      sendMessageToGui("You must be on a tile containing a victim to move with it");
+      return false;
+    }
+    if (adjacentTile.hasFire() || adjacentTile.hasPointOfInterest()) {
+      sendMessageToGui("You cannot move a victim into a tile with fire or a tile with a POI");
       return false;
     }
     return true;
@@ -238,6 +273,10 @@ public class FireFighterTurnManager implements Iterable<FireFighter> {
 
   public static void useFireFighterGameManagerFamily() {
     instance = new FireFighterTurnManager();
+  }
+
+  public void sendMessageToGui(String message) {
+    BoardScreen.createDialog("Action rejected", message);
   }
 
   @NotNull
