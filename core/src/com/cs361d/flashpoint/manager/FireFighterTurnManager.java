@@ -103,8 +103,9 @@ public class FireFighterTurnManager implements Iterable<FireFighter> {
         oldTile.setNullVictim();
         newTile.setVictim(v);
         f.setTile(newTile);
-        BoardManager.getInstance().verifyVictimRescueStatus(newTile);
-        sendChangeToNetwork();
+        if (!BoardManager.getInstance().verifyVictimRescueStatus(newTile)) {
+          sendChangeToNetwork();
+         }
       } else {
         sendMessageToGui("You need 2 AP to move with a victim");
       }
@@ -132,8 +133,9 @@ public class FireFighterTurnManager implements Iterable<FireFighter> {
       return;
     }
     if (getCurrentFireFighter().chopAP()) {
-      o.applyDamage();
-      sendChangeToNetwork();
+      if (o.applyDamage()) {
+        sendChangeToNetwork();
+        }
     } else {
       sendMessageToGui("You need 2 ap to chop a wall");
     }
@@ -264,7 +266,8 @@ public class FireFighterTurnManager implements Iterable<FireFighter> {
   }
 
   private void sendChangeToNetwork() {
-    NetworkManager.getInstance().sendCommand(Commands.GAMESTATE, DBHandler.getBoardAsString());
+    if (!BoardManager.getInstance().gameHasEnded())
+      NetworkManager.getInstance().sendCommand(Commands.GAMESTATE, DBHandler.getBoardAsString());
   }
 
   public static void useFireFighterGameManagerAdvanced() {

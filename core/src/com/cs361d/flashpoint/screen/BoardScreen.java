@@ -19,9 +19,6 @@ import com.cs361d.flashpoint.networking.Commands;
 import com.cs361d.flashpoint.networking.NetworkManager;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
 
 public class BoardScreen extends FlashPointScreen {
 
@@ -32,7 +29,6 @@ public class BoardScreen extends FlashPointScreen {
 
   static final int WALL_THICKNESS = 5;
   static final int TILE_SIZE = 75;
-
   static Image[][] tilesImg = new Image[NUMBER_OF_ROWS][NUMBER_OF_COLS];
   static ArrayList<Image> gameUnits = new ArrayList<Image>();
 
@@ -519,6 +515,7 @@ public class BoardScreen extends FlashPointScreen {
   }
 
   public static void createEndGameDialog(String title, String message) {
+    BoardManager.getInstance().setGameEnded();
     Dialog dialog =
             new Dialog(title, skinUI, "dialog") {
               public void result(Object obj) {
@@ -767,6 +764,10 @@ public class BoardScreen extends FlashPointScreen {
     if (game.getScreen() == game.boardScreen) {
       setBoardScreen();
     }
+  }
+
+  public static boolean isOnBoardScreen() {
+    return game.getScreen() == game.boardScreen;
   }
 
   public static void setLobbyPage() {

@@ -1,8 +1,12 @@
 package com.cs361d.flashpoint.manager;
 
 import com.cs361d.flashpoint.model.BoardElements.*;
+import com.cs361d.flashpoint.networking.Commands;
+import com.cs361d.flashpoint.networking.NetworkManager;
+import com.cs361d.flashpoint.networking.Server;
 import com.cs361d.flashpoint.screen.BoardScreen;
 import org.jetbrains.annotations.NotNull;
+import org.json.simple.JSONObject;
 
 import java.util.*;
 import java.util.List;
@@ -10,8 +14,8 @@ import java.util.List;
 public class BoardManager implements Iterable<Tile> {
   protected Difficulty difficulty;
   private final LinkedList<FireFighterColor> colorList = new LinkedList<FireFighterColor>();
-  public final static int NUM_VICTIM_SAVED_TO_WIN = 7;
-  public final static int MAX_WALL_DAMAGE_POSSIBLE = 24;
+  public static final int NUM_VICTIM_SAVED_TO_WIN = 7;
+  public static final int MAX_WALL_DAMAGE_POSSIBLE = 24;
   public static final int COLUMNS = 10;
   public static final int ROWS = 8;
   protected final Tile[][] TILE_MAP = new Tile[ROWS][COLUMNS];
@@ -23,8 +27,13 @@ public class BoardManager implements Iterable<Tile> {
   protected List<AbstractVictim> victims = new ArrayList<AbstractVictim>(18);
   protected int TOTAL_NUM_PLAYER_NEEDED = 0;
   protected int numPlayerLeftToJoin = 0;
+  protected boolean gameEnded = false;
 
   // create an object of SingleObject
+
+  public void setGameEnded() {
+    gameEnded = true;
+  }
   protected static BoardManager instance = new BoardManager();
 
   public Difficulty getDifficulty() {
@@ -74,7 +83,7 @@ public class BoardManager implements Iterable<Tile> {
       }
     }
     for (int i = 0; i < 5; i++) {
-      Victim v = new Victim( true);
+      Victim v = new Victim(true);
       victims.add(v);
     }
     for (int i = 0; i < 11; i++) {
@@ -88,7 +97,6 @@ public class BoardManager implements Iterable<Tile> {
     colorList.add(FireFighterColor.ORANGE);
     colorList.add(FireFighterColor.WHITE);
     colorList.add(FireFighterColor.YELLOW);
-
   }
 
   public void setTotalPlayerNeeded(int num) {
@@ -107,14 +115,13 @@ public class BoardManager implements Iterable<Tile> {
     return numPlayerLeftToJoin;
   }
 
-
   public void setGameName(String name) {
-      this.gameName = name;
+    this.gameName = name;
   }
 
   public String getGameName() {
-      return this.gameName;
-    }
+    return this.gameName;
+  }
 
   public void addWall(int i, int j, Direction d, int health) {
     /*
@@ -126,6 +133,7 @@ public class BoardManager implements Iterable<Tile> {
       TILE_MAP[i][j].getObstacle(d).setHealth(health);
     }
   }
+
   public void setCarrierStatus(int i, int j, CarrierStatus s) {
     TILE_MAP[i][j].setCarrierStatus(s);
   }
@@ -139,6 +147,7 @@ public class BoardManager implements Iterable<Tile> {
       FireFighterTurnManager.getInstance().addFireFighter(f);
     }
   }
+
   public void addDoor(int i, int j, Direction d, int health, boolean isOpen) {
     Obstacle obstacle = TILE_MAP[i][j].getObstacle(d);
     /*
@@ -149,8 +158,7 @@ public class BoardManager implements Iterable<Tile> {
     obstacle.setOpen(isOpen);
   }
 
-  public void addFireFighter(
-      int i, int j, FireFighterColor color, int actionPoints) {
+  public void addFireFighter(int i, int j, FireFighterColor color, int actionPoints) {
     FireFighter f = FireFighter.createFireFighter(color, actionPoints);
     if (f.getTile() != null) {
       throw new IllegalArgumentException();
@@ -163,7 +171,8 @@ public class BoardManager implements Iterable<Tile> {
     TILE_MAP[i][j].setFireStatus(f);
   }
 
-  public void setGameAtStart(int numFalseAlarmRemoved, int numVictimsDead, int numVictimSaved, int totalWallDamageLeft) {
+  public void setGameAtStart(
+      int numFalseAlarmRemoved, int numVictimsDead, int numVictimSaved, int totalWallDamageLeft) {
     this.numFalseAlarmRemoved = numFalseAlarmRemoved;
     this.numVictimSaved = numVictimSaved;
     this.numVictimDead = numVictimsDead;
@@ -173,10 +182,9 @@ public class BoardManager implements Iterable<Tile> {
       Victim v = new Victim(false);
       victims.add(v);
     }
-    for (int i = 0; i < 6-numFalseAlarmRemoved; i++) {
+    for (int i = 0; i < 6 - numFalseAlarmRemoved; i++) {
       Victim v = new Victim(true);
       victims.add(v);
-
     }
     Collections.shuffle(victims);
   }
@@ -206,8 +214,8 @@ public class BoardManager implements Iterable<Tile> {
 
   // Spread the fire at the end of the turn
   public void endTurnFireSpread() throws IllegalAccessException {
-    int i = 1+(int) (Math.random()*(ROWS -2));
-    int j = 1+(int) (Math.random()*(COLUMNS -2));
+    int i = 1 + (int) (Math.random() * (ROWS - 2));
+    int j = 1 + (int) (Math.random() * (COLUMNS - 2));
     Tile hitLocation = TILE_MAP[i][j];
     if (hitLocation.hasNoFireAndNoSmoke()) {
       hitLocation.setFireStatus(FireStatus.SMOKE);
@@ -369,10 +377,9 @@ public class BoardManager implements Iterable<Tile> {
         if (t.hasRealVictim()) {
           this.numVictimDead++;
           if (numVictimDead > 3) {
-            endGame("GAME OVER", "You lost the game more than 3 victims died");
+            endGameMessage("GAME OVER", "You lost the game more than 3 victims died");
           }
-        }
-        else {
+        } else {
           numFalseAlarmRemoved++;
         }
         addNewPointInterest();
@@ -383,38 +390,36 @@ public class BoardManager implements Iterable<Tile> {
 
   protected void addNewPointInterest() {
     if (victims.isEmpty()) {
-//      throw new IllegalStateException("we cannot add a new point of interest if the list is empty");
+      //      throw new IllegalStateException("we cannot add a new point of interest if the list is
+      // empty");
       return;
     }
     AbstractVictim v = victims.remove(0);
     int width;
     int height;
-    do
-    {
-      width = 1+(int) (Math.random()*(ROWS -2));
-      height = 1+(int) (Math.random()*(COLUMNS -2));
+    do {
+      width = 1 + (int) (Math.random() * (ROWS - 2));
+      height = 1 + (int) (Math.random() * (COLUMNS - 2));
 
+    } while (TILE_MAP[width][height].hasPointOfInterest());
+    TILE_MAP[width][height].setFireStatus(FireStatus.EMPTY);
+    if (TILE_MAP[width][height].hasFireFighters()) {
+      // here we are on a firefighter and the point of interest is not
+      if (v.isFalseAlarm()) {
+        addNewPointInterest();
+      } else {
+        v.reveal();
+      }
+    } else {
+      TILE_MAP[width][height].setVictim(v);
     }
-      while (TILE_MAP[width][height].hasPointOfInterest());
-      TILE_MAP[width][height].setFireStatus(FireStatus.EMPTY);
-      if (TILE_MAP[width][height].hasFireFighters()) {
-        // here we are on a firefighter and the point of interest is not
-        if (v.isFalseAlarm()) {
-          addNewPointInterest();
-        }
-        else {
-          v.reveal();
-        }
-      }
-      else {
-        TILE_MAP[width][height].setVictim(v);
-      }
   }
 
   protected void addNewPointInterest(int i, int j) {
     AbstractVictim v = victims.get(0);
     TILE_MAP[i][j].setVictim(v);
   }
+
   // removes the fire outside the building
   protected void removeEdgeFire() {
     for (int i = 0; i < ROWS; i++) {
@@ -486,25 +491,27 @@ public class BoardManager implements Iterable<Tile> {
     }
     ArrayList<Tile> tiles = getClosestAmbulanceTile(i, j);
     FireFighter f = TILE_MAP[i][j].getFirefighters().get(0);
-      if (tiles.size() == 1) {
-        if (tiles.get(0).hasFire()) {
-          throw new IllegalArgumentException("Issue with tile at location " + i + " " + j + "It shoul not have fire");
-        }
-        f.setTile(tiles.get(0));
-      } else if (tiles.size() > 1) {
-        BoardScreen.addFilterOnKnockDownChoosePos(f, tiles);
-        f.removeFromBoard();
-      } else {
-        throw new IllegalStateException();
+    if (tiles.size() == 1) {
+      if (tiles.get(0).hasFire()) {
+        throw new IllegalArgumentException(
+            "Issue with tile at location " + i + " " + j + "It shoul not have fire");
       }
-    if(!TILE_MAP[i][j].getFirefighters().isEmpty()) {
-        knockedDown(i, j);
-      }
+      f.setTile(tiles.get(0));
+    } else if (tiles.size() > 1) {
+      BoardScreen.addFilterOnKnockDownChoosePos(f, tiles);
+      f.removeFromBoard();
+    } else {
+      throw new IllegalStateException();
+    }
+    if (!TILE_MAP[i][j].getFirefighters().isEmpty()) {
+      knockedDown(i, j);
+    }
   }
 
   public void chooseForKnockedDown(Tile t, FireFighter f) {
     if (!t.canContainAmbulance()) {
-      throw new IllegalArgumentException("Cannot place firefighter outside of ambulance tile after knocked down");
+      throw new IllegalArgumentException(
+          "Cannot place firefighter outside of ambulance tile after knocked down");
     }
     f.setTile(t);
   }
@@ -525,10 +532,10 @@ public class BoardManager implements Iterable<Tile> {
     this.totalWallDamageLeft = w;
   }
 
-  public void verifyVictimRescueStatus(Tile t) {
+  public boolean verifyVictimRescueStatus(Tile t) {
     int i = t.getI();
     int j = t.getJ();
-    if (i == 0 || i == ROWS -1 || j == 0 || j == COLUMNS -1 ) {
+    if (i == 0 || i == ROWS - 1 || j == 0 || j == COLUMNS - 1) {
       if (t.hasRealVictim()) {
         numVictimSaved++;
         t.setNullVictim();
@@ -536,15 +543,19 @@ public class BoardManager implements Iterable<Tile> {
       }
     }
     if (numVictimSaved >= NUM_VICTIM_SAVED_TO_WIN) {
-      endGame("GAME OVER", "Congratulation you won the game saving 7 victims!!!");
+      endGameMessage("GAME OVER", "Congratulation you won the game saving 7 victims!!!");
+      return true;
     }
+    return false;
   }
 
-  public void useDamageMarker() {
+  public boolean useDamageMarker() {
     this.totalWallDamageLeft--;
     if (this.totalWallDamageLeft <= 0) {
-      endGame("GAME OVER", "You lost the game the building collapsed)");
+      endGameMessage("GAME OVER", "You lost the game the building collapsed)");
+      return false;
     }
+    return true;
   }
 
   public int getTotalWallDamageLeft() {
@@ -583,8 +594,24 @@ public class BoardManager implements Iterable<Tile> {
     return tiles.iterator();
   }
 
-  protected void endGame(String title, String msg) {
-    BoardScreen.createEndGameDialog(title, msg);
-    DBHandler.removeGameFile(gameName);
+  public void endGameMessage(String title, String msg) {
+      JSONObject msCarrier = new JSONObject();
+      msCarrier.put("title", title);
+      msCarrier.put("endmessage", msg);
+      NetworkManager.getInstance().sendCommand(Commands.END_GAME, msCarrier.toJSONString());
+  }
+
+  public void endGameOnboard(String title, String msg) {
+    if (Server.amIServer()) {
+      Server.getServer().changeLoadedStatus(false);
+    }
+    if (BoardScreen.isOnBoardScreen()) {
+      BoardScreen.createEndGameDialog(title, msg);
+      // DBHandler.removeGameFile(gameName);
+    }
+  }
+
+  public boolean gameHasEnded() {
+    return gameEnded;
   }
 }

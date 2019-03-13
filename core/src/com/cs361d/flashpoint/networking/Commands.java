@@ -13,6 +13,7 @@ public enum Commands {
     JOIN("join"),
     SETBOARDSCREEN("SETBOARDSCREEN"),
     DISPLAY_MESSAGE("displaymessage"),
+    END_GAME("end_game"),
     EXITGAME("exitgame");
 
     private String text;

@@ -23,6 +23,6 @@ public class FlashPointGame extends Game {
         this.setScreen(loginScreen);
     }
 
-    public void setLobbyScreenScreen() { this.setScreen(lobbyScreen); }
+    public void setLobbyScreen() { this.setScreen(lobbyScreen); }
 
 }

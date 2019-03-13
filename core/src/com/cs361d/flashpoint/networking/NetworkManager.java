@@ -27,7 +27,7 @@ public class NetworkManager {
   //    final public String DEFAULT_SERVER_IP = getMyIPAddress(); //CHANGE THIS TO WORK OUTSIDE
   // MCGILL WORLD
   // public static final String DEFAULT_SERVER_IP = "142.157.74.18"; // Simon public ip address
-  public static final String DEFAULT_SERVER_IP = "132.216.233.3"; // Elvric public ip address
+  public static final String DEFAULT_SERVER_IP = "132.216.233.52"; // Elvric public ip address
   // public static final String DEFAULT_SERVER_IP = "142.157.129.43"; // JZ public ip address
   // final public static String DEFAULT_SERVER_IP = "142.157.149.34"; // DC public ip
   public static final int DEFAULT_SERVER_PORT = 54590;
@@ -279,9 +279,9 @@ public class NetworkManager {
               });
           if (Server.amIServer()) {
             Server.getServer().changeLoadedStatus(false);
-            for (ClientHandler mc : Server.clientThreads.values()) {
-              mc.dout.writeUTF(msg);
-            }
+            //            for (ClientHandler mc : Server.clientThreads.values()) {
+            //              mc.dout.writeUTF(msg);
+            //            }
           }
           break;
 
@@ -322,6 +322,33 @@ public class NetworkManager {
                   BoardScreen.createDialog(jsarr.get(0).toString(), jsarr.get(1).toString());
                 }
               });
+          break;
+
+        case END_GAME:
+          jsonObject = (JSONObject) parser.parse(message);
+          final String title = jsonObject.get("title").toString();
+          final String endReason = jsonObject.get("endmessage").toString();
+          if (Server.amIServer()) {
+            try {
+              Thread.sleep(10);
+            } catch (InterruptedException e) {
+              e.printStackTrace();
+            }
+            BoardManager.getInstance().endGameOnboard(title, endReason);
+          } else {
+            Gdx.app.postRunnable(
+                new Runnable() {
+                  @Override
+                  public void run() {
+                    try {
+                      Thread.sleep(10);
+                    } catch (InterruptedException e) {
+                      e.printStackTrace();
+                    }
+                    BoardManager.getInstance().endGameOnboard(title, endReason);
+                  }
+                });
+          }
           break;
         default:
       }

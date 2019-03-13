@@ -42,7 +42,7 @@ public class Obstacle {
     } else {
       this.health--;
       if (!isDoor) {
-          BoardManager.getInstance().useDamageMarker();
+          return BoardManager.getInstance().useDamageMarker();
       }
       return true;
     }
