@@ -345,6 +345,9 @@ public class NetworkManager {
               e.printStackTrace();
             }
             BoardManager.getInstance().endGameOnboard(title, endReason);
+            for (ClientHandler mc : Server.clientThreads.values()) {
+              mc.dout.writeUTF(msg);
+            }
           }
           else if (Server.amIServer()) {
             try {
@@ -353,9 +356,6 @@ public class NetworkManager {
               e.printStackTrace();
             }
             BoardManager.getInstance().endGameOnboard(title, endReason);
-            for (ClientHandler mc : Server.clientThreads.values()) {
-              mc.dout.writeUTF(msg);
-            }
           }
           else {
             try {

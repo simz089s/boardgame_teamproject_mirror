@@ -552,6 +552,7 @@ public class BoardManager implements Iterable<Tile> {
   public boolean useDamageMarker() {
     this.totalWallDamageLeft--;
     if (this.totalWallDamageLeft <= 0) {
+      BoardManager.getInstance().setGameEnded();
       endGameMessage("GAME OVER", "You lost the game the building collapsed)");
       return false;
     }
