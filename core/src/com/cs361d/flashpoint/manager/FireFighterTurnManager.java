@@ -233,7 +233,11 @@ public class FireFighterTurnManager implements Iterable<FireFighter> {
   }
 
   public FireFighter getCurrentFireFighter() {
-    return FIREFIGHTERS.peek();
+    FireFighter f;
+    do {
+      f = FIREFIGHTERS.peek();
+    } while (f == null);
+    return f;
   }
 
   protected void reset() {
