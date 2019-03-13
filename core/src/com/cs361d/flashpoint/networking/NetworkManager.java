@@ -153,7 +153,7 @@ public class NetworkManager {
       final String ip = jsonObject.get("IP").toString();
       switch (c) {
         case ADD_CHAT_MESSAGE:
-          if (!message.equals("") && Server.amIServer()) {
+          if (!message.equals("") && Server.amIServer() && !ip.equals(DEFAULT_SERVER_IP)) {
             Server.addMessage(message);
             if (BoardScreen.isChatFragment()) {
               BoardChatFragment.addMessageToChat(message);
@@ -161,7 +161,14 @@ public class NetworkManager {
             for (ClientHandler mc : Server.clientThreads.values()) {
               mc.dout.writeUTF(msg);
             }
-          } else if (!message.equals("")) {
+          }
+          else if (!message.equals("") && Server.amIServer()) {
+            Server.addMessage(message);
+            if (BoardScreen.isChatFragment()) {
+              BoardChatFragment.addMessageToChat(message);
+            }
+          }
+          else if (!message.equals("")) {
             Gdx.app.postRunnable(
                 new Runnable() {
                   @Override
@@ -331,7 +338,15 @@ public class NetworkManager {
           jsonObject = (JSONObject) parser.parse(message);
           final String title = jsonObject.get("title").toString();
           final String endReason = jsonObject.get("endmessage").toString();
-          if (Server.amIServer()) {
+          if (Server.amIServer() && !ip.equals(DEFAULT_SERVER_IP)) {
+            try {
+              Thread.sleep(10);
+            } catch (InterruptedException e) {
+              e.printStackTrace();
+            }
+            BoardManager.getInstance().endGameOnboard(title, endReason);
+          }
+          else if (Server.amIServer()) {
             try {
               Thread.sleep(10);
             } catch (InterruptedException e) {
@@ -341,7 +356,13 @@ public class NetworkManager {
             for (ClientHandler mc : Server.clientThreads.values()) {
               mc.dout.writeUTF(msg);
             }
-          } else {
+          }
+          else {
+            try {
+              Thread.sleep(10);
+            } catch (InterruptedException e) {
+              e.printStackTrace();
+            }
             Gdx.app.postRunnable(
                 new Runnable() {
                   @Override
