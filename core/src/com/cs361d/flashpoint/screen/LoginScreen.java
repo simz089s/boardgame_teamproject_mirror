@@ -227,11 +227,10 @@ public class LoginScreen extends FlashPointScreen {
                         String usr = fdUname.getText();
                         String pwd = fdPwd.getText();
 
-                        if (usr.isEmpty() || pwd.isEmpty()){
-                            errorMsgLabel.setText("Error: empty fields");
-                        } else {
-                            User.getInstance().setName(usr);
+                        if (searchDB(usr, pwd)) {
                             game.setScreen(game.lobbyScreen);
+                        } else {
+                            btnLogin.setText("Wrong");
                         }
                     }
                 });

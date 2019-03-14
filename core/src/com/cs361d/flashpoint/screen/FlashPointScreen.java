@@ -19,12 +19,12 @@ public abstract class FlashPointScreen implements Screen {
 
     static final String[][] ACCOUNTS = {
             {"Username", "Password"},
-            {"Simon", "notunderrated"},
-            {"Elvric", "BGod"},
-            {"Jacques", "corp"},
-            {"David", "notdaniel"},
-            {"Daniel", "notdavid"},
-            {"Mat", "hematics"}
+            {"Simon", "1234"},
+            {"Elvric", "1234"},
+            {"Jacques", "1234"},
+            {"David", "1234"},
+            {"Daniel", "1234"},
+            {"Mat", "1234"}
     };
 
     static boolean searchDB(String usr, String pwd) {
