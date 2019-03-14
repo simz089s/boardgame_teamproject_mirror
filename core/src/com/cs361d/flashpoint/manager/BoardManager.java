@@ -494,12 +494,14 @@ public class BoardManager implements Iterable<Tile> {
     if (tiles.size() == 1) {
       if (tiles.get(0).hasFire()) {
         throw new IllegalArgumentException(
-            "Issue with tile at location " + i + " " + j + "It shoul not have fire");
+            "Issue with tile at location " + i + " " + j + "It should not have fire");
       }
       f.setTile(tiles.get(0));
     } else if (tiles.size() > 1) {
-      BoardScreen.addFilterOnKnockDownChoosePos(f, tiles);
-      f.removeFromBoard();
+     // BoardScreen.addFilterOnKnockDownChoosePos(f, tiles);
+     // f.removeFromBoard();
+      // TODO modify in the future
+      f.setTile(tiles.get(0));
     } else {
       throw new IllegalStateException();
     }

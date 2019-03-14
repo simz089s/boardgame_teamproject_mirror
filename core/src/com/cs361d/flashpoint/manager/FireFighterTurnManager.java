@@ -47,7 +47,7 @@ public class FireFighterTurnManager implements Iterable<FireFighter> {
       }
     }
     allAssigned = true;
-    return allAssigned;
+    return true;
   }
 
   public void removeFireFighter(FireFighter f) {
@@ -70,9 +70,9 @@ public class FireFighterTurnManager implements Iterable<FireFighter> {
   }
 
   public void move(Direction d) {
+    FireFighter f = getCurrentFireFighter();
     if (canMove(d)) {
-      if (getCurrentFireFighter().moveAP(d)) {
-        FireFighter f = getCurrentFireFighter();
+      if (f.moveAP(d)) {
         Tile oldTile = f.getTile();
         Tile newTile = oldTile.getAdjacentTile(d);
         f.setTile(newTile);
@@ -95,8 +95,8 @@ public class FireFighterTurnManager implements Iterable<FireFighter> {
 
   public void moveWithVictim(Direction d) {
     if (canMoveWithVictim(d)) {
-      if (getCurrentFireFighter().moveWithVictimAP()) {
-        FireFighter f = getCurrentFireFighter();
+      FireFighter f = getCurrentFireFighter();
+      if (f.moveWithVictimAP()) {
         AbstractVictim v = f.getTile().getVictim();
         Tile oldTile = f.getTile();
         Tile newTile = oldTile.getAdjacentTile(d);

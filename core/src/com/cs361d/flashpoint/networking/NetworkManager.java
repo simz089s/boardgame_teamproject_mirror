@@ -1,6 +1,7 @@
 package com.cs361d.flashpoint.networking;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Net;
 import com.cs361d.flashpoint.manager.*;
 import com.cs361d.flashpoint.model.BoardElements.FireFighterColor;
 import com.cs361d.flashpoint.screen.BoardChatFragment;
@@ -27,7 +28,7 @@ public class NetworkManager {
   //    final public String DEFAULT_SERVER_IP = getMyIPAddress(); //CHANGE THIS TO WORK OUTSIDE
   // MCGILL WORLD
   // public static final String DEFAULT_SERVER_IP = "142.157.74.18"; // Simon public ip address
-  public static final String DEFAULT_SERVER_IP = "142.157.26.118"; // Elvric public ip address
+  public static final String DEFAULT_SERVER_IP = "96.20.111.206"; // Elvric public ip address
   // public static final String DEFAULT_SERVER_IP = "142.157.129.43"; // JZ public ip address
   // final public static String DEFAULT_SERVER_IP = "142.157.149.34"; // DC public ip
   public static final int DEFAULT_SERVER_PORT = 54590;
@@ -226,15 +227,21 @@ public class NetworkManager {
           break;
 
         case GAMESTATE:
+          // TODO check that in case it does not work during demo
           // Transfer the redraw call to the main thread (that has openGL and GDX)
-          CreateNewGameManager.loadGameFromString(message);
-          Gdx.app.postRunnable(
-              new Runnable() {
-                @Override
-                public void run() {
-                  BoardScreen.redrawBoard();
-                }
-              });
+          if (!ip.equals(DEFAULT_SERVER_IP)) {
+            CreateNewGameManager.loadGameFromString(message);
+            Gdx.app.postRunnable(
+                new Runnable() {
+                  @Override
+                  public void run() {
+                    BoardScreen.redrawBoard();
+                  }
+                });
+          }
+          else {
+            BoardScreen.redrawBoard();
+          }
           if (Server.amIServer()) {
             for (ClientHandler mc : Server.clientThreads.values()) {
               mc.dout.writeUTF(msg);
@@ -243,7 +250,9 @@ public class NetworkManager {
           break;
 
         case SAVE:
-          CreateNewGameManager.loadGameFromString(message);
+          if (!BoardScreen.isOnBoardScreen()) {
+            CreateNewGameManager.loadGameFromString(message);
+          }
           DBHandler.saveBoardToDB(BoardManager.getInstance().getGameName());
           if (Server.amIServer()) {
             for (ClientHandler mc : Server.clientThreads.values()) {
