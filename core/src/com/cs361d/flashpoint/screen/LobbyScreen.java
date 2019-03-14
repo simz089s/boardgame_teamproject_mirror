@@ -187,7 +187,7 @@ public class LobbyScreen extends FlashPointScreen {
                 new ClickListener() {
                     @Override
                     public void clicked(InputEvent event, float x, float y) {
-                        NetworkManager.getInstance().sendCommand(Commands.DISCONNECT,"");
+//                        NetworkManager.getInstance().sendCommand(Commands.DISCONNECT,"");
                         BGM.stop();
                         game.setScreen(game.loginScreen);
                     }
