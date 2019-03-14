@@ -229,7 +229,6 @@ public class NetworkManager {
         case GAMESTATE:
           // TODO check that in case it does not work during demo
           // Transfer the redraw call to the main thread (that has openGL and GDX)
-          if (!ip.equals(DEFAULT_SERVER_IP)) {
             CreateNewGameManager.loadGameFromString(message);
             Gdx.app.postRunnable(
                 new Runnable() {
@@ -238,10 +237,6 @@ public class NetworkManager {
                     BoardScreen.redrawBoard();
                   }
                 });
-          }
-          else {
-            BoardScreen.redrawBoard();
-          }
           if (Server.amIServer()) {
             for (ClientHandler mc : Server.clientThreads.values()) {
               mc.dout.writeUTF(msg);
