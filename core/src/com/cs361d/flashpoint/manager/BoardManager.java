@@ -539,6 +539,7 @@ public class BoardManager implements Iterable<Tile> {
     int j = t.getJ();
     if (i == 0 || i == ROWS - 1 || j == 0 || j == COLUMNS - 1) {
       if (t.hasRealVictim()) {
+        BoardScreen.createDialog("Victim Saved", "Congreatulation you saved one Victim");
         numVictimSaved++;
         t.setNullVictim();
         addNewPointInterest();
