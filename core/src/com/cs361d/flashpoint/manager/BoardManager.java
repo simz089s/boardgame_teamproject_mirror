@@ -229,6 +229,22 @@ public class BoardManager implements Iterable<Tile> {
     // we clear the edge tiles with fire as knocked down player must be able to respawn
     removeEdgeFire();
     updateVictimAndFireFighter(tiles);
+    checkVictimsAndAdd();
+  }
+
+  protected void checkVictimsAndAdd() {
+    int numVictimToAdd = 3;
+    for (int i = 0; i <ROWS; i++) {
+      for (int j = 0; j < COLUMNS; j++) {
+        if (TILE_MAP[i][j].hasPointOfInterest()) {
+          numVictimToAdd--;
+        }
+      }
+    }
+    while(numVictimToAdd>0) {
+      addNewPointInterest();
+      numVictimToAdd--;
+    }
   }
 
   public void reset() {
@@ -382,7 +398,6 @@ public class BoardManager implements Iterable<Tile> {
         } else {
           numFalseAlarmRemoved++;
         }
-        addNewPointInterest();
         t.setNullVictim();
       }
     }
@@ -539,14 +554,13 @@ public class BoardManager implements Iterable<Tile> {
     int j = t.getJ();
     if (i == 0 || i == ROWS - 1 || j == 0 || j == COLUMNS - 1) {
       if (t.hasRealVictim()) {
-        BoardScreen.createDialog("Victim Saved", "Congreatulation you saved one Victim");
+        BoardScreen.createDialog("Victim Saved", "Congratulations, you saved one victim!");
         numVictimSaved++;
         t.setNullVictim();
-        addNewPointInterest();
       }
     }
     if (numVictimSaved >= NUM_VICTIM_SAVED_TO_WIN) {
-      endGameMessage("GAME OVER", "Congratulation you won the game saving 7 victims!!!");
+      endGameMessage("GAME OVER", "Congratulations, you won the game saving 7 victims!");
       return true;
     }
     return false;
@@ -556,7 +570,7 @@ public class BoardManager implements Iterable<Tile> {
     this.totalWallDamageLeft--;
     if (this.totalWallDamageLeft <= 0) {
       BoardManager.getInstance().setGameEnded();
-      endGameMessage("GAME OVER", "You lost the game the building collapsed)");
+      endGameMessage("GAME OVER", "You lost the game. The building collapsed.");
       return false;
     }
     return true;
