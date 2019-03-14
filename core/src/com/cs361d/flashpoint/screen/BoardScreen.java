@@ -132,7 +132,11 @@ public class BoardScreen extends FlashPointScreen {
                       } catch (IllegalAccessException e) {
                         e.printStackTrace();
                       }
-
+                      try {
+                        Thread.sleep(100);
+                      } catch (InterruptedException e) {
+                        e.printStackTrace();
+                      }
                       removeAllFilterOnTile();
                       redrawGameUnitsOnTile();
                       updateGameInfoLabel();

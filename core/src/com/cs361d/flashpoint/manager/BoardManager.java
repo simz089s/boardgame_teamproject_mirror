@@ -608,7 +608,7 @@ public class BoardManager implements Iterable<Tile> {
   public void endGameOnboard(String title, String msg) {
     if (Server.amIServer()) {
       Server.getServer().changeLoadedStatus(false);
-    }
+  }
     if (BoardScreen.isOnBoardScreen()) {
       BoardScreen.createEndGameDialog(title, msg);
       // DBHandler.removeGameFile(gameName);
