@@ -123,7 +123,7 @@ public class BoardScreen extends FlashPointScreen {
                   public void clicked(InputEvent event, float x, float y) {
                     if (!FireFighterTurnManager.getInstance().allAssigned()
                             && DBHandler.isPresentInArr(CHOOSE_INIT_POS_TILES, i_pos + "-" + j_pos)
-                            && User.getInstance().isMyTurn()) {
+                            ) {
                       clearAllGameUnits();
                       Tile[][] tiles = BoardManager.getInstance().getTiles();
 
@@ -141,8 +141,7 @@ public class BoardScreen extends FlashPointScreen {
                       redrawGameUnitsOnTile();
                       updateGameInfoLabel();
 
-                      if (!FireFighterTurnManager.getInstance().allAssigned()
-                              && User.getInstance().isMyTurn()) {
+                      if (!FireFighterTurnManager.getInstance().allAssigned()) {
                         addFilterOnTileForChooseInitPos();
                       } else {
                         createResumeButton();

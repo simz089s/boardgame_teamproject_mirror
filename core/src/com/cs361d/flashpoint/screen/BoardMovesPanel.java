@@ -75,7 +75,7 @@ public class BoardMovesPanel {
 
     public void createMovesAndDirectionsPanel() {
 
-        if (User.getInstance().isMyTurn()) {
+        if (User.getInstance().isMyTurn() || true) {
 
             // list style
             listStyleMoveOptions = new List.ListStyle();
