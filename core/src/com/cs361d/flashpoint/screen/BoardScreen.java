@@ -60,6 +60,7 @@ public class BoardScreen extends FlashPointScreen {
   static ImageButton btnExit;
   static Label gameInfoLabel;
   static ImageButton btnResume;
+  static ImageButton btnDefaultRound;
   ImageButton btnChat;
   ImageButton btnCheatS;
   ImageButton btnStats;
@@ -180,6 +181,7 @@ public class BoardScreen extends FlashPointScreen {
     createStatsButton();
     createChatButton();
     createSoundButton();
+    createDefaultRoundButton();
     createResumeButton();
 
     // Moves panel
@@ -656,6 +658,7 @@ public class BoardScreen extends FlashPointScreen {
   private static void createResumeButton() {
 
     Texture myTexture = new Texture(Gdx.files.internal("icons/resumeBtn.png"));
+
     TextureRegion myTextureRegion = new TextureRegion(myTexture);
     TextureRegionDrawable myTexRegionDrawable = new TextureRegionDrawable(myTextureRegion);
 
@@ -680,6 +683,23 @@ public class BoardScreen extends FlashPointScreen {
     if (User.getInstance().isMyTurn()) {
       stage.addActor(btnResume);
     }
+  }
+
+  private static void createDefaultRoundButton() { // just for show (no listener)
+
+    Texture myTexture = new Texture(Gdx.files.internal("icons/defaultBtn.png"));
+    TextureRegion myTextureRegion = new TextureRegion(myTexture);
+    TextureRegionDrawable myTexRegionDrawable = new TextureRegionDrawable(myTextureRegion);
+
+    btnDefaultRound = new ImageButton(myTexRegionDrawable);
+    btnDefaultRound.setWidth(100);
+    btnDefaultRound.setHeight(100);
+
+    final float x = Gdx.graphics.getWidth() - btnDefaultRound.getWidth();
+    final float y = Gdx.graphics.getHeight() - btnDefaultRound.getHeight();
+
+    btnDefaultRound.setPosition(x, y);
+    stage.addActor(btnDefaultRound);
   }
 
   private void createSoundButton() {
