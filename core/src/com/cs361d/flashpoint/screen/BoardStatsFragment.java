@@ -60,7 +60,7 @@ public class BoardStatsFragment {
         //scrollMessage.setBounds(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight() + 100);
         scrollPaneStats.setPosition(
                 845,
-                Gdx.graphics.getHeight() - scrollPaneStats.getHeight() - 150);
+                Gdx.graphics.getHeight() - scrollPaneStats.getHeight() - 170);
 
 
         statsListSP.add(scrollPaneStats);

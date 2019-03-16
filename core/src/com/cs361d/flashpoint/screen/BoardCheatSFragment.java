@@ -52,7 +52,7 @@ public class BoardCheatSFragment {
         //scrollMessage.setBounds(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight() + 100);
         scrollPaneCard.setPosition(
                 845,
-                Gdx.graphics.getHeight() - scrollPaneCard.getHeight() - 150);
+                Gdx.graphics.getHeight() - scrollPaneCard.getHeight() - 170);
 
 
         cardsListSP.add(scrollPaneCard);

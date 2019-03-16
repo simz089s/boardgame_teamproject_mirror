@@ -57,12 +57,12 @@ public class BoardScreen extends FlashPointScreen {
   static BoardCheatSFragment boardCheatSFragment;
   static BoardStatsFragment boardStatsFragment;
 
-  static TextButton btnExit;
+  static ImageButton btnExit;
   static Label gameInfoLabel;
   static ImageButton btnResume;
-  TextButton btnChat;
-  TextButton btnCheatS;
-  TextButton btnStats;
+  ImageButton btnChat;
+  ImageButton btnCheatS;
+  ImageButton btnStats;
   ImageButton btnMusicSound;
 
   static Fragment currentFragment = Fragment.EMPTY;
@@ -537,12 +537,19 @@ public class BoardScreen extends FlashPointScreen {
   // right menu buttons
 
   private void createExitButton() {
-    btnExit = new TextButton("Exit", skinUI, "default");
-    btnExit.setWidth(100);
-    btnExit.setHeight(25);
-    btnExit.setPosition(
-            (Gdx.graphics.getWidth() - btnExit.getWidth() - 8),
-            (Gdx.graphics.getHeight() - btnExit.getHeight() - 8));
+    Texture myTexture = new Texture(Gdx.files.internal("icons/exitBtn.png"));
+    TextureRegion myTextureRegion = new TextureRegion(myTexture);
+    TextureRegionDrawable myTexRegionDrawable = new TextureRegionDrawable(myTextureRegion);
+
+    btnExit = new ImageButton(myTexRegionDrawable);
+
+    btnExit.setWidth(50);
+    btnExit.setHeight(50);
+
+    final float xPosBtnExit = Gdx.graphics.getWidth() - btnExit.getWidth() - 100;
+    final float yPosBtnExit = Gdx.graphics.getHeight() - btnExit.getHeight() - 8;
+
+    btnExit.setPosition(xPosBtnExit, yPosBtnExit);
 
     btnExit.addListener(
             new ClickListener() {
@@ -566,12 +573,17 @@ public class BoardScreen extends FlashPointScreen {
   }
 
   private void createCheatSButton() {
-    btnCheatS = new TextButton("Cheat sheet", skinUI, "default");
-    btnCheatS.setWidth(100);
-    btnCheatS.setHeight(25);
+    Texture myTexture = new Texture(Gdx.files.internal("icons/cheatSheetBtn.png"));
+    TextureRegion myTextureRegion = new TextureRegion(myTexture);
+    TextureRegionDrawable myTexRegionDrawable = new TextureRegionDrawable(myTextureRegion);
 
-    final float xPosBtnCheatS = Gdx.graphics.getWidth() - btnExit.getWidth() - 8;
-    final float yPosBtnCheatS = Gdx.graphics.getHeight() - btnExit.getHeight() * 2 - 15;
+    btnCheatS = new ImageButton(myTexRegionDrawable);
+
+    btnCheatS.setWidth(50);
+    btnCheatS.setHeight(50);
+
+    final float xPosBtnCheatS = Gdx.graphics.getWidth() - btnExit.getWidth() - 110;
+    final float yPosBtnCheatS = Gdx.graphics.getHeight() - btnExit.getHeight() * 2 - 10;
 
     btnCheatS.setPosition(xPosBtnCheatS, yPosBtnCheatS);
 
@@ -587,12 +599,17 @@ public class BoardScreen extends FlashPointScreen {
   }
 
   private void createStatsButton() {
-    btnStats = new TextButton("Stats", skinUI, "default");
-    btnStats.setWidth(100);
-    btnStats.setHeight(25);
+    Texture myTexture = new Texture(Gdx.files.internal("icons/statBtn.png"));
+    TextureRegion myTextureRegion = new TextureRegion(myTexture);
+    TextureRegionDrawable myTexRegionDrawable = new TextureRegionDrawable(myTextureRegion);
 
-    final float xPosBtnStats = Gdx.graphics.getWidth() - btnExit.getWidth() - 8;
-    final float yPosBtnStats = Gdx.graphics.getHeight() - btnExit.getHeight() * 2 - 48;
+    btnStats = new ImageButton(myTexRegionDrawable);
+
+    btnStats.setWidth(50);
+    btnStats.setHeight(50);
+
+    final float xPosBtnStats = Gdx.graphics.getWidth() - btnExit.getWidth() - 65;
+    final float yPosBtnStats = Gdx.graphics.getHeight() - btnExit.getHeight() * 2 - 43;
 
     btnStats.setPosition(xPosBtnStats, yPosBtnStats);
 
@@ -608,12 +625,19 @@ public class BoardScreen extends FlashPointScreen {
   }
 
   private void createChatButton() {
-    btnChat = new TextButton("Chat", skinUI, "default");
-    btnChat.setWidth(100);
-    btnChat.setHeight(25);
+
+    Texture myTexture = new Texture(Gdx.files.internal("icons/chatBtn.png"));
+    TextureRegion myTextureRegion = new TextureRegion(myTexture);
+    TextureRegionDrawable myTexRegionDrawable = new TextureRegionDrawable(myTextureRegion);
+
+    btnChat = new ImageButton(myTexRegionDrawable);
+
+    btnChat.setWidth(50);
+    btnChat.setHeight(50);
+
 
     final float xPosBtnChat = Gdx.graphics.getWidth() - btnExit.getWidth() - 8;
-    final float yPosBtnChat = Gdx.graphics.getHeight() - btnExit.getHeight() * 3 - 55;
+    final float yPosBtnChat = Gdx.graphics.getHeight() - btnExit.getHeight() * 2 - 50;
 
     btnChat.setPosition(xPosBtnChat, yPosBtnChat);
 
@@ -631,16 +655,16 @@ public class BoardScreen extends FlashPointScreen {
   // show MovesAndDirectionsPanel on resume
   private static void createResumeButton() {
 
-    Texture myTexture = new Texture(Gdx.files.internal("icons/myResumeBtn.png"));
+    Texture myTexture = new Texture(Gdx.files.internal("icons/resumeBtn.png"));
     TextureRegion myTextureRegion = new TextureRegion(myTexture);
     TextureRegionDrawable myTexRegionDrawable = new TextureRegionDrawable(myTextureRegion);
 
     btnResume = new ImageButton(myTexRegionDrawable);
-    btnResume.setWidth(50);
-    btnResume.setHeight(50);
+    btnResume.setWidth(100);
+    btnResume.setHeight(100);
 
-    final float x = Gdx.graphics.getWidth() - btnExit.getWidth() - btnResume.getWidth() - 35;
-    final float y = Gdx.graphics.getHeight() - btnExit.getHeight() * 3 - 55;
+    final float x = Gdx.graphics.getWidth() - btnResume.getWidth();
+    final float y = Gdx.graphics.getHeight() - btnResume.getHeight();
 
     btnResume.setPosition(x, y);
 
@@ -685,7 +709,7 @@ public class BoardScreen extends FlashPointScreen {
               }
             });
 
-    stage.addActor(btnMusicSound);
+    //stage.addActor(btnMusicSound);
   }
 
   // add filters
