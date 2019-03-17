@@ -86,9 +86,7 @@ public class BoardScreen extends FlashPointScreen {
 
     txtrBG = new Texture("empty.png");
     spriteBG = new Sprite(txtrBG);
-    spriteBG.setScale(0.6f);
-    spriteBG.setPosition(
-            -(Gdx.graphics.getWidth() / 2f) - 125, -(Gdx.graphics.getHeight() / 2f) + 30);
+    spriteBG.setPosition(0, 0);
 
     boardChatFragment = new BoardChatFragment(stage);
     boardCheatSFragment = new BoardCheatSFragment(stage);

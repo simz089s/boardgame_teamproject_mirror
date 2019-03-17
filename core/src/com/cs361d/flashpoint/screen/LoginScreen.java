@@ -234,7 +234,7 @@ public class LoginScreen extends FlashPointScreen {
 //                            User.getInstance().setName(usr);
 //                            game.setScreen(game.lobbyScreen);
 //                        } else {
-//                            btnLogin.setText("Wrong");
+//                            errorMsgLabel.setText("Invalid credentials, try again.");
 //                        }
                     }
                 });
@@ -251,8 +251,8 @@ public class LoginScreen extends FlashPointScreen {
     public void createErrorMsgLabel(){
         errorMsgLabel = new Label("", skinUI);
         errorMsgLabel.setPosition(
-                Gdx.graphics.getWidth() / 2 - 70,
-                (Gdx.graphics.getHeight() / 3f - (btnLogin.getHeight() / 2)) / 2);
+                Gdx.graphics.getWidth() / 2 - 80,
+                Gdx.graphics.getHeight() / 2 - 60);
         errorMsgLabel.setColor(Color.RED);
 
         stage.addActor(errorMsgLabel);

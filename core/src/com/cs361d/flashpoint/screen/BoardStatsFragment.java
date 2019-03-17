@@ -71,9 +71,9 @@ public class BoardStatsFragment {
 
         ArrayList<String> gamesStatsArrList = new ArrayList<String>();
 
-        gamesStatsArrList.add(BoardManager.getInstance().getGameName());
+        gamesStatsArrList.add("Game name: " + BoardManager.getInstance().getGameName());
         gamesStatsArrList.add("");
-        gamesStatsArrList.add("[Team stats]");
+        gamesStatsArrList.add("[TEAM]");
         gamesStatsArrList.add("Walls left: " + BoardManager.getInstance().getTotalWallDamageLeft());
         gamesStatsArrList.add("Victims saved: " + BoardManager.getInstance().getNumVictimSaved());
         gamesStatsArrList.add("Victims lost: " + BoardManager.getInstance().getNumVictimDead());
@@ -82,10 +82,10 @@ public class BoardStatsFragment {
         Iterator<FireFighter> it = FireFighterTurnManager.getInstance().iterator();
         while(it.hasNext()) {
             FireFighter f = it.next();
-            gamesStatsArrList.add("" + f.getColor());
+            gamesStatsArrList.add("[" + f.getColor() + "]");
             gamesStatsArrList.add("Accumulated AP: " + f.getActionPointsLeft());
             gamesStatsArrList.add("Special AP: 0");
-            gamesStatsArrList.add("Specialist: Fire Captain");
+            gamesStatsArrList.add("Specialist: None"); // TODO: add firefighter specialist here
             gamesStatsArrList.add("");
         }
 
