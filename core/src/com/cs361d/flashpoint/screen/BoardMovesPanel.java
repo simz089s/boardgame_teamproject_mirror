@@ -53,23 +53,23 @@ public class BoardMovesPanel {
         if (move.equals("MOVE")){
             clearAllGameUnits();
             fireFighterTurnManager.move(direction);
-            redrawGameUnitsOnTile();
+            drawGameUnitsOnTile();
         } else if (move.equals("EXTINGUISH")){
             clearAllGameUnits();
             fireFighterTurnManager.extinguishFire(direction);
-            redrawGameUnitsOnTile();
+            drawGameUnitsOnTile();
         } else if (move.equals("CHOP")){
             clearAllGameUnits();
             fireFighterTurnManager.chopWall(direction);
-            redrawGameUnitsOnTile();
+            drawGameUnitsOnTile();
         } else if (move.equals("MOVE WITH VICTIM")){
             clearAllGameUnits();
             fireFighterTurnManager.moveWithVictim(direction);
-            redrawGameUnitsOnTile();
+            drawGameUnitsOnTile();
         } else if (move.equals("INTERACT WITH DOOR")){
             clearAllGameUnits();
             fireFighterTurnManager.interactWithDoor(direction);
-            redrawGameUnitsOnTile();
+            drawGameUnitsOnTile();
         }
     }
 
@@ -146,7 +146,7 @@ public class BoardMovesPanel {
                             e.printStackTrace();
                         }
 
-                        redrawGameUnitsOnTile();
+                        drawGameUnitsOnTile();
                         gameInfoLabel.setColor(Color.BLACK);
                         updateGameInfoLabel();
 

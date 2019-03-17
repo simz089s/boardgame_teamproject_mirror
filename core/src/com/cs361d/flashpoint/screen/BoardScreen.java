@@ -139,7 +139,7 @@ public class BoardScreen extends FlashPointScreen {
                         e.printStackTrace();
                       }
                       removeAllFilterOnTile();
-                      redrawGameUnitsOnTile();
+                      drawGameUnitsOnTile();
                       updateGameInfoLabel();
 
                       if (!FireFighterTurnManager.getInstance().allAssigned()) {
@@ -167,17 +167,18 @@ public class BoardScreen extends FlashPointScreen {
                       activateKnockDownChoosePos = false;
 
                       removeAllFilterOnTile();
-                      redrawGameUnitsOnTile();
+                      drawGameUnitsOnTile();
                       updateGameInfoLabel();
                     }
                   }
                 });
 
         stage.addActor(tilesImg[i][j]);
-        drawGameUnitsOnTile(tilesImg[i][j], i, j);
       }
     }
 
+    drawGameUnitsOnTile();
+    
     //createSoundButton();
     createGameInfoLabel();
 
@@ -368,10 +369,48 @@ public class BoardScreen extends FlashPointScreen {
       drawObstacles(myTile, bottom, Direction.BOTTOM);
     }
 
+    Image gameUnit;
+
+    // Vehicles
+    //TODO: boolean to check tiles[i][j].hasVehicle()
+    if (true) {
+      gameUnit = null;
+      if(true){ // TODO: tiles[i][j].hasAmbulance()
+        if(isVehicleOnTile(i, j, CarrierStatus.HASAMBULANCE, Orientation.HORIZONTAL)) { // horizontally positioned
+          gameUnit = new Image(new Texture("game_units/vehicles/h_ambulance.png"));
+          gameUnit.setHeight(60);
+          gameUnit.setWidth(100);
+          gameUnit.setPosition(myTile.getX() + 25, myTile.getY() + 8);
+        } else if (isVehicleOnTile(i, j, CarrierStatus.HASAMBULANCE, Orientation.VERTICAL)){ // vertically positioned
+          gameUnit = new Image(new Texture("game_units/vehicles/v_ambulance.png"));
+          gameUnit.setHeight(100);
+          gameUnit.setWidth(60);
+          gameUnit.setPosition(myTile.getX() + 8, myTile.getY() + 25);
+        }
+      }
+
+      if (true){ // TODO: tiles[i][j].hasEngine()
+        if(isVehicleOnTile(i, j, CarrierStatus.HASFIRETRUCK, Orientation.HORIZONTAL)) { // horizontally positioned
+          gameUnit = new Image(new Texture("game_units/vehicles/h_engine.png"));
+          gameUnit.setHeight(60);
+          gameUnit.setWidth(100);
+          gameUnit.setPosition(myTile.getX() + 25, myTile.getY() + 8);
+        } else if (isVehicleOnTile(i, j, CarrierStatus.HASFIRETRUCK, Orientation.VERTICAL)){ // vertically positioned
+          gameUnit = new Image(new Texture("game_units/vehicles/v_engine.png"));
+          gameUnit.setHeight(100);
+          gameUnit.setWidth(60);
+          gameUnit.setPosition(myTile.getX() + 8, myTile.getY() + 25);
+        }
+      }
+
+      if (gameUnit != null){
+        gameUnits.add(gameUnit);
+        stage.addActor(gameUnit);
+      }
+    }
+
     // Firefighters
     if (!tiles[i][j].getFirefighters().isEmpty()) {
-
-      Image gameUnit;
       for (FireFighter f : tiles[i][j].getFirefighters()) {
         switch (f.getColor()) {
           case BLUE:
@@ -410,7 +449,6 @@ public class BoardScreen extends FlashPointScreen {
       }
     }
     // POI
-    Image gameUnit;
     if (tiles[i][j].hasPointOfInterest()) {
       gameUnit = new Image(new Texture("game_units/POI_Rear.png"));
       if (tiles[i][j].getVictim().isRevealed()) {
@@ -469,7 +507,7 @@ public class BoardScreen extends FlashPointScreen {
     }
   }
 
-  public static void redrawGameUnitsOnTile() {
+  public static void drawGameUnitsOnTile() {
     Tile[][] tiles = BoardManager.getInstance().getTiles();
     for (int i = 0; i < tiles.length; i++) {
       for (int j = 0; j < tiles[i].length; j++) {
@@ -478,7 +516,11 @@ public class BoardScreen extends FlashPointScreen {
     }
   }
 
+
+
   // game info label
+
+
 
   private void createGameInfoLabel() {
 
@@ -854,6 +896,40 @@ public class BoardScreen extends FlashPointScreen {
         }
       }
     }
+  }
+
+  private static boolean isVehicleOnTile(int i, int j, CarrierStatus carrierStatus, Orientation orientation) {
+    if(true){ //TODO; get the map kind (if mk == 1)
+      if(carrierStatus == CarrierStatus.HASAMBULANCE){
+        if(orientation == Orientation.VERTICAL){
+          return (i == 4 && j == 0) || (i == 4 && j == 9);
+        } else if(orientation == Orientation.HORIZONTAL){
+          return (i == 0 && j == 5) || (i == 7 && j == 3);
+        }
+      } else if (carrierStatus == CarrierStatus.HASFIRETRUCK){
+        if(orientation == Orientation.VERTICAL){
+          return (i == 2 && j == 0) || (i == 6 && j == 9);
+        } else if(orientation == Orientation.HORIZONTAL){
+          return (i == 0 && j == 7) || (i == 7 && j == 1);
+        }
+      }
+    } else if(false){ //TODO; get the map kind (if mk == 2)
+      if(carrierStatus == CarrierStatus.HASAMBULANCE){
+        if(orientation == Orientation.VERTICAL){
+          return (i == 3 && j == 0) || (i == 5 && j == 9);
+        } else if(orientation == Orientation.HORIZONTAL){
+          return (i == 0 && j == 5) || (i == 7 && j == 3);
+        }
+      } else if (carrierStatus == CarrierStatus.HASFIRETRUCK){
+        if(orientation == Orientation.VERTICAL){
+          return (i == 5 && j == 0) || (i == 3 && j == 9);
+        } else if(orientation == Orientation.HORIZONTAL){
+          return (i == 0 && j == 3) || (i == 7 && j == 5);
+        }
+      }
+    }
+
+    return false;
   }
 
   public static void redrawBoard() {
