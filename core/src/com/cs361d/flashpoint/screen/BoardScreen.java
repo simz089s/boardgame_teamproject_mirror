@@ -22,7 +22,7 @@ import java.util.ArrayList;
 
 public class BoardScreen extends FlashPointScreen {
 
-  String BOARD_TO_DISPLAY_FILE = "boards/tile.png";
+  String BOARD_TO_DISPLAY_FILE = "boards/tile_1.png";
 
   static final int NUMBER_OF_ROWS = BoardManager.ROWS;
   static final int NUMBER_OF_COLS = BoardManager.COLUMNS;
@@ -178,7 +178,7 @@ public class BoardScreen extends FlashPointScreen {
     }
 
     drawGameUnitsOnTile();
-    
+
     //createSoundButton();
     createGameInfoLabel();
 
@@ -376,12 +376,12 @@ public class BoardScreen extends FlashPointScreen {
     if (true) {
       gameUnit = null;
       if(true){ // TODO: tiles[i][j].hasAmbulance()
-        if(isVehicleOnTile(i, j, CarrierStatus.HASAMBULANCE, Orientation.HORIZONTAL)) { // horizontally positioned
+        if(getVehicleOrientationOnTile(i, j, CarrierStatus.HASAMBULANCE, Orientation.HORIZONTAL)) { // horizontally positioned
           gameUnit = new Image(new Texture("game_units/vehicles/h_ambulance.png"));
           gameUnit.setHeight(60);
           gameUnit.setWidth(100);
           gameUnit.setPosition(myTile.getX() + 25, myTile.getY() + 8);
-        } else if (isVehicleOnTile(i, j, CarrierStatus.HASAMBULANCE, Orientation.VERTICAL)){ // vertically positioned
+        } else if (getVehicleOrientationOnTile(i, j, CarrierStatus.HASAMBULANCE, Orientation.VERTICAL)){ // vertically positioned
           gameUnit = new Image(new Texture("game_units/vehicles/v_ambulance.png"));
           gameUnit.setHeight(100);
           gameUnit.setWidth(60);
@@ -390,12 +390,12 @@ public class BoardScreen extends FlashPointScreen {
       }
 
       if (true){ // TODO: tiles[i][j].hasEngine()
-        if(isVehicleOnTile(i, j, CarrierStatus.HASFIRETRUCK, Orientation.HORIZONTAL)) { // horizontally positioned
+        if(getVehicleOrientationOnTile(i, j, CarrierStatus.HASFIRETRUCK, Orientation.HORIZONTAL)) { // horizontally positioned
           gameUnit = new Image(new Texture("game_units/vehicles/h_engine.png"));
           gameUnit.setHeight(60);
           gameUnit.setWidth(100);
           gameUnit.setPosition(myTile.getX() + 25, myTile.getY() + 8);
-        } else if (isVehicleOnTile(i, j, CarrierStatus.HASFIRETRUCK, Orientation.VERTICAL)){ // vertically positioned
+        } else if (getVehicleOrientationOnTile(i, j, CarrierStatus.HASFIRETRUCK, Orientation.VERTICAL)){ // vertically positioned
           gameUnit = new Image(new Texture("game_units/vehicles/v_engine.png"));
           gameUnit.setHeight(100);
           gameUnit.setWidth(60);
@@ -498,9 +498,9 @@ public class BoardScreen extends FlashPointScreen {
     //TODO: boolean to check tiles[i][j].hasHotSpot()
     if (false) { // placed at bottom right corner of tile
       gameUnit = new Image(new Texture("game_units/Hot_Spot.png"));
-      gameUnit.setHeight(30);
-      gameUnit.setWidth(30);
-      gameUnit.setPosition(myTile.getX() + 45, myTile.getY());
+      gameUnit.setHeight(15);
+      gameUnit.setWidth(15);
+      gameUnit.setPosition(myTile.getX() + 30, myTile.getY() + 28);
 
       gameUnits.add(gameUnit);
       stage.addActor(gameUnit);
@@ -898,7 +898,7 @@ public class BoardScreen extends FlashPointScreen {
     }
   }
 
-  private static boolean isVehicleOnTile(int i, int j, CarrierStatus carrierStatus, Orientation orientation) {
+  private static boolean getVehicleOrientationOnTile(int i, int j, CarrierStatus carrierStatus, Orientation orientation) {
     if(true){ //TODO; get the map kind (if mk == 1)
       if(carrierStatus == CarrierStatus.HASAMBULANCE){
         if(orientation == Orientation.VERTICAL){
