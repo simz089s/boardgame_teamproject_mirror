@@ -182,7 +182,11 @@ public class Tile {
     public boolean canContainAmbulance() {
         return this.carrierStatus == CarrierStatus.CANHAVEAMBULANCE;
     }
+    public boolean hasAmbulance() {
+        return this.carrierStatus == CarrierStatus.HASAMBULANCE;
+    }
     public boolean canContainFireTruck() {return this.carrierStatus == CarrierStatus.CANHAVEFIRETRUCK;}
+    public boolean hasFireTruck() {return this.carrierStatus == CarrierStatus.HASFIRETRUCK;}
 
     public boolean hasFireFighters() {
         return FIREFIGHTERS.size() > 0;

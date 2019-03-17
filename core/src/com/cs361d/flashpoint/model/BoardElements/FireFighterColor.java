@@ -6,11 +6,16 @@ public enum FireFighterColor {
   ORANGE("orange"),
   RED("red"),
   WHITE("white"),
-  YELLOW("yellow");
+  YELLOW("yellow"),
+  NOT_ASSIGNED("not_assigned");
 
   private String text;
   FireFighterColor(String text) {
     this.text = text;
+  }
+
+  public String toString() {
+    return this.text;
   }
 
   public static FireFighterColor fromString(String text) {

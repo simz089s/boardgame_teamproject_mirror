@@ -113,6 +113,7 @@ public class CreateGameScreen extends FlashPointScreen {
               int numPlayers = Integer.parseInt(lstNumPlayers.getSelected());
 
               String mapSelected = lstGameBoard.getSelected();
+              String diffSelected = lstDifficulty.getSelected();
 
               MapKind mk = MapKind.MAP1;
 
@@ -125,7 +126,7 @@ public class CreateGameScreen extends FlashPointScreen {
               //                            }
 
               CreateNewGameManager.createNewGame(
-                  gameNameField.getText(), numPlayers, mk, Difficulty.FAMILLY);
+                  gameNameField.getText(), numPlayers, mk, Difficulty.fromString(diffSelected));
               NetworkManager.getInstance()
                   .sendCommand(Commands.SEND_NEWLY_CREATED_BOARD, DBHandler.getBoardAsString());
                 BGM.stop();
@@ -292,7 +293,12 @@ public class CreateGameScreen extends FlashPointScreen {
 
     private void createDifficultyList() {
         lstDifficulty = new List<String>(skinUI);
-        String[] gameDifficulty = {"Family","Recruit","Veteran","Heroic"};
+        String[] gameDifficulty = new String[Difficulty.values().length];
+        int i = 0;
+        for (Difficulty diff : Difficulty.values()) {
+            gameDifficulty[i] = diff.getText();
+            i++;
+        }
         lstDifficulty.setItems(gameDifficulty);
         difficultyMenu = new ScrollPane(lstDifficulty);
 
