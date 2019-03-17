@@ -6,7 +6,6 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -53,6 +52,7 @@ public class BoardScreen extends FlashPointScreen {
 
   private static Music BGM = Gdx.audio.newMusic(Gdx.files.internal("playlist/battle_normal01.mp3"));
 
+  static BoardChooseRolePanel boardChooseRolePanel;
   static BoardMovesPanel boardMovesPanel;
   static BoardChatFragment boardChatFragment;
   static BoardCheatSFragment boardCheatSFragment;
@@ -61,7 +61,6 @@ public class BoardScreen extends FlashPointScreen {
   static ImageButton btnExit;
   static Label gameInfoLabel;
   static ImageButton btnResume;
-  static ImageButton btnDefaultRound;
   ImageButton btnChat;
   ImageButton btnCheatS;
   ImageButton btnStats;
@@ -88,6 +87,8 @@ public class BoardScreen extends FlashPointScreen {
     spriteBG = new Sprite(txtrBG);
     spriteBG.setPosition(0, 0);
 
+    boardChooseRolePanel = new BoardChooseRolePanel(stage);
+    boardMovesPanel = new BoardMovesPanel(stage);
     boardChatFragment = new BoardChatFragment(stage);
     boardCheatSFragment = new BoardCheatSFragment(stage);
     boardStatsFragment = new BoardStatsFragment(stage);
@@ -144,8 +145,12 @@ public class BoardScreen extends FlashPointScreen {
                       if (!FireFighterTurnManager.getInstance().allAssigned()) {
                         addFilterOnTileForChooseInitPos();
                       } else {
-                        createResumeButton();
+                        createAllGameButtons();
+
+                        // moves panel
+                        removeAllPrevFragments();
                         boardMovesPanel.createMovesAndDirectionsPanel();
+
                         createEngineTilesColor();
                       }
                     }
@@ -173,27 +178,23 @@ public class BoardScreen extends FlashPointScreen {
       }
     }
 
+    //createSoundButton();
     createGameInfoLabel();
 
-    createExitButton();
-    createCheatSButton();
-    createStatsButton();
-    createChatButton();
-    createSoundButton();
-    createDefaultRoundButton();
-    createResumeButton();
-
-    // Moves panel
-    boardMovesPanel = new BoardMovesPanel(stage);
-    boardMovesPanel.createMovesAndDirectionsPanel();
-
     // Choose init pos
-    if (!FireFighterTurnManager.getInstance().allAssigned() && User.getInstance().isMyTurn()) {
-      createDialog("Ready, set, go!", "Choose your initial position on the board (green tiles).");
-      addFilterOnTileForChooseInitPos();
-      removeAllPrevFragments();
-      btnResume.remove();
+    if (!FireFighterTurnManager.getInstance().allAssigned()) {
+      if(User.getInstance().isMyTurn()) {
+        createDialog("Ready, set, go!", "Choose your initial position on the board (green tiles).");
+        addFilterOnTileForChooseInitPos();
+        boardChooseRolePanel.createChooseRolePanel();
+      }
     } else {
+      createAllGameButtons();
+
+      // moves panel
+      removeAllPrevFragments();
+      boardMovesPanel.createMovesAndDirectionsPanel();
+
       createEngineTilesColor();
     }
 
@@ -413,7 +414,8 @@ public class BoardScreen extends FlashPointScreen {
     if (tiles[i][j].hasPointOfInterest()) {
       gameUnit = new Image(new Texture("game_units/POI_Rear.png"));
       if (tiles[i][j].getVictim().isRevealed()) {
-        gameUnit = new Image(new Texture("game_units/Victim_1.png"));
+        int victimImgNum = (int) Math.floor(Math.random() * (12)) + 1;
+        gameUnit = new Image(new Texture("game_units/victims/Victim_" + victimImgNum + ".png"));
       }
       gameUnit.setHeight(30);
       gameUnit.setWidth(30);
@@ -441,6 +443,30 @@ public class BoardScreen extends FlashPointScreen {
       gameUnits.add(gameUnit);
       stage.addActor(gameUnit);
     }
+
+    // Hazmat
+    //TODO: boolean to check tiles[i][j].hasHazmat()
+    if (false) { // placed at bottom right corner of tile
+      gameUnit = new Image(new Texture("game_units/Hazmat.png"));
+      gameUnit.setHeight(30);
+      gameUnit.setWidth(30);
+      gameUnit.setPosition(myTile.getX() + 45, myTile.getY());
+
+      gameUnits.add(gameUnit);
+      stage.addActor(gameUnit);
+    }
+
+    // Hot spot
+    //TODO: boolean to check tiles[i][j].hasHotSpot()
+    if (false) { // placed at bottom right corner of tile
+      gameUnit = new Image(new Texture("game_units/Hot_Spot.png"));
+      gameUnit.setHeight(30);
+      gameUnit.setWidth(30);
+      gameUnit.setPosition(myTile.getX() + 45, myTile.getY());
+
+      gameUnits.add(gameUnit);
+      stage.addActor(gameUnit);
+    }
   }
 
   public static void redrawGameUnitsOnTile() {
@@ -462,12 +488,19 @@ public class BoardScreen extends FlashPointScreen {
     int numAP = FireFighterTurnManager.getInstance().getCurrentFireFighter().getActionPointsLeft();
     FireFighterColor color =
             FireFighterTurnManager.getInstance().getCurrentFireFighter().getColor();
+
+    String specialty = "\n";
+    if(true){ //TODO: boolean to check if experienced game mode
+      specialty = "\n"; //TODO: User.getInstance().getSpecialty()
+    }
+
     gameInfoLabel =
             new Label(
-                    "You: "
-                            + User.getInstance().getName()
-                            + "\nYour Color: "
-                            + User.getInstance().getColor()
+
+                      User.getInstance().getName().toUpperCase()
+                              + specialty
+                            //+ "\nYour Color: "
+                            //+ User.getInstance().getColor()
                             + "\nCurrent turn: "
                             + color
                             + "\nAP left: "
@@ -488,11 +521,17 @@ public class BoardScreen extends FlashPointScreen {
     int APLeft = FireFighterTurnManager.getInstance().getCurrentFireFighter().getActionPointsLeft();
     FireFighterColor color =
             FireFighterTurnManager.getInstance().getCurrentFireFighter().getColor();
+
+    String specialty = "\n";
+    if(true){ //TODO: boolean to check if experienced game mode
+      specialty = "\n"; //TODO: User.getInstance().getSpecialty()
+    }
+
     gameInfoLabel.setText(
-            "Player: "
-                    + User.getInstance().getName()
-                    + "\nPlaying Color: "
-                    + User.getInstance().getColor()
+                    User.getInstance().getName().toUpperCase()
+                            + specialty
+                    //+ "\nPlaying Color: "
+                    //+ User.getInstance().getColor()
                     + "\nCurrent turn: "
                     + color
                     + "\nAP left: "
@@ -503,7 +542,11 @@ public class BoardScreen extends FlashPointScreen {
     }
   }
 
+
+
   // dialogs
+
+
 
   public static void createDialog(String title, String message) {
     Dialog dialog =
@@ -535,7 +578,19 @@ public class BoardScreen extends FlashPointScreen {
     dialog.show(stage);
   }
 
+
+
   // right menu buttons
+
+
+
+  private void createAllGameButtons() {
+    createExitButton();
+    createCheatSButton();
+    createStatsButton();
+    createChatButton();
+    createResumeButton();
+  }
 
   private void createExitButton() {
     Texture myTexture = new Texture(Gdx.files.internal("icons/exitBtn.png"));
@@ -656,7 +711,7 @@ public class BoardScreen extends FlashPointScreen {
   // show MovesAndDirectionsPanel on resume
   private static void createResumeButton() {
 
-    Texture myTexture = new Texture(Gdx.files.internal("icons/resumeBtn.png"));
+    Texture myTexture = new Texture(Gdx.files.internal("icons/resumeBtn_" + User.getInstance().getColor() + ".png"));
 
     TextureRegion myTextureRegion = new TextureRegion(myTexture);
     TextureRegionDrawable myTexRegionDrawable = new TextureRegionDrawable(myTextureRegion);
@@ -682,23 +737,6 @@ public class BoardScreen extends FlashPointScreen {
     if (User.getInstance().isMyTurn()) {
       stage.addActor(btnResume);
     }
-  }
-
-  private static void createDefaultRoundButton() { // just for show (no listener)
-
-    Texture myTexture = new Texture(Gdx.files.internal("icons/defaultBtn.png"));
-    TextureRegion myTextureRegion = new TextureRegion(myTexture);
-    TextureRegionDrawable myTexRegionDrawable = new TextureRegionDrawable(myTextureRegion);
-
-    btnDefaultRound = new ImageButton(myTexRegionDrawable);
-    btnDefaultRound.setWidth(100);
-    btnDefaultRound.setHeight(100);
-
-    final float x = Gdx.graphics.getWidth() - btnDefaultRound.getWidth();
-    final float y = Gdx.graphics.getHeight() - btnDefaultRound.getHeight();
-
-    btnDefaultRound.setPosition(x, y);
-    stage.addActor(btnDefaultRound);
   }
 
   private void createSoundButton() {
@@ -728,10 +766,14 @@ public class BoardScreen extends FlashPointScreen {
               }
             });
 
-    //stage.addActor(btnMusicSound);
+    stage.addActor(btnMusicSound);
   }
 
+
+
   // add filters
+
+
 
   private void addFilterOnTileForChooseInitPos() {
     for (int i = 0; i < CHOOSE_INIT_POS_TILES.length; i++) {
@@ -752,10 +794,13 @@ public class BoardScreen extends FlashPointScreen {
     }
   }
 
+
+
   // remove GUI elements
 
+
+
   public static void clearAllGameUnits() {
-    // System.out.println(gameUnits); // for test
     for (int i = 0; i < gameUnits.size(); i++) {
       gameUnits.get(i).remove();
     }
@@ -764,6 +809,7 @@ public class BoardScreen extends FlashPointScreen {
 
   private static void removeAllPrevFragments() {
     boardMovesPanel.removeMovesAndDirectionsPanel();
+    boardChooseRolePanel.removeChooseInitPosPanel();
     boardChatFragment.removeChatFragment();
     boardCheatSFragment.removeCheatSFragment();
     boardStatsFragment.removeStatsFragment();
@@ -777,7 +823,11 @@ public class BoardScreen extends FlashPointScreen {
     }
   }
 
+
+
   // helper methods
+
+
 
   private boolean isClickableTileOnKnockDown(int i_input, int j_input) {
     for (int i = 0; i < clickableTilesOnKnockDownArr.size(); i++) {

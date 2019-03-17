@@ -26,7 +26,7 @@ import static com.cs361d.flashpoint.screen.BoardScreen.*;
 
 public class BoardMovesPanel {
 
-    final int DIRECTION_BUTTON_SIZE = 75;
+    final int DIRECTION_BUTTON_SIZE = 65;
 
     ScrollPane scrollPaneMoveOptions;
     ScrollPane.ScrollPaneStyle scrollStyle;
@@ -37,6 +37,7 @@ public class BoardMovesPanel {
 
 
     Stage stage;
+    BoardChooseRolePanel boardChooseRolePanel;
     FireFighterTurnManager fireFighterTurnManager = FireFighterTurnManager.getInstance();
 
     ArrayList<ScrollPane> movesList = new ArrayList<ScrollPane>();
@@ -45,6 +46,7 @@ public class BoardMovesPanel {
     // constructor
     public BoardMovesPanel(Stage stage){
         this.stage = stage;
+        this.boardChooseRolePanel = new BoardChooseRolePanel(stage);
     }
 
     private void performDirectionMove(String move, Direction direction){
@@ -98,12 +100,12 @@ public class BoardMovesPanel {
             scrollPaneMoveOptions.setScrollingDisabled(true, false);
             scrollPaneMoveOptions.setTransform(true);
             scrollPaneMoveOptions.setScale(1.0f);
-            scrollPaneMoveOptions.setWidth(300);
-            scrollPaneMoveOptions.setHeight(200);
+            scrollPaneMoveOptions.setWidth(345);
+            scrollPaneMoveOptions.setHeight(250);
             //scrollMessage.setBounds(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight() + 100);
             scrollPaneMoveOptions.setPosition(
                     850,
-                    Gdx.graphics.getHeight() - scrollPaneMoveOptions.getHeight() - 150);
+                    Gdx.graphics.getHeight() - scrollPaneMoveOptions.getHeight() - 165);
 
             lstMoveOptions.addListener(new InputListener() {
                 @Override
@@ -148,6 +150,10 @@ public class BoardMovesPanel {
                         gameInfoLabel.setColor(Color.BLACK);
                         updateGameInfoLabel();
 
+                    } else if (moveSelected.equals("CREW CHANGE")) {
+                        removeMovesAndDirectionsPanel();
+                        boardChooseRolePanel.createChooseRolePanel();
+
                     } else if (moveSelected.equals("SAVE")) {
                         DBHandler.saveBoardToDB(BoardManager.getInstance().getGameName());
                         NetworkManager.getInstance().sendCommand(Commands.SAVE, DBHandler.getBoardAsString());
@@ -181,28 +187,28 @@ public class BoardMovesPanel {
         directionTable = new Table();
 
         directionTable.add();
-        directionTable.add(btnDirectionU).width(DIRECTION_BUTTON_SIZE);
+        directionTable.add(btnDirectionU).size(DIRECTION_BUTTON_SIZE, DIRECTION_BUTTON_SIZE);
         directionTable.add();
 
         directionTable.row();
 
-        directionTable.add(btnDirectionL).width(DIRECTION_BUTTON_SIZE);
+        directionTable.add(btnDirectionL).size(DIRECTION_BUTTON_SIZE, DIRECTION_BUTTON_SIZE);
         if (MOVE.equals("EXTINGUISH")){
-            directionTable.add(btnDirectionCurr).width(DIRECTION_BUTTON_SIZE);
+            directionTable.add(btnDirectionCurr).size(DIRECTION_BUTTON_SIZE, DIRECTION_BUTTON_SIZE);
         } else {
             directionTable.add();
         }
-        directionTable.add(btnDirectionR).width(DIRECTION_BUTTON_SIZE);
+        directionTable.add(btnDirectionR).size(DIRECTION_BUTTON_SIZE, DIRECTION_BUTTON_SIZE);
 
         directionTable.row();
 
         directionTable.add();
-        directionTable.add(btnDirectionD).width(DIRECTION_BUTTON_SIZE);
+        directionTable.add(btnDirectionD).size(DIRECTION_BUTTON_SIZE, DIRECTION_BUTTON_SIZE);
         directionTable.add();
 
         directionTable.setPosition(
                 1000,
-                Gdx.graphics.getHeight() - directionTable.getHeight() - 480);
+                Gdx.graphics.getHeight() - directionTable.getHeight() - 520);
 
         btnDirectionU.addListener(new InputListener() {
             @Override
@@ -265,11 +271,23 @@ public class BoardMovesPanel {
 
 
     private String[] getMovesArrForDisplay(){
+
+        // TODO: MOVES_ARR = fireFighterTurnManager.getAvailableMoves();
+
         String[] MOVES_ARR = {
                 "MOVE", "EXTINGUISH", "CHOP", "MOVE WITH VICTIM", "INTERACT WITH DOOR", "END TURN", "SAVE"
         };
 
-        // TODO: MOVES_ARR = fireFighterTurnManager.getAvailableMoves();
+        String[] MOVES_ARR_EXP = {
+                "MOVE", "EXTINGUISH", "CHOP", "MOVE WITH VICTIM", "INTERACT WITH DOOR", "END TURN",
+                "DRIVE", "RIDE", "FIRE DECK GUN", "CREW CHANGE",
+                "SAVE"
+        };
+
+        // TODO: boolean to check if experienced game mode
+        if (true){
+            return MOVES_ARR_EXP;
+        }
 
         return MOVES_ARR;
     }
@@ -320,5 +338,6 @@ public class BoardMovesPanel {
         movesList.clear();
 
         removeTableDirectionsPanel();
+        boardChooseRolePanel.removeChooseInitPosPanel();
     }
 }
