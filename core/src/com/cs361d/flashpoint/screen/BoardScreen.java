@@ -452,8 +452,7 @@ public class BoardScreen extends FlashPointScreen {
     if (tiles[i][j].hasPointOfInterest()) {
       gameUnit = new Image(new Texture("game_units/POI_Rear.png"));
       if (tiles[i][j].getVictim().isRevealed()) {
-        int victimImgNum = (int) Math.floor(Math.random() * (12)) + 1;
-        gameUnit = new Image(new Texture("game_units/victims/Victim_" + victimImgNum + ".png"));
+        gameUnit = new Image(new Texture("game_units/Victim.png"));
       }
       gameUnit.setHeight(30);
       gameUnit.setWidth(30);
