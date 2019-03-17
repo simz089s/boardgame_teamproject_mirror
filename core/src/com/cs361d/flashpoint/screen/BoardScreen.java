@@ -6,6 +6,7 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -799,7 +800,7 @@ public class BoardScreen extends FlashPointScreen {
     for (int i = 0; i < tiles.length; i++) {
       for (int j = 0; j < tiles[i].length; j++) {
         if (tiles[i][j].canContainAmbulance()) {
-          tilesImg[i][j].setColor(Color.NAVY);
+          tilesImg[i][j].setColor(Color.SKY);
         } else if (tiles[i][j].canContainFireTruck()) {
           tilesImg[i][j].setColor(Color.ORANGE);
         }
