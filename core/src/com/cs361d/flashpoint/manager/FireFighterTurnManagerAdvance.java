@@ -213,6 +213,13 @@ public class FireFighterTurnManagerAdvance extends FireFighterTurnManager {
     }
   }
 
+  public String[] getAvailableSpecialities() {
+        List<String> sList = new ArrayList<String>();
+        for (FireFighterAdvanceSpecialities spec: FREESPECIALITIES ) {
+            sList.add(spec.toString().replace("_"," "));
+        }
+        return (String[]) sList.toArray();
+    }
   //TODO
   // verify the veteran vacinity at the begining of each turn;
   // Flip the markes in ajacentSpace

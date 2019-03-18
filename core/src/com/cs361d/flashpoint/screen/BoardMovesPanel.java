@@ -338,6 +338,6 @@ public class BoardMovesPanel {
         movesList.clear();
 
         removeTableDirectionsPanel();
-        boardChooseRolePanel.removeChooseInitPosPanel();
+        boardChooseRolePanel.setSpecialities();
     }
 }

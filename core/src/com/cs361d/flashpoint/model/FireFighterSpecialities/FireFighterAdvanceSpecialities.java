@@ -17,7 +17,7 @@ public enum FireFighterAdvanceSpecialities {
     FireFighterAdvanceSpecialities(String text) {
         this.text = text;
     }
-    public String toString() {
+    public String toText() {
         return this.text;
     }
 

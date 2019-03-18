@@ -850,7 +850,7 @@ public class BoardScreen extends FlashPointScreen {
 
   private static void removeAllPrevFragments() {
     boardMovesPanel.removeMovesAndDirectionsPanel();
-    boardChooseRolePanel.removeChooseInitPosPanel();
+    boardChooseRolePanel.setSpecialities();
     boardChatFragment.removeChatFragment();
     boardCheatSFragment.removeCheatSFragment();
     boardStatsFragment.removeStatsFragment();

@@ -7,14 +7,17 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.List;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
+import com.cs361d.flashpoint.manager.FireFighterTurnManager;
+import com.cs361d.flashpoint.manager.FireFighterTurnManagerAdvance;
+import com.cs361d.flashpoint.model.BoardElements.FireFighter;
+import com.cs361d.flashpoint.model.FireFighterSpecialities.FireFighterAdvanceSpecialities;
+import com.cs361d.flashpoint.model.FireFighterSpecialities.FireFighterAdvanced;
 
 import java.util.ArrayList;
 
 public class BoardChooseRolePanel {
 
-    String [] INITIAL_ROLE = {"VETERAN", "RESCUE DOG", "CAFS FIREFIGHTER", "DRIVER OPERATOR", "FIRE CAPTAIN",
-            "GENERALIST", "HAZMAT TECHNICIAN", "IMAGING TECHNICIAN", "PARAMEDIC", "RESCUE SPECIALIST"
-    };
+    String [] INITIAL_ROLE;
 
     ScrollPane scrollPaneRoles;
     ScrollPane.ScrollPaneStyle scrollStyleRoles;
@@ -27,6 +30,7 @@ public class BoardChooseRolePanel {
 
     // constructor
     public BoardChooseRolePanel(Stage stage){
+        setSpecialities();
         this.stage = stage;
     }
 
@@ -74,11 +78,9 @@ public class BoardChooseRolePanel {
         stage.addActor(scrollPaneRoles);
     }
 
-    public void removeChooseInitPosPanel(){
-        for (int i = 0; i < rolesList.size(); i++) {
-            rolesList.get(i).remove();
-        }
 
-        rolesList.clear();
+    public void setSpecialities() {
+        INITIAL_ROLE = ((FireFighterTurnManagerAdvance) FireFighterTurnManagerAdvance.getInstance()).getAvailableSpecialities();
     }
+
 }
