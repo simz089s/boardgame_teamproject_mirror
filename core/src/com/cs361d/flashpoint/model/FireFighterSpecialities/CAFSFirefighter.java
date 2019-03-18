@@ -8,4 +8,15 @@ public class CAFSFirefighter extends FireFighterAdvanced {
     this.maxSpecialAp = 3;
     this.actionsPointPerTurn = 3;
   }
+
+  @Override
+  public boolean extinguishAP() {
+    if (!(specialActionPoints < 1)) {
+      specialActionPoints--;
+      return true;
+    }
+    else {
+      return super.extinguishAP();
+    }
+  }
 }

@@ -752,7 +752,7 @@ public class BoardScreen extends FlashPointScreen {
   // show MovesAndDirectionsPanel on resume
   private static void createResumeButton() {
 
-    Texture myTexture = new Texture(Gdx.files.internal("icons/resumeBtn_" + User.getInstance().getColor() + ".png"));
+    Texture myTexture = new Texture(Gdx.files.internal("icons/resumeBtn_" + "RED" + ".png"));
 
     TextureRegion myTextureRegion = new TextureRegion(myTexture);
     TextureRegionDrawable myTexRegionDrawable = new TextureRegionDrawable(myTextureRegion);

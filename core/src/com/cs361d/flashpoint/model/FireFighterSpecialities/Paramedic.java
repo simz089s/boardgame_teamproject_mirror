@@ -6,4 +6,21 @@ public class Paramedic extends FireFighterAdvanced{
   public Paramedic(FireFighterColor color) {
     super(color, 4, 0, FireFighterAdvanceSpecialities.PARAMEDIC);
   }
+
+  public boolean treatVictimAP() {
+    if (!(actionPoints < 1)) {
+      actionPoints--;
+      return true;
+    }
+    return false;
+  }
+
+  @Override
+  public boolean extinguishAP() {
+    if (!(actionPoints < 2)) {
+      actionPoints -= 2;
+      return true;
+    }
+    return false;
+  }
 }

@@ -11,6 +11,7 @@ import java.util.Map;
 
 public abstract class FireFighterAdvanced extends FireFighter {
   protected int specialActionPoints = 0;
+  protected boolean hadVeteranBonus = false;
   protected final FireFighterAdvanceSpecialities SPECIALITY;
   protected int maxSpecialAp = 0;
   protected static final Map<FireFighterColor, FireFighterAdvanced> FIREFIGHTERS =
@@ -32,7 +33,9 @@ public abstract class FireFighterAdvanced extends FireFighter {
       currentTile.removeFirefighter(this);
     }
     if (SPECIALITY == FireFighterAdvanceSpecialities.NO_ROLE) {
-        throw new IllegalArgumentException("Cannot Place a FireFighter on board with no speciality");
+      // TODO put that line back active again
+      // throw new IllegalArgumentException("Cannot Place a FireFighter on board with no
+      // speciality");
     }
     this.currentTile = t;
     t.addFirefighter(this);
@@ -122,6 +125,9 @@ public abstract class FireFighterAdvanced extends FireFighter {
     return f;
   }
 
+  public boolean getHadVeteranBonus() {
+    return hadVeteranBonus;
+  }
   @Override
   public void resetActionPoints() {
     this.actionPoints += actionsPointPerTurn;
@@ -129,6 +135,7 @@ public abstract class FireFighterAdvanced extends FireFighter {
       this.actionPoints = maxActionPoint;
     }
     this.specialActionPoints = maxSpecialAp;
+    this.hadVeteranBonus = false;
   }
 
   public void setActionPoint(int points) {
@@ -153,5 +160,80 @@ public abstract class FireFighterAdvanced extends FireFighter {
     }
     actionPoints -= 2;
     return true;
+  }
+
+  @Override
+  public boolean moveWithVictimAP() {
+    int cost = 2;
+    if (currentTile.getVictim().isCured()) {
+      cost = 1;
+    }
+    if (actionPoints < cost) {
+      return false;
+    }
+    actionPoints -= cost;
+    return true;
+  }
+
+  public boolean fireTheDeckGunAp() {
+    if (actionPoints < 4) {
+      return false;
+    }
+    else {
+      actionPoints -= 4;
+      return true;
+    }
+  }
+
+  public boolean carryHazardAp() {
+    if (currentTile.hasHazmat()) {
+      if (actionPoints < 2) {
+        return false;
+      }
+      else {
+        actionPoints -= 2;
+        return true;
+      }
+    }
+    else {
+      return false;
+    }
+  }
+
+  public boolean driveAp() {
+    if (actionPoints < 2) {
+      return false;
+    }
+    else {
+      actionPoints -= 2;
+      return true;
+    }
+  }
+
+  public boolean dodgeAp() {
+    if (actionPoints < 2) {
+      return false;
+    }
+    else {
+      actionPoints -= 2;
+      return true;
+    }
+  }
+
+  public void veteranBonus() {
+    if (!hadVeteranBonus) {
+      actionPoints++;
+      hadVeteranBonus = true;
+      }
+  }
+
+  public void setHadVeteranBonus(boolean value) {
+    this.hadVeteranBonus = value;
+  }
+
+  public void removeVeteranBonus() {
+    if (hadVeteranBonus && actionPoints > 0) {
+      actionPoints--;
+    }
   }
 }

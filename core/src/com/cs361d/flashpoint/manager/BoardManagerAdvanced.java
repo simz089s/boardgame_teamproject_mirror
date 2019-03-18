@@ -3,6 +3,7 @@ package com.cs361d.flashpoint.manager;
 import com.cs361d.flashpoint.model.BoardElements.*;
 import com.cs361d.flashpoint.model.FireFighterSpecialities.FireFighterAdvanceSpecialities;
 import com.cs361d.flashpoint.model.FireFighterSpecialities.FireFighterAdvanced;
+import com.cs361d.flashpoint.screen.BoardScreen;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -109,6 +110,7 @@ public class BoardManagerAdvanced extends BoardManager {
       FireFighterColor color,
       int actionPoints,
       int specialApPoints,
+      boolean veteranBonus,
       FireFighterAdvanceSpecialities role) {
     if (role == FireFighterAdvanceSpecialities.NO_ROLE) {
       throw new IllegalArgumentException("A fireFighter on the board must have a role");
@@ -117,6 +119,7 @@ public class BoardManagerAdvanced extends BoardManager {
         FireFighterAdvanced.createFireFighter(color, role);
     f.setActionPoint(actionPoints);
     f.setSpecialActionPoints(specialApPoints);
+    f.setHadVeteranBonus(veteranBonus);
     if (f.getTile() != null) {
       throw new IllegalArgumentException();
     }
@@ -149,5 +152,23 @@ public class BoardManagerAdvanced extends BoardManager {
         v.reveal();
       }
     }
+  }
+
+  @Override
+  public boolean verifyVictimRescueStatus(Tile t) {
+    int i = t.getI();
+    int j = t.getJ();
+    if (i == 0 || i == ROWS - 1 || j == 0 || j == COLUMNS - 1) {
+      if (t.hasRealVictim() && t.hasAmbulance()) {
+        BoardScreen.createDialog("Victim Saved", "Congratulations, you saved one victim!");
+        numVictimSaved++;
+        t.setNullVictim();
+      }
+    }
+    if (numVictimSaved >= NUM_VICTIM_SAVED_TO_WIN) {
+      endGameMessage("GAME OVER", "Congratulations, you won the game saving 7 victims!");
+      return true;
+    }
+    return false;
   }
 }

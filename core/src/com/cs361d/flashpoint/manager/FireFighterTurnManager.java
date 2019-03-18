@@ -61,9 +61,9 @@ public class FireFighterTurnManager implements Iterable<FireFighter> {
     FireFighter fireFighter = getCurrentFireFighter();
     if (!fireFighter.getTile().hasFire()) {
       FireFighter last = FIREFIGHTERS.removeFirst();
-      last.resetActionPoints();
       FIREFIGHTERS.addLast(last);
       BoardManager.getInstance().endTurnFireSpread();
+      last.resetActionPoints();
       sendChangeToNetwork();
     } else {
       sendMessageToGui("You cannot end turn as you are currently on a tile with fire");
@@ -270,7 +270,7 @@ public class FireFighterTurnManager implements Iterable<FireFighter> {
     FIREFIGHTERS = newList;
   }
 
-  private void sendChangeToNetwork() {
+  protected void sendChangeToNetwork() {
     if (!BoardManager.getInstance().gameHasEnded())
       NetworkManager.getInstance().sendCommand(Commands.GAMESTATE, DBHandler.getBoardAsString());
   }

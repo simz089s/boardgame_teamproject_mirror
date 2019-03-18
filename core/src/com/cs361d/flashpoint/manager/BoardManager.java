@@ -384,7 +384,7 @@ public class BoardManager implements Iterable<Tile> {
   }
 
   // removes victims that are in a place with fire at the end of turn as well as knockdown player
-  protected void updateVictimAndFireFighter(List<Tile> tiles) throws IllegalAccessException {
+  protected void updateVictimAndFireFighter(List<Tile> tiles) {
     for (Tile t : tiles) {
       if (t.hasFireFighters()) {
         knockedDown(t.getI(), t.getJ());
