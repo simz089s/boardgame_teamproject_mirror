@@ -4,7 +4,7 @@ public enum Difficulty {
   FAMILLY("familly"),
   RECRUIT("recruit"),
   VETERAN("veteran"),
-  HEROIC("heroid");
+  HEROIC("heroic");
 
   private String text;
 

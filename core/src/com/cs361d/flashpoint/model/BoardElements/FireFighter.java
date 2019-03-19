@@ -8,15 +8,15 @@ public class FireFighter {
   protected static final Map<FireFighterColor, FireFighter> FIREFIGHTERS =
       new HashMap<FireFighterColor, FireFighter>();
   protected final FireFighterColor color;
-  protected static final int MAX_ACTION_POINTS = 8;
+  protected int maxActionPoint = 8;
   protected int actionsPointPerTurn = 4;
   protected int actionPoints;
   protected Tile currentTile;
 
   protected FireFighter(FireFighterColor color, int actionPoints) {
-    if (actionPoints > MAX_ACTION_POINTS) {
+    if (actionPoints > maxActionPoint) {
       throw new IllegalStateException(
-          "Action points cannot exceed " + MAX_ACTION_POINTS + " was: " + actionPoints);
+          "Action points cannot exceed " + maxActionPoint + " was: " + actionPoints);
     }
     this.color = color;
     this.actionPoints = actionPoints;
@@ -77,22 +77,16 @@ public class FireFighter {
   }
 
 
-  public boolean canEscape(Tile t) {
-      return true;
-
-      // TODO : Do code for the Rescue Specialist
-  }
-
   public void resetActionPoints() {
     this.actionPoints += actionsPointPerTurn;
-    if (this.actionPoints > MAX_ACTION_POINTS) {
-      this.actionPoints = MAX_ACTION_POINTS;
+    if (this.actionPoints > maxActionPoint) {
+      this.actionPoints = maxActionPoint;
     }
   }
 
   public boolean moveAP(Direction d) {
     Tile newTile = currentTile.getAdjacentTile(d);
-    if (newTile.hasFire() && canEscape(newTile)) {
+    if (newTile.hasFire()) {
       if (actionPoints >= 2) {
         actionPoints -= 2;
         return true;
@@ -142,13 +136,16 @@ public class FireFighter {
 
   @Override
   public boolean equals(Object o) {
-    if (!(o instanceof   FireFighter)) {
+    if (!(o instanceof FireFighter)) {
       return false;
     }
     else if( o == this) {
       return true;
     }
     else {
+      if (this.getColor() == FireFighterColor.NOT_ASSIGNED ) {
+        return false;
+      }
       return this.getColor() == ((FireFighter) o).getColor();
     }
   }

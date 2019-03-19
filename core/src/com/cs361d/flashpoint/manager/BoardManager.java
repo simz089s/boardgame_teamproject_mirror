@@ -13,7 +13,7 @@ import java.util.List;
 
 public class BoardManager implements Iterable<Tile> {
   protected Difficulty difficulty;
-  private final LinkedList<FireFighterColor> colorList = new LinkedList<FireFighterColor>();
+  protected final LinkedList<FireFighterColor> colorList = new LinkedList<FireFighterColor>();
   public static final int NUM_VICTIM_SAVED_TO_WIN = 7;
   public static final int MAX_WALL_DAMAGE_POSSIBLE = 24;
   public static final int COLUMNS = 10;
@@ -247,9 +247,9 @@ public class BoardManager implements Iterable<Tile> {
     }
   }
 
-  public void reset() {
+  public static void reset() {
     instance = new BoardManager();
-    FireFighterTurnManager.getInstance().reset();
+    FireFighterTurnManager.reset();
     FireFighter.reset();
   }
   // Spread the fire in a specific direction after an explosion
@@ -418,15 +418,15 @@ public class BoardManager implements Iterable<Tile> {
 
     } while (TILE_MAP[width][height].hasPointOfInterest());
     TILE_MAP[width][height].setFireStatus(FireStatus.EMPTY);
+    TILE_MAP[width][height].setVictim(v);
     if (TILE_MAP[width][height].hasFireFighters()) {
       // here we are on a firefighter and the point of interest is not
       if (v.isFalseAlarm()) {
+        TILE_MAP[width][height].setNullVictim();
         addNewPointInterest();
       } else {
         v.reveal();
       }
-    } else {
-      TILE_MAP[width][height].setVictim(v);
     }
   }
 
@@ -627,6 +627,10 @@ public class BoardManager implements Iterable<Tile> {
       BoardScreen.createEndGameDialog(title, msg);
       // DBHandler.removeGameFile(gameName);
     }
+  }
+
+  public boolean isAdvance() {
+    return instance instanceof BoardManagerAdvanced;
   }
 
   public boolean gameHasEnded() {

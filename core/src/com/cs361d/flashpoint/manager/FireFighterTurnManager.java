@@ -1,6 +1,7 @@
 package com.cs361d.flashpoint.manager;
 
 import com.cs361d.flashpoint.model.BoardElements.*;
+import com.cs361d.flashpoint.model.FireFighterSpecialities.FireFighterAdvanced;
 import com.cs361d.flashpoint.networking.Commands;
 import com.cs361d.flashpoint.screen.BoardScreen;
 import org.jetbrains.annotations.NotNull;
@@ -240,7 +241,7 @@ public class FireFighterTurnManager implements Iterable<FireFighter> {
     return f;
   }
 
-  protected void reset() {
+  public static void reset() {
     instance = new FireFighterTurnManager();
   }
 
