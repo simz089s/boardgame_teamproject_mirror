@@ -277,6 +277,7 @@ public class FireFighterTurnManager implements Iterable<FireFighter> {
 
   public static void useFireFighterGameManagerAdvanced() {
     instance = new FireFighterTurnManagerAdvance();
+    FireFighterAdvanced.reset();
   }
 
   public static void useFireFighterGameManagerFamily() {

@@ -23,10 +23,9 @@ public class BoardManager implements Iterable<Tile> {
   protected int numVictimSaved = 0;
   protected int numVictimDead = 0;
   protected int numFalseAlarmRemoved = 0;
+  protected int numHotSpotLeft = 0;
   protected String gameName = "defaultName";
   protected List<AbstractVictim> victims = new ArrayList<AbstractVictim>(18);
-  protected int TOTAL_NUM_PLAYER_NEEDED = 0;
-  protected int numPlayerLeftToJoin = 0;
   protected boolean gameEnded = false;
 
   // create an object of SingleObject
@@ -35,14 +34,6 @@ public class BoardManager implements Iterable<Tile> {
     gameEnded = true;
   }
   protected static BoardManager instance = new BoardManager();
-
-  public Difficulty getDifficulty() {
-    return this.difficulty;
-  }
-
-  public void setDifficulty(Difficulty diff) {
-    this.difficulty = difficulty;
-  }
 
   // Get the only object available
   public static BoardManager getInstance() {
@@ -99,21 +90,6 @@ public class BoardManager implements Iterable<Tile> {
     colorList.add(FireFighterColor.YELLOW);
   }
 
-  public void setTotalPlayerNeeded(int num) {
-    TOTAL_NUM_PLAYER_NEEDED = num;
-  }
-
-  public void setNumPlayerLeftToJoin(int num) {
-    numPlayerLeftToJoin = num;
-  }
-
-  public int getTotalPlayer() {
-    return TOTAL_NUM_PLAYER_NEEDED;
-  }
-
-  public int getNumPlayerLeftToJoin() {
-    return numPlayerLeftToJoin;
-  }
 
   public void setGameName(String name) {
     this.gameName = name;

@@ -1,5 +1,7 @@
 package com.cs361d.flashpoint.model.BoardElements;
 
+import com.cs361d.flashpoint.model.FireFighterSpecialities.FireFighterAdvanceSpecialities;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -12,7 +14,6 @@ public class FireFighter {
   protected int actionsPointPerTurn = 4;
   protected int actionPoints;
   protected Tile currentTile;
-
   protected FireFighter(FireFighterColor color, int actionPoints) {
     if (actionPoints > maxActionPoint) {
       throw new IllegalStateException(

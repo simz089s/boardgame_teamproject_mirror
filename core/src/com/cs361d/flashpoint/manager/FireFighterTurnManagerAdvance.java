@@ -2,12 +2,9 @@ package com.cs361d.flashpoint.manager;
 
 import com.cs361d.flashpoint.model.BoardElements.*;
 import com.cs361d.flashpoint.model.FireFighterSpecialities.*;
-import com.cs361d.flashpoint.screen.BoardScreen;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class FireFighterTurnManagerAdvance extends FireFighterTurnManager {
   protected final ArrayList<FireFighterAdvanceSpecialities> FREESPECIALITIES =
@@ -35,7 +32,7 @@ public class FireFighterTurnManagerAdvance extends FireFighterTurnManager {
   public boolean assignSpecialityForTheFirstTime(FireFighterAdvanceSpecialities speciality) {
     if (FREESPECIALITIES.remove(speciality)) {
       FireFighter f = FIREFIGHTERS.removeFirst();
-      if (((FireFighterAdvanced) f).getSpeciality() == FireFighterAdvanceSpecialities.NO_ROLE) {
+      if (((FireFighterAdvanced) f).getSpeciality() == FireFighterAdvanceSpecialities.NO_SPECIALITY) {
         throw new IllegalArgumentException("This fireFighter already has a speciality");
       }
       FIREFIGHTERS.addLast(FireFighterAdvanced.createFireFighter(f.getColor(), speciality));

@@ -10,11 +10,10 @@ import java.util.Iterator;
 import java.util.List;
 
 public class BoardManagerAdvanced extends BoardManager {
+  private int numHotSpotLeft;
   protected BoardManagerAdvanced() {
     super();
   }
-
-  private int numHotSpotLeft = 6;
 
   public void addHazmat(int i, int j) {
     TILE_MAP[i][j].setHasHazmat(true);
@@ -26,6 +25,10 @@ public class BoardManagerAdvanced extends BoardManager {
 
   public void setNumHotSpotLeft(int num) {
     this.numHotSpotLeft = num;
+  }
+
+  public int getNumHotSpotLeft() {
+    return this.numHotSpotLeft;
   }
 
   @Override
@@ -99,7 +102,7 @@ public class BoardManagerAdvanced extends BoardManager {
     for (int i = 0; i < count; i++) {
       FireFighterAdvanced f =
           FireFighterAdvanced.createFireFighter(
-              colorList.removeFirst(), FireFighterAdvanceSpecialities.NO_ROLE);
+              colorList.removeFirst(), FireFighterAdvanceSpecialities.NO_SPECIALITY);
       FireFighterTurnManager.getInstance().addFireFighter(f);
     }
   }
@@ -112,7 +115,7 @@ public class BoardManagerAdvanced extends BoardManager {
       int specialApPoints,
       boolean veteranBonus,
       FireFighterAdvanceSpecialities role) {
-    if (role == FireFighterAdvanceSpecialities.NO_ROLE) {
+    if (role == FireFighterAdvanceSpecialities.NO_SPECIALITY) {
       throw new IllegalArgumentException("A fireFighter on the board must have a role");
     }
     FireFighterAdvanced f =

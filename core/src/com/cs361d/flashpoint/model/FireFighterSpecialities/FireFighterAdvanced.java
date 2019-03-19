@@ -32,7 +32,7 @@ public abstract class FireFighterAdvanced extends FireFighter {
     if (currentTile != null) {
       currentTile.removeFirefighter(this);
     }
-    if (SPECIALITY == FireFighterAdvanceSpecialities.NO_ROLE) {
+    if (SPECIALITY == FireFighterAdvanceSpecialities.NO_SPECIALITY) {
       // TODO put that line back active again
       // throw new IllegalArgumentException("Cannot Place a FireFighter on board with no
       // speciality");
@@ -49,18 +49,22 @@ public abstract class FireFighterAdvanced extends FireFighter {
     return SPECIALITY == speciality;
   }
 
+  public int getSpecialActionPoints() {
+    return this.specialActionPoints;
+  }
+
   public FireFighterAdvanceSpecialities getSpeciality() {
     return SPECIALITY;
   }
 
   @Override
   public boolean equals(Object o) {
-    boolean supertruth = super.equals(o);
-    if (supertruth) {
+    boolean parentTruth = super.equals(o);
+    if (parentTruth) {
       return true;
     } else if (!(o instanceof FireFighterAdvanced)) {
       return false;
-    } else if (((FireFighterAdvanced) o).SPECIALITY == FireFighterAdvanceSpecialities.NO_ROLE) {
+    } else if (((FireFighterAdvanced) o).SPECIALITY == FireFighterAdvanceSpecialities.NO_SPECIALITY) {
       return false;
     }
 
@@ -81,7 +85,7 @@ public abstract class FireFighterAdvanced extends FireFighter {
         return f;
       }
     }
-    if (role == FireFighterAdvanceSpecialities.NO_ROLE) {
+    if (role == FireFighterAdvanceSpecialities.NO_SPECIALITY) {
       f = new Default(color);
     } else {
       FireFighterTurnManagerAdvance tm =

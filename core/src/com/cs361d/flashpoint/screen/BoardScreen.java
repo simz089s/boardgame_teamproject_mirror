@@ -15,6 +15,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.cs361d.flashpoint.manager.*;
 import com.cs361d.flashpoint.model.BoardElements.*;
+import com.cs361d.flashpoint.model.FireFighterSpecialities.FireFighterAdvanced;
 import com.cs361d.flashpoint.networking.Commands;
 import com.cs361d.flashpoint.networking.NetworkManager;
 
@@ -372,10 +373,8 @@ public class BoardScreen extends FlashPointScreen {
     Image gameUnit;
 
     // Vehicles
-    //TODO: boolean to check tiles[i][j].hasVehicle()
-    if (true) {
       gameUnit = null;
-      if(true){ // TODO: tiles[i][j].hasAmbulance()
+      if(tiles[i][j].hasAmbulance()){
         if(getVehicleOrientationOnTile(i, j, CarrierStatus.HASAMBULANCE, Orientation.HORIZONTAL)) { // horizontally positioned
           gameUnit = new Image(new Texture("game_units/vehicles/h_ambulance.png"));
           gameUnit.setHeight(60);
@@ -389,7 +388,7 @@ public class BoardScreen extends FlashPointScreen {
         }
       }
 
-      if (true){ // TODO: tiles[i][j].hasEngine()
+      else if (tiles[i][j].hasFireTruck()){
         if(getVehicleOrientationOnTile(i, j, CarrierStatus.HASFIRETRUCK, Orientation.HORIZONTAL)) { // horizontally positioned
           gameUnit = new Image(new Texture("game_units/vehicles/h_engine.png"));
           gameUnit.setHeight(60);
@@ -407,7 +406,6 @@ public class BoardScreen extends FlashPointScreen {
         gameUnits.add(gameUnit);
         stage.addActor(gameUnit);
       }
-    }
 
     // Firefighters
     if (!tiles[i][j].getFirefighters().isEmpty()) {
@@ -482,8 +480,7 @@ public class BoardScreen extends FlashPointScreen {
     }
 
     // Hazmat
-    //TODO: boolean to check tiles[i][j].hasHazmat()
-    if (false) { // placed at bottom right corner of tile
+    if (tiles[i][j].hasHazmat()) { // placed at bottom right corner of tile
       gameUnit = new Image(new Texture("game_units/Hazmat.png"));
       gameUnit.setHeight(30);
       gameUnit.setWidth(30);
@@ -494,8 +491,7 @@ public class BoardScreen extends FlashPointScreen {
     }
 
     // Hot spot
-    //TODO: boolean to check tiles[i][j].hasHotSpot()
-    if (false) { // placed at bottom right corner of tile
+    if (tiles[i][j].hasHotSpot()) { // placed at bottom right corner of tile
       gameUnit = new Image(new Texture("game_units/Hot_Spot.png"));
       gameUnit.setHeight(15);
       gameUnit.setWidth(15);
@@ -531,8 +527,8 @@ public class BoardScreen extends FlashPointScreen {
             FireFighterTurnManager.getInstance().getCurrentFireFighter().getColor();
 
     String specialty = "\n";
-    if(true){ //TODO: boolean to check if experienced game mode
-      specialty = "\n"; //TODO: User.getInstance().getSpecialty()
+    if(BoardManager.getInstance() instanceof BoardManagerAdvanced) {
+      specialty = ((FireFighterAdvanced)FireFighterAdvanced.getFireFighter(User.getInstance().getColor())).getSpeciality().toString();
     }
 
     gameInfoLabel =
@@ -564,8 +560,8 @@ public class BoardScreen extends FlashPointScreen {
             FireFighterTurnManager.getInstance().getCurrentFireFighter().getColor();
 
     String specialty = "\n";
-    if(true){ //TODO: boolean to check if experienced game mode
-      specialty = "\n"; //TODO: User.getInstance().getSpecialty()
+    if(BoardManager.getInstance() instanceof BoardManagerAdvanced) {
+      specialty = ((FireFighterAdvanced)FireFighterAdvanced.getFireFighter(User.getInstance().getColor())).getSpeciality().toString();
     }
 
     gameInfoLabel.setText(

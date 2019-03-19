@@ -11,7 +11,7 @@ public enum FireFighterAdvanceSpecialities {
     RESCUE_DOG("rescue_dog"),
     VETERAN("veteran"),
     DRIVER("driver"),
-    NO_ROLE("no_role");
+    NO_SPECIALITY("no_role");
 
     private String text;
     FireFighterAdvanceSpecialities(String text) {
