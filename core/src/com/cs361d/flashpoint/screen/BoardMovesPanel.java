@@ -12,10 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.List;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-import com.cs361d.flashpoint.manager.BoardManager;
-import com.cs361d.flashpoint.manager.DBHandler;
-import com.cs361d.flashpoint.manager.FireFighterTurnManager;
-import com.cs361d.flashpoint.manager.User;
+import com.cs361d.flashpoint.manager.*;
 import com.cs361d.flashpoint.model.BoardElements.Direction;
 import com.cs361d.flashpoint.networking.Commands;
 import com.cs361d.flashpoint.networking.NetworkManager;
@@ -46,7 +43,6 @@ public class BoardMovesPanel {
     // constructor
     public BoardMovesPanel(Stage stage){
         this.stage = stage;
-        this.boardChooseRolePanel = new BoardChooseRolePanel(stage);
     }
 
     private void performDirectionMove(String move, Direction direction){
@@ -272,7 +268,6 @@ public class BoardMovesPanel {
 
     private String[] getMovesArrForDisplay(){
 
-        // TODO: MOVES_ARR = fireFighterTurnManager.getAvailableMoves();
 
         String[] MOVES_ARR = {
                 "MOVE", "EXTINGUISH", "CHOP", "MOVE WITH VICTIM", "INTERACT WITH DOOR", "END TURN", "SAVE"
@@ -284,11 +279,9 @@ public class BoardMovesPanel {
                 "SAVE"
         };
 
-        // TODO: boolean to check if experienced game mode
-        if (true){
+        if (BoardManager.getInstance() instanceof BoardManagerAdvanced){
             return MOVES_ARR_EXP;
         }
-
         return MOVES_ARR;
     }
 
@@ -338,6 +331,7 @@ public class BoardMovesPanel {
         movesList.clear();
 
         removeTableDirectionsPanel();
-        boardChooseRolePanel.setSpecialities();
+        if (boardChooseRolePanel != null)
+            boardChooseRolePanel.removeChooseInitPosPanel();
     }
 }

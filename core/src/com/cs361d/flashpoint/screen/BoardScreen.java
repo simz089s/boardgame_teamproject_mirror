@@ -88,7 +88,9 @@ public class BoardScreen extends FlashPointScreen {
     spriteBG = new Sprite(txtrBG);
     spriteBG.setPosition(0, 0);
 
-    boardChooseRolePanel = new BoardChooseRolePanel(stage);
+    if (BoardManager.getInstance() instanceof BoardManagerAdvanced) {
+      boardChooseRolePanel = new BoardChooseRolePanel(stage);
+      }
     boardMovesPanel = new BoardMovesPanel(stage);
     boardChatFragment = new BoardChatFragment(stage);
     boardCheatSFragment = new BoardCheatSFragment(stage);
@@ -185,11 +187,11 @@ public class BoardScreen extends FlashPointScreen {
 
     // Choose init pos
     if (!FireFighterTurnManager.getInstance().allAssigned()) {
-      if(User.getInstance().isMyTurn()) {
+   //   if(User.getInstance().isMyTurn()) {
         createDialog("Ready, set, go!", "Choose your initial position on the board (green tiles).");
         addFilterOnTileForChooseInitPos();
         boardChooseRolePanel.createChooseRolePanel();
-      }
+   //   }
     } else {
       createAllGameButtons();
 
@@ -538,7 +540,7 @@ public class BoardScreen extends FlashPointScreen {
 
     String specialty = "\n";
     if(BoardManager.getInstance() instanceof BoardManagerAdvanced) {
-      specialty = ((FireFighterAdvanced)FireFighterAdvanced.getFireFighter(User.getInstance().getColor())).getSpeciality().toString();
+      // TODO     specialty = ((FireFighterAdvanced)FireFighterAdvanced.getFireFighter(User.getInstance().getColor())).getSpeciality().toString();
     }
 
     gameInfoLabel =
@@ -571,7 +573,7 @@ public class BoardScreen extends FlashPointScreen {
 
     String specialty = "\n";
     if(BoardManager.getInstance() instanceof BoardManagerAdvanced) {
-      specialty = ((FireFighterAdvanced)FireFighterAdvanced.getFireFighter(User.getInstance().getColor())).getSpeciality().toString();
+    // TODO     specialty = ((FireFighterAdvanced)FireFighterAdvanced.getFireFighter(User.getInstance().getColor())).getSpeciality().toString();
     }
 
     gameInfoLabel.setText(
@@ -758,7 +760,7 @@ public class BoardScreen extends FlashPointScreen {
   // show MovesAndDirectionsPanel on resume
   private static void createResumeButton() {
 
-    Texture myTexture = new Texture(Gdx.files.internal("icons/resumeBtn_" + User.getInstance().getColor() + ".png"));
+    Texture myTexture = new Texture(Gdx.files.internal("icons/resumeBtn_" + "RED" + ".png"));
 
     TextureRegion myTextureRegion = new TextureRegion(myTexture);
     TextureRegionDrawable myTexRegionDrawable = new TextureRegionDrawable(myTextureRegion);
@@ -856,7 +858,8 @@ public class BoardScreen extends FlashPointScreen {
 
   private static void removeAllPrevFragments() {
     boardMovesPanel.removeMovesAndDirectionsPanel();
-    boardChooseRolePanel.removeChooseInitPosPanel();
+    if (boardChooseRolePanel != null)
+      boardChooseRolePanel.removeChooseInitPosPanel();
     boardChatFragment.removeChatFragment();
     boardCheatSFragment.removeCheatSFragment();
     boardStatsFragment.removeStatsFragment();

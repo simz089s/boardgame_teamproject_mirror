@@ -29,16 +29,15 @@ public class FireFighterTurnManagerAdvance extends FireFighterTurnManager {
     }
   }
 
-  public boolean assignSpecialityForTheFirstTime(FireFighterAdvanceSpecialities speciality) {
+  public boolean chooseInitialPosition(FireFighterAdvanceSpecialities speciality, Tile t) throws IllegalAccessException {
     if (FREESPECIALITIES.remove(speciality)) {
       FireFighter f = FIREFIGHTERS.removeFirst();
       if (((FireFighterAdvanced) f).getSpeciality() == FireFighterAdvanceSpecialities.NO_SPECIALITY) {
         throw new IllegalArgumentException("This fireFighter already has a speciality");
       }
-      FIREFIGHTERS.addLast(FireFighterAdvanced.createFireFighter(f.getColor(), speciality));
-      return true;
+      FIREFIGHTERS.addFirst(FireFighterAdvanced.createFireFighter(f.getColor(), speciality));
+      return chooseInitialPosition(t);
     } else {
-      sendMessageToGui("The speciality Asked is not available");
       return false;
     }
   }
@@ -211,11 +210,14 @@ public class FireFighterTurnManagerAdvance extends FireFighterTurnManager {
   }
 
   public String[] getAvailableSpecialities() {
-        List<String> sList = new ArrayList<String>();
+        ArrayList<String> sList = new ArrayList<String>();
         for (FireFighterAdvanceSpecialities spec: FREESPECIALITIES ) {
+          if (spec != FireFighterAdvanceSpecialities.NO_SPECIALITY)
             sList.add(spec.toString().replace("_"," "));
         }
-        return (String[]) sList.toArray();
+        String[] list = new String[sList.size()];
+        sList.toArray(list);
+        return list;
     }
   //TODO
   // verify the veteran vacinity at the begining of each turn;

@@ -38,6 +38,9 @@ public class FireFighter {
 
   // If the fireFighter has not yet been Initalized it initialises it with default AP of 4 else it just returns the instance
   public static FireFighter getFireFighter(FireFighterColor color) {
+    if (color == null) {
+      return null;
+    }
     FireFighter f;
     if (FIREFIGHTERS.containsKey(color)) {
       f = FIREFIGHTERS.get(color);

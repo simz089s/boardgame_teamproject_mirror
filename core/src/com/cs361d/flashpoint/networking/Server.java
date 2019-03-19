@@ -105,7 +105,7 @@ public class Server implements Runnable
             for (ClientHandler mc : Server.clientThreads.values()) {
                 mc.dout.writeUTF(msg);
             }
-            updateServerGui(msg); //update your own Gui
+//            updateServerGui(msg); //update your own Gui
 
         } catch (IOException e) { e.printStackTrace(); }
     }
@@ -121,7 +121,7 @@ public class Server implements Runnable
             String msg = NetworkManager.getInstance().createJSON(command, message);
             client.dout.writeUTF(msg);
 
-            // updateServerGui(msg);
+            updateServerGui(msg);
 
         } catch (IOException e) {
             e.printStackTrace();

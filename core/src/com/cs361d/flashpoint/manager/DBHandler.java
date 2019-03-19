@@ -296,7 +296,8 @@ public class DBHandler {
         }
 
         JSONObject gameParams = (JSONObject) jsonObject.get("gameParams");
-            if (Difficulty.FAMILLY == Difficulty.fromString(gameParams.get("difficulty").toString())) {
+        Object diff = gameParams.get("difficulty");
+            if (diff  == null || Difficulty.FAMILLY == Difficulty.fromString(diff.toString())) {
                 loadFamilyBoard(jsonString);
             }
             else {
@@ -632,7 +633,7 @@ public class DBHandler {
             FireFighter f = it.next();
             playersOrdering.add("" + f.getColor());
         }
-        gameParams.put("difficulty",Difficulty.RECRUIT);
+        gameParams.put("difficulty",Difficulty.RECRUIT.toString());
         gameParams.put("gameName", boardManager.getInstance().getGameName());
         gameParams.put("numVictimsLost", BoardManager.getInstance().getNumVictimDead());
         gameParams.put("numVictimsSaved", BoardManager.getInstance().getNumVictimSaved());
@@ -787,8 +788,7 @@ public class DBHandler {
             FireFighter f = it.next();
             playersOrdering.add("" + f.getColor());
         }
-        gameParams.put("difficulty",Difficulty.RECRUIT);
-        gameParams.put("difficulty",Difficulty.FAMILLY);
+        gameParams.put("difficulty",Difficulty.FAMILLY.toString());
         gameParams.put("gameName", boardManager.getInstance().getGameName());
         gameParams.put("numVictimsLost", BoardManager.getInstance().getNumVictimDead());
         gameParams.put("numVictimsSaved", BoardManager.getInstance().getNumVictimSaved());
