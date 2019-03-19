@@ -124,7 +124,7 @@ public class BoardScreen extends FlashPointScreen {
                   public void clicked(InputEvent event, float x, float y) {
                     if (!FireFighterTurnManager.getInstance().allAssigned()
                             && DBHandler.isPresentInArr(CHOOSE_INIT_POS_TILES, i_pos + "-" + j_pos)
-                            ) {
+                    ) {
                       clearAllGameUnits();
                       Tile[][] tiles = BoardManager.getInstance().getTiles();
 
@@ -538,8 +538,8 @@ public class BoardScreen extends FlashPointScreen {
     gameInfoLabel =
             new Label(
 
-                      User.getInstance().getName().toUpperCase()
-                              + specialty
+                    User.getInstance().getName().toUpperCase()
+                            + specialty
                             //+ "\nYour Color: "
                             //+ User.getInstance().getColor()
                             + "\nCurrent turn: "
@@ -569,8 +569,8 @@ public class BoardScreen extends FlashPointScreen {
     }
 
     gameInfoLabel.setText(
-                    User.getInstance().getName().toUpperCase()
-                            + specialty
+            User.getInstance().getName().toUpperCase()
+                    + specialty
                     //+ "\nPlaying Color: "
                     //+ User.getInstance().getColor()
                     + "\nCurrent turn: "
@@ -752,7 +752,7 @@ public class BoardScreen extends FlashPointScreen {
   // show MovesAndDirectionsPanel on resume
   private static void createResumeButton() {
 
-    Texture myTexture = new Texture(Gdx.files.internal("icons/resumeBtn_" + "RED" + ".png"));
+    Texture myTexture = new Texture(Gdx.files.internal("icons/resumeBtn_" + User.getInstance().getColor() + ".png"));
 
     TextureRegion myTextureRegion = new TextureRegion(myTexture);
     TextureRegionDrawable myTexRegionDrawable = new TextureRegionDrawable(myTextureRegion);
@@ -850,7 +850,7 @@ public class BoardScreen extends FlashPointScreen {
 
   private static void removeAllPrevFragments() {
     boardMovesPanel.removeMovesAndDirectionsPanel();
-    boardChooseRolePanel.setSpecialities();
+    boardChooseRolePanel.removeChooseInitPosPanel();
     boardChatFragment.removeChatFragment();
     boardCheatSFragment.removeCheatSFragment();
     boardStatsFragment.removeStatsFragment();
@@ -945,7 +945,7 @@ public class BoardScreen extends FlashPointScreen {
     BGM.stop();
     if (game.getScreen() == game.boardScreen) {
       game.setScreen(game.lobbyScreen);
-      }
+    }
   }
 
   public static void setBoardScreen() {
