@@ -35,6 +35,7 @@ public class BoardChooseRolePanel {
     }
 
     public void createChooseRolePanel() {
+        setSpecialities();
         // list style
         listStyleRoles = new List.ListStyle();
         listStyleRoles.font = Font.get(22); // font size

@@ -672,7 +672,7 @@ public class DBHandler {
                     firefighterParams.put("numAP", f.getActionPointsLeft());
                     firefighterParams.put("numSpecialAP", fAdvanced.getSpecialActionPoints());
                     firefighterParams.put("hadVeteranBonus", fAdvanced.getHadVeteranBonus());
-                    firefighterParams.put("specialty", fAdvanced.getSpeciality());
+                    firefighterParams.put("specialty", fAdvanced.getSpeciality().toString());
                     newFirefightersList.add(firefighterParams);
                 }
             }
