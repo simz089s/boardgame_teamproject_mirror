@@ -59,6 +59,7 @@ public class BoardManagerAdvanced extends BoardManager {
       hitLocation.addHotSpot();
       numHotSpotLeft--;
     }
+    checkVictimsAndAdd();
   }
 
   private List<Tile> getHazMatTile() {
@@ -173,5 +174,73 @@ public class BoardManagerAdvanced extends BoardManager {
       return true;
     }
     return false;
+  }
+
+  public void addAmbulance(int i, int j) {
+    Tile currentTile = TILE_MAP[i][j];
+    if (!currentTile.canContainAmbulance()) {
+      throw new IllegalArgumentException("This tile cannot contain ambulance");
+    }
+
+    Tile neibourTile = null;
+    for (Direction d : Direction.values()) {
+      if (d != Direction.NODIRECTION) {
+        neibourTile = currentTile.getAdjacentTile(d);
+        if (neibourTile != null && neibourTile.canContainAmbulance()) {
+          break;
+        }
+        neibourTile = null;
+      }
+    }
+    if (neibourTile == null) {
+      throw new IllegalArgumentException("There is no tile adjacent that is an ambulance");
+    }
+    currentTile.setCarrierStatus(CarrierStatus.HASAMBULANCE);
+    neibourTile.setCarrierStatus(CarrierStatus.HASAMBULANCE);
+
+  }
+
+  public void addFireTruck(int i, int j) {
+    Tile currentTile = TILE_MAP[i][j];
+    if (!currentTile.canContainFireTruck()) {
+      throw new IllegalArgumentException("This tile cannot contain fireTruck");
+    }
+
+    Tile neibourTile = null;
+    for (Direction d : Direction.values()) {
+      if (d != Direction.NODIRECTION) {
+        neibourTile = currentTile.getAdjacentTile(d);
+        if (neibourTile != null && neibourTile.canContainFireTruck()) {
+          break;
+        }
+        neibourTile = null;
+      }
+    }
+    if (neibourTile == null) {
+      throw new IllegalArgumentException("There is no tile adjacent that is a fireTrcuh");
+    }
+    currentTile.setCarrierStatus(CarrierStatus.HASFIRETRUCK);
+    neibourTile.setCarrierStatus(CarrierStatus.HASFIRETRUCK);
+  }
+
+  @Override
+  public ArrayList<Tile> getClosestAmbulanceTile(int i, int j) {
+    ArrayList<Tile> tiles = new ArrayList<Tile>();
+    double currentSmallestDistance = Double.MAX_VALUE;
+    for (int k = 0; k < ROWS; k++) {
+      for (int l = 0; l < COLUMNS; l++) {
+        if (TILE_MAP[k][l].hasAmbulance()) {
+          double squareDistance = Math.pow(i - k, 2) + Math.pow(j - l, 2);
+          if (squareDistance < currentSmallestDistance) {
+            currentSmallestDistance = squareDistance;
+            tiles.clear();
+            tiles.add(TILE_MAP[k][l]);
+          } else if (squareDistance == currentSmallestDistance) {
+            tiles.add(TILE_MAP[k][l]);
+          }
+        }
+      }
+    }
+    return tiles;
   }
 }

@@ -29,14 +29,14 @@ public class FireFighterTurnManagerAdvance extends FireFighterTurnManager {
     }
   }
 
-  public boolean chooseInitialPosition(FireFighterAdvanceSpecialities speciality, Tile t) throws IllegalAccessException {
+  public boolean setInitialSpeciality(FireFighterAdvanceSpecialities speciality) {
     if (FREESPECIALITIES.remove(speciality)) {
       FireFighter f = FIREFIGHTERS.removeFirst();
       if (((FireFighterAdvanced) f).getSpeciality() == FireFighterAdvanceSpecialities.NO_SPECIALITY) {
         throw new IllegalArgumentException("This fireFighter already has a speciality");
       }
       FIREFIGHTERS.addFirst(FireFighterAdvanced.createFireFighter(f.getColor(), speciality));
-      return chooseInitialPosition(t);
+      return true;
     } else {
       return false;
     }
@@ -219,6 +219,11 @@ public class FireFighterTurnManagerAdvance extends FireFighterTurnManager {
         sList.toArray(list);
         return list;
     }
+
+    public boolean currentHasSpeciality() {
+      return !getCurrentFireFighter().hasSpeciality(FireFighterAdvanceSpecialities.NO_SPECIALITY);
+    }
+
   //TODO
   // verify the veteran vacinity at the begining of each turn;
   // Flip the markes in ajacentSpace

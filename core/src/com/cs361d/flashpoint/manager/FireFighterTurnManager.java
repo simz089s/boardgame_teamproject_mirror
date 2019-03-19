@@ -14,6 +14,7 @@ public class FireFighterTurnManager implements Iterable<FireFighter> {
   protected final int MAX_NUMBER_OF_PLAYERS = 6;
   protected LinkedList<FireFighter> FIREFIGHTERS = new LinkedList<FireFighter>();
   protected boolean allAssigned = false;
+  boolean firstCall = true;
   protected static FireFighterTurnManager instance = new FireFighterTurnManager();
 
   public static FireFighterTurnManager getInstance() {
@@ -41,14 +42,8 @@ public class FireFighterTurnManager implements Iterable<FireFighter> {
     return FIREFIGHTERS.getFirst().getTile() != null;
   }
 
-  public boolean allAssigned() {
-    for (FireFighter f : FIREFIGHTERS) {
-      if (f.getTile() == null) {
-        return allAssigned;
-      }
-    }
-    allAssigned = true;
-    return true;
+  public boolean currentHasTile() {
+    return getCurrentFireFighter().getTile() != null;
   }
 
   public void removeFireFighter(FireFighter f) {

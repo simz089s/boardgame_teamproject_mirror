@@ -34,7 +34,7 @@ public class Tile {
 
     public boolean hasHotSpot()
     {
-        return this.hasHazmat;
+        return this.hasHotSpot;
     }
 
     public void setHasHazmat(boolean value) {

@@ -15,9 +15,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.cs361d.flashpoint.manager.*;
 import com.cs361d.flashpoint.model.BoardElements.*;
-import com.cs361d.flashpoint.model.FireFighterSpecialities.FireFighterAdvanced;
-import com.cs361d.flashpoint.networking.Commands;
-import com.cs361d.flashpoint.networking.NetworkManager;
 
 import java.util.ArrayList;
 
@@ -122,7 +119,7 @@ public class BoardScreen extends FlashPointScreen {
                 new ClickListener() {
                   @Override
                   public void clicked(InputEvent event, float x, float y) {
-                    if (!FireFighterTurnManager.getInstance().allAssigned()
+                    if (!FireFighterTurnManager.getInstance().currentHasTile()
                             && DBHandler.isPresentInArr(CHOOSE_INIT_POS_TILES, i_pos + "-" + j_pos)
                     ) {
                       clearAllGameUnits();
@@ -142,7 +139,7 @@ public class BoardScreen extends FlashPointScreen {
                       drawGameUnitsOnTile();
                       updateGameInfoLabel();
 
-                      if (!FireFighterTurnManager.getInstance().allAssigned()) {
+                      if (!FireFighterTurnManager.getInstance().currentHasTile()) {
                         addFilterOnTileForChooseInitPos();
                       } else {
                         createAllGameButtons();
@@ -183,7 +180,7 @@ public class BoardScreen extends FlashPointScreen {
     createGameInfoLabel();
 
     // Choose init pos
-    if (!FireFighterTurnManager.getInstance().allAssigned()) {
+    if (!FireFighterTurnManager.getInstance().currentHasTile()) {
    //   if(User.getInstance().isMyTurn()) {
         createDialog("Ready, set, go!", "Choose your initial position on the board (green tiles).");
         addFilterOnTileForChooseInitPos();

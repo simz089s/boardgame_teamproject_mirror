@@ -127,8 +127,6 @@ public class CreateGameScreen extends FlashPointScreen {
 
               CreateNewGameManager.createNewGame(
                   gameNameField.getText(), numPlayers, mk, Difficulty.fromString(diffSelected));
-              NetworkManager.getInstance()
-                  .sendCommand(Commands.SEND_NEWLY_CREATED_BOARD, DBHandler.getBoardAsString());
                 game.setScreen(game.boardScreen);
                 BGM.stop();
 
