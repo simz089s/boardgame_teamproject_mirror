@@ -331,6 +331,6 @@ public class BoardMovesPanel {
 
         removeTableDirectionsPanel();
         if (boardChooseRolePanel != null)
-            boardChooseRolePanel.removeChooseInitPosPanel();
+            boardChooseRolePanel.removeChooseInitRolePanel();
     }
 }

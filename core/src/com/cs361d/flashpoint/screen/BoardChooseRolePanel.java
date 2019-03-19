@@ -89,7 +89,7 @@ public class BoardChooseRolePanel {
         INITIAL_ROLE = ((FireFighterTurnManagerAdvance) FireFighterTurnManagerAdvance.getInstance()).getAvailableSpecialities();
     }
 
-    public void removeChooseInitPosPanel(){
+    public void removeChooseInitRolePanel(){
         for (int i = 0; i < rolesList.size(); i++) {
             rolesList.get(i).remove();
         }
