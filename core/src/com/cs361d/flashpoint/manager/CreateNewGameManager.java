@@ -44,7 +44,6 @@ public class CreateNewGameManager {
 
   private static void createExperienceGame(MapKind map, Difficulty diff, int numPlayers) {
     BoardManager.useExperienceGameManager();
-    FireFighterTurnManager.useFireFighterGameManagerAdvanced();
     loadMap(map);
     populateExperiencedMap(diff, numPlayers);
   }

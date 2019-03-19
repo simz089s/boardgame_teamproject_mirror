@@ -594,6 +594,7 @@ public class BoardManager implements Iterable<Tile> {
 
   public static void useExperienceGameManager() {
     instance = new BoardManagerAdvanced();
+    FireFighterTurnManager.useFireFighterGameManagerAdvanced();
   }
 
   public static void useFamilyGameManager() {
