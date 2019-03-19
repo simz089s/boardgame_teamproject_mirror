@@ -375,12 +375,12 @@ public class BoardScreen extends FlashPointScreen {
     // Vehicles
       gameUnit = null;
       if(tiles[i][j].hasAmbulance()){
-        if(getVehicleOrientationOnTile(i, j, CarrierStatus.HASAMBULANCE, Orientation.HORIZONTAL)) { // horizontally positioned
+        if((i == 0 || i == 7) && (!tiles[i][j - 1].hasAmbulance())) { // horizontally positioned
           gameUnit = new Image(new Texture("game_units/vehicles/h_ambulance.png"));
           gameUnit.setHeight(60);
           gameUnit.setWidth(100);
           gameUnit.setPosition(myTile.getX() + 25, myTile.getY() + 8);
-        } else if (getVehicleOrientationOnTile(i, j, CarrierStatus.HASAMBULANCE, Orientation.VERTICAL)){ // vertically positioned
+        } else if ((j == 0 || j == 9) && (!tiles[i + 1][j].hasAmbulance())){ // vertically positioned
           gameUnit = new Image(new Texture("game_units/vehicles/v_ambulance.png"));
           gameUnit.setHeight(100);
           gameUnit.setWidth(60);
@@ -389,12 +389,12 @@ public class BoardScreen extends FlashPointScreen {
       }
 
       else if (tiles[i][j].hasFireTruck()){
-        if(getVehicleOrientationOnTile(i, j, CarrierStatus.HASFIRETRUCK, Orientation.HORIZONTAL)) { // horizontally positioned
+        if((i == 0 || i == 7) && (!tiles[i][j - 1].hasFireTruck())) { // horizontally positioned
           gameUnit = new Image(new Texture("game_units/vehicles/h_engine.png"));
           gameUnit.setHeight(60);
           gameUnit.setWidth(100);
           gameUnit.setPosition(myTile.getX() + 25, myTile.getY() + 8);
-        } else if (getVehicleOrientationOnTile(i, j, CarrierStatus.HASFIRETRUCK, Orientation.VERTICAL)){ // vertically positioned
+        } else if ((j == 0 || j == 9) && (!tiles[i + 1][j].hasFireTruck())){ // vertically positioned
           gameUnit = new Image(new Texture("game_units/vehicles/v_engine.png"));
           gameUnit.setHeight(100);
           gameUnit.setWidth(60);
@@ -458,6 +458,16 @@ public class BoardScreen extends FlashPointScreen {
               myTile.getX() + myTile.getHeight() / 2 + 7, myTile.getY() + myTile.getHeight() / 2 + 7);
       gameUnits.add(gameUnit);
       stage.addActor(gameUnit);
+
+    if (tiles[i][j].getVictim().isCured()){
+        Image healMarker = new Image(new Texture("game_units/Heal_Marker.png"));
+        gameUnit.setHeight(10);
+        gameUnit.setWidth(10);
+        gameUnit.setPosition(
+                myTile.getX() + myTile.getHeight() / 2 + 10, myTile.getY() + myTile.getHeight() / 2 + 10);
+        gameUnits.add(healMarker);
+        stage.addActor(healMarker);
+    }
     }
 
     // Fire status (smoke, fire)
@@ -893,39 +903,6 @@ public class BoardScreen extends FlashPointScreen {
     }
   }
 
-  private static boolean getVehicleOrientationOnTile(int i, int j, CarrierStatus carrierStatus, Orientation orientation) {
-    if(true){ //TODO; get the map kind (if mk == 1)
-      if(carrierStatus == CarrierStatus.HASAMBULANCE){
-        if(orientation == Orientation.VERTICAL){
-          return (i == 4 && j == 0) || (i == 4 && j == 9);
-        } else if(orientation == Orientation.HORIZONTAL){
-          return (i == 0 && j == 5) || (i == 7 && j == 3);
-        }
-      } else if (carrierStatus == CarrierStatus.HASFIRETRUCK){
-        if(orientation == Orientation.VERTICAL){
-          return (i == 2 && j == 0) || (i == 6 && j == 9);
-        } else if(orientation == Orientation.HORIZONTAL){
-          return (i == 0 && j == 7) || (i == 7 && j == 1);
-        }
-      }
-    } else if(false){ //TODO; get the map kind (if mk == 2)
-      if(carrierStatus == CarrierStatus.HASAMBULANCE){
-        if(orientation == Orientation.VERTICAL){
-          return (i == 3 && j == 0) || (i == 5 && j == 9);
-        } else if(orientation == Orientation.HORIZONTAL){
-          return (i == 0 && j == 5) || (i == 7 && j == 3);
-        }
-      } else if (carrierStatus == CarrierStatus.HASFIRETRUCK){
-        if(orientation == Orientation.VERTICAL){
-          return (i == 5 && j == 0) || (i == 3 && j == 9);
-        } else if(orientation == Orientation.HORIZONTAL){
-          return (i == 0 && j == 3) || (i == 7 && j == 5);
-        }
-      }
-    }
-
-    return false;
-  }
 
   public static void redrawBoard() {
     if (game.getScreen() == game.boardScreen) {
