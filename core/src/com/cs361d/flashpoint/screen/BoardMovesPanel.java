@@ -152,7 +152,6 @@ public class BoardMovesPanel {
 
                     } else if (moveSelected.equals("SAVE")) {
                         DBHandler.saveBoardToDB(BoardManager.getInstance().getGameName());
-                        NetworkManager.getInstance().sendCommand(Commands.SAVE, DBHandler.getBoardAsString());
                         createDialog("Save", "Your game has been successfully saved.");
                     } else {
                         //debugLbl.setText("failed action");

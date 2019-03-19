@@ -232,7 +232,7 @@ public class LobbyScreen extends FlashPointScreen {
                     public void clicked(InputEvent event, float x, float y) {
                         if (lstLoadGames.getSelected() != null ){
                             CreateNewGameManager.loadSavedGame(lstLoadGames.getSelected());
-                            NetworkManager.getInstance().sendCommand(Commands.SEND_NEWLY_CREATED_BOARD, DBHandler.getBoardAsString());
+                            game.setScreen(game.boardScreen);
                         }
                     }
                 });

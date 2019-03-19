@@ -581,8 +581,8 @@ public class BoardManager implements Iterable<Tile> {
   @Override
   public Iterator<Tile> iterator() {
     List<Tile> tiles = new ArrayList<Tile>();
-    for (int i = 0; i < COLUMNS; i++) {
-      for (int j = 0; j < ROWS; j++) {
+    for (int i = 0; i < ROWS; i++) {
+      for (int j = 0; j < COLUMNS; j++) {
         tiles.add(TILE_MAP[i][j]);
       }
     }
@@ -612,5 +612,9 @@ public class BoardManager implements Iterable<Tile> {
 
   public boolean gameHasEnded() {
     return gameEnded;
+  }
+
+  public static boolean isAdvanced() {
+    return instance instanceof BoardManagerAdvanced;
   }
 }

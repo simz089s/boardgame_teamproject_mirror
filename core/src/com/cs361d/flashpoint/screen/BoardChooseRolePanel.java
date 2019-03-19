@@ -7,6 +7,8 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.List;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
+import com.cs361d.flashpoint.manager.BoardManager;
+import com.cs361d.flashpoint.manager.BoardManagerAdvanced;
 import com.cs361d.flashpoint.manager.FireFighterTurnManager;
 import com.cs361d.flashpoint.manager.FireFighterTurnManagerAdvance;
 import com.cs361d.flashpoint.model.BoardElements.FireFighter;
@@ -30,11 +32,14 @@ public class BoardChooseRolePanel {
 
     // constructor
     public BoardChooseRolePanel(Stage stage){
-        setSpecialities();
         this.stage = stage;
     }
 
     public void createChooseRolePanel() {
+        if (!(BoardManager.getInstance() instanceof BoardManagerAdvanced))
+        {
+            return;
+        }
         setSpecialities();
         // list style
         listStyleRoles = new List.ListStyle();

@@ -87,10 +87,7 @@ public class BoardScreen extends FlashPointScreen {
     txtrBG = new Texture("empty.png");
     spriteBG = new Sprite(txtrBG);
     spriteBG.setPosition(0, 0);
-
-    if (BoardManager.getInstance() instanceof BoardManagerAdvanced) {
-      boardChooseRolePanel = new BoardChooseRolePanel(stage);
-      }
+    boardChooseRolePanel = new BoardChooseRolePanel(stage);
     boardMovesPanel = new BoardMovesPanel(stage);
     boardChatFragment = new BoardChatFragment(stage);
     boardCheatSFragment = new BoardCheatSFragment(stage);
@@ -660,19 +657,9 @@ public class BoardScreen extends FlashPointScreen {
             new ClickListener() {
               @Override
               public void clicked(InputEvent event, float x, float y) {
-                Dialog dialog =
-                        new Dialog("Warning", skinUI, "dialog") {
-                          public void result(Object obj) {
-                            if ((Boolean) obj) {
-                              NetworkManager.getInstance().sendCommand(Commands.DISCONNECT, "");
-                              BGM.stop();
-                              game.setScreen(game.lobbyScreen);
-                            }
-                          }
-                        };
-                NetworkManager.getInstance().sendCommand(Commands.EXITGAME, "");
-              }
-            });
+                  BGM.stop();
+                  game.setScreen(game.lobbyScreen);
+              }});
 
     stage.addActor(btnExit);
   }
@@ -750,7 +737,7 @@ public class BoardScreen extends FlashPointScreen {
             new ClickListener() {
               @Override
               public void clicked(InputEvent event, float x, float y) {
-                NetworkManager.getInstance().sendCommand(Commands.GET_CHAT_MESSAGES,"");
+                  setSideFragment(Fragment.CHAT);
               }
             });
 
@@ -858,8 +845,7 @@ public class BoardScreen extends FlashPointScreen {
 
   private static void removeAllPrevFragments() {
     boardMovesPanel.removeMovesAndDirectionsPanel();
-    if (boardChooseRolePanel != null)
-      boardChooseRolePanel.removeChooseInitPosPanel();
+    boardChooseRolePanel.removeChooseInitPosPanel();
     boardChatFragment.removeChatFragment();
     boardCheatSFragment.removeCheatSFragment();
     boardStatsFragment.removeStatsFragment();
@@ -939,6 +925,8 @@ public class BoardScreen extends FlashPointScreen {
       boardStatsFragment.createStatsFragment();
     } else if (fragment == Fragment.CHAT){
       boardChatFragment.createChatFragment();
+    } else if (fragment == Fragment.CHOOSESPECIALTY){
+        boardChooseRolePanel.createChooseRolePanel();
     }
 
     currentFragment = fragment;

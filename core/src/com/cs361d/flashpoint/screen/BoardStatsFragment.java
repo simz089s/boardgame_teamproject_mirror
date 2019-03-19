@@ -8,6 +8,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.cs361d.flashpoint.manager.BoardManager;
 import com.cs361d.flashpoint.manager.FireFighterTurnManager;
 import com.cs361d.flashpoint.model.BoardElements.FireFighter;
+import com.cs361d.flashpoint.model.FireFighterSpecialities.FireFighterAdvanceSpecialities;
+import com.cs361d.flashpoint.model.FireFighterSpecialities.FireFighterAdvanced;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -84,8 +86,12 @@ public class BoardStatsFragment {
             FireFighter f = it.next();
             gamesStatsArrList.add("[" + f.getColor() + "]");
             gamesStatsArrList.add("Accumulated AP: " + f.getActionPointsLeft());
-            gamesStatsArrList.add("Special AP: 0");
-            gamesStatsArrList.add("Specialist: None"); // TODO: add firefighter specialist here
+            if (BoardManager.isAdvanced()) {
+                int specialAp = ((FireFighterAdvanced) f).getSpecialActionPoints();
+                String speciality = ((FireFighterAdvanced) f).getSpeciality().toString();
+                gamesStatsArrList.add("Special AP: " + specialAp);
+                gamesStatsArrList.add("Specialist: " + speciality);
+            }
             gamesStatsArrList.add("");
         }
 

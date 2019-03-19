@@ -2,6 +2,7 @@ package com.cs361d.flashpoint.screen;
 
 public enum Fragment {
     CHEATSHEET("cheat_sheep"),
+    CHOOSESPECIALTY("choose_specialty"),
     STATS("stats"),
     EMPTY("empty"),
     CHAT("chat");
