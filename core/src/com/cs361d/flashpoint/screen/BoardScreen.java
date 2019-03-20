@@ -369,38 +369,38 @@ public class BoardScreen extends FlashPointScreen {
     Image gameUnit;
 
     // Vehicles
-      gameUnit = null;
       if(tiles[i][j].hasAmbulance()){
         if((i == 0 || i == 7) && (!tiles[i][j - 1].hasAmbulance())) { // horizontally positioned
           gameUnit = new Image(new Texture("game_units/vehicles/h_ambulance.png"));
           gameUnit.setHeight(60);
           gameUnit.setWidth(100);
           gameUnit.setPosition(myTile.getX() + 25, myTile.getY() + 8);
+          gameUnits.add(gameUnit);
+          stage.addActor(gameUnit);
         } else if ((j == 0 || j == 9) && (!tiles[i + 1][j].hasAmbulance())){ // vertically positioned
           gameUnit = new Image(new Texture("game_units/vehicles/v_ambulance.png"));
           gameUnit.setHeight(100);
           gameUnit.setWidth(60);
           gameUnit.setPosition(myTile.getX() + 8, myTile.getY() + 25);
+          gameUnits.add(gameUnit);
+          stage.addActor(gameUnit);
         }
-      }
-
-      else if (tiles[i][j].hasFireTruck()){
+      } else if (tiles[i][j].hasFireTruck()){
         if((i == 0 || i == 7) && (!tiles[i][j - 1].hasFireTruck())) { // horizontally positioned
           gameUnit = new Image(new Texture("game_units/vehicles/h_engine.png"));
           gameUnit.setHeight(60);
           gameUnit.setWidth(100);
           gameUnit.setPosition(myTile.getX() + 25, myTile.getY() + 8);
+          gameUnits.add(gameUnit);
+          stage.addActor(gameUnit);
         } else if ((j == 0 || j == 9) && (!tiles[i + 1][j].hasFireTruck())){ // vertically positioned
           gameUnit = new Image(new Texture("game_units/vehicles/v_engine.png"));
           gameUnit.setHeight(100);
           gameUnit.setWidth(60);
           gameUnit.setPosition(myTile.getX() + 8, myTile.getY() + 25);
+          gameUnits.add(gameUnit);
+          stage.addActor(gameUnit);
         }
-      }
-
-      if (gameUnit != null){
-        gameUnits.add(gameUnit);
-        stage.addActor(gameUnit);
       }
 
     // Firefighters
