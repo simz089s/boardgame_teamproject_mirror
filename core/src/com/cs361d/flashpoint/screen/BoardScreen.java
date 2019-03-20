@@ -48,16 +48,19 @@ public class BoardScreen extends FlashPointScreen {
   Sprite spriteBG;
   static Stage stage;
 
-  private static Music BGM = Gdx.audio.newMusic(Gdx.files.internal("playlist/battle_normal01.mp3"));
+  private static Music audioMusic = Gdx.audio.newMusic(Gdx.files.internal("playlist/battle_normal01.mp3"));
+
+  static BoardDialog boardDialog;
 
   static BoardChooseRolePanel boardChooseRolePanel;
+  static BoardGameInfoLabel boardGameInfoLabel;
   static BoardMovesPanel boardMovesPanel;
   static BoardChatFragment boardChatFragment;
   static BoardCheatSFragment boardCheatSFragment;
   static BoardStatsFragment boardStatsFragment;
 
+
   static ImageButton btnExit;
-  static Label gameInfoLabel;
   static ImageButton btnResume;
   ImageButton btnChat;
   ImageButton btnCheatS;
@@ -68,7 +71,7 @@ public class BoardScreen extends FlashPointScreen {
 
   BoardScreen(Game pGame) {
     super(pGame);
-    BGM.setLooping(true);
+    audioMusic.setLooping(true);
   }
 
   @Override
@@ -76,7 +79,7 @@ public class BoardScreen extends FlashPointScreen {
 
     // DBHandler.createBoard(MapKind.MAP2); // generate initial map
 
-    BGM.play();
+    audioMusic.play();
 
     stage = new Stage();
     batch = new SpriteBatch();
@@ -84,8 +87,12 @@ public class BoardScreen extends FlashPointScreen {
     txtrBG = new Texture("empty.png");
     spriteBG = new Sprite(txtrBG);
     spriteBG.setPosition(0, 0);
+
+    boardDialog = new BoardDialog(stage);
+
     boardChooseRolePanel = new BoardChooseRolePanel(stage);
-    boardMovesPanel = new BoardMovesPanel(stage);
+    boardGameInfoLabel = new BoardGameInfoLabel(stage);
+    boardMovesPanel = new BoardMovesPanel(stage, boardGameInfoLabel);
     boardChatFragment = new BoardChatFragment(stage);
     boardCheatSFragment = new BoardCheatSFragment(stage);
     boardStatsFragment = new BoardStatsFragment(stage);
@@ -137,7 +144,7 @@ public class BoardScreen extends FlashPointScreen {
                       }
                       removeAllFilterOnTile();
                       drawGameUnitsOnTile();
-                      updateGameInfoLabel();
+                      boardGameInfoLabel.drawGameInfoLabel();
 
                       if (!FireFighterTurnManager.getInstance().currentHasTile()) {
                         addFilterOnTileForChooseInitPos();
@@ -146,9 +153,9 @@ public class BoardScreen extends FlashPointScreen {
 
                         // moves panel
                         removeAllPrevFragments();
-                        boardMovesPanel.createMovesAndDirectionsPanel();
+                        boardMovesPanel.drawMovesAndDirectionsPanel();
 
-                        createEngineTilesColor();
+                        drawEngineTilesColor();
                       }
                     }
 
@@ -165,7 +172,7 @@ public class BoardScreen extends FlashPointScreen {
 
                       removeAllFilterOnTile();
                       drawGameUnitsOnTile();
-                      updateGameInfoLabel();
+                      boardGameInfoLabel.drawGameInfoLabel();
                     }
                   }
                 });
@@ -177,23 +184,23 @@ public class BoardScreen extends FlashPointScreen {
     drawGameUnitsOnTile();
 
     //createSoundButton();
-    createGameInfoLabel();
+    boardGameInfoLabel.drawGameInfoLabel();
 
     // Choose init pos
     if (!FireFighterTurnManager.getInstance().currentHasTile()) {
    //   if(User.getInstance().isMyTurn()) {
-        createDialog("Ready, set, go!", "Choose your initial position on the board (green tiles).");
+        boardDialog.drawDialog("Ready, set, go!", "Choose your initial position on the board (green tiles).");
         addFilterOnTileForChooseInitPos();
-        boardChooseRolePanel.createChooseRolePanel();
+        boardChooseRolePanel.drawChooseRolePanel();
    //   }
     } else {
       createAllGameButtons();
 
       // moves panel
       removeAllPrevFragments();
-      boardMovesPanel.createMovesAndDirectionsPanel();
+      boardMovesPanel.drawMovesAndDirectionsPanel();
 
-      createEngineTilesColor();
+      drawEngineTilesColor();
     }
 
     Gdx.input.setInputProcessor(stage);
@@ -517,113 +524,23 @@ public class BoardScreen extends FlashPointScreen {
     }
   }
 
-
-
-  // game info label
-
-
-
-  private void createGameInfoLabel() {
-
-    if (FireFighterTurnManager.getInstance().getCurrentFireFighter() == null) {
-      return;
-    }
-    int numAP = FireFighterTurnManager.getInstance().getCurrentFireFighter().getActionPointsLeft();
-    FireFighterColor color =
-            FireFighterTurnManager.getInstance().getCurrentFireFighter().getColor();
-
-    String specialty = "\n";
-    if(BoardManager.getInstance() instanceof BoardManagerAdvanced) {
-      // TODO     specialty = ((FireFighterAdvanced)FireFighterAdvanced.getFireFighter(User.getInstance().getColor())).getSpeciality().toString();
-    }
-
-    gameInfoLabel =
-            new Label(
-
-                    User.getInstance().getName().toUpperCase()
-                            + specialty
-                            //+ "\nYour Color: "
-                            //+ User.getInstance().getColor()
-                            + "\nCurrent turn: "
-                            + color
-                            + "\nAP left: "
-                            + numAP,
-                    skinUI);
-    gameInfoLabel.setFontScale(1.2f);
-    gameInfoLabel.setColor(Color.BLACK);
-    gameInfoLabel.setPosition(850, Gdx.graphics.getHeight() - 130);
-
-    stage.addActor(gameInfoLabel);
-  }
-
-  public static void updateGameInfoLabel() {
-    FireFighterTurnManager ft = FireFighterTurnManager.getInstance();
-    if (ft.getInstance().getCurrentFireFighter() == null) {
-      return;
-    }
-    int APLeft = FireFighterTurnManager.getInstance().getCurrentFireFighter().getActionPointsLeft();
-    FireFighterColor color =
-            FireFighterTurnManager.getInstance().getCurrentFireFighter().getColor();
-
-    String specialty = "\n";
-    if(BoardManager.getInstance() instanceof BoardManagerAdvanced) {
-    // TODO     specialty = ((FireFighterAdvanced)FireFighterAdvanced.getFireFighter(User.getInstance().getColor())).getSpeciality().toString();
-    }
-
-    gameInfoLabel.setText(
-            User.getInstance().getName().toUpperCase()
-                    + specialty
-                    //+ "\nPlaying Color: "
-                    //+ User.getInstance().getColor()
-                    + "\nCurrent turn: "
-                    + color
-                    + "\nAP left: "
-                    + APLeft);
-
-    if (APLeft == 0) {
-      gameInfoLabel.setColor(Color.RED);
+  private void drawEngineTilesColor() {
+    // Engines (Ambulance, firetruck)
+    Tile[][] tiles = BoardManager.getInstance().getTiles();
+    for (int i = 0; i < tiles.length; i++) {
+      for (int j = 0; j < tiles[i].length; j++) {
+        if (tiles[i][j].canContainAmbulance()) {
+          tilesImg[i][j].setColor(Color.SKY);
+        } else if (tiles[i][j].canContainFireTruck()) {
+          tilesImg[i][j].setColor(Color.ORANGE);
+        }
+      }
     }
   }
 
 
 
-  // dialogs
-
-
-
-  public static void createDialog(String title, String message) {
-    Dialog dialog =
-            new Dialog(title, skinUI, "dialog") {
-              public void result(Object obj) {
-                remove();
-              }
-            };
-
-    dialog.text(message);
-    dialog.button("OK", true);
-    dialog.show(stage);
-  }
-
-  public static void createEndGameDialog(String title, String message) {
-    BoardManager.getInstance().setGameEnded();
-    Dialog dialog =
-            new Dialog(title, skinUI, "dialog") {
-              public void result(Object obj) {
-                if ((Boolean) obj) {
-                  BGM.stop();
-                  game.setScreen(game.lobbyScreen);
-                }
-              }
-            };
-
-    dialog.text(message);
-    dialog.button("OK", true);
-    dialog.show(stage);
-  }
-
-
-
-  // right menu buttons
+  // menu buttons
 
 
 
@@ -654,7 +571,7 @@ public class BoardScreen extends FlashPointScreen {
             new ClickListener() {
               @Override
               public void clicked(InputEvent event, float x, float y) {
-                  BGM.stop();
+                  audioMusic.stop();
                   game.setScreen(game.lobbyScreen);
               }});
 
@@ -763,7 +680,7 @@ public class BoardScreen extends FlashPointScreen {
               @Override
               public void clicked(InputEvent event, float x, float y) {
                 removeAllPrevFragments();
-                boardMovesPanel.createMovesAndDirectionsPanel();
+                boardMovesPanel.drawMovesAndDirectionsPanel();
               }
             });
 
@@ -791,10 +708,10 @@ public class BoardScreen extends FlashPointScreen {
             new ClickListener() {
               @Override
               public void clicked(InputEvent event, float x, float y) {
-                if (BGM.isPlaying()) {
-                  BGM.pause();
+                if (audioMusic.isPlaying()) {
+                  audioMusic.pause();
                 } else {
-                  BGM.play();
+                  audioMusic.play();
                 }
               }
             });
@@ -842,7 +759,7 @@ public class BoardScreen extends FlashPointScreen {
 
   private static void removeAllPrevFragments() {
     boardMovesPanel.removeMovesAndDirectionsPanel();
-    boardChooseRolePanel.removeChooseInitRolePanel();
+    boardChooseRolePanel.removeChooseRolePanel();
     boardChatFragment.removeChatFragment();
     boardCheatSFragment.removeCheatSFragment();
     boardStatsFragment.removeStatsFragment();
@@ -875,20 +792,6 @@ public class BoardScreen extends FlashPointScreen {
     return false;
   }
 
-  private void createEngineTilesColor() {
-    // Engines (Ambulance, firetruck)
-    Tile[][] tiles = BoardManager.getInstance().getTiles();
-    for (int i = 0; i < tiles.length; i++) {
-      for (int j = 0; j < tiles[i].length; j++) {
-        if (tiles[i][j].canContainAmbulance()) {
-          tilesImg[i][j].setColor(Color.SKY);
-        } else if (tiles[i][j].canContainFireTruck()) {
-          tilesImg[i][j].setColor(Color.ORANGE);
-        }
-      }
-    }
-  }
-
 
   public static void redrawBoard() {
     if (game.getScreen() == game.boardScreen) {
@@ -901,14 +804,14 @@ public class BoardScreen extends FlashPointScreen {
   }
 
   public static void setLobbyPage() {
-    BGM.stop();
+    audioMusic.stop();
     if (game.getScreen() == game.boardScreen) {
       game.setScreen(game.lobbyScreen);
     }
   }
 
   public static void setBoardScreen() {
-    BGM.stop();
+    audioMusic.stop();
     game.setScreen(game.boardScreen);
   }
 
@@ -917,13 +820,13 @@ public class BoardScreen extends FlashPointScreen {
     removeAllPrevFragments();
 
     if (fragment == Fragment.CHEATSHEET){
-      boardCheatSFragment.createCheatSFragment();
+      boardCheatSFragment.drawCheatSFragment();
     } else if (fragment == Fragment.STATS){
-      boardStatsFragment.createStatsFragment();
+      boardStatsFragment.drawStatsFragment();
     } else if (fragment == Fragment.CHAT){
       boardChatFragment.createChatFragment();
     } else if (fragment == Fragment.CHOOSESPECIALTY){
-        boardChooseRolePanel.createChooseRolePanel();
+        boardChooseRolePanel.drawChooseRolePanel();
     }
 
     currentFragment = fragment;
@@ -939,5 +842,9 @@ public class BoardScreen extends FlashPointScreen {
 
   public static boolean isStatsFragment() {
     return currentFragment == Fragment.STATS;
+  }
+
+  public static BoardDialog getDialog(){
+    return boardDialog;
   }
 }

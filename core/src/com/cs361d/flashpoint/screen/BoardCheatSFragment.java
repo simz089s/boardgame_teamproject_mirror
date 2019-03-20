@@ -34,7 +34,7 @@ public class BoardCheatSFragment {
 
     }
 
-    public void createCheatSFragment() {
+    public void drawCheatSFragment() {
 
         // scrollPane style
         scrollStyle = new ScrollPane.ScrollPaneStyle();

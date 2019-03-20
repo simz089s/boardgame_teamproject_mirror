@@ -32,7 +32,7 @@ public class BoardStatsFragment {
     }
 
     // TODO : pass in an updated Stats object to be converted to a string (GameManager)
-    public void createStatsFragment() {
+    public void drawStatsFragment() {
 
         String[] gamesStatsArr = createStats();
 

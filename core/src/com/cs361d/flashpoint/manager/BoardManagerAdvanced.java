@@ -3,6 +3,7 @@ package com.cs361d.flashpoint.manager;
 import com.cs361d.flashpoint.model.BoardElements.*;
 import com.cs361d.flashpoint.model.FireFighterSpecialities.FireFighterAdvanceSpecialities;
 import com.cs361d.flashpoint.model.FireFighterSpecialities.FireFighterAdvanced;
+import com.cs361d.flashpoint.screen.BoardDialog;
 import com.cs361d.flashpoint.screen.BoardScreen;
 
 import java.util.ArrayList;
@@ -164,7 +165,7 @@ public class BoardManagerAdvanced extends BoardManager {
     int j = t.getJ();
     if (i == 0 || i == ROWS - 1 || j == 0 || j == COLUMNS - 1) {
       if (t.hasRealVictim() && t.hasAmbulance()) {
-        BoardScreen.createDialog("Victim Saved", "Congratulations, you saved one victim!");
+        BoardScreen.getDialog().drawDialog("Victim Saved", "Congratulations, you saved one victim!");
         numVictimSaved++;
         t.setNullVictim();
       }

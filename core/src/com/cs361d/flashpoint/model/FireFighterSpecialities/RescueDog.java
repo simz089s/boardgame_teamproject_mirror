@@ -3,6 +3,8 @@ package com.cs361d.flashpoint.model.FireFighterSpecialities;
 import com.cs361d.flashpoint.model.BoardElements.Direction;
 import com.cs361d.flashpoint.model.BoardElements.FireFighterColor;
 import com.cs361d.flashpoint.model.BoardElements.Tile;
+import com.cs361d.flashpoint.screen.BoardDialog;
+import com.cs361d.flashpoint.screen.BoardGameInfoLabel;
 import com.cs361d.flashpoint.screen.BoardScreen;
 
 public class RescueDog extends FireFighterAdvanced {
@@ -23,7 +25,7 @@ public class RescueDog extends FireFighterAdvanced {
     @Override
     public boolean moveAP(Direction d) {
         if(currentTile.getAdjacentTile(d).hasFire()) {
-            BoardScreen.createDialog("Action rejected", "The rescue dog cannot go on a space with fire");
+            BoardScreen.getDialog().drawDialog("Action rejected", "The rescue dog cannot go on a space with fire");
             return false;
         }
         else if (currentTile.hasObstacle(d)) {

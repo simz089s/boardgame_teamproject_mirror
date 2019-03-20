@@ -35,7 +35,8 @@ public class BoardChooseRolePanel {
         this.stage = stage;
     }
 
-    public void createChooseRolePanel() {
+    public void drawChooseRolePanel() {
+
         if (!(BoardManager.getInstance() instanceof BoardManagerAdvanced))
         {
             return;
@@ -74,7 +75,7 @@ public class BoardChooseRolePanel {
             public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
 
                 String moveSelected = lstRoles.getSelected();
-
+                removeChooseRolePanel();
                 return true;
             }
         });
@@ -89,7 +90,7 @@ public class BoardChooseRolePanel {
         INITIAL_ROLE = ((FireFighterTurnManagerAdvance) FireFighterTurnManagerAdvance.getInstance()).getAvailableSpecialities();
     }
 
-    public void removeChooseInitRolePanel(){
+    public void removeChooseRolePanel(){
         for (int i = 0; i < rolesList.size(); i++) {
             rolesList.get(i).remove();
         }

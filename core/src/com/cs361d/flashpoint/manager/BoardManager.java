@@ -4,6 +4,7 @@ import com.cs361d.flashpoint.model.BoardElements.*;
 import com.cs361d.flashpoint.networking.Commands;
 import com.cs361d.flashpoint.networking.NetworkManager;
 import com.cs361d.flashpoint.networking.Server;
+import com.cs361d.flashpoint.screen.BoardDialog;
 import com.cs361d.flashpoint.screen.BoardScreen;
 import org.jetbrains.annotations.NotNull;
 import org.json.simple.JSONObject;
@@ -530,7 +531,7 @@ public class BoardManager implements Iterable<Tile> {
     int j = t.getJ();
     if (i == 0 || i == ROWS - 1 || j == 0 || j == COLUMNS - 1) {
       if (t.hasRealVictim()) {
-        BoardScreen.createDialog("Victim Saved", "Congratulations, you saved one victim!");
+        BoardScreen.getDialog().drawDialog("Victim Saved", "Congratulations, you saved one victim!");
         numVictimSaved++;
         t.setNullVictim();
       }
@@ -601,7 +602,7 @@ public class BoardManager implements Iterable<Tile> {
       Server.getServer().changeLoadedStatus(false);
   }
     if (BoardScreen.isOnBoardScreen()) {
-      BoardScreen.createEndGameDialog(title, msg);
+      BoardScreen.getDialog().drawEndGameDialog(title, msg);
       // DBHandler.removeGameFile(gameName);
     }
   }

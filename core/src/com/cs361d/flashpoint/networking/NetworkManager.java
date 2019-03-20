@@ -5,6 +5,7 @@ import com.badlogic.gdx.Net;
 import com.cs361d.flashpoint.manager.*;
 import com.cs361d.flashpoint.model.BoardElements.FireFighterColor;
 import com.cs361d.flashpoint.screen.BoardChatFragment;
+import com.cs361d.flashpoint.screen.BoardDialog;
 import com.cs361d.flashpoint.screen.BoardScreen;
 
 import com.cs361d.flashpoint.screen.Fragment;
@@ -333,7 +334,7 @@ public class NetworkManager {
               new Runnable() {
                 @Override
                 public void run() {
-                  BoardScreen.createDialog(jsarr.get(0).toString(), jsarr.get(1).toString());
+                  BoardScreen.getDialog().drawDialog(jsarr.get(0).toString(), jsarr.get(1).toString());
                 }
               });
           break;

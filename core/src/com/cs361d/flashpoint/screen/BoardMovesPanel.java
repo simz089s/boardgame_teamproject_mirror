@@ -33,6 +33,8 @@ public class BoardMovesPanel {
   Table directionTable;
 
   Stage stage;
+  BoardDialog boardDialog;
+  BoardGameInfoLabel boardGameInfoLabel;
   BoardChooseRolePanel boardChooseRolePanel;
   FireFighterTurnManager fireFighterTurnManager = FireFighterTurnManager.getInstance();
 
@@ -40,8 +42,12 @@ public class BoardMovesPanel {
   ArrayList<Table> directionsTableList = new ArrayList<Table>();
 
   // constructor
-  public BoardMovesPanel(Stage stage) {
+  public BoardMovesPanel(Stage stage, BoardGameInfoLabel boardGameInfoLabel) {
+
     this.stage = stage;
+    this.boardGameInfoLabel = boardGameInfoLabel;
+    boardDialog = new BoardDialog(stage);
+    boardChooseRolePanel = new BoardChooseRolePanel(stage);
   }
 
   private void performDirectionMove(String move, Direction direction) {
@@ -68,7 +74,7 @@ public class BoardMovesPanel {
     }
   }
 
-  public void createMovesAndDirectionsPanel() {
+  public void drawMovesAndDirectionsPanel() {
 
     if (User.getInstance().isMyTurn() || true) {
 
@@ -108,27 +114,27 @@ public class BoardMovesPanel {
 
               if (moveSelected.equals("MOVE")) {
                 removeTableDirectionsPanel();
-                createDirectionsPanelTable(moveSelected);
+                drawDirectionsPanelTable(moveSelected);
                 stage.addActor(directionTable);
 
               } else if (moveSelected.equals("EXTINGUISH")) {
                 removeTableDirectionsPanel();
-                createDirectionsPanelTable(moveSelected);
+                drawDirectionsPanelTable(moveSelected);
                 stage.addActor(directionTable);
 
               } else if (moveSelected.equals("CHOP")) {
                 removeTableDirectionsPanel();
-                createDirectionsPanelTable(moveSelected);
+                drawDirectionsPanelTable(moveSelected);
                 stage.addActor(directionTable);
 
               } else if (moveSelected.equals("MOVE WITH VICTIM")) {
                 removeTableDirectionsPanel();
-                createDirectionsPanelTable(moveSelected);
+                drawDirectionsPanelTable(moveSelected);
                 stage.addActor(directionTable);
 
               } else if (moveSelected.equals("INTERACT WITH DOOR")) {
                 removeTableDirectionsPanel();
-                createDirectionsPanelTable(moveSelected);
+                drawDirectionsPanelTable(moveSelected);
                 stage.addActor(directionTable);
 
               } else if (moveSelected.equals("END TURN")) {
@@ -140,16 +146,15 @@ public class BoardMovesPanel {
                 }
 
                 drawGameUnitsOnTile();
-                gameInfoLabel.setColor(Color.BLACK);
-                updateGameInfoLabel();
+                boardGameInfoLabel.drawGameInfoLabel();
 
               } else if (moveSelected.equals("CREW CHANGE")) {
                 removeMovesAndDirectionsPanel();
-                boardChooseRolePanel.createChooseRolePanel();
+                boardChooseRolePanel.drawChooseRolePanel();
 
               } else if (moveSelected.equals("SAVE")) {
                 DBHandler.saveBoardToDB(BoardManager.getInstance().getGameName());
-                createDialog("Save", "Your game has been successfully saved.");
+                boardDialog.drawDialog("Save", "Your game has been successfully saved.");
               } else {
                 // debugLbl.setText("failed action");
               }
@@ -164,7 +169,7 @@ public class BoardMovesPanel {
     }
   }
 
-  private void createDirectionsPanelTable(String moveSelected) {
+  private void drawDirectionsPanelTable(String moveSelected) {
 
     final String MOVE = moveSelected;
 
@@ -204,7 +209,7 @@ public class BoardMovesPanel {
           @Override
           public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
             performDirectionMove(MOVE, Direction.TOP);
-            updateGameInfoLabel();
+            boardGameInfoLabel.drawGameInfoLabel();
             removeTableDirectionsPanel();
             return true;
           }
@@ -215,7 +220,7 @@ public class BoardMovesPanel {
           @Override
           public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
             performDirectionMove(MOVE, Direction.BOTTOM);
-            updateGameInfoLabel();
+            boardGameInfoLabel.drawGameInfoLabel();
             removeTableDirectionsPanel();
             return true;
           }
@@ -226,7 +231,7 @@ public class BoardMovesPanel {
           @Override
           public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
             performDirectionMove(MOVE, Direction.NODIRECTION);
-            updateGameInfoLabel();
+            boardGameInfoLabel.drawGameInfoLabel();
             removeTableDirectionsPanel();
             return true;
           }
@@ -237,7 +242,7 @@ public class BoardMovesPanel {
           @Override
           public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
             performDirectionMove(MOVE, Direction.LEFT);
-            updateGameInfoLabel();
+            boardGameInfoLabel.drawGameInfoLabel();
             removeTableDirectionsPanel();
             return true;
           }
@@ -248,7 +253,7 @@ public class BoardMovesPanel {
           @Override
           public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
             performDirectionMove(MOVE, Direction.RIGHT);
-            updateGameInfoLabel();
+            boardGameInfoLabel.drawGameInfoLabel();
             removeTableDirectionsPanel();
             return true;
           }
@@ -325,8 +330,6 @@ public class BoardMovesPanel {
 
     removeTableDirectionsPanel();
 
-    if (boardChooseRolePanel != null) {
-      boardChooseRolePanel.removeChooseInitRolePanel();
-    }
+    boardChooseRolePanel.removeChooseRolePanel();
   }
 }

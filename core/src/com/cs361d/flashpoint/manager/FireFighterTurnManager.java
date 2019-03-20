@@ -3,6 +3,7 @@ package com.cs361d.flashpoint.manager;
 import com.cs361d.flashpoint.model.BoardElements.*;
 import com.cs361d.flashpoint.model.FireFighterSpecialities.FireFighterAdvanced;
 import com.cs361d.flashpoint.networking.Commands;
+import com.cs361d.flashpoint.screen.BoardDialog;
 import com.cs361d.flashpoint.screen.BoardScreen;
 import org.jetbrains.annotations.NotNull;
 import com.cs361d.flashpoint.networking.NetworkManager;
@@ -280,7 +281,7 @@ public class FireFighterTurnManager implements Iterable<FireFighter> {
   }
 
   public void sendMessageToGui(String message) {
-    BoardScreen.createDialog("Action rejected", message);
+    BoardScreen.getDialog().drawDialog("Action rejected", message);
   }
 
   @NotNull
