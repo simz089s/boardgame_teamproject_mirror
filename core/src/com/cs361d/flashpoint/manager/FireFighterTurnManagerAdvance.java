@@ -72,6 +72,9 @@ public class FireFighterTurnManagerAdvance extends FireFighterTurnManager {
       FireFighterAdvanced newF = FireFighterAdvanced.createFireFighter(f.getColor(), speciality);
       newF.setActionPoint(f.getActionPointsLeft());
       newF.setHadVeteranBonus(f.getHadVeteranBonus());
+      Tile currentTile = f.getTile();
+      f.removeFromBoard();
+      newF.setTile(currentTile);
       FIREFIGHTERS.removeFirst();
       FIREFIGHTERS.addFirst(newF);
     } else {
@@ -125,6 +128,9 @@ public class FireFighterTurnManagerAdvance extends FireFighterTurnManager {
           return false;
         } else if (o.getHealth() < 2) {
           return true;
+        }
+        else {
+          return false;
         }
       }
       return true;
@@ -322,7 +328,7 @@ public class FireFighterTurnManagerAdvance extends FireFighterTurnManager {
             if (adjacent != null && adjacent.hasPointOfInterest() && adjacent.getVictim().isFalseAlarm()) {
               adjacent.setNullVictim();
             }
-            else if (adjacent != null || adjacent.hasPointOfInterest()) {
+            else if (adjacent != null && adjacent.hasPointOfInterest()) {
               adjacent.getVictim().reveal();
             }
           }
@@ -356,6 +362,10 @@ public class FireFighterTurnManagerAdvance extends FireFighterTurnManager {
     }
     sendChangeToNetwork();
     return FIREFIGHTERS.getFirst().getTile() != null;
+  }
+
+  public void removeSpecilty(FireFighterAdvanceSpecialities speciality) {
+    FREESPECIALITIES.remove(speciality);
   }
 
   //TODO

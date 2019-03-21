@@ -68,6 +68,7 @@ public enum Actions {
         case MOVE:
         case EXTINGUISH:
         case MOVE_WITH_VICTIM:
+        case MOVE_WITH_HAZMAT:
         case INTERACT_WITH_DOOR:
         case DRIVE_AMBULANCE:
         case DRIVE_FIRETRUCK:

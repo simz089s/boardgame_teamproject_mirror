@@ -123,6 +123,8 @@ public class BoardManagerAdvanced extends BoardManager {
       //      throw new IllegalArgumentException("A fireFighter on the board must have a role");
     }
     FireFighterAdvanced f = FireFighterAdvanced.createFireFighter(color, role);
+    FireFighterTurnManagerAdvance fta = (FireFighterTurnManagerAdvance) (FireFighterTurnManager.getInstance());
+    fta.removeSpecilty(role);
     f.setActionPoint(actionPoints);
     f.setSpecialActionPoints(specialApPoints);
     f.setHadVeteranBonus(veteranBonus);
