@@ -91,7 +91,7 @@ public class BoardScreen extends FlashPointScreen {
 
     boardChooseRolePanel = new BoardChooseSpecialtyPanel(stage);
     boardGameInfoLabel = new BoardGameInfoLabel(stage);
-    boardMovesPanel = new BoardMovesPanel(stage, boardGameInfoLabel);
+    boardMovesPanel = new BoardMovesPanel(stage);
     boardChatFragment = new BoardChatFragment(stage);
     boardCheatSFragment = new BoardCheatSFragment(stage);
     boardStatsFragment = new BoardStatsFragment(stage);
@@ -143,6 +143,11 @@ public class BoardScreen extends FlashPointScreen {
                       boardDialog.drawDialog("Engine position", "Choose the fire engine's initial position (green tiles).");
                       addFilterOnTileForEngine();
                     } else if (isEngineNotSet && DBHandler.isPresentInArr(getEngineClickableTiles(), i_pos + "-" + j_pos)){
+
+                      if(isAmbulanceNotSet){
+                        return;
+                      }
+
                       ((BoardManagerAdvanced) BoardManagerAdvanced.getInstance()).addFireTruck(i_pos, j_pos);
                       removeAllFilterOnTile();
                       drawGameUnitsOnTile();

@@ -14,9 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.cs361d.flashpoint.manager.*;
 import com.cs361d.flashpoint.model.BoardElements.Direction;
-
 import java.util.ArrayList;
-
 import static com.cs361d.flashpoint.screen.BoardScreen.*;
 
 public class BoardMovesPanel {
@@ -32,17 +30,15 @@ public class BoardMovesPanel {
 
   Stage stage;
   BoardDialog boardDialog;
-  BoardGameInfoLabel boardGameInfoLabel;
   BoardChooseSpecialtyPanel boardChooseRolePanel;
 
   ArrayList<ScrollPane> movesList = new ArrayList<ScrollPane>();
   ArrayList<Table> directionsTableList = new ArrayList<Table>();
 
   // constructor
-  public BoardMovesPanel(Stage stage, BoardGameInfoLabel boardGameInfoLabel) {
+  public BoardMovesPanel(Stage stage) {
 
     this.stage = stage;
-    this.boardGameInfoLabel = boardGameInfoLabel;
     boardDialog = new BoardDialog(stage);
     boardChooseRolePanel = new BoardChooseSpecialtyPanel(stage);
   }

@@ -13,6 +13,8 @@ import com.cs361d.flashpoint.manager.FireFighterTurnManagerAdvance;
 import com.cs361d.flashpoint.model.FireFighterSpecialities.FireFighterAdvanceSpecialities;
 
 import java.util.ArrayList;
+
+import static com.cs361d.flashpoint.screen.BoardScreen.boardMovesPanel;
 import static com.cs361d.flashpoint.screen.FlashPointScreen.skinUI;
 
 public class BoardChooseSpecialtyPanel {
@@ -39,11 +41,12 @@ public class BoardChooseSpecialtyPanel {
 
     public void drawChooseSpecialtyPanel() {
 
-        if (!(BoardManager.getInstance() instanceof BoardManagerAdvanced))
-        {
+        if (!BoardManager.getInstance().isAdvanced()) {
             return;
         }
+
         setSpecialities();
+
         // list style
         listStyleSpecialties = new List.ListStyle();
         listStyleSpecialties.font = Font.get(22); // font size
@@ -68,13 +71,6 @@ public class BoardChooseSpecialtyPanel {
         scrollPaneSpecialties.setWidth(300);
         scrollPaneSpecialties.setHeight(300);
 
-//        lstSpecialties.addListener(new InputListener() {
-//            @Override
-//            public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-//                return true;
-//            }
-//        });
-
         // confirm button creation
 
         btnConfirm = new TextButton("Confirm", skinUI, "default");
@@ -87,12 +83,15 @@ public class BoardChooseSpecialtyPanel {
                     public void clicked(InputEvent event, float x, float y) {
                         String specialtySelected = lstSpecialties.getSelected();
 
+                        // set init specialty
                         if (! ((FireFighterTurnManagerAdvance) FireFighterTurnManagerAdvance.getInstance()).currentHasSpeciality()){
                             ((FireFighterTurnManagerAdvance) FireFighterTurnManagerAdvance.getInstance())
                                     .setInitialSpeciality(FireFighterAdvanceSpecialities.fromString(specialtySelected));
-                        } else {
+                        } else { // crew change
                             ((FireFighterTurnManagerAdvance) FireFighterTurnManagerAdvance.getInstance())
                                     .crewChange(FireFighterAdvanceSpecialities.fromString(specialtySelected));
+
+                            boardMovesPanel.drawMovesAndDirectionsPanel();
                         }
 
                         removeChooseSpecialtyPanel();
