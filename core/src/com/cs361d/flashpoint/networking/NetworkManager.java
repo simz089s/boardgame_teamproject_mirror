@@ -55,16 +55,21 @@ public class NetworkManager {
     this.clientList.add(c);
   }
 
-  public void sendCommand(Commands command, String msg) {
+  public void sendCommand(ServerCommands command, String msg) {
     String jsonMsg = createJSON(command, msg);
-    if (getMyPublicIP().equals(DEFAULT_SERVER_IP)) server.sendMsg(jsonMsg);
-    else
-      for (Client c : clientList) {
+//    if (getMyPublicIP().equals(DEFAULT_SERVER_IP)) server.sendMsg(jsonMsg);
+//    else
+//      for (Client c : clientList) {
+//        c.sendMsg(jsonMsg);
+//      }
+    // Find the right client and send the message from him to server
+    for (Client c: clientList) {
+      if (getMyPublicIP().equals(c.getClientIP()))
         c.sendMsg(jsonMsg);
-      }
+    }
   }
 
-  public String createJSON(Commands command, String msg) {
+  public String createJSON(ServerCommands command, String msg) {
 
     JSONObject message = new JSONObject();
     message.put("command", command.toString());
@@ -138,7 +143,7 @@ public class NetworkManager {
       JSONParser parser = new JSONParser();
 
       JSONObject jsonObject = (JSONObject) parser.parse(msg);
-      Commands c = Commands.fromString(jsonObject.get("command").toString());
+      ServerCommands c = ServerCommands.fromString(jsonObject.get("command").toString());
       String message = jsonObject.get("message").toString();
       String ip = jsonObject.get("IP").toString();
       System.out.println(message);
@@ -154,7 +159,7 @@ public class NetworkManager {
         case CHATGAME:
         case GAMESTATE:
         case SAVE:
-          for (ClientHandler mc : Server.clientThreads.values()) {
+          for (ClientHandler mc : Server.getClientThreads().values()) {
             mc.dout.writeUTF(msg);
           }
           break;
@@ -165,11 +170,11 @@ public class NetworkManager {
             CreateNewGameManager.loadGameFromString(message);
             Server.getServer().setFireFighterAssignArray();
             Server.getServer().assignFireFighterToClient(ip);
-            if (ip.equals(NetworkManager.getInstance().getMyPublicIP())) {
-              BoardScreen.setBoardScreen();
-            } else {
-              Server.getServer().sendMsgSpecificClient(ip, Commands.SETBOARDSCREEN, "");
-            }
+//            if (ip.equals(NetworkManager.getInstance().getMyPublicIP())) {
+//              BoardScreen.setBoardScreen();
+//            } else {
+              Server.getServer().sendMsgSpecificClient(ip, ServerCommands.SETBOARDSCREEN, "");
+//            }
           }
           break;
 
@@ -193,7 +198,7 @@ public class NetworkManager {
 
         case EXITGAME:
           Server.getServer().changeLoadedStatus(false);
-          for (ClientHandler mc : Server.clientThreads.values()) {
+          for (ClientHandler mc : Server.getClientThreads().values()) {
             mc.dout.writeUTF(msg);
           }
           break;
@@ -204,8 +209,8 @@ public class NetworkManager {
                 && Server.getServer().getLoadedOrCreatedStatus()) {
               Server.getServer().assignFireFighterToClient(ip);
               Server.getServer()
-                  .sendMsgSpecificClient(ip, Commands.GAMESTATE, DBHandler.getBoardAsString());
-              Server.getServer().sendMsgSpecificClient(ip, Commands.SETBOARDSCREEN, "");
+                  .sendMsgSpecificClient(ip, ServerCommands.GAMESTATE, DBHandler.getBoardAsString());
+              Server.getServer().sendMsgSpecificClient(ip, ServerCommands.SETBOARDSCREEN, "");
             }
           } else if (Server.getServer().getLoadedOrCreatedStatus() && !Server.getServer().isEmpty()) {
               Server.getServer().assignFireFighterToClient(ip);
@@ -226,7 +231,7 @@ public class NetworkManager {
       JSONParser parser = new JSONParser();
 
       JSONObject jsonObject = (JSONObject) parser.parse(msg);
-      Commands c = Commands.fromString(jsonObject.get("command").toString());
+      ServerCommands c = ServerCommands.fromString(jsonObject.get("command").toString());
       String message = jsonObject.get("message").toString();
       String ip = jsonObject.get("IP").toString();
       System.out.println(message);

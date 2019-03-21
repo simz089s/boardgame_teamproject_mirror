@@ -14,9 +14,10 @@ public class Client
     // A client has an instance of the game
     public static FlashPointGame clientFPGame = new FlashPointGame();
 
-    Socket s;
-    DataInputStream din;      // input stream
-    DataOutputStream dout;    // output stream
+    private Socket s;
+    private DataInputStream din;      // input stream
+    private DataOutputStream dout;    // output stream
+    private String clientIP;
 
     public Client(String serverIP, int serverPort) {
         try {
@@ -27,6 +28,9 @@ public class Client
             // obtaining input and out streams
             din = new DataInputStream(s.getInputStream());
             dout = new DataOutputStream(s.getOutputStream());
+
+            // obtain client IP address
+            clientIP = s.getInetAddress().toString();
 
             // readMessage thread constantly listening
             Thread readMessage =
@@ -50,6 +54,8 @@ public class Client
         } catch (UnknownHostException e) { e.printStackTrace(); }
         catch (IOException e) { e.printStackTrace(); }
     }
+
+    public String getClientIP() { return clientIP; }
 
     /* Send a message to a server */
     public synchronized void sendMsg(String msg) {

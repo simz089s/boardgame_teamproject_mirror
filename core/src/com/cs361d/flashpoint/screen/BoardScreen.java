@@ -15,7 +15,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.cs361d.flashpoint.manager.*;
 import com.cs361d.flashpoint.model.BoardElements.*;
-import com.cs361d.flashpoint.networking.Commands;
+import com.cs361d.flashpoint.networking.ServerCommands;
 import com.cs361d.flashpoint.networking.NetworkManager;
 
 import java.util.ArrayList;
@@ -547,13 +547,13 @@ public class BoardScreen extends FlashPointScreen {
                 new Dialog("Warning", skinUI, "dialog") {
                   public void result(Object obj) {
                     if ((Boolean) obj) {
-                      NetworkManager.getInstance().sendCommand(Commands.DISCONNECTSERVER, "");
+                      NetworkManager.getInstance().sendCommand(ServerCommands.DISCONNECTSERVER, "");
                       BGM.stop();
                       game.setScreen(game.lobbyScreen);
                     }
                   }
                 };
-            NetworkManager.getInstance().sendCommand(Commands.EXITGAME, "");
+            NetworkManager.getInstance().sendCommand(ServerCommands.EXITGAME, "");
           }
         });
 

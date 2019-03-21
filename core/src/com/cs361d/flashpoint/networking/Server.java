@@ -5,7 +5,6 @@ import com.cs361d.flashpoint.manager.FireFighterTurnManager;
 import com.cs361d.flashpoint.manager.User;
 import com.cs361d.flashpoint.model.BoardElements.FireFighter;
 import com.cs361d.flashpoint.model.BoardElements.FireFighterColor;
-import com.cs361d.flashpoint.screen.FlashPointGame;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -23,7 +22,7 @@ public class Server implements Runnable
     private List<FireFighterColor> notYetAssigned = new ArrayList<FireFighterColor>();
 
     // Vector to store active client threads
-    static HashMap<String, ClientHandler> clientThreads = new HashMap<String, ClientHandler>();
+    private static HashMap<String, ClientHandler> clientThreads = new HashMap<String, ClientHandler>();
     private static Server instance;
     private boolean gameAlreadyLoadedorCreated = false;
     // counter for clientThreads
@@ -43,6 +42,8 @@ public class Server implements Runnable
         } catch (IOException e) { e.printStackTrace(); }
 
     }
+
+    public static HashMap<String, ClientHandler> getClientThreads() { return clientThreads; }
 
     public static Server createServer(int serverPort) {
         instance = new Server(serverPort);
@@ -107,7 +108,7 @@ public class Server implements Runnable
         } catch (IOException e) { e.printStackTrace(); }
     }
 
-    public synchronized void sendMsgSpecificClient(String ip, Commands command, String message){
+    public synchronized void sendMsgSpecificClient(String ip, ServerCommands command, String message){
         try {
 
             ClientHandler client = clientThreads.get(ip);
@@ -168,7 +169,7 @@ public class Server implements Runnable
             User.getInstance().assignFireFighter(color);
         }
         else {
-           sendMsgSpecificClient(IP, Commands.ASSIGN_FIREFIGHTER, color.toString());
+           sendMsgSpecificClient(IP, ServerCommands.ASSIGN_FIREFIGHTER, color.toString());
         }
     }
 //    public static boolean amIServer() {

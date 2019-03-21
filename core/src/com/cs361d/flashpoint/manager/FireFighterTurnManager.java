@@ -1,7 +1,7 @@
 package com.cs361d.flashpoint.manager;
 
 import com.cs361d.flashpoint.model.BoardElements.*;
-import com.cs361d.flashpoint.networking.Commands;
+import com.cs361d.flashpoint.networking.ServerCommands;
 import com.cs361d.flashpoint.screen.BoardScreen;
 import org.jetbrains.annotations.NotNull;
 import com.cs361d.flashpoint.networking.NetworkManager;
@@ -229,7 +229,7 @@ public class FireFighterTurnManager implements Iterable<FireFighter> {
   }
 
   private void sendChangeToNetwork() {
-    NetworkManager.getInstance().sendCommand(Commands.GAMESTATE, DBHandler.getBoardAsString());
+    NetworkManager.getInstance().sendCommand(ServerCommands.GAMESTATE, DBHandler.getBoardAsString());
   }
 
   public static void useFireFighterGameManagerAdvanced() {
