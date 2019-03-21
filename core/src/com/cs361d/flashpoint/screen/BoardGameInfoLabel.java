@@ -9,6 +9,7 @@ import com.cs361d.flashpoint.manager.BoardManagerAdvanced;
 import com.cs361d.flashpoint.manager.FireFighterTurnManager;
 import com.cs361d.flashpoint.manager.User;
 import com.cs361d.flashpoint.model.BoardElements.FireFighterColor;
+import com.cs361d.flashpoint.model.FireFighterSpecialities.FireFighterAdvanced;
 
 import java.util.ArrayList;
 
@@ -37,8 +38,8 @@ public class BoardGameInfoLabel {
                 FireFighterTurnManager.getInstance().getCurrentFireFighter().getColor();
 
         String specialty = "\n";
-        if(BoardManager.getInstance() instanceof BoardManagerAdvanced) {
-            // TODO     specialty = ((FireFighterAdvanced)FireFighterAdvanced.getFireFighter(User.getInstance().getColor())).getSpeciality().toString();
+        if(BoardManager.getInstance().isAdvanced()) {
+            specialty = ((FireFighterAdvanced)FireFighterAdvanced.getFireFighter(User.getInstance().getColor())).getSpeciality().toString();
         }
 
         gameInfoLabel =
@@ -46,8 +47,6 @@ public class BoardGameInfoLabel {
 
                         User.getInstance().getName().toUpperCase()
                                 + specialty
-                                //+ "\nYour Color: "
-                                //+ User.getInstance().getColor()
                                 + "\nCurrent turn: "
                                 + color
                                 + "\nAP left: "

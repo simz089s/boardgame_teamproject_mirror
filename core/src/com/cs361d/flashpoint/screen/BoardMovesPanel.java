@@ -14,9 +14,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.cs361d.flashpoint.manager.*;
 import com.cs361d.flashpoint.model.BoardElements.Direction;
-import com.cs361d.flashpoint.model.FireFighterSpecialities.FireFighterAdvanced;
-import com.cs361d.flashpoint.networking.Commands;
-import com.cs361d.flashpoint.networking.NetworkManager;
 
 import java.util.ArrayList;
 
@@ -37,7 +34,6 @@ public class BoardMovesPanel {
   BoardDialog boardDialog;
   BoardGameInfoLabel boardGameInfoLabel;
   BoardChooseSpecialtyPanel boardChooseRolePanel;
-  FireFighterTurnManager fireFighterTurnManager = FireFighterTurnManager.getInstance();
 
   ArrayList<ScrollPane> movesList = new ArrayList<ScrollPane>();
   ArrayList<Table> directionsTableList = new ArrayList<Table>();
@@ -51,12 +47,12 @@ public class BoardMovesPanel {
     boardChooseRolePanel = new BoardChooseSpecialtyPanel(stage);
   }
 
-  private void performDirectionMove(String move, Direction direction) {
+  private void performDirectionMove(Actions move, Direction direction) {
 
     boolean actionDone = false; //TODO
 
     FireFighterTurnManager fireFighterTurnManager = FireFighterTurnManager.getInstance();
-    switch(Actions.fromString(move)) {
+    switch(move) {
       case MOVE:
         fireFighterTurnManager.move(direction);
         break;
@@ -77,7 +73,7 @@ public class BoardMovesPanel {
 
     if ((FireFighterTurnManager.getInstance() instanceof FireFighterTurnManagerAdvance)) {
       FireFighterTurnManagerAdvance fireFighterTurnManagerAdvance = (FireFighterTurnManagerAdvance) fireFighterTurnManager;
-      switch(Actions.fromString(move)) {
+      switch(move) {
         case MOVE_WITH_HAZMAT:
           fireFighterTurnManagerAdvance.moveWithHazmat(direction);
           break;
@@ -102,7 +98,7 @@ public class BoardMovesPanel {
       listStyleMoveOptions.selection = TextureLoader.getDrawable(50, 100, Color.SKY);
 
       lstMoveOptions = new List<String>(listStyleMoveOptions);
-      lstMoveOptions.setItems(getMovesArrForDisplay());
+      lstMoveOptions.setItems(getMovesArrForPanel());
 
       // scrollPane style
       scrollStyle = new ScrollPane.ScrollPaneStyle();
@@ -126,10 +122,12 @@ public class BoardMovesPanel {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
 
-              String move = lstMoveOptions.getSelected();
+              Actions move = Actions.fromString(lstMoveOptions.getSelected());
 
               FireFighterTurnManager fireFighterTurnManager = FireFighterTurnManager.getInstance();
-              switch(Actions.fromString(move)) {
+
+              // family
+              switch(move) {
                 case MOVE:
                   drawDirectionsPanelTable(move);
                   break;
@@ -165,19 +163,27 @@ public class BoardMovesPanel {
                 default:
               }
 
+              // advanced
               if ((FireFighterTurnManager.getInstance() instanceof FireFighterTurnManagerAdvance)) {
                 FireFighterTurnManagerAdvance fireFighterTurnManagerAdvance = (FireFighterTurnManagerAdvance) fireFighterTurnManager;
-                switch(Actions.fromString(move)) {
-                  case FIRE_DECK_GUN:
+                switch(move) {
+                  case FIRE_DECK_GUN: //TODO
                     break;
                   case MOVE_WITH_HAZMAT:
                     drawDirectionsPanelTable(move);
                     break;
                   case DRIVE_AMBULANCE:
+                    drawDirectionsPanelTable(move);
+                    break;
                   case DRIVE_FIRETRUCK:
-                  case REMOVE_HAZMAT:
-                  case FLIP_POI:
-                  case CURE_VICTIM:
+                    drawDirectionsPanelTable(move);
+                    break;
+                  case REMOVE_HAZMAT: //TODO
+                    break;
+                  case FLIP_POI: //TODO
+                    break;
+                  case CURE_VICTIM: //TODO
+                    break;
                   case CREW_CHANGE:
                     removeMovesAndDirectionsPanel();
                     boardChooseRolePanel.drawChooseSpecialtyPanel();
@@ -195,28 +201,30 @@ public class BoardMovesPanel {
     }
   }
 
-  private void drawDirectionsPanelTable(String moveSelected) {
+  private void drawDirectionsPanelTable(Actions moveSelected) {
+
+    final Actions move = moveSelected;
 
     removeTableDirectionsPanel();
 
-    final String MOVE = moveSelected;
-
-    ImageButton btnDirectionU = new ImageButton(getTextureForDirectionTable(Direction.TOP));
-    ImageButton btnDirectionD = new ImageButton(getTextureForDirectionTable(Direction.BOTTOM));
-    ImageButton btnDirectionCurr = new ImageButton(getTextureForDirectionTable(Direction.NODIRECTION));
-    ImageButton btnDirectionL = new ImageButton(getTextureForDirectionTable(Direction.LEFT));
-    ImageButton btnDirectionR = new ImageButton(getTextureForDirectionTable(Direction.RIGHT));
+    ImageButton btnDirectionU = new ImageButton(getTextureForDirectionsTable(Direction.TOP));
+    ImageButton btnDirectionD = new ImageButton(getTextureForDirectionsTable(Direction.BOTTOM));
+    ImageButton btnDirectionCurr = new ImageButton(getTextureForDirectionsTable(Direction.NODIRECTION));
+    ImageButton btnDirectionL = new ImageButton(getTextureForDirectionsTable(Direction.LEFT));
+    ImageButton btnDirectionR = new ImageButton(getTextureForDirectionsTable(Direction.RIGHT));
 
     directionTable = new Table();
 
     directionTable.add();
-    directionTable.add(btnDirectionU).size(DIRECTION_BUTTON_SIZE, DIRECTION_BUTTON_SIZE);
+    if (move != Actions.DRIVE_AMBULANCE && move != Actions.DRIVE_FIRETRUCK) { //TODO: test
+      directionTable.add(btnDirectionU).size(DIRECTION_BUTTON_SIZE, DIRECTION_BUTTON_SIZE);
+    }
     directionTable.add();
 
     directionTable.row();
 
     directionTable.add(btnDirectionL).size(DIRECTION_BUTTON_SIZE, DIRECTION_BUTTON_SIZE);
-    if (MOVE.equals(Actions.EXTINGUISH.toString())) {
+    if (move == Actions.EXTINGUISH) {
       directionTable.add(btnDirectionCurr).size(DIRECTION_BUTTON_SIZE, DIRECTION_BUTTON_SIZE);
     } else {
       directionTable.add();
@@ -226,7 +234,9 @@ public class BoardMovesPanel {
     directionTable.row();
 
     directionTable.add();
-    directionTable.add(btnDirectionD).size(DIRECTION_BUTTON_SIZE, DIRECTION_BUTTON_SIZE);
+    if (move != Actions.DRIVE_AMBULANCE && move != Actions.DRIVE_FIRETRUCK) {
+      directionTable.add(btnDirectionD).size(DIRECTION_BUTTON_SIZE, DIRECTION_BUTTON_SIZE);
+    }
     directionTable.add();
 
     directionTable.setPosition(1000, Gdx.graphics.getHeight() - directionTable.getHeight() - 520);
@@ -235,7 +245,7 @@ public class BoardMovesPanel {
         new InputListener() {
           @Override
           public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-            performDirectionMove(MOVE, Direction.TOP);
+            performDirectionMove(move, Direction.TOP);
             boardGameInfoLabel.drawGameInfoLabel();
             removeTableDirectionsPanel();
             return true;
@@ -246,7 +256,7 @@ public class BoardMovesPanel {
         new InputListener() {
           @Override
           public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-            performDirectionMove(MOVE, Direction.BOTTOM);
+            performDirectionMove(move, Direction.BOTTOM);
             boardGameInfoLabel.drawGameInfoLabel();
             removeTableDirectionsPanel();
             return true;
@@ -257,7 +267,7 @@ public class BoardMovesPanel {
         new InputListener() {
           @Override
           public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-            performDirectionMove(MOVE, Direction.NODIRECTION);
+            performDirectionMove(move, Direction.NODIRECTION);
             boardGameInfoLabel.drawGameInfoLabel();
             removeTableDirectionsPanel();
             return true;
@@ -268,7 +278,7 @@ public class BoardMovesPanel {
         new InputListener() {
           @Override
           public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-            performDirectionMove(MOVE, Direction.LEFT);
+            performDirectionMove(move, Direction.LEFT);
             boardGameInfoLabel.drawGameInfoLabel();
             removeTableDirectionsPanel();
             return true;
@@ -279,7 +289,7 @@ public class BoardMovesPanel {
         new InputListener() {
           @Override
           public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-            performDirectionMove(MOVE, Direction.RIGHT);
+            performDirectionMove(move, Direction.RIGHT);
             boardGameInfoLabel.drawGameInfoLabel();
             removeTableDirectionsPanel();
             return true;
@@ -292,7 +302,7 @@ public class BoardMovesPanel {
 
   // helper
 
-  private String[] getMovesArrForDisplay() {
+  private String[] getMovesArrForPanel() {
 
     if (BoardManager.getInstance().isAdvanced()) {
       return Actions.convertToStringArray(
@@ -301,7 +311,7 @@ public class BoardMovesPanel {
     return Actions.convertToStringArray(Actions.basicActions());
   }
 
-  private TextureRegionDrawable getTextureForDirectionTable(Direction d) {
+  private TextureRegionDrawable getTextureForDirectionsTable(Direction d) {
 
     Texture myTexture = null;
 

@@ -6,6 +6,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.List;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.cs361d.flashpoint.manager.BoardManager;
+import com.cs361d.flashpoint.manager.BoardManagerAdvanced;
 import com.cs361d.flashpoint.manager.FireFighterTurnManager;
 import com.cs361d.flashpoint.model.BoardElements.FireFighter;
 import com.cs361d.flashpoint.model.FireFighterSpecialities.FireFighterAdvanceSpecialities;
@@ -31,7 +32,6 @@ public class BoardStatsFragment {
         this.stage = stage;
     }
 
-    // TODO : pass in an updated Stats object to be converted to a string (GameManager)
     public void drawStatsFragment() {
 
         String[] gamesStatsArr = createStats();
@@ -79,6 +79,9 @@ public class BoardStatsFragment {
         gamesStatsArrList.add("Walls left: " + BoardManager.getInstance().getTotalWallDamageLeft());
         gamesStatsArrList.add("Victims saved: " + BoardManager.getInstance().getNumVictimSaved());
         gamesStatsArrList.add("Victims lost: " + BoardManager.getInstance().getNumVictimDead());
+        if (BoardManager.getInstance().isAdvanced()) {
+            gamesStatsArrList.add("# hazmat left: " + ((BoardManagerAdvanced) BoardManagerAdvanced.getInstance()).getNumHotSpotLeft());
+        }
         gamesStatsArrList.add("");
 
         Iterator<FireFighter> it = FireFighterTurnManager.getInstance().iterator();
