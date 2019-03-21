@@ -547,7 +547,7 @@ public class BoardScreen extends FlashPointScreen {
                 new Dialog("Warning", skinUI, "dialog") {
                   public void result(Object obj) {
                     if ((Boolean) obj) {
-                      NetworkManager.getInstance().sendCommand(Commands.DISCONNECT, "");
+                      NetworkManager.getInstance().sendCommand(Commands.DISCONNECTSERVER, "");
                       BGM.stop();
                       game.setScreen(game.lobbyScreen);
                     }

@@ -104,7 +104,7 @@ public class Server implements Runnable
             for (ClientHandler mc : Server.clientThreads.values()) {
                 mc.dout.writeUTF(msg);
             }
-            updateServerGui(msg); //update your own Gui
+//            updateServerGui(msg); //update your own Gui
 
         } catch (IOException e) { e.printStackTrace(); }
     }
@@ -127,16 +127,16 @@ public class Server implements Runnable
         }
     }
 
-    /* Update GUI of the Server based on sent String*/
-    public void updateServerGui(String msg) {
-        /* Get the command from the string read
-         * CHATWAIT: waiting screen chat changes
-         * CHATGAME: in-game chat changes
-         * GAMESTATE: gameState changes
-         * */
-        try { NetworkManager.executeCommand(msg); }
-        catch (Exception e) { e.printStackTrace(); }
-    }
+//    /* Update GUI of the Server based on sent String*/
+//    public void updateServerGui(String msg) {
+//        /* Get the command from the string read
+//         * CHATWAIT: waiting screen chat changes
+//         * CHATGAME: in-game chat changes
+//         * GAMESTATE: gameState changes
+//         * */
+//        try { NetworkManager.serverExecuteCommand(msg); }
+//        catch (Exception e) { e.printStackTrace(); }
+//    }
 
 
     /* Get info about the server's machine */
@@ -178,9 +178,9 @@ public class Server implements Runnable
            sendMsgSpecificClient(IP, Commands.ASSIGN_FIREFIGHTER, color.toString());
         }
     }
-    public static boolean amIServer() {
-        return instance != null;
-    }
+//    public static boolean amIServer() {
+//        return instance != null;
+//    }
 
     public void setFireFighterAssignArray() {
         notYetAssigned.clear();
@@ -206,4 +206,7 @@ public class Server implements Runnable
         return notYetAssigned.isEmpty();
     }
 
+    public void closeClient()
+    {
+    }
 }

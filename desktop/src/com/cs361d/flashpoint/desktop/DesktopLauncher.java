@@ -19,7 +19,11 @@ public class DesktopLauncher {
             //start server with its Game instance
             server = Server.createServer(NetworkManager.DEFAULT_SERVER_PORT);
             myNetwork.addServer(server);
-            new LwjglApplication(server.serverFPGame, config);
+
+            //Start the client on the same machine as the server
+            Client client = new Client(NetworkManager.DEFAULT_SERVER_IP, NetworkManager.DEFAULT_SERVER_PORT);
+            myNetwork.addNewClient(client);
+            new LwjglApplication(client.clientFPGame, config);
         }
         else {
             Client client = new Client(NetworkManager.DEFAULT_SERVER_IP, NetworkManager.DEFAULT_SERVER_PORT);
