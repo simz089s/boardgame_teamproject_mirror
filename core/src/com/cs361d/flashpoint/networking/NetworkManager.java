@@ -51,11 +51,9 @@ public class NetworkManager {
     this.server = s;
   }
 
-  public void addNewClient(Client c) {
-    this.clientList.add(c);
-  }
+  public void addNewClient(Client c) { this.clientList.add(c); }
 
-  public void sendCommand(ServerCommands command, String msg) {
+  public void sendCommand(ClientCommands command, String msg) {
     String jsonMsg = createJSON(command, msg);
 //    if (getMyPublicIP().equals(DEFAULT_SERVER_IP)) server.sendMsg(jsonMsg);
 //    else
@@ -69,7 +67,7 @@ public class NetworkManager {
     }
   }
 
-  public String createJSON(ServerCommands command, String msg) {
+  public String createJSON(ClientCommands command, String msg) {
 
     JSONObject message = new JSONObject();
     message.put("command", command.toString());
