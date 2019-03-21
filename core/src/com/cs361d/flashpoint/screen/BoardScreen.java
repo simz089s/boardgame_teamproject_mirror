@@ -135,10 +135,6 @@ public class BoardScreen extends FlashPointScreen {
                     boolean isEngineNotSet = isAdvancedVersion;
                     //TODO && !((BoardManagerAdvanced) BoardManagerAdvanced.getInstance()).gameHasEngine();
 
-                    // isAmbulanceNotSet = false; // test (choose specialty + init pos)
-                    // isEngineNotSet = false; // test (choose specialty + init pos)
-                    // isVehiclesNotSet = false; // test (choose specialty + init pos)
-
                     // set init vehicles position
                     if (isAmbulanceNotSet && DBHandler.isPresentInArr(getAmbulanceClickableTiles(), i_pos + "-" + j_pos)){
                       ((BoardManagerAdvanced) BoardManagerAdvanced.getInstance()).addAmbulance(i_pos, j_pos);

@@ -52,27 +52,42 @@ public class BoardMovesPanel {
   }
 
   private void performDirectionMove(String move, Direction direction) {
-    if (move.equals("MOVE")) {
-      clearAllGameUnits();
-      fireFighterTurnManager.move(direction);
-      drawGameUnitsOnTile();
-    } else if (move.equals("EXTINGUISH")) {
-      clearAllGameUnits();
-      fireFighterTurnManager.extinguishFire(direction);
-      drawGameUnitsOnTile();
-    } else if (move.equals("CHOP")) {
-      clearAllGameUnits();
-      fireFighterTurnManager.chopWall(direction);
-      drawGameUnitsOnTile();
-    } else if (move.equals("MOVE WITH VICTIM")) {
-      clearAllGameUnits();
-      fireFighterTurnManager.moveWithVictim(direction);
-      drawGameUnitsOnTile();
-    } else if (move.equals("INTERACT WITH DOOR")) {
-      clearAllGameUnits();
-      fireFighterTurnManager.interactWithDoor(direction);
-      drawGameUnitsOnTile();
+
+    boolean actionDone = false; //TODO
+
+    FireFighterTurnManager fireFighterTurnManager = FireFighterTurnManager.getInstance();
+    switch(Actions.fromString(move)) {
+      case MOVE:
+        fireFighterTurnManager.move(direction);
+        break;
+      case MOVE_WITH_VICTIM:
+        fireFighterTurnManager.moveWithVictim(direction);
+        break;
+      case CHOP:
+        fireFighterTurnManager.chopWall(direction);
+        break;
+      case EXTINGUISH:
+        fireFighterTurnManager.extinguishFire(direction);
+        break;
+      case INTERACT_WITH_DOOR:
+        fireFighterTurnManager.interactWithDoor(direction);
+        break;
+      default:
     }
+
+    if ((FireFighterTurnManager.getInstance() instanceof FireFighterTurnManagerAdvance)) {
+      FireFighterTurnManagerAdvance fireFighterTurnManagerAdvance = (FireFighterTurnManagerAdvance) fireFighterTurnManager;
+      switch(Actions.fromString(move)) {
+        case MOVE_WITH_HAZMAT:
+          fireFighterTurnManagerAdvance.moveWithHazmat(direction);
+          break;
+        case DRIVE_FIRETRUCK:
+        case DRIVE_AMBULANCE:
+        default:
+      }
+    }
+    clearAllGameUnits();
+    drawGameUnitsOnTile();
   }
 
   public void drawMovesAndDirectionsPanel() {
@@ -111,55 +126,63 @@ public class BoardMovesPanel {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
 
-              String moveSelected = lstMoveOptions.getSelected();
+              String move = lstMoveOptions.getSelected();
 
-              if (moveSelected.equals("MOVE")) {
-                removeTableDirectionsPanel();
-                drawDirectionsPanelTable(moveSelected);
-                stage.addActor(directionTable);
+              FireFighterTurnManager fireFighterTurnManager = FireFighterTurnManager.getInstance();
+              switch(Actions.fromString(move)) {
+                case MOVE:
+                  drawDirectionsPanelTable(move);
+                  break;
+                case EXTINGUISH:
+                  drawDirectionsPanelTable(move);
+                  break;
+                case CHOP:
+                  drawDirectionsPanelTable(move);
+                  break;
+                case MOVE_WITH_VICTIM:
+                  drawDirectionsPanelTable(move);
+                  break;
+                case INTERACT_WITH_DOOR:
+                  drawDirectionsPanelTable(move);
+                  break;
+                case END_TURN:
+                  try {
+                    fireFighterTurnManager.endTurn();
+                  } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                  }
 
-              } else if (moveSelected.equals("EXTINGUISH")) {
-                removeTableDirectionsPanel();
-                drawDirectionsPanelTable(moveSelected);
-                stage.addActor(directionTable);
-
-              } else if (moveSelected.equals("CHOP")) {
-                removeTableDirectionsPanel();
-                drawDirectionsPanelTable(moveSelected);
-                stage.addActor(directionTable);
-
-              } else if (moveSelected.equals("MOVE WITH VICTIM")) {
-                removeTableDirectionsPanel();
-                drawDirectionsPanelTable(moveSelected);
-                stage.addActor(directionTable);
-
-              } else if (moveSelected.equals("INTERACT WITH DOOR")) {
-                removeTableDirectionsPanel();
-                drawDirectionsPanelTable(moveSelected);
-                stage.addActor(directionTable);
-
-              } else if (moveSelected.equals("END TURN")) {
-                clearAllGameUnits();
-                try {
-                  fireFighterTurnManager.endTurn();
-                } catch (IllegalAccessException e) {
-                  e.printStackTrace();
-                }
-
-                drawGameUnitsOnTile();
-                boardGameInfoLabel.drawGameInfoLabel();
-
-              } else if (moveSelected.equals("CREW CHANGE")) {
-                removeMovesAndDirectionsPanel();
-                boardChooseRolePanel.drawChooseSpecialtyPanel();
-
-              } else if (moveSelected.equals("SAVE")) {
-                DBHandler.saveBoardToDB(BoardManager.getInstance().getGameName());
-                boardDialog.drawDialog("Save", "Your game has been successfully saved.");
-              } else {
-                // debugLbl.setText("failed action");
+                  clearAllGameUnits();
+                  drawGameUnitsOnTile();
+                  boardGameInfoLabel.drawGameInfoLabel();
+                  break;
+                case SAVE:
+                  DBHandler.saveBoardToDB(BoardManager.getInstance().getGameName());
+                  boardDialog.drawDialog("Save", "Your game has been successfully saved.");
+                  break;
+                default:
               }
 
+              if ((FireFighterTurnManager.getInstance() instanceof FireFighterTurnManagerAdvance)) {
+                FireFighterTurnManagerAdvance fireFighterTurnManagerAdvance = (FireFighterTurnManagerAdvance) fireFighterTurnManager;
+                switch(Actions.fromString(move)) {
+                  case FIRE_DECK_GUN:
+                    break;
+                  case MOVE_WITH_HAZMAT:
+                    drawDirectionsPanelTable(move);
+                    break;
+                  case DRIVE_AMBULANCE:
+                  case DRIVE_FIRETRUCK:
+                  case REMOVE_HAZMAT:
+                  case FLIP_POI:
+                  case CURE_VICTIM:
+                  case CREW_CHANGE:
+                    removeMovesAndDirectionsPanel();
+                    boardChooseRolePanel.drawChooseSpecialtyPanel();
+                    break;
+                  default:
+                }
+              }
               return true;
             }
           });
@@ -171,6 +194,8 @@ public class BoardMovesPanel {
   }
 
   private void drawDirectionsPanelTable(String moveSelected) {
+
+    removeTableDirectionsPanel();
 
     final String MOVE = moveSelected;
 
@@ -189,7 +214,7 @@ public class BoardMovesPanel {
     directionTable.row();
 
     directionTable.add(btnDirectionL).size(DIRECTION_BUTTON_SIZE, DIRECTION_BUTTON_SIZE);
-    if (MOVE.equals("EXTINGUISH")) {
+    if (MOVE.equals(Actions.EXTINGUISH.toString())) {
       directionTable.add(btnDirectionCurr).size(DIRECTION_BUTTON_SIZE, DIRECTION_BUTTON_SIZE);
     } else {
       directionTable.add();
@@ -260,13 +285,14 @@ public class BoardMovesPanel {
         });
 
     directionsTableList.add(directionTable);
+    stage.addActor(directionTable);
   }
 
   // helper
 
   private String[] getMovesArrForDisplay() {
 
-    if (BoardManager.getInstance() instanceof BoardManagerAdvanced) {
+    if (BoardManager.getInstance().isAdvanced()) {
       return Actions.convertToStringArray(
           FireFighterTurnManagerAdvance.getInstance().getCurrentFireFighter().getActions());
     }
