@@ -91,7 +91,7 @@ public class BoardScreen extends FlashPointScreen {
 
     boardChooseRolePanel = new BoardChooseSpecialtyPanel(stage);
     boardGameInfoLabel = new BoardGameInfoLabel(stage);
-    boardMovesPanel = new BoardMovesPanel(stage, boardGameInfoLabel);
+    boardMovesPanel = new BoardMovesPanel(stage);
     boardChatFragment = new BoardChatFragment(stage);
     boardCheatSFragment = new BoardCheatSFragment(stage);
     boardStatsFragment = new BoardStatsFragment(stage);
@@ -143,6 +143,11 @@ public class BoardScreen extends FlashPointScreen {
                       boardDialog.drawDialog("Engine position", "Choose the fire engine's initial position (green tiles).");
                       addFilterOnTileForEngine();
                     } else if (isEngineNotSet && DBHandler.isPresentInArr(getEngineClickableTiles(), i_pos + "-" + j_pos)){
+
+                      if(isAmbulanceNotSet){
+                        return;
+                      }
+
                       ((BoardManagerAdvanced) BoardManagerAdvanced.getInstance()).addFireTruck(i_pos, j_pos);
                       removeAllFilterOnTile();
                       drawGameUnitsOnTile();
@@ -503,10 +508,11 @@ public class BoardScreen extends FlashPointScreen {
 
       if (tiles[i][j].getVictim().isCured()){
         Image healMarker = new Image(new Texture("game_units/Heal_Marker.png"));
-        gameUnit.setHeight(10);
-        gameUnit.setWidth(10);
-        gameUnit.setPosition(
-                myTile.getX() + myTile.getHeight() / 2 + 10, myTile.getY() + myTile.getHeight() / 2 + 10);
+        healMarker.setHeight(15);
+        healMarker.setWidth(15);
+        healMarker.setPosition(
+                myTile.getX() + myTile.getHeight() / 2 + 10,
+                myTile.getY() + myTile.getHeight() / 2 + 10);
         gameUnits.add(healMarker);
         stage.addActor(healMarker);
       }
