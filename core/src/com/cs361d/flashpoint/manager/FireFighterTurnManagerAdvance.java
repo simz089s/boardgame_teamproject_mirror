@@ -13,6 +13,7 @@ public class FireFighterTurnManagerAdvance extends FireFighterTurnManager {
   protected FireFighterTurnManagerAdvance() {
     super();
     FREESPECIALITIES.clear();
+    FireFighterAdvanced.reset();
     for (FireFighterAdvanceSpecialities s : FireFighterAdvanceSpecialities.values()) {
       FREESPECIALITIES.add(s);
     }
