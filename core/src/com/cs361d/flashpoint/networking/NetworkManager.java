@@ -154,9 +154,9 @@ public class NetworkManager {
 //          }
 //          break;
 
-        case CHATGAME:
+    //    case CHATGAME:
         case GAMESTATE:
-        case SAVE:
+    //    case SAVE:
           for (ClientHandler mc : Server.getClientThreads().values()) {
             mc.dout.writeUTF(msg);
           }
@@ -181,20 +181,20 @@ public class NetworkManager {
             instance.server.closeServer(); // disconnect all the clients
           break;
 
-        case DISCONNECTCLIENT:
+      /*  case DISCONNECTCLIENT:
           if (instance.getMyPublicIP().equals(DEFAULT_SERVER_IP))
             instance.server.closeClient(); // disconnect clients
-          break;
+          break; */
 
-        case ASK_TO_GET_ASSIGN_FIREFIGHTER:
+      /*  case ASK_TO_GET_ASSIGN_FIREFIGHTER:
           Server.getServer().assignFireFighterToClient(ip);
-          break;
+          break; */
 
         case ASSIGN_FIREFIGHTER:
           User.getInstance().assignFireFighter(FireFighterColor.fromString(message));
           break;
 
-        case EXITGAME:
+      /*  case EXITGAME:
           Server.getServer().changeLoadedStatus(false);
           for (ClientHandler mc : Server.getClientThreads().values()) {
             mc.dout.writeUTF(msg);
@@ -214,7 +214,7 @@ public class NetworkManager {
               Server.getServer().assignFireFighterToClient(ip);
               BoardScreen.setBoardScreen();
             }
-          break;
+          break; */
 
         default:
       }
@@ -234,13 +234,13 @@ public class NetworkManager {
       String ip = jsonObject.get("IP").toString();
       System.out.println(message);
       switch (c) {
-        case CHATWAIT:
+        /*case CHATWAIT:
           if (!msg.equals("")) ChatScreen.addMessageToGui(message);
           break;
 
         case CHATGAME:
           if (!message.equals("")) BoardChatFragment.addMessageToGui(message);
-          break;
+          break; */
 
         case GAMESTATE:
           // Transfer the redraw call to the main thread (that has openGL and GDX)
@@ -254,20 +254,20 @@ public class NetworkManager {
                   });
           break;
 
-        case SAVE:
+       /* case SAVE:
           CreateNewGameManager.loadGameFromString(message);
           DBHandler.saveBoardToDB(BoardManager.getInstance().getGameName());
           break;
 
         case ASK_TO_GET_ASSIGN_FIREFIGHTER:
           Server.getServer().assignFireFighterToClient(ip);
-          break;
+          break; */
 
         case ASSIGN_FIREFIGHTER:
           User.getInstance().assignFireFighter(FireFighterColor.fromString(message));
           break;
 
-        case EXITGAME:
+    /*    case EXITGAME:
           Gdx.app.postRunnable(
                   new Runnable() {
                     @Override
@@ -275,7 +275,7 @@ public class NetworkManager {
                       BoardScreen.setLobbyPage();
                     }
                   });
-          break;
+          break;  */
 
         case SETBOARDSCREEN:
           Gdx.app.postRunnable(
