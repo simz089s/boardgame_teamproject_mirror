@@ -19,7 +19,7 @@ import static com.cs361d.flashpoint.screen.BoardScreen.*;
 
 public class BoardMovesPanel {
 
-  final int DIRECTION_BUTTON_SIZE = 65;
+  final int DIRECTION_BUTTON_SIZE = 50;
 
   ScrollPane scrollPaneMoveOptions;
   ScrollPane.ScrollPaneStyle scrollStyle;
@@ -112,7 +112,7 @@ public class BoardMovesPanel {
       scrollPaneMoveOptions.setTransform(true);
       scrollPaneMoveOptions.setScale(1.0f);
       scrollPaneMoveOptions.setWidth(345);
-      scrollPaneMoveOptions.setHeight(250);
+      scrollPaneMoveOptions.setHeight(275);
       // scrollMessage.setBounds(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight() + 100);
       scrollPaneMoveOptions.setPosition(
           850, Gdx.graphics.getHeight() - scrollPaneMoveOptions.getHeight() - 165);
@@ -161,7 +161,7 @@ public class BoardMovesPanel {
               }
 
               // advanced
-              if ((FireFighterTurnManager.getInstance() instanceof FireFighterTurnManagerAdvance)) {
+              if (BoardManager.getInstance().isAdvanced()) {
                 FireFighterTurnManagerAdvance fireFighterTurnManagerAdvance = (FireFighterTurnManagerAdvance) fireFighterTurnManager;
                 switch(move) {
                   case FIRE_DECK_GUN: //TODO
@@ -180,6 +180,7 @@ public class BoardMovesPanel {
                     redrawAfterMove();
                     break;
                   case FLIP_POI: //TODO
+                    addFilterOnChoosePOIChoosePos();
                     break;
                   case CURE_VICTIM:
                     fireFighterTurnManagerAdvance.treatVictim();
@@ -256,7 +257,7 @@ public class BoardMovesPanel {
     }
     directionTable.add();
 
-    directionTable.setPosition(1000, Gdx.graphics.getHeight() - directionTable.getHeight() - 520);
+    directionTable.setPosition(1000, Gdx.graphics.getHeight() - directionTable.getHeight() - 550);
 
     btnDirectionU.addListener(
         new InputListener() {

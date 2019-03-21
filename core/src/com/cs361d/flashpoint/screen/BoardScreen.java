@@ -17,6 +17,7 @@ import com.cs361d.flashpoint.manager.*;
 import com.cs361d.flashpoint.model.BoardElements.*;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class BoardScreen extends FlashPointScreen {
 
@@ -39,6 +40,7 @@ public class BoardScreen extends FlashPointScreen {
 
   // choose pos on knock down
   static boolean activateKnockDownChoosePos = false;
+  static boolean activateFlipPOIChoosePos = false;
   static FireFighter knockedDownFirefigher;
   static ArrayList<Tile> clickableTilesOnKnockDownArr = new ArrayList<Tile>();
 
@@ -198,8 +200,6 @@ public class BoardScreen extends FlashPointScreen {
 
                     // choose tile on knock down
                     if (activateKnockDownChoosePos && isClickableTileOnKnockDown(i_pos, j_pos)) {
-                      clearAllGameUnits();
-
                       BoardManager.getInstance()
                               .chooseForKnockedDown(
                                       BoardManager.getInstance().getTiles()[i_pos][j_pos],
@@ -208,6 +208,20 @@ public class BoardScreen extends FlashPointScreen {
                       activateKnockDownChoosePos = false;
 
                       removeAllFilterOnTile();
+                      clearAllGameUnits();
+                      drawGameUnitsOnTile();
+                      boardGameInfoLabel.drawGameInfoLabel();
+                    }
+
+                    // TODO: choose flip POI
+                    if (activateFlipPOIChoosePos && isClickableTileOnFlipPOI(i_pos, j_pos)) {
+
+                      ((FireFighterTurnManagerAdvance) FireFighterTurnManager.getInstance()).flipPOI(BoardManager.getInstance().getTiles()[i_pos][j_pos]);
+
+                      activateKnockDownChoosePos = false;
+
+                      removeAllFilterOnTile();
+                      clearAllGameUnits();
                       drawGameUnitsOnTile();
                       boardGameInfoLabel.drawGameInfoLabel();
                     }
@@ -754,8 +768,9 @@ public class BoardScreen extends FlashPointScreen {
 
     for (int i = 0; i < clickableTiles.size(); i++) {
       tilesImg[clickableTiles.get(i).getI()][clickableTiles.get(i).getJ()].setColor(Color.GREEN);
-      activateKnockDownChoosePos = true;
     }
+
+    activateKnockDownChoosePos = true;
   }
 
   private void addFilterOnTileForAmbulance() {
@@ -778,6 +793,17 @@ public class BoardScreen extends FlashPointScreen {
         }
       }
     }
+  }
+
+  public static void addFilterOnChoosePOIChoosePos() {
+
+    List<Tile> tiles = BoardManagerAdvanced.getInstance().tilesWithPOI();
+
+    for (int i = 0; i < tiles.size(); i++) {
+      tilesImg[tiles.get(i).getI()][tiles.get(i).getJ()].setColor(Color.GREEN);
+    }
+
+    activateFlipPOIChoosePos = true;
   }
 
 
@@ -821,6 +847,19 @@ public class BoardScreen extends FlashPointScreen {
       int j_pos = clickableTilesOnKnockDownArr.get(i).getJ();
 
       if (i_input == i_pos && j_input == j_pos) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  private boolean isClickableTileOnFlipPOI(int i_input, int j_input) {
+
+    List<Tile> tiles = BoardManagerAdvanced.getInstance().tilesWithPOI();
+
+    for (int i = 0; i < tiles.size(); i++) {
+      if(tiles.get(i).getI() == i_input && tiles.get(i).getJ() == j_input ){
         return true;
       }
     }
