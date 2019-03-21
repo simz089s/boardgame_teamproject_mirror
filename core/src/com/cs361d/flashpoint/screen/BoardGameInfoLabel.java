@@ -38,9 +38,9 @@ public class BoardGameInfoLabel {
                 FireFighterTurnManager.getInstance().getCurrentFireFighter().getColor();
 
         String specialty = "\n";
-        if(BoardManager.getInstance().isAdvanced()) {
-            specialty = ((FireFighterAdvanced)FireFighterAdvanced.getFireFighter(User.getInstance().getColor())).getSpeciality().toString();
-        }
+//        if(BoardManager.getInstance().isAdvanced()) {
+//            specialty = ((FireFighterAdvanced)FireFighterAdvanced.getFireFighter(User.getInstance().getColor())).getSpeciality().toString();
+//        }
 
         gameInfoLabel =
                 new Label(
