@@ -215,25 +215,41 @@ public class BoardMovesPanel {
     directionTable = new Table();
 
     directionTable.add();
-    if (move != Actions.DRIVE_AMBULANCE && move != Actions.DRIVE_FIRETRUCK) {
+    Direction side = Direction.NULLDIRECTION;
+    switch (move) {
+      case DRIVE_AMBULANCE:
+        side = BoardManagerAdvanced.getInstance().ambulanceLocationSide();
+        break;
+      case DRIVE_FIRETRUCK:
+        side = BoardManagerAdvanced.getInstance().fireTruckLocationSide();
+        break;
+        default:
+    }
+    if (side != Direction.NULLDIRECTION && side != Direction.TOP && side != Direction.BOTTOM) {
       directionTable.add(btnDirectionU).size(DIRECTION_BUTTON_SIZE, DIRECTION_BUTTON_SIZE);
     }
     directionTable.add();
 
     directionTable.row();
+    if (side != Direction.NULLDIRECTION && side != Direction.LEFT && side != Direction.RIGHT) {
+      directionTable.add(btnDirectionL).size(DIRECTION_BUTTON_SIZE, DIRECTION_BUTTON_SIZE);
+    }
 
-    directionTable.add(btnDirectionL).size(DIRECTION_BUTTON_SIZE, DIRECTION_BUTTON_SIZE);
     if (move == Actions.EXTINGUISH) {
       directionTable.add(btnDirectionCurr).size(DIRECTION_BUTTON_SIZE, DIRECTION_BUTTON_SIZE);
     } else {
       directionTable.add();
     }
-    directionTable.add(btnDirectionR).size(DIRECTION_BUTTON_SIZE, DIRECTION_BUTTON_SIZE);
+
+    if (side != Direction.NULLDIRECTION && side != Direction.LEFT && side != Direction.RIGHT) {
+      directionTable.add(btnDirectionR).size(DIRECTION_BUTTON_SIZE, DIRECTION_BUTTON_SIZE);
+    }
 
     directionTable.row();
 
     directionTable.add();
-    if (move != Actions.DRIVE_AMBULANCE && move != Actions.DRIVE_FIRETRUCK) {
+
+    if (side != Direction.NULLDIRECTION && side != Direction.TOP && side != Direction.BOTTOM) {
       directionTable.add(btnDirectionD).size(DIRECTION_BUTTON_SIZE, DIRECTION_BUTTON_SIZE);
     }
     directionTable.add();

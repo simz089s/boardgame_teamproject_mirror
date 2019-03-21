@@ -378,7 +378,7 @@ public class BoardManagerAdvanced extends BoardManager {
     List<Tile> list = new ArrayList<Tile>(2);
     for (int i = 0; i < ROWS; i++) {
       for (int j = 0; j < COLUMNS; j++) {
-        if (TILE_MAP[i][j].hasFireTruck()) {
+        if (TILE_MAP[i][j].hasAmbulance()) {
           list.add(TILE_MAP[i][j]);
         }
       }
