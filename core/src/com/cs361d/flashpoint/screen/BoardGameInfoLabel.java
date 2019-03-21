@@ -38,9 +38,9 @@ public class BoardGameInfoLabel {
                 FireFighterTurnManager.getInstance().getCurrentFireFighter().getColor();
 
         String specialty = "\n";
-//        if(BoardManager.getInstance().isAdvanced()) {
-//            specialty = ((FireFighterAdvanced)FireFighterAdvanced.getFireFighter(User.getInstance().getColor())).getSpeciality().toString();
-//        }
+        if(BoardManager.getInstance().isAdvanced()) {
+            specialty = "\nSpecialty: " + ((FireFighterAdvanced) FireFighterTurnManager.getInstance().getCurrentFireFighter()).getSpeciality();
+        }
 
         String specialAP = "";
         if(BoardManager.getInstance().isAdvanced()) {
@@ -51,12 +51,12 @@ public class BoardGameInfoLabel {
                 new Label(
 
                         User.getInstance().getName().toUpperCase()
-                                + specialty
                                 + "\nCurrent turn: "
                                 + color
                                 + "\nAP left: "
                                 + numAP
-                                + specialAP,
+                                + specialAP
+                                + specialty,
                         skinUI);
         gameInfoLabel.setFontScale(1.2f);
 
