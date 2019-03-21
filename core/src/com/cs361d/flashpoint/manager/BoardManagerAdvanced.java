@@ -247,6 +247,12 @@ public class BoardManagerAdvanced extends BoardManager {
     return tiles;
   }
 
+  public static void reset() {
+    instance = new BoardManagerAdvanced();
+    FireFighterAdvanced.reset();
+    FireFighterAdvanced.reset();
+  }
+
   public boolean hasAmbulancePlaced() {
     for (int i = 0; i < ROWS; i++) {
       for (int j = 0; j < COLUMNS; j++) {

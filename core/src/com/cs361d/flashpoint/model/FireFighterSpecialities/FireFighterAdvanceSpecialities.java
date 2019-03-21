@@ -11,7 +11,7 @@ public enum FireFighterAdvanceSpecialities {
     RESCUE_DOG("rescue dog"),
     VETERAN("veteran"),
     DRIVER("driver"),
-    NO_SPECIALITY("NO_SPECIALITY");
+    NO_SPECIALITY("NO SPECIALITY");
 
     private String text;
     FireFighterAdvanceSpecialities(String text) {
@@ -20,6 +20,10 @@ public enum FireFighterAdvanceSpecialities {
     public String toText() {
         return this.text;
     }
+
+//    @Override public String toString() {
+//        return super.toString().replace("_"," ");
+//    }
 
     public static FireFighterAdvanceSpecialities fromString(String text) {
         for (FireFighterAdvanceSpecialities b : FireFighterAdvanceSpecialities.values()) {

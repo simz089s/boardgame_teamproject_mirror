@@ -156,7 +156,7 @@ public class CreateNewGameManager {
       do {
         column = 1 + (int) (Math.random() * (BoardManager.COLUMNS - 2));
         row = 1 + (int) (Math.random() * (BoardManager.ROWS - 2));
-      } while (mg.getTiles()[row][column].hasFire() && !mg.getTiles()[row][column].hasHazmat());
+      } while (mg.getTiles()[row][column].hasFire() || mg.getTiles()[row][column].hasHazmat());
       mg.addHazmat(row, column);
       numExtraHazmat--;
     }
@@ -164,7 +164,7 @@ public class CreateNewGameManager {
       do {
       column = 1 + (int) (Math.random() * (BoardManager.COLUMNS - 2));
       row = 1 + (int) (Math.random() * (BoardManager.ROWS - 2));
-      } while (!mg.getTiles()[row][column].hasHotSpot());
+      } while (mg.getTiles()[row][column].hasHotSpot());
       mg.addHotspot(row, column);
       numExtraHotSpot--;
     }
@@ -177,10 +177,10 @@ public class CreateNewGameManager {
   private static boolean generateExplosion(int row, int column) {
     BoardManagerAdvanced mg = (BoardManagerAdvanced) BoardManager.getInstance();
     if (mg.getTiles()[row][column].hasFire()) {
-      return false;
+      return true;
     }
     mg.explosion(row, column);
     mg.addHotspot(row, column);
-    return true;
+    return false;
   }
 }

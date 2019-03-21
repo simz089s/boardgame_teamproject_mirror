@@ -177,9 +177,9 @@ public abstract class FireFighterAdvanced extends FireFighter {
 
   public void setSpecialActionPoints(int points) {
     if (points > maxSpecialAp) {
-      actionPoints = maxSpecialAp;
+      specialActionPoints = maxSpecialAp;
     } else {
-      actionPoints = points;
+      specialActionPoints = points;
     }
   }
 
@@ -248,6 +248,7 @@ public abstract class FireFighterAdvanced extends FireFighter {
   public void removeVeteranBonus() {
     if (hadVeteranBonus && actionPoints > 0) {
       actionPoints--;
+      hadVeteranBonus = false;
     }
   }
 
@@ -259,5 +260,20 @@ public abstract class FireFighterAdvanced extends FireFighter {
       actionPoints -= 2;
       return true;
     }
+  }
+
+  // If the fireFighter has not yet been Initalized it initialises it with default AP of 4 else it just returns the instance
+  public static FireFighter getFireFighter(FireFighterColor color) {
+    if (color == null) {
+      return null;
+    }
+    FireFighterAdvanced f;
+    if (FIREFIGHTERS.containsKey(color)) {
+      f = FIREFIGHTERS.get(color);
+    } else {
+      f = new Default(color);
+      FIREFIGHTERS.put(color, f);
+    }
+    return f;
   }
 }
