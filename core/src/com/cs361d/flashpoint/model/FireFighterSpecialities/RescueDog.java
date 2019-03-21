@@ -3,9 +3,12 @@ package com.cs361d.flashpoint.model.FireFighterSpecialities;
 import com.cs361d.flashpoint.model.BoardElements.Direction;
 import com.cs361d.flashpoint.model.BoardElements.FireFighterColor;
 import com.cs361d.flashpoint.model.BoardElements.Tile;
+import com.cs361d.flashpoint.screen.Actions;
 import com.cs361d.flashpoint.screen.BoardDialog;
 import com.cs361d.flashpoint.screen.BoardGameInfoLabel;
 import com.cs361d.flashpoint.screen.BoardScreen;
+
+import java.util.List;
 
 public class RescueDog extends FireFighterAdvanced {
 
@@ -87,5 +90,10 @@ public class RescueDog extends FireFighterAdvanced {
     @Override
     public boolean dodgeAp() {
         return false;
+    }
+
+    @Override
+    public List<Actions> getActions() {
+        return Actions.rescueDogActions();
     }
 }

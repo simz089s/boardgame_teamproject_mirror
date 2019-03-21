@@ -1,8 +1,10 @@
 package com.cs361d.flashpoint.model.BoardElements;
 
 import com.cs361d.flashpoint.model.FireFighterSpecialities.FireFighterAdvanceSpecialities;
+import com.cs361d.flashpoint.screen.Actions;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class FireFighter {
@@ -21,6 +23,10 @@ public class FireFighter {
     }
     this.color = color;
     this.actionPoints = actionPoints;
+  }
+
+  public List<Actions> getActions() {
+    return Actions.basicActions();
   }
 
   public static FireFighter createFireFighter(

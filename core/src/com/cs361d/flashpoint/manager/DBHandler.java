@@ -5,6 +5,7 @@ import com.cs361d.flashpoint.model.BoardElements.*;
 import com.cs361d.flashpoint.model.FireFighterSpecialities.FireFighterAdvanceSpecialities;
 import com.cs361d.flashpoint.model.FireFighterSpecialities.FireFighterAdvanced;
 import com.sun.deploy.ui.DeployEmbeddedFrameIf;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -427,9 +428,10 @@ public class DBHandler {
                         int numAP = Integer.parseInt("" + firefighterParams.get("numAP"));
                         int numSpecialAP = Integer.parseInt("" + firefighterParams.get("numSpecialAP"));
                         boolean hadVeteranBonus = (Boolean) firefighterParams.get("hadVeteranBonus");
+                        boolean firstTurn = (Boolean) firefighterParams.get("firstTurn");
                         FireFighterAdvanceSpecialities specialty = FireFighterAdvanceSpecialities.
                                 fromString("" + firefighterParams.get("specialty"));
-                        myBoardManager.addFireFighter(i, j, fc, numAP, numSpecialAP, hadVeteranBonus, specialty);
+                        myBoardManager.addFireFighter(i, j, fc, numAP, numSpecialAP, hadVeteranBonus, specialty, firstTurn);
                     }
                 }
 
@@ -673,6 +675,7 @@ public class DBHandler {
                     firefighterParams.put("numSpecialAP", fAdvanced.getSpecialActionPoints());
                     firefighterParams.put("hadVeteranBonus", fAdvanced.getHadVeteranBonus());
                     firefighterParams.put("specialty", fAdvanced.getSpeciality().toString());
+                    firefighterParams.put("firstTurn",fAdvanced.isFirstTurn());
                     newFirefightersList.add(firefighterParams);
                 }
             }

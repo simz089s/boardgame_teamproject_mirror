@@ -5,8 +5,10 @@ import com.cs361d.flashpoint.manager.FireFighterTurnManagerAdvance;
 import com.cs361d.flashpoint.model.BoardElements.FireFighter;
 import com.cs361d.flashpoint.model.BoardElements.FireFighterColor;
 import com.cs361d.flashpoint.model.BoardElements.Tile;
+import com.cs361d.flashpoint.screen.Actions;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public abstract class FireFighterAdvanced extends FireFighter {
@@ -14,6 +16,7 @@ public abstract class FireFighterAdvanced extends FireFighter {
   protected boolean hadVeteranBonus = false;
   protected final FireFighterAdvanceSpecialities SPECIALITY;
   protected int maxSpecialAp = 0;
+  protected boolean firstTurn = false;
   protected static final Map<FireFighterColor, FireFighterAdvanced> FIREFIGHTERS =
       new HashMap<FireFighterColor, FireFighterAdvanced>();
 
@@ -25,6 +28,28 @@ public abstract class FireFighterAdvanced extends FireFighter {
     super(color, actionPoints);
     this.specialActionPoints = specialActionPoints;
     this.SPECIALITY = role;
+    this.firstTurn = true;
+  }
+
+  public void firstTurnDone() {
+    this.firstTurn = false;
+  }
+
+  public void setFirstTurn(boolean firstTurn) {
+    this.firstTurn = firstTurn;
+  }
+
+  public boolean isFirstTurn() {
+    return firstTurn;
+  }
+
+  @Override
+  public List<Actions> getActions() {
+    return Actions.advancedActions();
+  }
+
+  public static void reset() {
+    FIREFIGHTERS.clear();
   }
 
   @Override
@@ -189,21 +214,6 @@ public abstract class FireFighterAdvanced extends FireFighter {
     }
   }
 
-  public boolean carryHazardAp() {
-    if (currentTile.hasHazmat()) {
-      if (actionPoints < 2) {
-        return false;
-      }
-      else {
-        actionPoints -= 2;
-        return true;
-      }
-    }
-    else {
-      return false;
-    }
-  }
-
   public boolean driveAp() {
     if (actionPoints < 2) {
       return false;
@@ -238,6 +248,16 @@ public abstract class FireFighterAdvanced extends FireFighter {
   public void removeVeteranBonus() {
     if (hadVeteranBonus && actionPoints > 0) {
       actionPoints--;
+    }
+  }
+
+  public boolean moveWithHazmatAp() {
+    if (this.actionPoints < 2) {
+      return false;
+    }
+    else {
+      actionPoints -= 2;
+      return true;
     }
   }
 }

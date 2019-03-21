@@ -14,6 +14,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.cs361d.flashpoint.manager.*;
 import com.cs361d.flashpoint.model.BoardElements.Direction;
+import com.cs361d.flashpoint.model.FireFighterSpecialities.FireFighterAdvanced;
+import com.cs361d.flashpoint.networking.Commands;
+import com.cs361d.flashpoint.networking.NetworkManager;
 
 import java.util.ArrayList;
 
@@ -263,28 +266,11 @@ public class BoardMovesPanel {
 
   private String[] getMovesArrForDisplay() {
 
-    String[] MOVES_ARR = {
-      "MOVE", "EXTINGUISH", "CHOP", "MOVE WITH VICTIM", "INTERACT WITH DOOR", "END TURN", "SAVE"
-    };
-
-    String[] MOVES_ARR_EXP = {
-      "MOVE",
-      "EXTINGUISH",
-      "CHOP",
-      "MOVE WITH VICTIM",
-      "INTERACT WITH DOOR",
-      "END TURN",
-      "DRIVE",
-      "RIDE",
-      "FIRE DECK GUN",
-      "CREW CHANGE",
-      "SAVE"
-    };
-
     if (BoardManager.getInstance() instanceof BoardManagerAdvanced) {
-      return MOVES_ARR_EXP;
+      return Actions.convertToStringArray(
+          FireFighterTurnManagerAdvance.getInstance().getCurrentFireFighter().getActions());
     }
-    return MOVES_ARR;
+    return Actions.convertToStringArray(Actions.basicActions());
   }
 
   private TextureRegionDrawable getTextureForDirectionTable(Direction d) {

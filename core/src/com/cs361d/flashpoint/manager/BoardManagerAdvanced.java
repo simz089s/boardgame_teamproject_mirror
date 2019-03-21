@@ -116,7 +116,8 @@ public class BoardManagerAdvanced extends BoardManager {
       int actionPoints,
       int specialApPoints,
       boolean veteranBonus,
-      FireFighterAdvanceSpecialities role) {
+      FireFighterAdvanceSpecialities role,
+      boolean firstTurn) {
     if (role == FireFighterAdvanceSpecialities.NO_SPECIALITY) {
 //      throw new IllegalArgumentException("A fireFighter on the board must have a role");
     }
@@ -125,6 +126,7 @@ public class BoardManagerAdvanced extends BoardManager {
     f.setActionPoint(actionPoints);
     f.setSpecialActionPoints(specialApPoints);
     f.setHadVeteranBonus(veteranBonus);
+    f.setFirstTurn(firstTurn);
     if (f.getTile() != null) {
       throw new IllegalArgumentException();
     }
