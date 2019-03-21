@@ -368,6 +368,9 @@ public class FireFighterTurnManagerAdvance extends FireFighterTurnManager {
         for (Tile t : newLocation) {
           t.setCarrierStatus(CarrierStatus.HASAMBULANCE);
         }
+        BoardManagerAdvanced.getInstance().verifyVictimRescueStatus(newLocation.get(0));
+        BoardManagerAdvanced.getInstance().verifyVictimRescueStatus(newLocation.get(1));
+        verifyVeteranVacinityToAddAp();
       }
     }
   }
@@ -386,6 +389,7 @@ public class FireFighterTurnManagerAdvance extends FireFighterTurnManager {
           t.setCarrierStatus(CarrierStatus.HASFIRETRUCK);
         }
         replaceFireFigherAfterVehicleMove(getCurrentFireFighter(),newLocation, d);
+        verifyVeteranVacinityToAddAp();
       }
     }
   }
@@ -471,7 +475,11 @@ public class FireFighterTurnManagerAdvance extends FireFighterTurnManager {
         }
         break;
     }
+
   }
+    public void fireDeckGun() {
+      // TODO Driver Speciality
+    }
 
   // TODO
   // verify the veteran vacinity at the begining of each turn;

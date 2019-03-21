@@ -291,8 +291,8 @@ public class BoardManagerAdvanced extends BoardManager {
         break;
       case BOTTOM:
         for (int j = 0; j < COLUMNS; j++) {
-          if (TILE_MAP[ROWS-1][j].canContainAmbulance()) {
-            list.add(TILE_MAP[ROWS-1][j]);
+          if (TILE_MAP[ROWS - 1][j].canContainAmbulance()) {
+            list.add(TILE_MAP[ROWS - 1][j]);
           }
         }
         break;
@@ -305,8 +305,8 @@ public class BoardManagerAdvanced extends BoardManager {
         break;
       case RIGHT:
         for (int i = 0; i < ROWS; i++) {
-          if (TILE_MAP[i][COLUMNS-1].canContainAmbulance()) {
-            list.add(TILE_MAP[i][COLUMNS-1]);
+          if (TILE_MAP[i][COLUMNS - 1].canContainAmbulance()) {
+            list.add(TILE_MAP[i][COLUMNS - 1]);
           }
         }
         break;
@@ -331,8 +331,8 @@ public class BoardManagerAdvanced extends BoardManager {
         break;
       case BOTTOM:
         for (int j = 0; j < COLUMNS; j++) {
-          if (TILE_MAP[ROWS-1][j].canContainFireTruck()) {
-            list.add(TILE_MAP[ROWS-1][j]);
+          if (TILE_MAP[ROWS - 1][j].canContainFireTruck()) {
+            list.add(TILE_MAP[ROWS - 1][j]);
           }
         }
         break;
@@ -345,8 +345,8 @@ public class BoardManagerAdvanced extends BoardManager {
         break;
       case RIGHT:
         for (int i = 0; i < ROWS; i++) {
-          if (TILE_MAP[i][COLUMNS-1].canContainFireTruck()) {
-            list.add(TILE_MAP[i][COLUMNS-1]);
+          if (TILE_MAP[i][COLUMNS - 1].canContainFireTruck()) {
+            list.add(TILE_MAP[i][COLUMNS - 1]);
           }
         }
         break;
@@ -369,7 +369,8 @@ public class BoardManagerAdvanced extends BoardManager {
       }
     }
     if (list.size() != 2) {
-      throw new IllegalArgumentException("The list must be exactly equal to 2 size found: " + list.size());
+      throw new IllegalArgumentException(
+          "The list must be exactly equal to 2 size found: " + list.size());
     }
     return list;
   }
@@ -384,7 +385,8 @@ public class BoardManagerAdvanced extends BoardManager {
       }
     }
     if (list.size() != 2) {
-      throw new IllegalArgumentException("The list must be exactly equal to 2 size found: " + list.size());
+      throw new IllegalArgumentException(
+          "The list must be exactly equal to 2 size found: " + list.size());
     }
     return list;
   }
@@ -393,16 +395,13 @@ public class BoardManagerAdvanced extends BoardManager {
     List<Tile> list = getTilesThatContainAmbulance();
     int i = list.get(0).getI();
     int j = list.get(0).getJ();
-    if ( i == 0) {
+    if (i == 0) {
       return Direction.TOP;
-    }
-    else if (i == ROWS-1) {
+    } else if (i == ROWS - 1) {
       return Direction.BOTTOM;
-    }
-    else if (j == 0) {
+    } else if (j == 0) {
       return Direction.LEFT;
-    }
-    else {
+    } else {
       return Direction.RIGHT;
     }
   }
@@ -411,21 +410,37 @@ public class BoardManagerAdvanced extends BoardManager {
     List<Tile> list = getTilesThatContainFireTruck();
     int i = list.get(0).getI();
     int j = list.get(0).getJ();
-    if ( i == 0) {
+    if (i == 0) {
       return Direction.TOP;
-    }
-    else if (i == ROWS-1) {
+    } else if (i == ROWS - 1) {
       return Direction.BOTTOM;
-    }
-    else if (j == 0) {
+    } else if (j == 0) {
       return Direction.LEFT;
-    }
-    else {
+    } else {
       return Direction.RIGHT;
     }
   }
 
   public static BoardManagerAdvanced getInstance() {
     return (BoardManagerAdvanced) instance;
+  }
+
+  public Tile[][] getTilesToUseGunOn() {
+    Tile[][] tiles = new Tile[3][4];
+    List<Tile> fireTruckTile = getTilesThatContainFireTruck();
+
+    return tiles;
+  }
+
+  public List<Tile> tilesWithPOI() {
+    List<Tile> list = new ArrayList<Tile>(3);
+    for (int i = 0; i < ROWS; i++) {
+      for (int j = 0; j < COLUMNS; j++) {
+        if (TILE_MAP[i][j].hasPointOfInterest() && !TILE_MAP[i][j].getVictim().isRevealed()) {
+          list.add(TILE_MAP[i][j]);
+        }
+      }
+    }
+    return list;
   }
 }

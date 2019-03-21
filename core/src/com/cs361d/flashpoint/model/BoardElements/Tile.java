@@ -180,12 +180,12 @@ public class Tile {
     }
 
     public boolean canContainAmbulance() {
-        return this.carrierStatus == CarrierStatus.CANHAVEAMBULANCE;
+        return this.carrierStatus == CarrierStatus.CANHAVEAMBULANCE || this.carrierStatus == CarrierStatus.HASAMBULANCE;
     }
     public boolean hasAmbulance() {
         return this.carrierStatus == CarrierStatus.HASAMBULANCE;
     }
-    public boolean canContainFireTruck() {return this.carrierStatus == CarrierStatus.CANHAVEFIRETRUCK;}
+    public boolean canContainFireTruck() {return this.carrierStatus == CarrierStatus.CANHAVEFIRETRUCK || this.carrierStatus == CarrierStatus.HASFIRETRUCK;}
     public boolean hasFireTruck() {return this.carrierStatus == CarrierStatus.HASFIRETRUCK;}
 
     public boolean hasFireFighters() {
