@@ -113,17 +113,14 @@ public class CreateNewGameManager {
       }
     }
     generateExplosion(row, column);
-    mg.addHotspot(row,column);
     do {
       column = 1 + (int) (Math.random() * (BoardManager.COLUMNS - 2));
       row = 1 + (int) (Math.random() * (BoardManager.ROWS - 2));
     } while (generateExplosion(row, column));
-    mg.addHotspot(row,column);
     column = 9-column;
     do {
       row = 1 + (int) (Math.random() * (BoardManager.ROWS - 2));
     } while (generateExplosion(row,column));
-    mg.addHotspot(row,column);
     int numExtraHazmat = 0;
     int numExtraHotSpot = 0;
     switch (diff) {
@@ -132,7 +129,6 @@ public class CreateNewGameManager {
           column = 1 + (int) (Math.random() * (BoardManager.COLUMNS - 2));
           row = 1 + (int) (Math.random() * (BoardManager.ROWS - 2));
         } while (generateExplosion(row, column));
-        mg.addHotspot(row,column);
         numExtraHazmat = 5;
         numExtraHotSpot = 3;
         mg.setNumHotSpotLeft(12);

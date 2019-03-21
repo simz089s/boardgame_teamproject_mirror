@@ -15,6 +15,7 @@ public class RescueDog extends FireFighterAdvanced {
     public RescueDog(FireFighterColor color) {
         super(color, 12, 0, FireFighterAdvanceSpecialities.RESCUE_DOG);
         this.maxActionPoint = 18;
+        this.actionsPointPerTurn = 12;
     }
 
     @Override
