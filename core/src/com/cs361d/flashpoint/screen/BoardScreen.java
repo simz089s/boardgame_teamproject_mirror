@@ -569,7 +569,7 @@ public class BoardScreen extends FlashPointScreen {
     }
   }
 
-  private void drawEngineTilesColor() {
+  public static void drawEngineTilesColor() {
     // Engines (Ambulance, firetruck)
     Tile[][] tiles = BoardManager.getInstance().getTiles();
     for (int i = 0; i < tiles.length; i++) {

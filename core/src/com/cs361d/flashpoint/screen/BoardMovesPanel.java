@@ -82,8 +82,8 @@ public class BoardMovesPanel {
         default:
       }
     }
-    clearAllGameUnits();
-    drawGameUnitsOnTile();
+
+    redrawAfterMove();
   }
 
   public void drawMovesAndDirectionsPanel() {
@@ -150,7 +150,7 @@ public class BoardMovesPanel {
                     e.printStackTrace();
                   }
 
-                  redrawAfterNoDirectionMoves();
+                  redrawAfterMove();
 
                   break;
                 case SAVE:
@@ -177,13 +177,13 @@ public class BoardMovesPanel {
                     break;
                   case REMOVE_HAZMAT:
                     fireFighterTurnManagerAdvance.disposeHazmat();
-                    redrawAfterNoDirectionMoves();
+                    redrawAfterMove();
                     break;
                   case FLIP_POI: //TODO
                     break;
                   case CURE_VICTIM:
                     fireFighterTurnManagerAdvance.treatVictim();
-                    redrawAfterNoDirectionMoves();
+                    redrawAfterMove();
                     break;
                   case CREW_CHANGE:
                     removeMovesAndDirectionsPanel();
@@ -227,13 +227,13 @@ public class BoardMovesPanel {
         break;
         default:
     }
-    if (side != Direction.NULLDIRECTION && side != Direction.TOP && side != Direction.BOTTOM) {
+    if (side == Direction.NULLDIRECTION || (side != Direction.TOP && side != Direction.BOTTOM)) {
       directionTable.add(btnDirectionU).size(DIRECTION_BUTTON_SIZE, DIRECTION_BUTTON_SIZE);
     }
     directionTable.add();
 
     directionTable.row();
-    if (side != Direction.NULLDIRECTION && side != Direction.LEFT && side != Direction.RIGHT) {
+    if (side == Direction.NULLDIRECTION || (side != Direction.LEFT && side != Direction.RIGHT)) {
       directionTable.add(btnDirectionL).size(DIRECTION_BUTTON_SIZE, DIRECTION_BUTTON_SIZE);
     }
 
@@ -243,7 +243,7 @@ public class BoardMovesPanel {
       directionTable.add();
     }
 
-    if (side != Direction.NULLDIRECTION && side != Direction.LEFT && side != Direction.RIGHT) {
+    if (side == Direction.NULLDIRECTION || (side != Direction.LEFT && side != Direction.RIGHT)) {
       directionTable.add(btnDirectionR).size(DIRECTION_BUTTON_SIZE, DIRECTION_BUTTON_SIZE);
     }
 
@@ -251,7 +251,7 @@ public class BoardMovesPanel {
 
     directionTable.add();
 
-    if (side != Direction.NULLDIRECTION && side != Direction.TOP && side != Direction.BOTTOM) {
+    if (side == Direction.NULLDIRECTION || (side != Direction.TOP && side != Direction.BOTTOM)) {
       directionTable.add(btnDirectionD).size(DIRECTION_BUTTON_SIZE, DIRECTION_BUTTON_SIZE);
     }
     directionTable.add();
@@ -263,7 +263,6 @@ public class BoardMovesPanel {
           @Override
           public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
             performDirectionMove(move, Direction.TOP);
-            boardGameInfoLabel.drawGameInfoLabel();
             removeTableDirectionsPanel();
             return true;
           }
@@ -274,7 +273,6 @@ public class BoardMovesPanel {
           @Override
           public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
             performDirectionMove(move, Direction.BOTTOM);
-            boardGameInfoLabel.drawGameInfoLabel();
             removeTableDirectionsPanel();
             return true;
           }
@@ -285,7 +283,6 @@ public class BoardMovesPanel {
           @Override
           public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
             performDirectionMove(move, Direction.NODIRECTION);
-            boardGameInfoLabel.drawGameInfoLabel();
             removeTableDirectionsPanel();
             return true;
           }
@@ -296,7 +293,6 @@ public class BoardMovesPanel {
           @Override
           public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
             performDirectionMove(move, Direction.LEFT);
-            boardGameInfoLabel.drawGameInfoLabel();
             removeTableDirectionsPanel();
             return true;
           }
@@ -307,7 +303,6 @@ public class BoardMovesPanel {
           @Override
           public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
             performDirectionMove(move, Direction.RIGHT);
-            boardGameInfoLabel.drawGameInfoLabel();
             removeTableDirectionsPanel();
             return true;
           }
@@ -317,9 +312,10 @@ public class BoardMovesPanel {
     stage.addActor(directionTable);
   }
 
-  private void redrawAfterNoDirectionMoves() {
+  private void redrawAfterMove() {
     clearAllGameUnits();
     drawGameUnitsOnTile();
+    drawEngineTilesColor();
     boardGameInfoLabel.drawGameInfoLabel();
     removeAllPrevFragments();
     boardMovesPanel.drawMovesAndDirectionsPanel();
