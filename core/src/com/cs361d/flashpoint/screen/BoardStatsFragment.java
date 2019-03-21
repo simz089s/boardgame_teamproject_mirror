@@ -80,7 +80,7 @@ public class BoardStatsFragment {
         gamesStatsArrList.add("Victims saved: " + BoardManager.getInstance().getNumVictimSaved());
         gamesStatsArrList.add("Victims lost: " + BoardManager.getInstance().getNumVictimDead());
         if (BoardManager.getInstance().isAdvanced()) {
-            gamesStatsArrList.add("# hazmat left: " + ((BoardManagerAdvanced) BoardManagerAdvanced.getInstance()).getNumHotSpotLeft());
+            gamesStatsArrList.add("Hot Spots left: " + ((BoardManagerAdvanced) BoardManagerAdvanced.getInstance()).getNumHotSpotLeft());
         }
         gamesStatsArrList.add("");
 
