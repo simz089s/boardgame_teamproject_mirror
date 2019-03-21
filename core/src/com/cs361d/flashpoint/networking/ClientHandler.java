@@ -14,17 +14,14 @@ class ClientHandler implements Runnable {
     final DataOutputStream dout;
     Socket s;
     boolean isloggedin;
-    FlashPointGame fpg;
 
     // constructor
-    public ClientHandler(Socket s, String name,
-                         DataInputStream din, DataOutputStream dout, FlashPointGame fpg) {
+    public ClientHandler(Socket s, String name, DataInputStream din, DataOutputStream dout) {
         this.din = din;
         this.dout = dout;
         this.name = name;
         this.s = s;
         this.isloggedin=true;
-        this.fpg = fpg;
     }
 
 

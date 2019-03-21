@@ -21,8 +21,6 @@ public class Server implements Runnable
 {
 
     private List<FireFighterColor> notYetAssigned = new ArrayList<FireFighterColor>();
-    // Server has an instance of the game
-    public FlashPointGame serverFPGame = new FlashPointGame();
 
     // Vector to store active client threads
     static HashMap<String, ClientHandler> clientThreads = new HashMap<String, ClientHandler>();
@@ -73,7 +71,7 @@ public class Server implements Runnable
                 System.out.println("Creating a new handler for this client...");
 
                 // Create a new handler object for handling this request.
-                ClientHandler clientObserver = new ClientHandler(s, "client " + i, din, dout, serverFPGame);
+                ClientHandler clientObserver = new ClientHandler(s, "client " + i, din, dout);
 
                 // Create a new Thread with this client.
                 Thread t = new Thread(clientObserver);
@@ -111,10 +109,7 @@ public class Server implements Runnable
 
     public synchronized void sendMsgSpecificClient(String ip, Commands command, String message){
         try {
-            // Get the specific client handler
-            if (ip.equals(NetworkManager.getInstance().getMyPublicIP())) {
-                return;
-            }
+
             ClientHandler client = clientThreads.get(ip);
 
             String msg = NetworkManager.getInstance().createJSON(command, message);
@@ -122,9 +117,7 @@ public class Server implements Runnable
 
             // updateServerGui(msg);
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        } catch (IOException e) { e.printStackTrace(); }
     }
 
 //    /* Update GUI of the Server based on sent String*/

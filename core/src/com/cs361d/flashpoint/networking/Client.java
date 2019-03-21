@@ -35,22 +35,16 @@ public class Client
                         @Override
                         public void run()
                         {
-                            while (true)
-                            {
+                            while (true) {
                                 String msg;
-                                try
-                                {
+                                try {
                                     // read the message sent to this client
                                     msg = din.readUTF();
                                     NetworkManager.clientExecuteCommand(msg);
-                                } catch (IOException e)
-                                {
-                                    e.printStackTrace();
-                                }
+                                } catch (IOException e) { e.printStackTrace(); }
                             }
                         }
                     });
-
             readMessage.start();
 
         } catch (UnknownHostException e) { e.printStackTrace(); }
