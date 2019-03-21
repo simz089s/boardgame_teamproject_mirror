@@ -142,7 +142,7 @@ public class FireFighterTurnManagerAdvance extends FireFighterTurnManager {
             Tile inRange = f.getTile().getAdjacentTile(d);
             validTiles.add(inRange);
             if (!f.getTile().hasObstacle(d)) {
-              while (!inRange.hasObstacle(d) && dist < 4) {
+              while (inRange != null && !inRange.hasObstacle(d) && dist < 4) {
                 inRange = inRange.getAdjacentTile(d);
                 if (!inRange.hasNoFireAndNoSmoke()) {
                   break;

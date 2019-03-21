@@ -155,6 +155,8 @@ public class BoardMovesPanel {
                   clearAllGameUnits();
                   drawGameUnitsOnTile();
                   boardGameInfoLabel.drawGameInfoLabel();
+                  removeAllPrevFragments();
+                  boardMovesPanel.drawMovesAndDirectionsPanel();
                   break;
                 case SAVE:
                   DBHandler.saveBoardToDB(BoardManager.getInstance().getGameName());

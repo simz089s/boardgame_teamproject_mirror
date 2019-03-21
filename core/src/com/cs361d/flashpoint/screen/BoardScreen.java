@@ -787,7 +787,7 @@ public class BoardScreen extends FlashPointScreen {
     gameUnits.clear();
   }
 
-  private static void removeAllPrevFragments() {
+  public static void removeAllPrevFragments() {
     boardMovesPanel.removeMovesAndDirectionsPanel();
     boardChooseRolePanel.removeChooseSpecialtyPanel();
     boardChatFragment.removeChatFragment();

@@ -453,7 +453,7 @@ public class BoardManager implements Iterable<Tile> {
       case NODIRECTION:
         return t;
       default:
-        throw new IllegalArgumentException();
+        throw new IllegalArgumentException(d.toString());
     }
     return null;
   }

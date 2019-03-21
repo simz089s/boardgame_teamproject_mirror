@@ -23,7 +23,7 @@ public enum FireFighterAdvanceSpecialities {
 
     public static FireFighterAdvanceSpecialities fromString(String text) {
         for (FireFighterAdvanceSpecialities b : FireFighterAdvanceSpecialities.values()) {
-            if (b.text.equalsIgnoreCase(text)) {
+            if (b.text.equalsIgnoreCase(text) || b.toString().equalsIgnoreCase(text)) {
                 return b;
             }
         }
