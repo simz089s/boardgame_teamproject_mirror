@@ -73,9 +73,11 @@ public class BoardMovesPanel {
         case MOVE_WITH_HAZMAT:
           fireFighterTurnManagerAdvance.moveWithHazmat(direction);
           break;
-        case DRIVE_FIRETRUCK: //TODO
+        case DRIVE_FIRETRUCK:
+          fireFighterTurnManagerAdvance.driveFireTruck(direction);
           break;
-        case DRIVE_AMBULANCE: //TODO
+        case DRIVE_AMBULANCE:
+          fireFighterTurnManagerAdvance.driveAmbulance(direction);
           break;
         default:
       }
