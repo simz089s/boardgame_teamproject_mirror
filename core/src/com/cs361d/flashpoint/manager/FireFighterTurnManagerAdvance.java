@@ -4,6 +4,7 @@ import com.cs361d.flashpoint.model.BoardElements.*;
 import com.cs361d.flashpoint.model.FireFighterSpecialities.*;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 public class FireFighterTurnManagerAdvance extends FireFighterTurnManager {
@@ -24,7 +25,7 @@ public class FireFighterTurnManagerAdvance extends FireFighterTurnManager {
     if (FIREFIGHTERS.contains(f) || !(f instanceof FireFighterAdvanced)) {
       throw new IllegalArgumentException();
     }
-    FIREFIGHTERS.add(f);
+    FIREFIGHTERS.add(((FireFighterAdvanced) f));
     if (FIREFIGHTERS.size() > MAX_NUMBER_OF_PLAYERS) {
       throw new IllegalStateException();
     }
@@ -55,6 +56,7 @@ public class FireFighterTurnManagerAdvance extends FireFighterTurnManager {
       BoardManager.getInstance().endTurnFireSpread();
       if (!getCurrentFireFighter().isFirstTurn()) {
         getCurrentFireFighter().resetActionPoints();
+        verifyVeteranVacinityToAddAp();
       }
       sendChangeToNetwork();
     } else {
@@ -82,7 +84,7 @@ public class FireFighterTurnManagerAdvance extends FireFighterTurnManager {
 
   @Override
   public FireFighterAdvanced getCurrentFireFighter() {
-    return (FireFighterAdvanced) super.getCurrentFireFighter();
+    return (FireFighterAdvanced) FIREFIGHTERS.peek();
   }
 
   public void treatVictim() {
@@ -132,23 +134,30 @@ public class FireFighterTurnManagerAdvance extends FireFighterTurnManager {
   }
 
   public boolean verifyVeteranVacinity(FireFighterAdvanced targeted) {
+    if (targeted instanceof Veteran) {
+      return false;
+    }
     List<Tile> validTiles = new ArrayList<Tile>();
     for (FireFighter f : FIREFIGHTERS) {
       if (f instanceof Veteran) {
         validTiles.add(f.getTile());
         for (Direction d : Direction.values()) {
-          if (d != Direction.NODIRECTION) {
+          if (d != Direction.NODIRECTION && d != Direction.NULLDIRECTION) {
             int dist = 1;
             Tile inRange = f.getTile().getAdjacentTile(d);
-            validTiles.add(inRange);
+            if (inRange != null) {
+              validTiles.add(inRange);
+              }
             if (!f.getTile().hasObstacle(d)) {
               while (inRange != null && !inRange.hasObstacle(d) && dist < 4) {
                 inRange = inRange.getAdjacentTile(d);
-                if (!inRange.hasNoFireAndNoSmoke()) {
+                if (inRange != null && !inRange.hasNoFireAndNoSmoke()) {
                   break;
                 }
                 dist++;
-                validTiles.add(inRange);
+                if (inRange != null) {
+                  validTiles.add(inRange);
+                }
               }
             }
           }
@@ -163,7 +172,7 @@ public class FireFighterTurnManagerAdvance extends FireFighterTurnManager {
     return false;
   }
 
-  private void verifyVeteranVacintyToAddAp() {
+  private void verifyVeteranVacinityToAddAp() {
     if (verifyVeteranVacinity(getCurrentFireFighter())) {
       getCurrentFireFighter().veteranBonus();
     }
@@ -182,10 +191,9 @@ public class FireFighterTurnManagerAdvance extends FireFighterTurnManager {
             newTile.getVictim().reveal();
           } else {
             newTile.setNullVictim();
-            BoardManager.getInstance().addNewPointInterest();
           }
         }
-        verifyVeteranVacintyToAddAp();
+        verifyVeteranVacinityToAddAp();
         flipAdjacentPOIForRescueDog();
         sendChangeToNetwork();
       } else {
@@ -199,7 +207,7 @@ public class FireFighterTurnManagerAdvance extends FireFighterTurnManager {
   @Override
   public void moveWithVictim(Direction d) {
     super.moveWithVictim(d);
-    verifyVeteranVacintyToAddAp();
+    verifyVeteranVacinityToAddAp();
     flipAdjacentPOIForRescueDog();
   }
 
@@ -289,7 +297,7 @@ public class FireFighterTurnManagerAdvance extends FireFighterTurnManager {
           adjacent.setHasHazmat(true);
           getCurrentFireFighter().setTile(adjacent);
           verifyHazmatRemovalStatus(adjacent);
-          verifyVeteranVacintyToAddAp();
+          verifyVeteranVacinityToAddAp();
         }
         else {
           sendMessageToGui("You do not have enough AP to move the Hazmat 2 AP required");
@@ -309,18 +317,47 @@ public class FireFighterTurnManagerAdvance extends FireFighterTurnManager {
       if (getCurrentFireFighter() instanceof RescueDog) {
         Tile currentTile = getCurrentFireFighter().getTile();
         for (Direction d : Direction.values()) {
-          if (d != Direction.NODIRECTION) {
+          if (d != Direction.NODIRECTION && d != Direction.NULLDIRECTION) {
             Tile adjacent = currentTile.getAdjacentTile(d);
-            if (adjacent.hasPointOfInterest() && adjacent.getVictim().isFalseAlarm()) {
+            if (adjacent != null && adjacent.hasPointOfInterest() && adjacent.getVictim().isFalseAlarm()) {
               adjacent.setNullVictim();
             }
-            else if (adjacent.hasPointOfInterest()) {
+            else if (adjacent != null || adjacent.hasPointOfInterest()) {
               adjacent.getVictim().reveal();
             }
           }
         }
       }
     }
+
+  @Override
+  public void setOrder(List<FireFighterColor> list) {
+    LinkedList<FireFighter> newList = new LinkedList<FireFighter>();
+    for (FireFighterColor c : list) {
+      FireFighter f = FireFighterAdvanced.getFireFighter(c);
+      newList.add(f);
+    }
+    FIREFIGHTERS = newList;
+  }
+
+  @Override
+  public boolean chooseInitialPosition(Tile t) throws IllegalAccessException {
+    FireFighter f = FIREFIGHTERS.removeFirst();
+    FIREFIGHTERS.addLast(f);
+    if (f.getTile() != null) {
+      throw new IllegalAccessException("The FireFighter has already been assigned a tile");
+    }
+    f.setTile(t);
+    flipAdjacentPOIForRescueDog();
+    for (FireFighter fi : FIREFIGHTERS) {
+        if(verifyVeteranVacinity(((FireFighterAdvanced)fi))) {
+          ((FireFighterAdvanced) fi).veteranBonus();
+        }
+    }
+    sendChangeToNetwork();
+    return FIREFIGHTERS.getFirst().getTile() != null;
+  }
+
   //TODO
   // verify the veteran vacinity at the begining of each turn;
   // Flip the markes in ajacentSpace
