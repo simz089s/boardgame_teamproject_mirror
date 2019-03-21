@@ -108,12 +108,12 @@ public class Server implements Runnable
         } catch (IOException e) { e.printStackTrace(); }
     }
 
-    public synchronized void sendMsgSpecificClient(String ip, ServerCommands command, String message){
+    public synchronized void sendMsgSpecificClient(String ip, ClientCommands command, String message){
         try {
 
             ClientHandler client = clientThreads.get(ip);
 
-            String msg = NetworkManager.getInstance().createJSON(command, message);
+            String msg = NetworkManager.getInstance().createJSON(command.toString(), message);
             client.dout.writeUTF(msg);
 
             // updateServerGui(msg);
@@ -169,7 +169,7 @@ public class Server implements Runnable
             User.getInstance().assignFireFighter(color);
         }
         else {
-           sendMsgSpecificClient(IP, ServerCommands.ASSIGN_FIREFIGHTER, color.toString());
+           sendMsgSpecificClient(IP, ClientCommands.ASSIGN_FIREFIGHTER, color.toString());
         }
     }
 //    public static boolean amIServer() {

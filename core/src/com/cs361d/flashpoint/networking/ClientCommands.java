@@ -1,20 +1,20 @@
 package com.cs361d.flashpoint.networking;
 
-public enum ClientCommands
+public enum ClientCommands //Commands sent to client
 {
-    CHATWAIT("chatwait"),
-    CHATGAME("chatgame"),
-    ADDMSG("addmsg"),
-    //GAMESTATE("gamestate"),
-    SAVE("save"),
+    CHATGAME("CHAT_GAME"),
+    SETMSG("SET_MESSAGE"),
+//    ADDMSG("addmsg"),
+    GAMESTATE("gamestate"),
+//    SAVE("save"),
     //SEND_NEWLY_CREATED_BOARD("SEND_NEWLY_CREATED_BOARD"),
-    //ASSIGN_FIREFIGHTER("ASSIGN_FIREFIGHTER"),
-    ASK_TO_GET_ASSIGN_FIREFIGHTER("ASK_TO_GET_ASSIGN_FIREFIGHTER"),
+    ASSIGN_FIREFIGHTER("ASSIGN_FIREFIGHTER"),
+//    ASK_TO_GET_ASSIGN_FIREFIGHTER("ASK_TO_GET_ASSIGN_FIREFIGHTER"),
     //DISCONNECTSERVER("DISCONNECT_SERVER"),
-    DISCONNECTCLIENT("DISCONNECT_CLIENT"),
-    JOIN("join"),
-    //SETBOARDSCREEN("SETBOARDSCREEN"),
-    EXITGAME("exitgame");
+//    DISCONNECTCLIENT("DISCONNECT_CLIENT"),
+//    JOIN("join"),
+    SETBOARDSCREEN("SETBOARDSCREEN"),
+    EXITGAME("EXIT_GAME");
 
     private String text;
 

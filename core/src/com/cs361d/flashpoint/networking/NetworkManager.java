@@ -53,8 +53,8 @@ public class NetworkManager {
 
   public void addNewClient(Client c) { this.clientList.add(c); }
 
-  public void sendCommand(ClientCommands command, String msg) {
-    String jsonMsg = createJSON(command, msg);
+  public void sendCommand(ServerCommands command, String msg) {
+    String jsonMsg = createJSON(command.toString(), msg);
 //    if (getMyPublicIP().equals(DEFAULT_SERVER_IP)) server.sendMsg(jsonMsg);
 //    else
 //      for (Client c : clientList) {
@@ -67,10 +67,10 @@ public class NetworkManager {
     }
   }
 
-  public String createJSON(ClientCommands command, String msg) {
+  public String createJSON(String command, String msg) {
 
     JSONObject message = new JSONObject();
-    message.put("command", command.toString());
+    message.put("command", command);
     message.put("message", msg);
     message.put("IP", getMyPublicIP());
     return message.toString();
@@ -146,20 +146,19 @@ public class NetworkManager {
       String ip = jsonObject.get("IP").toString();
       System.out.println(message);
       switch (c) {
-//        case CHATWAIT:
-//          if (!msg.equals("")) ChatScreen.addMessageToGui(message);
-//          if (Server.amIServer()) {
-//
-//            }
-//          }
-//          break;
 
-    //    case CHATGAME:
         case GAMESTATE:
-    //    case SAVE:
           for (ClientHandler mc : Server.getClientThreads().values()) {
             mc.dout.writeUTF(msg);
           }
+          break;
+
+        case ADDMSG:
+          break;
+
+        case SAVE:
+          CreateNewGameManager.loadGameFromString(message);
+          DBHandler.saveBoardToDB(BoardManager.getInstance().getGameName());
           break;
 
         case SEND_NEWLY_CREATED_BOARD:
@@ -168,11 +167,7 @@ public class NetworkManager {
             CreateNewGameManager.loadGameFromString(message);
             Server.getServer().setFireFighterAssignArray();
             Server.getServer().assignFireFighterToClient(ip);
-//            if (ip.equals(NetworkManager.getInstance().getMyPublicIP())) {
-//              BoardScreen.setBoardScreen();
-//            } else {
-              Server.getServer().sendMsgSpecificClient(ip, ServerCommands.SETBOARDSCREEN, "");
-//            }
+            Server.getServer().sendMsgSpecificClient(ip, ClientCommands.SETBOARDSCREEN, "");
           }
           break;
 
@@ -181,24 +176,24 @@ public class NetworkManager {
             instance.server.closeServer(); // disconnect all the clients
           break;
 
-      /*  case DISCONNECTCLIENT:
+        case DISCONNECTCLIENT:
           if (instance.getMyPublicIP().equals(DEFAULT_SERVER_IP))
             instance.server.closeClient(); // disconnect clients
-          break; */
-
-      /*  case ASK_TO_GET_ASSIGN_FIREFIGHTER:
-          Server.getServer().assignFireFighterToClient(ip);
-          break; */
-
-        case ASSIGN_FIREFIGHTER:
-          User.getInstance().assignFireFighter(FireFighterColor.fromString(message));
           break;
 
-      /*  case EXITGAME:
+        case ASK_TO_GET_ASSIGN_FIREFIGHTER:
+          Server.getServer().assignFireFighterToClient(ip);
+          break;
+
+        case EXITGAME:
           Server.getServer().changeLoadedStatus(false);
           for (ClientHandler mc : Server.getClientThreads().values()) {
+            //TODO: if client is in the game let him exit
             mc.dout.writeUTF(msg);
           }
+          break;
+
+        case LOADGAME:
           break;
 
         case JOIN:
@@ -207,14 +202,14 @@ public class NetworkManager {
                 && Server.getServer().getLoadedOrCreatedStatus()) {
               Server.getServer().assignFireFighterToClient(ip);
               Server.getServer()
-                  .sendMsgSpecificClient(ip, ServerCommands.GAMESTATE, DBHandler.getBoardAsString());
-              Server.getServer().sendMsgSpecificClient(ip, ServerCommands.SETBOARDSCREEN, "");
+                  .sendMsgSpecificClient(ip, ClientCommands.GAMESTATE, DBHandler.getBoardAsString());
+              Server.getServer().sendMsgSpecificClient(ip, ClientCommands.SETBOARDSCREEN, "");
             }
-          } else if (Server.getServer().getLoadedOrCreatedStatus() && !Server.getServer().isEmpty()) {
-              Server.getServer().assignFireFighterToClient(ip);
-              BoardScreen.setBoardScreen();
+//          } else if (Server.getServer().getLoadedOrCreatedStatus() && !Server.getServer().isEmpty()) {
+//              Server.getServer().assignFireFighterToClient(ip);
+//              BoardScreen.setBoardScreen();
             }
-          break; */
+          break;
 
         default:
       }
@@ -229,18 +224,14 @@ public class NetworkManager {
       JSONParser parser = new JSONParser();
 
       JSONObject jsonObject = (JSONObject) parser.parse(msg);
-      ServerCommands c = ServerCommands.fromString(jsonObject.get("command").toString());
+      ClientCommands c = ClientCommands.fromString(jsonObject.get("command").toString());
       String message = jsonObject.get("message").toString();
       String ip = jsonObject.get("IP").toString();
       System.out.println(message);
       switch (c) {
-        /*case CHATWAIT:
-          if (!msg.equals("")) ChatScreen.addMessageToGui(message);
-          break;
-
-        case CHATGAME:
-          if (!message.equals("")) BoardChatFragment.addMessageToGui(message);
-          break; */
+//        case CHATGAME:
+//          if (!message.equals("")) BoardChatFragment.addMessageToGui(message);
+//          break;
 
         case GAMESTATE:
           // Transfer the redraw call to the main thread (that has openGL and GDX)
@@ -254,20 +245,11 @@ public class NetworkManager {
                   });
           break;
 
-       /* case SAVE:
-          CreateNewGameManager.loadGameFromString(message);
-          DBHandler.saveBoardToDB(BoardManager.getInstance().getGameName());
-          break;
-
-        case ASK_TO_GET_ASSIGN_FIREFIGHTER:
-          Server.getServer().assignFireFighterToClient(ip);
-          break; */
-
         case ASSIGN_FIREFIGHTER:
           User.getInstance().assignFireFighter(FireFighterColor.fromString(message));
           break;
 
-    /*    case EXITGAME:
+        case EXITGAME:
           Gdx.app.postRunnable(
                   new Runnable() {
                     @Override
@@ -275,7 +257,7 @@ public class NetworkManager {
                       BoardScreen.setLobbyPage();
                     }
                   });
-          break;  */
+          break;
 
         case SETBOARDSCREEN:
           Gdx.app.postRunnable(
