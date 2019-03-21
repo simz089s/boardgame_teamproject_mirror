@@ -85,7 +85,6 @@ public enum Actions {
 
   public static List<Actions> hazmatTechnicianActions() {
     List<Actions> list = advancedActions();
-    list.remove(MOVE_WITH_HAZMAT);
     list.add(REMOVE_HAZMAT);
     return list;
   }

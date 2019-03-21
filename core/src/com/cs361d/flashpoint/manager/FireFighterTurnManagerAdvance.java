@@ -51,8 +51,11 @@ public class FireFighterTurnManagerAdvance extends FireFighterTurnManager {
       FireFighterAdvanced last = (FireFighterAdvanced) FIREFIGHTERS.removeFirst();
       last.removeVeteranBonus();
       FIREFIGHTERS.addLast(last);
+      last.firstTurnDone();
       BoardManager.getInstance().endTurnFireSpread();
-      last.resetActionPoints();
+      if (!getCurrentFireFighter().isFirstTurn()) {
+        getCurrentFireFighter().resetActionPoints();
+      }
       sendChangeToNetwork();
     } else {
       sendMessageToGui("You cannot end turn as you are currently on a tile with fire");
@@ -93,6 +96,9 @@ public class FireFighterTurnManagerAdvance extends FireFighterTurnManager {
     }
     if (f.treatVictimAP()) {
       f.getTile().getVictim().cure();
+    }
+    else {
+      sendMessageToGui("You do not have enough AP to treat the victim need at least 1");
     }
   }
 
@@ -180,6 +186,7 @@ public class FireFighterTurnManagerAdvance extends FireFighterTurnManager {
           }
         }
         verifyVeteranVacintyToAddAp();
+        flipAdjacentPOIForRescueDog();
         sendChangeToNetwork();
       } else {
         sendMessageToGui(
@@ -191,23 +198,9 @@ public class FireFighterTurnManagerAdvance extends FireFighterTurnManager {
 
   @Override
   public void moveWithVictim(Direction d) {
-    if (canMoveWithVictim(d)) {
-      FireFighter f = getCurrentFireFighter();
-      if (f.moveWithVictimAP()) {
-        AbstractVictim v = f.getTile().getVictim();
-        Tile oldTile = f.getTile();
-        Tile newTile = oldTile.getAdjacentTile(d);
-        oldTile.setNullVictim();
-        newTile.setVictim(v);
-        f.setTile(newTile);
-        verifyVeteranVacintyToAddAp();
-        if (!BoardManager.getInstance().verifyVictimRescueStatus(newTile)) {
-          sendChangeToNetwork();
-        }
-      } else {
-        sendMessageToGui("You need 2 AP to move with a victim");
-      }
-    }
+    super.moveWithVictim(d);
+    verifyVeteranVacintyToAddAp();
+    flipAdjacentPOIForRescueDog();
   }
 
   public String[] getAvailableSpecialities() {
@@ -225,6 +218,109 @@ public class FireFighterTurnManagerAdvance extends FireFighterTurnManager {
       return !getCurrentFireFighter().hasSpeciality(FireFighterAdvanceSpecialities.NO_SPECIALITY);
     }
 
+    private boolean canMoveWithHazmat(Direction d) {
+      Tile currentTile = getCurrentFireFighter().getTile();
+      if (!currentTile.hasHazmat()) {
+        sendMessageToGui("The tile does not contain a hazmat");
+        return false;
+      }
+      else if (currentTile.hasObstacle(d)) {
+        sendMessageToGui("You cannot move to that direction as there is an obstacle in the way");
+        return false;
+      }
+      else if (currentTile.getAdjacentTile(d).hasFire()) {
+        sendMessageToGui("You cannot move a hazmat into fire");
+        return false;
+      }
+      else if (currentTile.getAdjacentTile(d).hasHazmat()) {
+        sendMessageToGui("The tile you want to move the hazmat to already has a hazmat");
+        return false;
+      }
+      else {
+        return true;
+      }
+
+    }
+
+    public void disposeHazmat() {
+      Tile currentTile = getCurrentFireFighter().getTile();
+      HazmatTechnician h = (HazmatTechnician) getCurrentFireFighter();
+      if (h == null) {
+        sendMessageToGui("You are not the Hazmat technician");
+      }
+      else if (!currentTile.hasHazmat()) {
+        sendMessageToGui("The current tile does not have a hazmat");
+      }
+      else if(h.removeHazmatAp()) {
+        currentTile.setHasHazmat(false);
+      }
+      else {
+        sendMessageToGui("You do not have enough AP require 2 for that task");
+      }
+    }
+
+    public void flipPOI(Tile t) {
+      ImagingTechnician i = (ImagingTechnician) getCurrentFireFighter();
+      if (i == null) {
+        sendMessageToGui("You are not the imaging technician");
+      }
+      else if (!t.hasPointOfInterest() || t.getVictim().isRevealed()) {
+        sendMessageToGui("The victim is already revealed");
+      }
+      else if (i.flipPOIAP()) {
+        if (t.getVictim().isFalseAlarm()) {
+          t.setNullVictim();
+        }
+        else {
+          t.getVictim().reveal();
+        }
+      }
+      else {
+        sendMessageToGui("You need 1 AP to perform that action");
+      }
+    }
+
+    public void moveWithHazmat(Direction d) {
+      if (canMoveWithHazmat(d)) {
+        if (getCurrentFireFighter().moveWithHazmatAp()) {
+          Tile currentTile =getCurrentFireFighter().getTile();
+          currentTile.setHasHazmat(false);
+          Tile adjacent = currentTile.getAdjacentTile(d);
+          adjacent.setHasHazmat(true);
+          getCurrentFireFighter().setTile(adjacent);
+          verifyHazmatRemovalStatus(adjacent);
+          verifyVeteranVacintyToAddAp();
+        }
+        else {
+          sendMessageToGui("You do not have enough AP to move the Hazmat 2 AP required");
+        }
+      }
+    }
+
+    public void verifyHazmatRemovalStatus(Tile t) {
+      int i = t.getI();
+      int j = t.getJ();
+      if (i == 0 || i == 7 || j == 0 || j == 9) {
+        t.setHasHazmat(false);
+      }
+    }
+
+    private void flipAdjacentPOIForRescueDog() {
+      if (getCurrentFireFighter() instanceof RescueDog) {
+        Tile currentTile = getCurrentFireFighter().getTile();
+        for (Direction d : Direction.values()) {
+          if (d != Direction.NODIRECTION) {
+            Tile adjacent = currentTile.getAdjacentTile(d);
+            if (adjacent.hasPointOfInterest() && adjacent.getVictim().isFalseAlarm()) {
+              adjacent.setNullVictim();
+            }
+            else if (adjacent.hasPointOfInterest()) {
+              adjacent.getVictim().reveal();
+            }
+          }
+        }
+      }
+    }
   //TODO
   // verify the veteran vacinity at the begining of each turn;
   // Flip the markes in ajacentSpace

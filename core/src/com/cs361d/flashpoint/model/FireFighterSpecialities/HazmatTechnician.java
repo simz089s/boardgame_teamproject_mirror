@@ -15,4 +15,14 @@ public class HazmatTechnician extends FireFighterAdvanced {
   public List<Actions> getActions() {
     return Actions.hazmatTechnicianActions();
   }
+
+  public boolean removeHazmatAp() {
+    if (actionPoints < 2) {
+      return false;
+    }
+    else {
+      actionPoints -= 2;
+      return true;
+    }
+  }
 }

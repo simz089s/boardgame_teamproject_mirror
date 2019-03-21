@@ -14,4 +14,14 @@ public class ImagingTechnician extends FireFighterAdvanced {
   public List<Actions> getActions() {
     return Actions.imagingTechnicianActions();
   }
+
+  public boolean flipPOIAP() {
+    if (actionPoints < 1) {
+      return false;
+    }
+    else {
+      actionPoints--;
+      return true;
+    }
+  }
 }
