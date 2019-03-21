@@ -127,7 +127,7 @@ public class BoardScreen extends FlashPointScreen {
                   public void clicked(InputEvent event, float x, float y) {
 
                     // some boolean checks for advanced version
-                    boolean isAdvancedVersion = BoardManager.getInstance().isAdvance();
+                    boolean isAdvancedVersion = BoardManager.getInstance().isAdvanced();
                     boolean hasNoSpecialty = isAdvancedVersion &&
                             !((FireFighterTurnManagerAdvance) FireFighterTurnManagerAdvance.getInstance()).currentHasSpeciality();
                     boolean isAmbulanceNotSet = isAdvancedVersion;
@@ -222,9 +222,9 @@ public class BoardScreen extends FlashPointScreen {
     boardGameInfoLabel.drawGameInfoLabel();
     drawGameUnitsOnTile();
 
-    boolean isAmbulanceNotSet = BoardManager.getInstance().isAdvance();
+    boolean isAmbulanceNotSet = BoardManager.getInstance().isAdvanced();
     //TODO && !((BoardManagerAdvanced) BoardManagerAdvanced.getInstance()).gameHasAmbulance();
-    boolean isEngineNotSet = BoardManager.getInstance().isAdvance();
+    boolean isEngineNotSet = BoardManager.getInstance().isAdvanced();
     //TODO && !((BoardManagerAdvanced) BoardManagerAdvanced.getInstance()).gameHasEngine();
 
     if(isAmbulanceNotSet || isEngineNotSet){
