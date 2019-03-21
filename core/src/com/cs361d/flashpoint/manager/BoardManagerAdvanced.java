@@ -6,6 +6,7 @@ import com.cs361d.flashpoint.model.FireFighterSpecialities.FireFighterAdvanced;
 import com.cs361d.flashpoint.screen.BoardDialog;
 import com.cs361d.flashpoint.screen.BoardScreen;
 
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -123,7 +124,8 @@ public class BoardManagerAdvanced extends BoardManager {
       //      throw new IllegalArgumentException("A fireFighter on the board must have a role");
     }
     FireFighterAdvanced f = FireFighterAdvanced.createFireFighter(color, role);
-    FireFighterTurnManagerAdvance fta = (FireFighterTurnManagerAdvance) (FireFighterTurnManager.getInstance());
+    FireFighterTurnManagerAdvance fta =
+        (FireFighterTurnManagerAdvance) (FireFighterTurnManager.getInstance());
     fta.removeSpecilty(role);
     f.setActionPoint(actionPoints);
     f.setSpecialActionPoints(specialApPoints);
@@ -275,5 +277,155 @@ public class BoardManagerAdvanced extends BoardManager {
       }
     }
     return false;
+  }
+
+  public List<Tile> getTilesThatCanContainAmbulance(Direction d) {
+    List<Tile> list = new ArrayList<Tile>(2);
+    switch (d) {
+      case TOP:
+        for (int j = 0; j < COLUMNS; j++) {
+          if (TILE_MAP[0][j].canContainAmbulance()) {
+            list.add(TILE_MAP[0][j]);
+          }
+        }
+        break;
+      case BOTTOM:
+        for (int j = 0; j < COLUMNS; j++) {
+          if (TILE_MAP[ROWS-1][j].canContainAmbulance()) {
+            list.add(TILE_MAP[ROWS-1][j]);
+          }
+        }
+        break;
+      case LEFT:
+        for (int i = 0; i < ROWS; i++) {
+          if (TILE_MAP[i][0].canContainAmbulance()) {
+            list.add(TILE_MAP[i][0]);
+          }
+        }
+        break;
+      case RIGHT:
+        for (int i = 0; i < ROWS; i++) {
+          if (TILE_MAP[i][COLUMNS-1].canContainAmbulance()) {
+            list.add(TILE_MAP[i][COLUMNS-1]);
+          }
+        }
+        break;
+      default:
+        throw new IllegalArgumentException("This direction is invalid here: " + d);
+    }
+    if (list.size() < 2) {
+      throw new IllegalArgumentException("The list must be of a size greater than 1");
+    }
+    return list;
+  }
+
+  public List<Tile> getTilesThatCanContainFireTruck(Direction d) {
+    List<Tile> list = new ArrayList<Tile>(2);
+    switch (d) {
+      case TOP:
+        for (int j = 0; j < COLUMNS; j++) {
+          if (TILE_MAP[0][j].canContainFireTruck()) {
+            list.add(TILE_MAP[0][j]);
+          }
+        }
+        break;
+      case BOTTOM:
+        for (int j = 0; j < COLUMNS; j++) {
+          if (TILE_MAP[ROWS-1][j].canContainFireTruck()) {
+            list.add(TILE_MAP[ROWS-1][j]);
+          }
+        }
+        break;
+      case LEFT:
+        for (int i = 0; i < ROWS; i++) {
+          if (TILE_MAP[i][0].canContainFireTruck()) {
+            list.add(TILE_MAP[i][0]);
+          }
+        }
+        break;
+      case RIGHT:
+        for (int i = 0; i < ROWS; i++) {
+          if (TILE_MAP[i][COLUMNS-1].canContainFireTruck()) {
+            list.add(TILE_MAP[i][COLUMNS-1]);
+          }
+        }
+        break;
+      default:
+        throw new IllegalArgumentException("This direction is invalid here: " + d);
+    }
+    if (list.size() < 2) {
+      throw new IllegalArgumentException("The list must be of a size greater than 1");
+    }
+    return list;
+  }
+
+  public List<Tile> getTilesThatContainFireTruck() {
+    List<Tile> list = new ArrayList<Tile>(2);
+    for (int i = 0; i < ROWS; i++) {
+      for (int j = 0; j < COLUMNS; j++) {
+        if (TILE_MAP[i][j].hasFireTruck()) {
+          list.add(TILE_MAP[i][j]);
+        }
+      }
+    }
+    if (list.size() != 2) {
+      throw new IllegalArgumentException("The list must be exactly equal to 2 size found: " + list.size());
+    }
+    return list;
+  }
+
+  public List<Tile> getTilesThatContainAmbulance() {
+    List<Tile> list = new ArrayList<Tile>(2);
+    for (int i = 0; i < ROWS; i++) {
+      for (int j = 0; j < COLUMNS; j++) {
+        if (TILE_MAP[i][j].hasFireTruck()) {
+          list.add(TILE_MAP[i][j]);
+        }
+      }
+    }
+    if (list.size() != 2) {
+      throw new IllegalArgumentException("The list must be exactly equal to 2 size found: " + list.size());
+    }
+    return list;
+  }
+
+  public Direction ambulanceLocationSide() {
+    List<Tile> list = getTilesThatContainAmbulance();
+    int i = list.get(0).getI();
+    int j = list.get(0).getJ();
+    if ( i == 0) {
+      return Direction.TOP;
+    }
+    else if (i == ROWS-1) {
+      return Direction.BOTTOM;
+    }
+    else if (j == 0) {
+      return Direction.LEFT;
+    }
+    else {
+      return Direction.RIGHT;
+    }
+  }
+
+  public Direction fireTruckLocationSide() {
+    List<Tile> list = getTilesThatContainFireTruck();
+    int i = list.get(0).getI();
+    int j = list.get(0).getJ();
+    if ( i == 0) {
+      return Direction.TOP;
+    }
+    else if (i == ROWS-1) {
+      return Direction.BOTTOM;
+    }
+    else if (j == 0) {
+      return Direction.LEFT;
+    }
+    else {
+      return Direction.RIGHT;
+    }
+  }
+
+  public static BoardManagerAdvanced getInstance() {
+    return (BoardManagerAdvanced) instance;
   }
 }
