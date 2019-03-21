@@ -14,8 +14,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.cs361d.flashpoint.manager.*;
 import com.cs361d.flashpoint.model.BoardElements.Direction;
-import com.cs361d.flashpoint.networking.Commands;
-import com.cs361d.flashpoint.networking.NetworkManager;
 
 import java.util.ArrayList;
 
@@ -35,7 +33,7 @@ public class BoardMovesPanel {
   Stage stage;
   BoardDialog boardDialog;
   BoardGameInfoLabel boardGameInfoLabel;
-  BoardChooseRolePanel boardChooseRolePanel;
+  BoardChooseSpecialtyPanel boardChooseRolePanel;
   FireFighterTurnManager fireFighterTurnManager = FireFighterTurnManager.getInstance();
 
   ArrayList<ScrollPane> movesList = new ArrayList<ScrollPane>();
@@ -47,7 +45,7 @@ public class BoardMovesPanel {
     this.stage = stage;
     this.boardGameInfoLabel = boardGameInfoLabel;
     boardDialog = new BoardDialog(stage);
-    boardChooseRolePanel = new BoardChooseRolePanel(stage);
+    boardChooseRolePanel = new BoardChooseSpecialtyPanel(stage);
   }
 
   private void performDirectionMove(String move, Direction direction) {
@@ -150,7 +148,7 @@ public class BoardMovesPanel {
 
               } else if (moveSelected.equals("CREW CHANGE")) {
                 removeMovesAndDirectionsPanel();
-                boardChooseRolePanel.drawChooseRolePanel();
+                boardChooseRolePanel.drawChooseSpecialtyPanel();
 
               } else if (moveSelected.equals("SAVE")) {
                 DBHandler.saveBoardToDB(BoardManager.getInstance().getGameName());
@@ -175,8 +173,7 @@ public class BoardMovesPanel {
 
     ImageButton btnDirectionU = new ImageButton(getTextureForDirectionTable(Direction.TOP));
     ImageButton btnDirectionD = new ImageButton(getTextureForDirectionTable(Direction.BOTTOM));
-    ImageButton btnDirectionCurr =
-        new ImageButton(getTextureForDirectionTable(Direction.NODIRECTION));
+    ImageButton btnDirectionCurr = new ImageButton(getTextureForDirectionTable(Direction.NODIRECTION));
     ImageButton btnDirectionL = new ImageButton(getTextureForDirectionTable(Direction.LEFT));
     ImageButton btnDirectionR = new ImageButton(getTextureForDirectionTable(Direction.RIGHT));
 
@@ -330,6 +327,6 @@ public class BoardMovesPanel {
 
     removeTableDirectionsPanel();
 
-    boardChooseRolePanel.removeChooseRolePanel();
+    boardChooseRolePanel.removeChooseSpecialtyPanel();
   }
 }
