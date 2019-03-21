@@ -258,7 +258,7 @@ public class BoardManagerAdvanced extends BoardManager {
     return false;
   }
 
-  public boolean hasFireTruck() {
+  public boolean hasFireTruckPlaced() {
     for (int i = 0; i < ROWS; i++) {
       for (int j = 0; j < COLUMNS; j++) {
         if (TILE_MAP[i][j].hasFireTruck()) {

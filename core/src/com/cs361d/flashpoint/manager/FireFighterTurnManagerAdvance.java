@@ -33,7 +33,7 @@ public class FireFighterTurnManagerAdvance extends FireFighterTurnManager {
   public boolean setInitialSpeciality(FireFighterAdvanceSpecialities speciality) {
     if (FREESPECIALITIES.remove(speciality)) {
       FireFighter f = FIREFIGHTERS.removeFirst();
-      if (((FireFighterAdvanced) f).getSpeciality() == FireFighterAdvanceSpecialities.NO_SPECIALITY) {
+      if (((FireFighterAdvanced) f).getSpeciality() != FireFighterAdvanceSpecialities.NO_SPECIALITY) {
         throw new IllegalArgumentException("This fireFighter already has a speciality");
       }
       FIREFIGHTERS.addFirst(FireFighterAdvanced.createFireFighter(f.getColor(), speciality));

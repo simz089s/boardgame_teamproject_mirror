@@ -130,10 +130,10 @@ public class BoardScreen extends FlashPointScreen {
                     boolean isAdvancedVersion = BoardManager.getInstance().isAdvanced();
                     boolean hasNoSpecialty = isAdvancedVersion &&
                             !((FireFighterTurnManagerAdvance) FireFighterTurnManagerAdvance.getInstance()).currentHasSpeciality();
-                    boolean isAmbulanceNotSet = isAdvancedVersion;
-                    //TODO && !((BoardManagerAdvanced) BoardManagerAdvanced.getInstance()).gameHasAmbulance();
-                    boolean isEngineNotSet = isAdvancedVersion;
-                    //TODO && !((BoardManagerAdvanced) BoardManagerAdvanced.getInstance()).gameHasEngine();
+                    boolean isAmbulanceNotSet = isAdvancedVersion
+                            && !((BoardManagerAdvanced) BoardManagerAdvanced.getInstance()).hasAmbulancePlaced();
+                    boolean isEngineNotSet = isAdvancedVersion
+                            && !((BoardManagerAdvanced) BoardManagerAdvanced.getInstance()).hasFireTruckPlaced();
 
                     // set init vehicles position
                     if (isAmbulanceNotSet && DBHandler.isPresentInArr(getAmbulanceClickableTiles(), i_pos + "-" + j_pos)){
@@ -218,10 +218,10 @@ public class BoardScreen extends FlashPointScreen {
     boardGameInfoLabel.drawGameInfoLabel();
     drawGameUnitsOnTile();
 
-    boolean isAmbulanceNotSet = BoardManager.getInstance().isAdvanced();
-    //TODO && !((BoardManagerAdvanced) BoardManagerAdvanced.getInstance()).gameHasAmbulance();
-    boolean isEngineNotSet = BoardManager.getInstance().isAdvanced();
-    //TODO && !((BoardManagerAdvanced) BoardManagerAdvanced.getInstance()).gameHasEngine();
+    boolean isAmbulanceNotSet = BoardManager.getInstance().isAdvanced()
+            && !((BoardManagerAdvanced) BoardManagerAdvanced.getInstance()).hasAmbulancePlaced();
+    boolean isEngineNotSet = BoardManager.getInstance().isAdvanced()
+            && !((BoardManagerAdvanced) BoardManagerAdvanced.getInstance()).hasFireTruckPlaced();
 
     if(isAmbulanceNotSet || isEngineNotSet){
       boardDialog.drawDialog("Ambulance position", "Choose the ambulance's initial position (green tiles).");

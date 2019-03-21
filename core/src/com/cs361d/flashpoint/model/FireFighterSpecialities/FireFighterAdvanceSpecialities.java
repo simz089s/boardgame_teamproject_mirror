@@ -2,13 +2,13 @@ package com.cs361d.flashpoint.model.FireFighterSpecialities;
 
 public enum FireFighterAdvanceSpecialities {
     PARAMEDIC("paramedic"),
-    FIRE_CAPTAIN("fire_captain"),
-    IMAGING_TECHNICIAN("imaging_technician"),
-    CAFS_FIREFIGHTER("cafs_firefighter"),
-    HAZMAT_TECHNICIAN("hazmat_technician"),
+    FIRE_CAPTAIN("fire captain"),
+    IMAGING_TECHNICIAN("imaging technician"),
+    CAFS_FIREFIGHTER("cafs firefighter"),
+    HAZMAT_TECHNICIAN("hazmat technician"),
     GENERALIST("generalist"),
-    RESCUE_SPECIALIST("rescue_specialist"),
-    RESCUE_DOG("rescue_dog"),
+    RESCUE_SPECIALIST("rescue specialist"),
+    RESCUE_DOG("rescue dog"),
     VETERAN("veteran"),
     DRIVER("driver"),
     NO_SPECIALITY("NO_SPECIALITY");

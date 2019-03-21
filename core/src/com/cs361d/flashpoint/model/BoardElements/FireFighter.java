@@ -17,10 +17,10 @@ public class FireFighter {
   protected int actionPoints;
   protected Tile currentTile;
   protected FireFighter(FireFighterColor color, int actionPoints) {
-    if (actionPoints > maxActionPoint) {
-      throw new IllegalStateException(
-          "Action points cannot exceed " + maxActionPoint + " was: " + actionPoints);
-    }
+//    if (actionPoints > maxActionPoint) {
+//      throw new IllegalStateException(
+//          "Action points cannot exceed " + maxActionPoint + " was: " + actionPoints);
+//    }
     this.color = color;
     this.actionPoints = actionPoints;
   }
