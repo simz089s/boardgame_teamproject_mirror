@@ -14,6 +14,7 @@ import com.cs361d.flashpoint.model.FireFighterSpecialities.FireFighterAdvanceSpe
 
 import java.util.ArrayList;
 
+import static com.cs361d.flashpoint.screen.BoardScreen.boardGameInfoLabel;
 import static com.cs361d.flashpoint.screen.BoardScreen.boardMovesPanel;
 import static com.cs361d.flashpoint.screen.FlashPointScreen.skinUI;
 
@@ -92,6 +93,7 @@ public class BoardChooseSpecialtyPanel {
                                     .crewChange(FireFighterAdvanceSpecialities.fromString(specialtySelected));
 
                             boardMovesPanel.drawMovesAndDirectionsPanel();
+                            boardGameInfoLabel.drawGameInfoLabel();
                         }
 
                         removeChooseSpecialtyPanel();

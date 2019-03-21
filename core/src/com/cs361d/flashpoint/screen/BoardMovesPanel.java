@@ -73,8 +73,10 @@ public class BoardMovesPanel {
         case MOVE_WITH_HAZMAT:
           fireFighterTurnManagerAdvance.moveWithHazmat(direction);
           break;
-        case DRIVE_FIRETRUCK:
-        case DRIVE_AMBULANCE:
+        case DRIVE_FIRETRUCK: //TODO
+          break;
+        case DRIVE_AMBULANCE: //TODO
+          break;
         default:
       }
     }
@@ -146,11 +148,8 @@ public class BoardMovesPanel {
                     e.printStackTrace();
                   }
 
-                  clearAllGameUnits();
-                  drawGameUnitsOnTile();
-                  boardGameInfoLabel.drawGameInfoLabel();
-                  removeAllPrevFragments();
-                  boardMovesPanel.drawMovesAndDirectionsPanel();
+                  redrawAfterNoDirectionMoves();
+
                   break;
                 case SAVE:
                   DBHandler.saveBoardToDB(BoardManager.getInstance().getGameName());
@@ -174,11 +173,15 @@ public class BoardMovesPanel {
                   case DRIVE_FIRETRUCK:
                     drawDirectionsPanelTable(move);
                     break;
-                  case REMOVE_HAZMAT: //TODO
+                  case REMOVE_HAZMAT:
+                    fireFighterTurnManagerAdvance.disposeHazmat();
+                    redrawAfterNoDirectionMoves();
                     break;
                   case FLIP_POI: //TODO
                     break;
-                  case CURE_VICTIM: //TODO
+                  case CURE_VICTIM:
+                    fireFighterTurnManagerAdvance.treatVictim();
+                    redrawAfterNoDirectionMoves();
                     break;
                   case CREW_CHANGE:
                     removeMovesAndDirectionsPanel();
@@ -212,7 +215,7 @@ public class BoardMovesPanel {
     directionTable = new Table();
 
     directionTable.add();
-    if (move != Actions.DRIVE_AMBULANCE && move != Actions.DRIVE_FIRETRUCK) { //TODO: test
+    if (move != Actions.DRIVE_AMBULANCE && move != Actions.DRIVE_FIRETRUCK) {
       directionTable.add(btnDirectionU).size(DIRECTION_BUTTON_SIZE, DIRECTION_BUTTON_SIZE);
     }
     directionTable.add();
@@ -294,6 +297,14 @@ public class BoardMovesPanel {
 
     directionsTableList.add(directionTable);
     stage.addActor(directionTable);
+  }
+
+  private void redrawAfterNoDirectionMoves() {
+    clearAllGameUnits();
+    drawGameUnitsOnTile();
+    boardGameInfoLabel.drawGameInfoLabel();
+    removeAllPrevFragments();
+    boardMovesPanel.drawMovesAndDirectionsPanel();
   }
 
   // helper
