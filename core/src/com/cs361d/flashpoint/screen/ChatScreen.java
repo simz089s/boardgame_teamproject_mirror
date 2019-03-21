@@ -136,7 +136,7 @@ public class ChatScreen extends FlashPointScreen {
 //                        {
 //                            c.substring(command[0].length()));
 //                        }
-                        myNetwork.sendCommand(ServerCommands.CHATWAIT,messageInputed); //send message over network
+           //             myNetwork.sendCommand(ServerCommands.CHATWAIT,messageInputed); //send message over network
 //                        msgs.add("Jacques:  " + messageInputed);
 //                        String[] newMsg = msgs.toArray(new String[msgs.size()]);
 //                        lstMsg.setItems(newMsg);
