@@ -22,6 +22,7 @@ class ClientHandler implements Runnable {
         this.isloggedin=true;
     }
 
+    public void stopServerWriteToClientThread() { notStopped = false; }
 
 
     @Override
