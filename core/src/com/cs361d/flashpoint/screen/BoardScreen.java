@@ -620,6 +620,8 @@ public class BoardScreen extends FlashPointScreen {
           public void clicked(InputEvent event, float x, float y) {
             removeAllPrevFragments();
             boardChatFragment.createChatFragment();
+            NetworkManager.getInstance().sendCommand(ServerCommands.GET_CHAT_MESSAGES,"");
+
           }
         });
 

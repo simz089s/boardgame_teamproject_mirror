@@ -12,8 +12,8 @@ public enum ClientCommands //Commands sent to client
 //    JOIN("join"),
     SETBOARDSCREEN("SETBOARDSCREEN"),
     EXITGAME("EXIT_GAME"),
-    SEND_CHAT_MESSAGES("SEND_MSG");
-
+    SEND_CHAT_MESSAGES("SEND_CHAT_MESSAGES"),
+    ADD_CHAT_MESSAGE ("ADD_CHAT_MESSAGE");
     private String text;
 
     ClientCommands(String text) {

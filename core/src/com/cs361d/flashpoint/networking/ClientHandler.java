@@ -40,13 +40,7 @@ class ClientHandler implements Runnable {
         {
             try
             {
-                String newMsg = din.readUTF();
-                // Don`t send the same string more than once
-                if (messageToSend.equals(newMsg))
-                {
-                    continue;
-                }
-                messageToSend = newMsg;
+                messageToSend = din.readUTF();
                 System.out.println(messageToSend);
 
                 NetworkManager.serverExecuteCommand(messageToSend);

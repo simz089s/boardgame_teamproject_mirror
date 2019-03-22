@@ -15,8 +15,8 @@ public enum ServerCommands
     LOADGAME("LOAD_GAME"),
 //    SETBOARDSCREEN("SETBOARDSCREEN"),
     EXITGAME("exitgame"),
-    ADD_CHAT_MESSAGE("ADD_MSG"),
-    GET_CHAT_MESSAGES("GET_MSG");
+    ADD_CHAT_MESSAGE("ADD_CHAT_MESSAGE"),
+    GET_CHAT_MESSAGES("GET_CHAT_MESSAGES");
 
     private String text;
 

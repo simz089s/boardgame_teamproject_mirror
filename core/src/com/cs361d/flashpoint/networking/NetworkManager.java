@@ -220,7 +220,7 @@ private static HashMap<String, Client> clientList = new HashMap<String, Client>(
 
       JSONObject jsonObject = (JSONObject) parser.parse(msg);
       ClientCommands c = ClientCommands.fromString(jsonObject.get("command").toString());
-      String message = jsonObject.get("message").toString();
+      final String message = jsonObject.get("message").toString();
       String ip = jsonObject.get("IP").toString();
       System.out.println(message);
       switch (c) {
@@ -262,6 +262,7 @@ private static HashMap<String, Client> clientList = new HashMap<String, Client>(
                       BoardScreen.setBoardScreen();
                     }
                   });
+          break;
         case SEND_CHAT_MESSAGES:
           Gdx.app.postRunnable(
                   new Runnable() {
@@ -283,6 +284,19 @@ private static HashMap<String, Client> clientList = new HashMap<String, Client>(
                     });
           }
           break;
+
+          case ADD_CHAT_MESSAGE:
+            if (!message.equals("")) {
+               Gdx.app.postRunnable(
+                 new Runnable() {
+                   @Override
+                   public void run() {
+//                      if (BoardScreen.isChatFragment())
+                     BoardChatFragment.addMessageToChat(message);
+                   }
+                 });
+              }
+              break;
 
         default:
       }
