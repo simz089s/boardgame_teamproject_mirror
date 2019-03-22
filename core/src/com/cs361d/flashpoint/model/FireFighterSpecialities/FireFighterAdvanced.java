@@ -6,6 +6,7 @@ import com.cs361d.flashpoint.model.BoardElements.FireFighter;
 import com.cs361d.flashpoint.model.BoardElements.FireFighterColor;
 import com.cs361d.flashpoint.model.BoardElements.Tile;
 import com.cs361d.flashpoint.screen.Actions;
+import com.cs361d.flashpoint.screen.BoardScreen;
 
 import java.util.HashMap;
 import java.util.List;
@@ -89,7 +90,8 @@ public abstract class FireFighterAdvanced extends FireFighter {
       return true;
     } else if (!(o instanceof FireFighterAdvanced)) {
       return false;
-    } else if (((FireFighterAdvanced) o).SPECIALITY == FireFighterAdvanceSpecialities.NO_SPECIALITY) {
+    } else if (((FireFighterAdvanced) o).SPECIALITY
+        == FireFighterAdvanceSpecialities.NO_SPECIALITY) {
       return false;
     }
 
@@ -105,16 +107,13 @@ public abstract class FireFighterAdvanced extends FireFighter {
     FireFighterAdvanced f;
     if (FIREFIGHTERS.containsKey(color)) {
       f = FIREFIGHTERS.get(color);
-      if (!f.hasSpeciality(role)) {
-      } else {
+      if (f.hasSpeciality(role)) {
         return f;
       }
     }
     if (role == FireFighterAdvanceSpecialities.NO_SPECIALITY) {
       f = new Default(color);
     } else {
-      FireFighterTurnManagerAdvance tm =
-          (FireFighterTurnManagerAdvance) FireFighterTurnManager.getInstance();
       switch (role) {
         case GENERALIST:
           f = new Generalist(color);
@@ -157,6 +156,7 @@ public abstract class FireFighterAdvanced extends FireFighter {
   public boolean getHadVeteranBonus() {
     return hadVeteranBonus;
   }
+
   @Override
   public void resetActionPoints() {
     this.actionPoints += actionsPointPerTurn;
@@ -207,8 +207,7 @@ public abstract class FireFighterAdvanced extends FireFighter {
   public boolean fireTheDeckGunAp() {
     if (actionPoints < 4) {
       return false;
-    }
-    else {
+    } else {
       actionPoints -= 4;
       return true;
     }
@@ -217,8 +216,7 @@ public abstract class FireFighterAdvanced extends FireFighter {
   public boolean driveAp() {
     if (actionPoints < 2) {
       return false;
-    }
-    else {
+    } else {
       actionPoints -= 2;
       return true;
     }
@@ -227,8 +225,7 @@ public abstract class FireFighterAdvanced extends FireFighter {
   public boolean dodgeAp() {
     if (actionPoints < 2) {
       return false;
-    }
-    else {
+    } else {
       actionPoints -= 2;
       return true;
     }
@@ -238,7 +235,9 @@ public abstract class FireFighterAdvanced extends FireFighter {
     if (!hadVeteranBonus) {
       actionPoints++;
       hadVeteranBonus = true;
-      }
+      BoardScreen.getDialog()
+          .drawDialog("Extra AP", "Congratulation you just gained one extra AP from the veteran!");
+    }
   }
 
   public void setHadVeteranBonus(boolean value) {
@@ -255,14 +254,14 @@ public abstract class FireFighterAdvanced extends FireFighter {
   public boolean moveWithHazmatAp() {
     if (this.actionPoints < 2) {
       return false;
-    }
-    else {
+    } else {
       actionPoints -= 2;
       return true;
     }
   }
 
-  // If the fireFighter has not yet been Initalized it initialises it with default AP of 4 else it just returns the instance
+  // If the fireFighter has not yet been Initalized it initialises it with default AP of 4 else it
+  // just returns the instance
   public static FireFighter getFireFighter(FireFighterColor color) {
     if (color == null) {
       return null;

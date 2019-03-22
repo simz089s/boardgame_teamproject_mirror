@@ -14,6 +14,7 @@ public class FireFighterTurnManagerAdvance extends FireFighterTurnManager {
   public static FireFighterTurnManagerAdvance getInstance() {
     return (FireFighterTurnManagerAdvance) instance;
   }
+
   protected FireFighterTurnManagerAdvance() {
     super();
     FREESPECIALITIES.clear();
@@ -148,28 +149,29 @@ public class FireFighterTurnManagerAdvance extends FireFighterTurnManager {
     List<Tile> validTiles = new ArrayList<Tile>();
     for (FireFighter f : FIREFIGHTERS) {
       if (f instanceof Veteran) {
-        validTiles.add(f.getTile());
+        Tile currentTile = f.getTile();
+        validTiles.add(currentTile);
         for (Direction d : Direction.values()) {
+          int dist = 2;
           if (d != Direction.NODIRECTION && d != Direction.NULLDIRECTION) {
-            int dist = 1;
-            Tile inRange = f.getTile().getAdjacentTile(d);
-            if (inRange != null) {
-              validTiles.add(inRange);
+            Tile adjacentTile = currentTile.getAdjacentTile(d);
+            if (adjacentTile == null) {
+              continue;
             }
-            if (!f.getTile().hasObstacle(d)) {
-              while (inRange != null && !inRange.hasObstacle(d) && dist < 4) {
-                inRange = inRange.getAdjacentTile(d);
-                if (inRange != null && !inRange.hasNoFireAndNoSmoke()) {
-                  break;
-                }
-                dist++;
-                if (inRange != null) {
-                  validTiles.add(inRange);
-                }
+            validTiles.add(adjacentTile);
+            while(dist < 4 && !adjacentTile.hasObstacle(d)) {
+              adjacentTile = adjacentTile.getAdjacentTile(d);
+              if (adjacentTile != null && adjacentTile.hasNoFireAndNoSmoke()) {
+                 validTiles.add(adjacentTile);
+                 dist++;
+              }
+              else {
+                break;
               }
             }
           }
         }
+        break;
       }
     }
     for (Tile t : validTiles) {
@@ -478,7 +480,8 @@ public class FireFighterTurnManagerAdvance extends FireFighterTurnManager {
     for (int i = 0; i < tiles.length; i++) {
       for (int j = 0; j < tiles[0].length; j++) {
         if (tiles[i][j].hasFireFighters()) {
-          sendMessageToGui("You cannot fire the deck gun as there is a firefighter in the quadrant");
+          sendMessageToGui(
+              "You cannot fire the deck gun as there is a firefighter in the quadrant");
           return;
         }
       }
@@ -487,9 +490,9 @@ public class FireFighterTurnManagerAdvance extends FireFighterTurnManager {
       int row = (int) (Math.random() * 3);
       int column = (int) (Math.random() * 4);
       BoardManagerAdvanced.getInstance().fireDeckGunOnTile(tiles[row][column]);
-    }
-    else {
-      sendMessageToGui("You need more AP to fire the deck gun 4 if you are not the Driver 2 otherwise");
+    } else {
+      sendMessageToGui(
+          "You need more AP to fire the deck gun 4 if you are not the Driver 2 otherwise");
     }
   }
 

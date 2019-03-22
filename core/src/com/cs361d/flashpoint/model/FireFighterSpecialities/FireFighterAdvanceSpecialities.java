@@ -21,9 +21,9 @@ public enum FireFighterAdvanceSpecialities {
         return this.text;
     }
 
-//    @Override public String toString() {
-//        return super.toString().replace("_"," ");
-//    }
+    @Override public String toString() {
+        return super.toString().replace("_"," ");
+    }
 
     public static FireFighterAdvanceSpecialities fromString(String text) {
         for (FireFighterAdvanceSpecialities b : FireFighterAdvanceSpecialities.values()) {
