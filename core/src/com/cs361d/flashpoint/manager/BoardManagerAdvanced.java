@@ -84,7 +84,10 @@ public class BoardManagerAdvanced extends BoardManager {
       if (t.hasFire()) {
         explosion(t.getI(), t.getJ());
         t.setHasHazmat(false);
-        t.addHotSpot();
+        if (numHotSpotLeft > 0) {
+          t.addHotSpot();
+          numHotSpotLeft--;
+        }
         hazMatExplosion();
       }
     }
@@ -122,7 +125,7 @@ public class BoardManagerAdvanced extends BoardManager {
       FireFighterAdvanceSpecialities role,
       boolean firstTurn) {
     if (role == FireFighterAdvanceSpecialities.NO_SPECIALITY) {
-      //      throw new IllegalArgumentException("A fireFighter on the board must have a role");
+      throw new IllegalArgumentException("A fireFighter on the board must have a role");
     }
     FireFighterAdvanced f = FireFighterAdvanced.createFireFighter(color, role);
     FireFighterTurnManagerAdvance fta =
@@ -435,33 +438,26 @@ public class BoardManagerAdvanced extends BoardManager {
     if (i == 0) {
       if (j < 5) {
         tiles = getQuadrant(Quadrants.TOP_LEFT);
-      }
-      else {
+      } else {
         tiles = getQuadrant(Quadrants.TOP_RIGHT);
       }
-    }
-    else if (i == ROWS-1) {
+    } else if (i == ROWS - 1) {
       if (j < 5) {
         tiles = getQuadrant(Quadrants.BOTTOM_LEFT);
-      }
-      else {
+      } else {
         tiles = getQuadrant(Quadrants.BOTTOM_RIGHT);
       }
-    }
-    else if (j == 0){
+    } else if (j == 0) {
       if (i < 5) {
         tiles = getQuadrant(Quadrants.TOP_LEFT);
-      }
-      else {
+      } else {
         tiles = getQuadrant(Quadrants.BOTTOM_LEFT);
       }
 
-    }
-    else if (j == COLUMNS-1) {
+    } else if (j == COLUMNS - 1) {
       if (i < 5) {
         tiles = getQuadrant(Quadrants.TOP_RIGHT);
-      }
-      else {
+      } else {
         tiles = getQuadrant(Quadrants.BOTTOM_RIGHT);
       }
     }
