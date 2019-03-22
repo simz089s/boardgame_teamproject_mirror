@@ -1,8 +1,5 @@
 package com.cs361d.flashpoint.networking;
 
-
-import com.cs361d.flashpoint.screen.FlashPointGame;
-
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -14,6 +11,7 @@ class ClientHandler implements Runnable {
     final DataOutputStream dout;
     Socket s;
     boolean isloggedin;
+    private boolean notStopped = true;
 
     // constructor
     public ClientHandler(Socket s, String name, DataInputStream din, DataOutputStream dout) {
@@ -31,7 +29,7 @@ class ClientHandler implements Runnable {
     public void run() {
 
         String messageToSend = "";
-        while (true)
+        while (notStopped)
         {
             try
             {

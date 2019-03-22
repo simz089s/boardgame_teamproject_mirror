@@ -18,6 +18,7 @@ public class Client
     private DataInputStream din;      // input stream
     private DataOutputStream dout;    // output stream
     private String clientIP;
+    private boolean notStopped = true;
 
     public Client(String serverIP, int serverPort) {
         try {
@@ -39,7 +40,7 @@ public class Client
                         @Override
                         public void run()
                         {
-                            while (true) {
+                            while (notStopped) {
                                 String msg;
                                 try {
                                     // read the message sent to this client
@@ -51,8 +52,14 @@ public class Client
                     });
             readMessage.start();
 
-        } catch (UnknownHostException e) { e.printStackTrace(); }
-        catch (IOException e) { e.printStackTrace(); }
+        } catch (UnknownHostException e) {
+            System.out.println("Server Not Found");
+            e.printStackTrace();
+        }
+        catch (IOException e) {
+
+//            e.printStackTrace();
+        }
     }
 
     public String getClientIP() { return clientIP; }

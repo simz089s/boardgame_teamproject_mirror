@@ -6,7 +6,6 @@ import com.cs361d.flashpoint.manager.User;
 import com.cs361d.flashpoint.model.BoardElements.FireFighter;
 import com.cs361d.flashpoint.model.BoardElements.FireFighterColor;
 
-import javax.jws.Oneway;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -23,46 +22,31 @@ public class Server implements Runnable
     private List<FireFighterColor> notYetAssigned = new ArrayList<FireFighterColor>();
 
     // Vector to store active client threads
-    private static HashMap<String, ClientHandler> clientThreads = new HashMap<String, ClientHandler>();
+    private static HashMap<String, ClientHandler> clientObservers = new HashMap<String, ClientHandler>();
+
+
+    // Arraylist of client Threads
+    static ArrayList<Thread> clientThreads = new ArrayList<Thread>();
+
+    public void stopServerWriteToClientThread() { notStopped = false; }
+
+
     private static Server instance;
     private boolean gameAlreadyLoadedorCreated = false;
     private static List<String> messages = new ArrayList<String>();
+    private boolean notStopped = true;
 
-    // counter for clientThreads
+    // counter for clientObservers
     static int i = 0;
 
     ServerSocket ss;    //Server Socket
     Socket s;           //Client socket
     Thread startServer; // DON'T SEND TO SRC CLIENT TWICE
 
-    private Server(int serverPort) {
-
-        try {
-            ss = new ServerSocket(serverPort);
-            startServer = new Thread(this);
-            startServer.start();
-
-        } catch (IOException e) { e.printStackTrace(); }
-
-    }
-
-    public static HashMap<String, ClientHandler> getClientThreads() { return clientThreads; }
-
-    public static Server createServer(int serverPort) {
-        instance = new Server(serverPort);
-        return instance;
-    }
-
-    public static Server getServer() {
-        if (instance == null) {
-           throw new IllegalArgumentException("You are not the server you should not ask to access it");
-        }
-        return instance;
-    }
     @Override
     public void run() {
         // running infinite loop for getting client request
-        while (true) {
+        while (notStopped) {
             // Accept the incoming request
             try {
                 s = ss.accept(); // s is the client socket
@@ -82,9 +66,9 @@ public class Server implements Runnable
 
                 System.out.println("Adding this client to active client list");
 
-                // add this client to active clientThreads list
+                // add this client to active clientObservers list
                 String ip = s.getInetAddress().toString().replace("/","");
-                clientThreads.put(ip, clientObserver);
+                clientObservers.put(ip, clientObserver);
 
                 System.out.println("Client Ip is: " + s.getInetAddress().toString());
 
@@ -99,97 +83,33 @@ public class Server implements Runnable
         }
     }
 
-
-    /* Send a message to from server */
-    public static synchronized void sendMsgToAllClients(String msg) {
+    //Constructor
+    private Server(int serverPort) {
         try {
-            for (ClientHandler mc : Server.clientThreads.values()) {
-                mc.dout.writeUTF(msg);
-            }
-//            updateServerGui(msg); //update your own Gui
-
-        } catch (IOException e) { e.printStackTrace(); }
-    }
-
-    public synchronized void sendMsgSpecificClient(String ip, ClientCommands command, String message){
-        try {
-
-            ClientHandler client = clientThreads.get(ip);
-
-            String msg = NetworkManager.getInstance().createJSON(command.toString(), message);
-            client.dout.writeUTF(msg);
-
-            // updateServerGui(msg);
-
-        } catch (IOException e) { e.printStackTrace(); }
-    }
-
-//    /* Update GUI of the Server based on sent String*/
-//    public void updateServerGui(String msg) {
-//        /* Get the command from the string read
-//         * CHATWAIT: waiting screen chat changes
-//         * CHATGAME: in-game chat changes
-//         * GAMESTATE: gameState changes
-//         * */
-//        try { NetworkManager.serverExecuteCommand(msg); }
-//        catch (Exception e) { e.printStackTrace(); }
-//    }
-
-
-    /* Get info about the server's machine */
-    public static String getMyHostName() {
-        String hostname = null;
-        try {
-            InetAddress addr = InetAddress.getLocalHost();
-            hostname = addr.getHostName();
-            System.out.println("Host Name = " + hostname);
-
-        } catch (UnknownHostException e) { e.printStackTrace(); }
-
-        return hostname;
-    }
-
-    public void closeServer(){
-        try {
-            // Close every client and redirect to login page
-            for (ClientHandler mc : Server.clientThreads.values()) {
-                mc.din.close(); //close client input stream
-                mc.dout.close();//close client output stream
-                mc.s.close();   //close client socket
-            }
-            ss.close();         //close server socket
+            ss = new ServerSocket(serverPort);
+            startServer = new Thread(this);
+            startServer.start();
 
         } catch (IOException e) { e.printStackTrace(); }
 
     }
 
-    public synchronized void  assignFireFighterToClient(String IP) {
-        if (notYetAssigned.isEmpty()) {
-            return;
-        }
-        FireFighterColor color = notYetAssigned.remove(0);
-        if (IP.equals(NetworkManager.getInstance().getMyPublicIP())) {
-            User.getInstance().assignFireFighter(color);
-        }
-        else {
-           sendMsgSpecificClient(IP, ClientCommands.ASSIGN_FIREFIGHTER, color.toString());
-        }
+    public static Server createServer(int serverPort) {
+        instance = new Server(serverPort);
+        return instance;
     }
-//    public static boolean amIServer() {
-//        return instance != null;
-//    }
 
-    public void setFireFighterAssignArray() {
-        notYetAssigned.clear();
-        Iterator<FireFighter> it = FireFighterTurnManager.getInstance().iterator();
-        if (!it.hasNext()) {
-            throw new IllegalArgumentException("Cannot call this function if the game board has not been initialized");
+    public static Server getServer() {
+        if (instance == null) {
+            throw new IllegalArgumentException("You are not the server you should not ask to access it");
         }
-        while (it.hasNext()) {
-            FireFighter f = it.next();
-            notYetAssigned.add(f.getColor());
-        }
+        return instance;
     }
+
+    public static HashMap<String, ClientHandler> getClientObservers() { return clientObservers; }
+
+    public static ArrayList<Thread> getClientThreads() { return clientThreads; }
+
     public boolean isEmpty() {
         return notYetAssigned.isEmpty();
     }
@@ -212,7 +132,74 @@ public class Server implements Runnable
         return notYetAssigned.isEmpty();
     }
 
+
+    public synchronized void  assignFireFighterToClient(String IP) {
+        if (notYetAssigned.isEmpty()) {
+            return;
+        }
+        FireFighterColor color = notYetAssigned.remove(0);
+        if (IP.equals(NetworkManager.getInstance().getMyPublicIP())) {
+            User.getInstance().assignFireFighter(color);
+        }
+        else {
+            sendMsgSpecificClient(IP, ClientCommands.ASSIGN_FIREFIGHTER, color.toString());
+        }
+    }
+
+    public void setFireFighterAssignArray() {
+        notYetAssigned.clear();
+        Iterator<FireFighter> it = FireFighterTurnManager.getInstance().iterator();
+        if (!it.hasNext()) {
+            throw new IllegalArgumentException("Cannot call this function if the game board has not been initialized");
+        }
+        while (it.hasNext()) {
+            FireFighter f = it.next();
+            notYetAssigned.add(f.getColor());
+        }
+    }
+
+    /* Send a message to from server */
+    public static synchronized void sendMsgToAllClients(String msg) {
+        try {
+            for (ClientHandler mc : Server.clientObservers.values()) {
+                mc.dout.writeUTF(msg);
+            }
+        } catch (IOException e) { e.printStackTrace(); }
+    }
+
+    public synchronized void sendMsgSpecificClient(String ip, ClientCommands command, String message){
+        try {
+            ClientHandler client = clientObservers.get(ip);
+            String msg = NetworkManager.getInstance().createJSON(command.toString(), message);
+            client.dout.writeUTF(msg);
+        } catch (IOException e) { e.printStackTrace(); }
+    }
+
+    public void closeServer(){
+
+
+    }
+
     public void closeClient() {
 
     }
+
+    /* Get info about the server's machine */
+    public static String getMyHostName() {
+        String hostname = null;
+        try {
+            InetAddress addr = InetAddress.getLocalHost();
+            hostname = addr.getHostName();
+            System.out.println("Host Name = " + hostname);
+
+        } catch (UnknownHostException e) { e.printStackTrace(); }
+
+        return hostname;
+    }
+
+
+
+
+
+
 }

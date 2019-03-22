@@ -223,7 +223,7 @@ public class NetworkManager {
 
         case EXITGAME:
           Server.getServer().changeLoadedStatus(false);
-          for (ClientHandler mc : Server.getClientThreads().values()) {
+          for (ClientHandler mc : Server.getClientObservers().values()) {
             //TODO: if client is in the game let him exit
             mc.dout.writeUTF(msg);
           }
