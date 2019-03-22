@@ -51,7 +51,10 @@ class ClientHandler implements Runnable {
                     this.din.close();
                     this.dout.close();
 
-                } catch(IOException ee) { ee.printStackTrace();  }
+                } catch(IOException ee) {
+                    ee.printStackTrace();
+                    Server.getServer().closeClient();
+                }
             }
         }
 

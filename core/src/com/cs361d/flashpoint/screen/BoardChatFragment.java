@@ -106,7 +106,7 @@ public class BoardChatFragment {
 
                     if(!messageInputed.equals("") && !messageInputed.equals(" ")){
                         textFieldMsg.setText("");
-                        myNetwork.sendCommand(ServerCommands.ADDMSG,messageInputed); //send message over network
+                        myNetwork.sendCommand(ServerCommands.ADD_CHAT_MESSAGE,messageInputed); //send message over network
 //                        messagesArrList.add("Y: " + messageInputed);
 //                        String[] newMsg = messagesArrList.toArray(new String[messagesArrList.size()]);
 //                        lstMsg.setItems(newMsg);

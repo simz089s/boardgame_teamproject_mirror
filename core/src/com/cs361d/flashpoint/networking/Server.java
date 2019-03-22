@@ -101,7 +101,7 @@ public class Server implements Runnable
 
 
     /* Send a message to from server */
-    public synchronized void sendMsg(String msg) {
+    public static synchronized void sendMsgToAllClients(String msg) {
         try {
             for (ClientHandler mc : Server.clientThreads.values()) {
                 mc.dout.writeUTF(msg);
@@ -213,5 +213,6 @@ public class Server implements Runnable
     }
 
     public void closeClient() {
+
     }
 }

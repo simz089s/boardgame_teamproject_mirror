@@ -58,7 +58,7 @@ public class Client
     public String getClientIP() { return clientIP; }
 
     /* Send a message to a server */
-    public synchronized void sendMsg(String msg) {
+    public synchronized void sendMsgToServer(String msg) {
         try {
             // write on the output stream
             dout.writeUTF(msg);

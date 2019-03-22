@@ -3,9 +3,7 @@ package com.cs361d.flashpoint.networking;
 import com.badlogic.gdx.Gdx;
 import com.cs361d.flashpoint.manager.*;
 import com.cs361d.flashpoint.model.BoardElements.FireFighterColor;
-import com.cs361d.flashpoint.screen.BoardChatFragment;
 import com.cs361d.flashpoint.screen.BoardScreen;
-import com.cs361d.flashpoint.screen.ChatScreen;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -26,7 +24,7 @@ public class NetworkManager {
   // MCGILL WORLD
   // public static final String DEFAULT_SERVER_IP = "142.157.74.18"; // Simon public ip address
 //  public static final String DEFAULT_SERVER_IP = "142.157.67.193"; // Elvric public ip address
-   final public static String DEFAULT_SERVER_IP = "142.157.149.16"; // DC public ip
+   final public static String DEFAULT_SERVER_IP = "142.157.149.154"; // DC public ip
   public static final int DEFAULT_SERVER_PORT = 54590;
 
   private String serverIP;
@@ -57,15 +55,15 @@ public class NetworkManager {
 
   public void sendCommand(ServerCommands command, String msg) {
     String jsonMsg = createJSON(command.toString(), msg);
-//    if (getMyPublicIP().equals(DEFAULT_SERVER_IP)) server.sendMsg(jsonMsg);
+//    if (getMyPublicIP().equals(DEFAULT_SERVER_IP)) server.sendMsgToAllClients(jsonMsg);
 //    else
 //      for (Client c : clientList) {
-//        c.sendMsg(jsonMsg);
+//        c.sendMsgToAllClients(jsonMsg);
 //      }
     // Find the right client and send the message from him to server
     for (Client c: clientList) {
       if (getMyPublicIP().equals(c.getClientIP()))
-        c.sendMsg(jsonMsg);
+        c.sendMsgToServer(jsonMsg);
     }
   }
 
@@ -147,17 +145,15 @@ public class NetworkManager {
       String message = jsonObject.get("message").toString();
       String ip = jsonObject.get("IP").toString();
       System.out.println(message);
-      switch (c) {
 
+      switch (c) {
         case ADD_CHAT_MESSAGE:
           if (!message.equals("")) {
             Server.addMessage(message);
 //            if (BoardScreen.isChatFragment()) {
 //              BoardChatFragment.addMessageToChat(message);
 //            }
-            for (ClientHandler mc : Server.getClientThreads().values()) {
-              mc.dout.writeUTF(msg);
-            }
+            Server.sendMsgToAllClients(msg);
           }
           else if (!message.equals("")) {
             Server.addMessage(message);
@@ -194,12 +190,8 @@ public class NetworkManager {
 //          }
           break;
 
-
-
         case GAMESTATE:
-          for (ClientHandler mc : Server.getClientThreads().values()) {
-            mc.dout.writeUTF(msg);
-          }
+          Server.sendMsgToAllClients(msg);
           break;
 
         case SAVE:
