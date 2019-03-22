@@ -6,6 +6,7 @@ import com.cs361d.flashpoint.manager.User;
 import com.cs361d.flashpoint.model.BoardElements.FireFighter;
 import com.cs361d.flashpoint.model.BoardElements.FireFighterColor;
 
+import javax.jws.Oneway;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -25,6 +26,8 @@ public class Server implements Runnable
     private static HashMap<String, ClientHandler> clientThreads = new HashMap<String, ClientHandler>();
     private static Server instance;
     private boolean gameAlreadyLoadedorCreated = false;
+    private static List<String> messages = new ArrayList<String>();
+
     // counter for clientThreads
     static int i = 0;
 
@@ -190,6 +193,15 @@ public class Server implements Runnable
     public boolean isEmpty() {
         return notYetAssigned.isEmpty();
     }
+
+    // To iterate through the chat messages
+    public static Iterator<String> iteratorForChar(){
+        return messages.iterator();
+    }
+
+    // Function to add messages
+    public synchronized void addMessages(String message){ messages.add(message);}
+
     public void changeLoadedStatus(boolean status) {
         gameAlreadyLoadedorCreated = status;
     }
