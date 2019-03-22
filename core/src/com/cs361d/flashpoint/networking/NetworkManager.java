@@ -7,6 +7,7 @@ import com.cs361d.flashpoint.screen.BoardChatFragment;
 import com.cs361d.flashpoint.screen.BoardScreen;
 import com.cs361d.flashpoint.screen.ChatScreen;
 
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
@@ -16,6 +17,7 @@ import java.net.InetAddress;
 import java.net.URL;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 public class NetworkManager {
 
@@ -147,13 +149,57 @@ public class NetworkManager {
       System.out.println(message);
       switch (c) {
 
+        case ADD_CHAT_MESSAGE:
+          if (!message.equals("")) {
+            Server.addMessage(message);
+//            if (BoardScreen.isChatFragment()) {
+//              BoardChatFragment.addMessageToChat(message);
+//            }
+            for (ClientHandler mc : Server.getClientThreads().values()) {
+              mc.dout.writeUTF(msg);
+            }
+          }
+          else if (!message.equals("")) {
+            Server.addMessage(message);
+//            if (BoardScreen.isChatFragment()) {
+//              BoardChatFragment.addMessageToChat(message);
+//            }
+          }
+//          else if (!message.equals("")) {
+//            Gdx.app.postRunnable(
+//                    new Runnable() {
+//                      @Override
+//                      public void run() {
+//                        if (BoardScreen.isChatFragment()) {
+//                          BoardChatFragment.addMessageToChat(message);
+//                        }
+//                      }
+//                    });
+//          }
+          break;
+
+        case GET_CHAT_MESSAGES:
+          JSONArray jsa = new JSONArray();
+          Iterator<String> it = Server.iteratorForChat();
+          while (it.hasNext()) {
+            jsa.add(it.next());
+          }
+          Server.getServer()
+                  .sendMsgSpecificClient(ip, ClientCommands.SEND_CHAT_MESSAGES, jsa.toJSONString());
+//            BoardScreen.setSideFragment(Fragment.CHAT);
+//            Iterator<String> it = Server.iteratorForChat();
+//            while (it.hasNext()) {
+//              BoardChatFragment.addMessageToChat(it.next());
+//            }
+//          }
+          break;
+
+
+
         case GAMESTATE:
           for (ClientHandler mc : Server.getClientThreads().values()) {
             mc.dout.writeUTF(msg);
           }
-          break;
-
-        case ADDMSG:
           break;
 
         case SAVE:
@@ -172,12 +218,10 @@ public class NetworkManager {
           break;
 
         case DISCONNECTSERVER:
-          if (instance.getMyPublicIP().equals(DEFAULT_SERVER_IP))
             instance.server.closeServer(); // disconnect all the clients
           break;
 
         case DISCONNECTCLIENT:
-          if (instance.getMyPublicIP().equals(DEFAULT_SERVER_IP))
             instance.server.closeClient(); // disconnect clients
           break;
 
@@ -267,9 +311,31 @@ public class NetworkManager {
                       BoardScreen.setBoardScreen();
                     }
                   });
+        case SEND_CHAT_MESSAGES:
+          Gdx.app.postRunnable(
+                  new Runnable() {
+                    @Override
+                    public void run() {
+//                      BoardScreen.setSideFragment(Fragment.CHAT);
+                    }
+                  });
+          JSONArray jsa = (JSONArray) parser.parse(message);
+          for (Object a : jsa) {
+            final String newMessage = a.toString();
+            Gdx.app.postRunnable(
+                    new Runnable() {
+                      @Override
+                      public void run() {
+                        final String msg = newMessage;
+//                        BoardChatFragment.addMessageToChat(msg);
+                      }
+                    });
+          }
+          break;
 
         default:
       }
+
 
     } catch (Exception e) {
       e.printStackTrace();

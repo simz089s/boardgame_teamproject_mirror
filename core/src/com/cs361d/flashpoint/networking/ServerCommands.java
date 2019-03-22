@@ -4,7 +4,6 @@ public enum ServerCommands
 {
     //CHATWAIT("chatwait"),
 //    CHATGAME("CHAT_GAME"),
-    ADDMSG("addmsg"),
     GAMESTATE("gamestate"),
     SAVE("SAVE"),
     SEND_NEWLY_CREATED_BOARD("SEND_NEWLY_CREATED_BOARD"),
@@ -15,7 +14,9 @@ public enum ServerCommands
     JOIN("join"),
     LOADGAME("LOAD_GAME"),
 //    SETBOARDSCREEN("SETBOARDSCREEN"),
-    EXITGAME("exitgame");
+    EXITGAME("exitgame"),
+    ADD_CHAT_MESSAGE("ADD_MSG"),
+    GET_CHAT_MESSAGES("GET_MSG");
 
     private String text;
 

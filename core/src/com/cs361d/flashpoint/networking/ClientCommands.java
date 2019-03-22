@@ -2,9 +2,6 @@ package com.cs361d.flashpoint.networking;
 
 public enum ClientCommands //Commands sent to client
 {
-    CHATGAME("CHAT_GAME"),
-    SETMSG("SET_MESSAGE"),
-//    ADDMSG("addmsg"),
     GAMESTATE("gamestate"),
 //    SAVE("save"),
     //SEND_NEWLY_CREATED_BOARD("SEND_NEWLY_CREATED_BOARD"),
@@ -14,7 +11,8 @@ public enum ClientCommands //Commands sent to client
 //    DISCONNECTCLIENT("DISCONNECT_CLIENT"),
 //    JOIN("join"),
     SETBOARDSCREEN("SETBOARDSCREEN"),
-    EXITGAME("EXIT_GAME");
+    EXITGAME("EXIT_GAME"),
+    SEND_CHAT_MESSAGES("SEND_MSG");
 
     private String text;
 

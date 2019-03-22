@@ -195,12 +195,12 @@ public class Server implements Runnable
     }
 
     // To iterate through the chat messages
-    public static Iterator<String> iteratorForChar(){
+    public static Iterator<String> iteratorForChat(){
         return messages.iterator();
     }
 
     // Function to add messages
-    public synchronized void addMessages(String message){ messages.add(message);}
+    public static synchronized void addMessage(String message){ messages.add(message);}
 
     public void changeLoadedStatus(boolean status) {
         gameAlreadyLoadedorCreated = status;
@@ -212,7 +212,6 @@ public class Server implements Runnable
         return notYetAssigned.isEmpty();
     }
 
-    public void closeClient()
-    {
+    public void closeClient() {
     }
 }
