@@ -29,6 +29,12 @@ public class BoardChatFragment {
     // messages list
     static ArrayList<String> messagesArrList = new ArrayList<String>();
 
+    public static void addMessageToChat(String msg) {
+        messagesArrList.add(msg);
+        lstMsg.clearItems();
+        String[] msgArr = messagesArrList.toArray(new String[messagesArrList.size()]);
+        lstMsg.setItems(msgArr);
+    }
 
     ArrayList<ScrollPane> msgListSP = new ArrayList<ScrollPane>();
     ArrayList<TextField> msgFieldListTF = new ArrayList<TextField>();
@@ -36,11 +42,11 @@ public class BoardChatFragment {
     // Get the current network
     NetworkManager myNetwork = NetworkManager.getInstance();
 
-    public static void addMessageToGui(String msg) {
-        messagesArrList.add(msg);
-        String[] newMsg = messagesArrList.toArray(new String[messagesArrList.size()]);
-        lstMsg.setItems(newMsg);
-    }
+//    public static void addMessageToGui(String msg) {
+//        messagesArrList.add(msg);
+//        String[] newMsg = messagesArrList.toArray(new String[messagesArrList.size()]);
+//        lstMsg.setItems(newMsg);
+//    }
 
     // constructor
     public BoardChatFragment(Stage stage){

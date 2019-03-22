@@ -3,6 +3,7 @@ package com.cs361d.flashpoint.networking;
 import com.badlogic.gdx.Gdx;
 import com.cs361d.flashpoint.manager.*;
 import com.cs361d.flashpoint.model.BoardElements.FireFighterColor;
+import com.cs361d.flashpoint.screen.BoardChatFragment;
 import com.cs361d.flashpoint.screen.BoardScreen;
 
 import org.json.simple.JSONArray;
@@ -59,15 +60,9 @@ private static HashMap<String, Client> clientList = new HashMap<String, Client>(
 
   public void sendCommand(ServerCommands command, String msg) {
     String jsonMsg = createJSON(command.toString(), msg);
-//    if (getMyPublicIP().equals(DEFAULT_SERVER_IP)) server.sendMsgToAllClients(jsonMsg);
-//    else
-//      for (Client c : clientList) {
-//        c.sendMsgToAllClients(jsonMsg);
-//      }
-    // Find the right client and send the message from him to server
     for (Client c: clientList.values()) {
       if (getMyPublicIP().equals(c.getClientIP()))
-        c.sendMsgToServer(jsonMsg);
+          c.sendMsgToServer(jsonMsg);
     }
   }
 
@@ -283,7 +278,7 @@ private static HashMap<String, Client> clientList = new HashMap<String, Client>(
                       @Override
                       public void run() {
                         final String msg = newMessage;
-//                        BoardChatFragment.addMessageToChat(msg);
+                        BoardChatFragment.addMessageToChat(msg);
                       }
                     });
           }

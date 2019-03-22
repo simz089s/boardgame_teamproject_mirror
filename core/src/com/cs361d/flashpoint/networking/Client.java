@@ -30,7 +30,7 @@ public class Client {
             dout = new DataOutputStream(s.getOutputStream());
 
             // obtain client IP address
-            clientIP = s.getInetAddress().toString();
+            clientIP = s.getInetAddress().toString().replace("/","");
 
             // readMessage thread constantly listening
             Thread readMessage =

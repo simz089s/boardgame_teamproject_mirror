@@ -216,15 +216,12 @@ public class Server implements Runnable
 
     // Remove Client from Server's and Network's List
     public void closeClient(String clientIP) {
-        System.out.println("Num observers: "+Server.getClientObservers().size());
-
         //Remove clientHandler from Hashmap
         Server.getClientObservers().remove(clientIP);
 
         //Remove Client from Network
         NetworkManager.getInstance().getClientList().remove(clientIP);
-        System.out.println("Num observers in server: "+Server.getClientObservers().size());
-        System.out.println("Number of Clients Remaining on Network: "+NetworkManager.getInstance().getClientList().size());
         System.out.println("Client with IP: "+clientIP+" is removed from the Network successfully");
+        System.out.println("Number of Clients Remaining on Network: "+NetworkManager.getInstance().getClientList().size());
     }
 }
