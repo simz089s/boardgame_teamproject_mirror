@@ -15,6 +15,7 @@ import java.net.InetAddress;
 import java.net.URL;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 
 public class NetworkManager {
@@ -31,7 +32,8 @@ public class NetworkManager {
 
   // variable of type String
   public Server server;
-  public ArrayList<Client> clientList = new ArrayList<Client>();
+//  public ArrayList<Client> clientList = new ArrayList<Client>();
+private static HashMap<String, Client> clientList = new HashMap<String, Client>();
 
   // private constructor restricted to this class itself
   private NetworkManager(String pServerIP, int pServerPort) {
@@ -51,7 +53,9 @@ public class NetworkManager {
     this.server = s;
   }
 
-  public void addNewClient(Client c) { this.clientList.add(c); }
+  public void addNewClient(String ip, Client c) { this.clientList.put(ip, c); }
+
+  public HashMap getClientList() { return clientList; }
 
   public void sendCommand(ServerCommands command, String msg) {
     String jsonMsg = createJSON(command.toString(), msg);
@@ -61,7 +65,7 @@ public class NetworkManager {
 //        c.sendMsgToAllClients(jsonMsg);
 //      }
     // Find the right client and send the message from him to server
-    for (Client c: clientList) {
+    for (Client c: clientList.values()) {
       if (getMyPublicIP().equals(c.getClientIP()))
         c.sendMsgToServer(jsonMsg);
     }
@@ -92,48 +96,6 @@ public class NetworkManager {
 
     System.out.println("Public IP Address: " + systemipaddress + "\n");
     return systemipaddress;
-  }
-
-  public String getMyIPAddress() {
-    String ipAddress = null;
-    try {
-      InetAddress addr = InetAddress.getLocalHost();
-      ipAddress = addr.getHostAddress();
-      System.out.println("LOCAL ONE IP Address = " + ipAddress);
-
-    } catch (UnknownHostException e) {
-      e.printStackTrace();
-    }
-
-    return ipAddress;
-  }
-
-  public String getIPByAddress(String address) {
-    String ipAddress = null;
-    try {
-      InetAddress addr = InetAddress.getByName(address);
-      ipAddress = addr.getHostAddress();
-      System.out.println("IP Address = " + ipAddress);
-
-    } catch (UnknownHostException e) {
-      e.printStackTrace();
-    }
-
-    return ipAddress;
-  }
-
-  public String getHostNameByAdress(String address) {
-    String hostname = null;
-    try {
-      InetAddress addr = InetAddress.getByName(address);
-      hostname = addr.getHostName();
-      System.out.println("Host Name = " + hostname);
-
-    } catch (UnknownHostException e) {
-      e.printStackTrace();
-    }
-
-    return hostname;
   }
 
   public static void serverExecuteCommand(String msg) {
@@ -214,7 +176,7 @@ public class NetworkManager {
           break;
 
         case DISCONNECTCLIENT:
-            instance.server.closeClient(); // disconnect clients
+//            instance.server.closeClient(); // disconnect clients
           break;
 
         case ASK_TO_GET_ASSIGN_FIREFIGHTER:
@@ -333,4 +295,53 @@ public class NetworkManager {
       e.printStackTrace();
     }
   }
+
+//  public String getMyIPAddress() {
+//    String ipAddress = null;
+//    try {
+//      InetAddress addr = InetAddress.getLocalHost();
+//      ipAddress = addr.getHostAddress();
+//      System.out.println("LOCAL ONE IP Address = " + ipAddress);
+//
+//    } catch (UnknownHostException e) {
+//      e.printStackTrace();
+//    }
+//
+//    return ipAddress;
+//  }
+//
+//  public String getIPByAddress(String address) {
+//    String ipAddress = null;
+//    try {
+//      InetAddress addr = InetAddress.getByName(address);
+//      ipAddress = addr.getHostAddress();
+//      System.out.println("IP Address = " + ipAddress);
+//
+//    } catch (UnknownHostException e) {
+//      e.printStackTrace();
+//    }
+//
+//    return ipAddress;
+//  }
+//
+//  public String getHostNameByAdress(String address) {
+//    String hostname = null;
+//    try {
+//      InetAddress addr = InetAddress.getByName(address);
+//      hostname = addr.getHostName();
+//      System.out.println("Host Name = " + hostname);
+//
+//    } catch (UnknownHostException e) {
+//      e.printStackTrace();
+//    }
+//
+//    return hostname;
+//  }
+
+
+
+
+
+
+
 }

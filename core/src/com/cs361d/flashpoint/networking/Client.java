@@ -16,6 +16,7 @@ public class Client
 
     private Socket s;
     private DataInputStream din;      // input stream
+
     private DataOutputStream dout;    // output stream
     private String clientIP;
     private boolean notStopped = true;
@@ -62,7 +63,12 @@ public class Client
         }
     }
 
+    /* Getters */
     public String getClientIP() { return clientIP; }
+    public DataInputStream getDin() { return din; }
+    public DataOutputStream getDout() { return dout; }
+
+
 
     /* Send a message to a server */
     public synchronized void sendMsgToServer(String msg) {

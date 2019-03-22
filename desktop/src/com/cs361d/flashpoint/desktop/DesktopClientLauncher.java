@@ -15,8 +15,9 @@ public class DesktopClientLauncher
         NetworkManager myNetwork = NetworkManager.getInstance(); // Create a single network
 
         Client client = new Client(NetworkManager.DEFAULT_SERVER_IP, NetworkManager.DEFAULT_SERVER_PORT);
-        myNetwork.addNewClient(client);
+        myNetwork.addNewClient(client.getClientIP(), client);
         new LwjglApplication(client.clientFPGame, config);
+
         // change window size
         config.width = 1225;
         config.height = 675;

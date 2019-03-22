@@ -24,7 +24,6 @@ public class Server implements Runnable
     // Vector to store active client threads
     private static HashMap<String, ClientHandler> clientObservers = new HashMap<String, ClientHandler>();
 
-
     // Arraylist of client Threads
     static ArrayList<Thread> clientThreads = new ArrayList<Thread>();
 
@@ -58,16 +57,16 @@ public class Server implements Runnable
 
                 System.out.println("Creating a new handler for this client...");
 
+                String ip = s.getInetAddress().toString().replace("/","");
+
                 // Create a new handler object for handling this request.
-                ClientHandler clientObserver = new ClientHandler(s, "client " + i, din, dout);
+                ClientHandler clientObserver = new ClientHandler(s, "client " + i, din, dout, ip);
 
                 // Create a new Thread with this client.
                 Thread t = new Thread(clientObserver);
-
                 System.out.println("Adding this client to active client list");
 
                 // add this client to active clientObservers list
-                String ip = s.getInetAddress().toString().replace("/","");
                 clientObservers.put(ip, clientObserver);
 
                 System.out.println("Client Ip is: " + s.getInetAddress().toString());
@@ -171,7 +170,7 @@ public class Server implements Runnable
             // Close every client connection
             for (final String clientIP : Server.clientObservers.keySet()) {
                 // redirect client to login page
-                this.sendMsgSpecificClient(clientIP,Commands.SETLOGINSCREEN,"");
+                //this.sendMsgSpecificClient(clientIP,ClientCommands.SETLOGINSCREEN,"");
                 ClientHandler mc = Server.clientObservers.get(clientIP);
                 mc.stopServerWriteToClientThread(); // Stop server-to-client writer thread (stop Client Handler)
                 mc.din.close(); //close server-from-client input stream
@@ -185,10 +184,12 @@ public class Server implements Runnable
             }
 
             // Stop all client's reader threads
-            for (Client client: NetworkManager.getInstance().clientList) {
+            for (Object c: NetworkManager.getInstance().getClientList().values()) {
+                Client client = (Client) c;
                 client.stopClientReadingThread();
-                client.din.close(); //close client-from-server input stream
-                client.dout.close();//close client-to-server output stream
+                client.getDin().close(); //close client-from-server input stream
+                //close client-to-server output stream
+                client.getDout().close();
             }
             ss.close();         //close server socket
 
@@ -216,8 +217,33 @@ public class Server implements Runnable
     }
 
 
+    public void closeClient(String clientIP) {
+        try {
+            ClientHandler clientToClose = Server.clientObservers.get(clientIP);
+            clientToClose.stopServerWriteToClientThread(); // Stop server-to-client writer thread (stop Client Handler)
+            clientToClose.din.close(); //close server-from-client input stream
+            clientToClose.dout.close();//close server-to-client output stream
+            clientToClose.s.close();   //close client socket
 
+            //Remove clientHandler from Hashmap
+            Server.getClientObservers().remove(clientIP);
 
+            // Main thread waits for all other threads to finish
+//            Thread clientThread = Server.getClientThreads().get(0);
+//            clientThread.join();
 
+            // Stop all client's reader threads
+            Client c = (Client) NetworkManager.getInstance().getClientList().get(clientIP);
+            c.stopClientReadingThread();
+            c.getDin().close(); //close client-from-server input stream
+            c.getDout().close();//close client-to-server output stream
 
+        System.out.println("Client with IP: "+c.getClientIP()+" is closed");
+
+        } catch (IOException e) {
+            System.out.println("Unable to close a Client");
+            e.printStackTrace();
+        }
+
+    }
 }

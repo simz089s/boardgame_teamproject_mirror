@@ -7,6 +7,7 @@ import java.net.Socket;
 
 class ClientHandler implements Runnable {
     private String name;
+    private String ip;
     final DataInputStream din;
     final DataOutputStream dout;
     Socket s;
@@ -14,16 +15,18 @@ class ClientHandler implements Runnable {
     private boolean notStopped = true;
 
     // constructor
-    public ClientHandler(Socket s, String name, DataInputStream din, DataOutputStream dout) {
+    public ClientHandler(Socket s, String name, DataInputStream din, DataOutputStream dout, String ip) {
         this.din = din;
         this.dout = dout;
         this.name = name;
         this.s = s;
         this.isloggedin=true;
+        this.ip = ip;
     }
 
     public void stopServerWriteToClientThread() { notStopped = false; }
 
+    public String getName() { return name; }
 
     @Override
     // Constantly ready to read a new msg
@@ -52,7 +55,7 @@ class ClientHandler implements Runnable {
 
                 } catch(IOException ee) {
                     ee.printStackTrace();
-                    Server.getServer().closeClient();
+                    Server.getServer().closeClient(ip);
                 }
             }
         }
