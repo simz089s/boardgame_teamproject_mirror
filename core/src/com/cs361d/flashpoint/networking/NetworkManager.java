@@ -94,7 +94,7 @@ private static HashMap<String, Client> clientList = new HashMap<String, Client>(
       e.printStackTrace();
     }
 
-    System.out.println("Public IP Address: " + systemipaddress + "\n");
+//    System.out.println("Public IP Address: " + systemipaddress + "\n");
     return systemipaddress;
   }
 
@@ -162,7 +162,9 @@ private static HashMap<String, Client> clientList = new HashMap<String, Client>(
           break;
 
         case SEND_NEWLY_CREATED_BOARD:
+          System.out.println(!Server.getServer().getLoadedOrCreatedStatus());
           if (!Server.getServer().getLoadedOrCreatedStatus()) {
+            System.out.println(msg);
             Server.getServer().changeLoadedStatus(true);
             CreateNewGameManager.loadGameFromString(message);
             Server.getServer().setFireFighterAssignArray();
@@ -186,7 +188,7 @@ private static HashMap<String, Client> clientList = new HashMap<String, Client>(
         case EXITGAME:
           Server.getServer().changeLoadedStatus(false);
           for (ClientHandler mc : Server.getClientObservers().values()) {
-            //TODO: if client is in the game let him exit
+            //TODO: Only if client is in the game let him exit
             mc.dout.writeUTF(msg);
           }
           break;

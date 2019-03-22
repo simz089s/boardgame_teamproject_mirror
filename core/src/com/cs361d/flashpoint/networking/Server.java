@@ -70,12 +70,11 @@ public class Server implements Runnable
                 clientObservers.put(ip, clientObserver);
 
                 System.out.println("Client Ip is: " + s.getInetAddress().toString());
+                System.out.println();
 
-                // start the thread for the client.
-                t.start();
+                t.start();  // start the thread for the client
 
-                // increment i for new client
-                i++;
+                i++; // increment i for new client
 
             } catch (IOException e) { e.printStackTrace(); }
         }
