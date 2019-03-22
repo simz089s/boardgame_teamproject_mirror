@@ -5,6 +5,7 @@ import com.cs361d.flashpoint.model.FireFighterSpecialities.FireFighterAdvanceSpe
 import com.cs361d.flashpoint.model.FireFighterSpecialities.FireFighterAdvanced;
 import com.cs361d.flashpoint.screen.BoardDialog;
 import com.cs361d.flashpoint.screen.BoardScreen;
+import sun.invoke.empty.Empty;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -426,8 +427,47 @@ public class BoardManagerAdvanced extends BoardManager {
   }
 
   public Tile[][] getTilesToUseGunOn() {
-    Tile[][] tiles = new Tile[3][4];
+    Tile[][] tiles = null;
     List<Tile> fireTruckTile = getTilesThatContainFireTruck();
+    Tile givenTile = fireTruckTile.get(0);
+    int i = givenTile.getI();
+    int j = givenTile.getJ();
+    if (i == 0) {
+      if (j < 5) {
+        tiles = getQuadrant(Quadrants.TOP_LEFT);
+      }
+      else {
+        tiles = getQuadrant(Quadrants.TOP_RIGHT);
+      }
+    }
+    else if (i == ROWS-1) {
+      if (j < 5) {
+        tiles = getQuadrant(Quadrants.BOTTOM_LEFT);
+      }
+      else {
+        tiles = getQuadrant(Quadrants.BOTTOM_RIGHT);
+      }
+    }
+    else if (j == 0){
+      if (i < 5) {
+        tiles = getQuadrant(Quadrants.TOP_LEFT);
+      }
+      else {
+        tiles = getQuadrant(Quadrants.BOTTOM_LEFT);
+      }
+
+    }
+    else if (j == COLUMNS-1) {
+      if (i < 5) {
+        tiles = getQuadrant(Quadrants.TOP_RIGHT);
+      }
+      else {
+        tiles = getQuadrant(Quadrants.BOTTOM_RIGHT);
+      }
+    }
+    if (tiles == null) {
+      throw new IllegalArgumentException("The tiles must exist in the quadrant");
+    }
 
     return tiles;
   }
@@ -442,5 +482,57 @@ public class BoardManagerAdvanced extends BoardManager {
       }
     }
     return list;
+  }
+
+  private Tile[][] getQuadrant(Quadrants q) {
+    Tile[][] tiles = new Tile[3][4];
+    switch (q) {
+      case TOP_LEFT:
+        for (int i = 1; i < 4; i++) {
+          for (int j = 1; j < 5; j++) {
+            tiles[i - 1][j - 1] = TILE_MAP[i][j];
+          }
+          break;
+        }
+      case TOP_RIGHT:
+        for (int i = 1; i < 4; i++) {
+          for (int j = 5; j < 9; j++) {
+            tiles[i - 1][j - 5] = TILE_MAP[i][j];
+          }
+        }
+        break;
+      case BOTTOM_LEFT:
+        for (int i = 4; i < 7; i++) {
+          for (int j = 1; j < 5; j++) {
+            tiles[i - 4][j - 1] = TILE_MAP[i][j];
+          }
+        }
+        break;
+      case BOTTOM_RIGHT:
+        for (int i = 4; i < 7; i++) {
+          for (int j = 5; j < 9; j++) {
+            tiles[i - 4][j - 5] = TILE_MAP[i][j];
+          }
+        }
+        break;
+      default:
+        throw new IllegalArgumentException(
+            "The enum for the quadrant does not exits" + q.toString());
+    }
+    return tiles;
+  }
+
+  public void fireDeckGunOnTile(Tile t) {
+    t.setFireStatus(FireStatus.EMPTY);
+    for (Direction d : Direction.values()) {
+      if (d != Direction.NODIRECTION && d != Direction.NULLDIRECTION) {
+        if (!t.hasObstacle(d)) {
+          Tile next = t.getAdjacentTile(d);
+          if (next != null) {
+            next.setFireStatus(FireStatus.EMPTY);
+          }
+        }
+      }
+    }
   }
 }

@@ -11,6 +11,9 @@ public class FireFighterTurnManagerAdvance extends FireFighterTurnManager {
   protected final ArrayList<FireFighterAdvanceSpecialities> FREESPECIALITIES =
       new ArrayList<FireFighterAdvanceSpecialities>(9);
 
+  public static FireFighterTurnManagerAdvance getInstance() {
+    return (FireFighterTurnManagerAdvance) instance;
+  }
   protected FireFighterTurnManagerAdvance() {
     super();
     FREESPECIALITIES.clear();
@@ -54,7 +57,7 @@ public class FireFighterTurnManagerAdvance extends FireFighterTurnManager {
       last.removeVeteranBonus();
       FIREFIGHTERS.addLast(last);
       last.firstTurnDone();
-      BoardManager.getInstance().endTurnFireSpread();
+      BoardManagerAdvanced.getInstance().endTurnFireSpread();
       if (!getCurrentFireFighter().isFirstTurn()) {
         getCurrentFireFighter().resetActionPoints();
         verifyVeteranVacinityToAddAp();
@@ -360,7 +363,8 @@ public class FireFighterTurnManagerAdvance extends FireFighterTurnManager {
       if (d == Direction.NODIRECTION || d == Direction.NULLDIRECTION) {
         throw new IllegalArgumentException("The direction cannot be " + d.toString());
       } else {
-        List<Tile> newLocation = BoardManagerAdvanced.getInstance().getTilesThatCanContainAmbulance(d);
+        List<Tile> newLocation =
+            BoardManagerAdvanced.getInstance().getTilesThatCanContainAmbulance(d);
         List<Tile> list = BoardManagerAdvanced.getInstance().getTilesThatContainAmbulance();
         for (Tile t : list) {
           t.setCarrierStatus(CarrierStatus.CANHAVEAMBULANCE);
@@ -380,7 +384,8 @@ public class FireFighterTurnManagerAdvance extends FireFighterTurnManager {
       if (d == Direction.NODIRECTION || d == Direction.NULLDIRECTION) {
         throw new IllegalArgumentException("The direction cannot be " + d.toString());
       } else {
-        List<Tile> newLocation = BoardManagerAdvanced.getInstance().getTilesThatCanContainFireTruck(d);
+        List<Tile> newLocation =
+            BoardManagerAdvanced.getInstance().getTilesThatCanContainFireTruck(d);
         List<Tile> list = BoardManagerAdvanced.getInstance().getTilesThatContainFireTruck();
         for (int i = 0; i < list.size(); i++) {
           list.get(i).setCarrierStatus(CarrierStatus.CANHAVEFIRETRUCK);
@@ -388,13 +393,14 @@ public class FireFighterTurnManagerAdvance extends FireFighterTurnManager {
         for (Tile t : newLocation) {
           t.setCarrierStatus(CarrierStatus.HASFIRETRUCK);
         }
-        replaceFireFigherAfterVehicleMove(getCurrentFireFighter(),newLocation, d);
+        replaceFireFigherAfterVehicleMove(getCurrentFireFighter(), newLocation, d);
         verifyVeteranVacinityToAddAp();
       }
     }
   }
 
-  public void replaceFireFigherAfterVehicleMove(FireFighterAdvanced f, List<Tile> newVehTile, Direction d) {
+  public void replaceFireFigherAfterVehicleMove(
+      FireFighterAdvanced f, List<Tile> newVehTile, Direction d) {
     Tile currentTile = f.getTile();
     int i = currentTile.getI();
     int j = currentTile.getJ();
@@ -403,83 +409,89 @@ public class FireFighterTurnManagerAdvance extends FireFighterTurnManager {
         if (j == 0) {
           if (currentTile.getAdjacentTile(Direction.BOTTOM).canContainAmbulance()) {
             f.setTile(newVehTile.get(0));
-          }
-          else {
+          } else {
             f.setTile(newVehTile.get(1));
           }
-        }
-        else {
+        } else {
           if (currentTile.getAdjacentTile(Direction.BOTTOM).canContainAmbulance()) {
             f.setTile(newVehTile.get(1));
-          }
-          else {
+          } else {
             f.setTile(newVehTile.get(0));
           }
-
         }
         break;
       case BOTTOM:
         if (j == 0) {
           if (currentTile.getAdjacentTile(Direction.BOTTOM).canContainAmbulance()) {
             f.setTile(newVehTile.get(1));
-          }
-          else {
+          } else {
             f.setTile(newVehTile.get(0));
           }
-        }
-        else {
+        } else {
           if (currentTile.getAdjacentTile(Direction.BOTTOM).canContainAmbulance()) {
             f.setTile(newVehTile.get(0));
-          }
-          else {
+          } else {
             f.setTile(newVehTile.get(1));
           }
-
         }
         break;
       case RIGHT:
         if (i == 0) {
           if (currentTile.getAdjacentTile(Direction.LEFT).canContainAmbulance()) {
             f.setTile(newVehTile.get(0));
-          }
-          else {
+          } else {
             f.setTile(newVehTile.get(1));
           }
-        }
-        else {
+        } else {
           if (currentTile.getAdjacentTile(Direction.LEFT).canContainAmbulance()) {
             f.setTile(newVehTile.get(1));
-          }
-          else {
+          } else {
             f.setTile(newVehTile.get(0));
           }
-
         }
         break;
       case LEFT:
         if (i == 0) {
           if (currentTile.getAdjacentTile(Direction.LEFT).canContainAmbulance()) {
             f.setTile(newVehTile.get(1));
-          }
-          else {
+          } else {
             f.setTile(newVehTile.get(0));
           }
-        }
-        else {
+        } else {
           if (currentTile.getAdjacentTile(Direction.LEFT).canContainAmbulance()) {
             f.setTile(newVehTile.get(0));
-          }
-          else {
+          } else {
             f.setTile(newVehTile.get(1));
           }
         }
         break;
     }
-
   }
-    public void fireDeckGun() {
-      // TODO Driver Speciality
+
+  public void fireDeckGun() {
+    // TODO Driver Speciality
+    if (!getCurrentFireFighter().getTile().hasFireTruck()) {
+      sendMessageToGui("You cannot use the deck gun as you are not on the FireTruck");
+      return;
     }
+    Tile[][] tiles = BoardManagerAdvanced.getInstance().getTilesToUseGunOn();
+    for (int i = 0; i < tiles.length; i++) {
+      for (int j = 0; j < tiles[0].length; j++) {
+        if (tiles[i][j].hasFireFighters()) {
+          sendMessageToGui("You cannot fire the deck gun as there is a firefighter in the quadrant");
+          return;
+        }
+      }
+    }
+    if (getCurrentFireFighter().fireTheDeckGunAp()) {
+      int row = (int) (Math.random() * 3);
+      int column = (int) (Math.random() * 4);
+      BoardManagerAdvanced.getInstance().fireDeckGunOnTile(tiles[row][column]);
+    }
+    else {
+      sendMessageToGui("You need more AP to fire the deck gun 4 if you are not the Driver 2 otherwise");
+    }
+  }
 
   // TODO
   // verify the veteran vacinity at the begining of each turn;

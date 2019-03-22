@@ -164,7 +164,9 @@ public class BoardMovesPanel {
               if (BoardManager.getInstance().isAdvanced()) {
                 FireFighterTurnManagerAdvance fireFighterTurnManagerAdvance = (FireFighterTurnManagerAdvance) fireFighterTurnManager;
                 switch(move) {
-                  case FIRE_DECK_GUN: //TODO
+                  case FIRE_DECK_GUN:
+                    FireFighterTurnManagerAdvance.getInstance().fireDeckGun();
+                    redrawAfterMove();
                     break;
                   case MOVE_WITH_HAZMAT:
                     drawDirectionsPanelTable(move);
