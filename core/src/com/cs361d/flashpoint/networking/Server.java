@@ -110,27 +110,17 @@ public class Server implements Runnable
 
     public static ArrayList<Thread> getClientThreads() { return clientThreads; }
 
-    public boolean isEmpty() {
-        return notYetAssigned.isEmpty();
-    }
+    public boolean isEmpty() { return notYetAssigned.isEmpty(); }
 
     // To iterate through the chat messages
-    public static Iterator<String> iteratorForChat(){
-        return messages.iterator();
-    }
+    public static Iterator<String> iteratorForChat(){ return messages.iterator(); }
 
     // Function to add messages
     public static synchronized void addMessage(String message){ messages.add(message);}
 
-    public void changeLoadedStatus(boolean status) {
-        gameAlreadyLoadedorCreated = status;
-    }
-    public boolean getLoadedOrCreatedStatus() {
-        return gameAlreadyLoadedorCreated;
-    }
-    public boolean noMorePlayer() {
-        return notYetAssigned.isEmpty();
-    }
+    public void changeLoadedStatus(boolean status) { gameAlreadyLoadedorCreated = status; }
+    public boolean getLoadedOrCreatedStatus() { return gameAlreadyLoadedorCreated; }
+    public boolean noMorePlayer() { return notYetAssigned.isEmpty(); }
 
 
     public synchronized void  assignFireFighterToClient(String IP) {
@@ -175,14 +165,42 @@ public class Server implements Runnable
         } catch (IOException e) { e.printStackTrace(); }
     }
 
+    // Close server process
     public void closeServer(){
+        try {
+            // Close every client connection
+            for (final String clientIP : Server.clientObservers.keySet()) {
+                // redirect client to login page
+                this.sendMsgSpecificClient(clientIP,Commands.SETLOGINSCREEN,"");
+                ClientHandler mc = Server.clientObservers.get(clientIP);
+                mc.stopServerWriteToClientThread(); // Stop server-to-client writer thread (stop Client Handler)
+                mc.din.close(); //close server-from-client input stream
+                mc.dout.close();//close server-to-client output stream
+                mc.s.close();   //close client socket
+            }
 
+            // Main thread waits for all other threads to finish
+            for (Thread clientThread: Server.clientThreads){
+                clientThread.join();
+            }
+
+            // Stop all client's reader threads
+            for (Client client: NetworkManager.getInstance().clientList) {
+                client.stopClientReadingThread();
+                client.din.close(); //close client-from-server input stream
+                client.dout.close();//close client-to-server output stream
+            }
+            ss.close();         //close server socket
+
+            //Stop Server Thread
+            stopServerThread();
+
+        } catch (IOException e) { e.printStackTrace(); }
+        catch (InterruptedException e) { e.printStackTrace(); }
 
     }
 
-    public void closeClient() {
-
-    }
+    private void stopServerThread() { notStopped = false;  }
 
     /* Get info about the server's machine */
     public static String getMyHostName() {

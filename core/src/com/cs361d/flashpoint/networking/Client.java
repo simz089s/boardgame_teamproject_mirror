@@ -72,4 +72,6 @@ public class Client
             dout.flush();
         } catch (IOException e) { e.printStackTrace(); }
     }
+
+    public void stopClientReadingThread() { notStopped = false; }
 }
