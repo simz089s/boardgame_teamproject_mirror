@@ -2,15 +2,17 @@ package com.cs361d.flashpoint.networking;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.EOFException;
 import java.io.IOException;
 import java.net.Socket;
 
 class ClientHandler implements Runnable {
     private String name;
     private String ip;
-    final DataInputStream din;
-    final DataOutputStream dout;
-    Socket s;
+    final DataInputStream din;      // server-from-client input stream
+    final DataOutputStream dout;    // server-to-client output stream
+
+    private Socket s;
     boolean isloggedin;
     private boolean notStopped = true;
 
@@ -24,9 +26,10 @@ class ClientHandler implements Runnable {
         this.ip = ip;
     }
 
-    public void stopServerWriteToClientThread() { notStopped = false; }
+    public void stopClientReadFromServerThread() { notStopped = false; }
 
     public String getName() { return name; }
+    public Socket getSocket() { return s; }
 
     @Override
     // Constantly ready to read a new msg
@@ -39,23 +42,44 @@ class ClientHandler implements Runnable {
             {
                 String newMsg = din.readUTF();
                 // Don`t send the same string more than once
-                if (messageToSend.equals(newMsg)) {
+                if (messageToSend.equals(newMsg))
+                {
                     continue;
                 }
                 messageToSend = newMsg;
                 System.out.println(messageToSend);
 
                 NetworkManager.serverExecuteCommand(messageToSend);
+            } catch (EOFException clientKilled) {
+                try {
+                    // Closing resources
+                    this.din.close();
+                    this.dout.close();
+                    this.s.close();
+                    System.out.println("Streams and Socket closed for Client with IP: "+ip);
+
+                    // Close Reader Thread
+                    stopClientReadFromServerThread();
+                    System.out.println("Reader Thread terminated or Client with IP: "+ip);
+
+                    // Remove Client from Server's and Network's List
+                    Server.getServer().closeClient(ip);
+                    System.out.println();
+
+                } catch (IOException e) {
+                    System.out.println("Unable to close Streams for Client with IP: "+ip);
+                    e.printStackTrace();
+                }
+
             } catch (IOException e) {
                 e.printStackTrace();
                 try {
-                    // closing resources
                     this.din.close();
                     this.dout.close();
+                    System.out.println("Unable to close Streams for Client with IP: "+ip);
 
-                } catch(IOException ee) {
-                    ee.printStackTrace();
-                    Server.getServer().closeClient(ip);
+                } catch(IOException e1) {
+                    e1.printStackTrace();
                 }
             }
         }

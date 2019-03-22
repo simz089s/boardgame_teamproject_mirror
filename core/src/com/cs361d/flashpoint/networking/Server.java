@@ -74,8 +74,7 @@ public class Server implements Runnable
                 // start the thread for the client.
                 t.start();
 
-                // increment i for new client.
-                // i is used for naming only, and can be replaced by any naming scheme
+                // increment i for new client
                 i++;
 
             } catch (IOException e) { e.printStackTrace(); }
@@ -172,10 +171,10 @@ public class Server implements Runnable
                 // redirect client to login page
                 //this.sendMsgSpecificClient(clientIP,ClientCommands.SETLOGINSCREEN,"");
                 ClientHandler mc = Server.clientObservers.get(clientIP);
-                mc.stopServerWriteToClientThread(); // Stop server-to-client writer thread (stop Client Handler)
+                mc.stopClientReadFromServerThread(); // Stop server-to-client writer thread (stop Client Handler)
                 mc.din.close(); //close server-from-client input stream
                 mc.dout.close();//close server-to-client output stream
-                mc.s.close();   //close client socket
+                mc.getSocket().close();   //close client socket
             }
 
             // Main thread waits for all other threads to finish
@@ -216,34 +215,17 @@ public class Server implements Runnable
         return hostname;
     }
 
-
+    // Remove Client from Server's and Network's List
     public void closeClient(String clientIP) {
-        try {
-            ClientHandler clientToClose = Server.clientObservers.get(clientIP);
-            clientToClose.stopServerWriteToClientThread(); // Stop server-to-client writer thread (stop Client Handler)
-            clientToClose.din.close(); //close server-from-client input stream
-            clientToClose.dout.close();//close server-to-client output stream
-            clientToClose.s.close();   //close client socket
+        System.out.println("Num observers: "+Server.getClientObservers().size());
 
-            //Remove clientHandler from Hashmap
-            Server.getClientObservers().remove(clientIP);
+        //Remove clientHandler from Hashmap
+        Server.getClientObservers().remove(clientIP);
 
-            // Main thread waits for all other threads to finish
-//            Thread clientThread = Server.getClientThreads().get(0);
-//            clientThread.join();
-
-            // Stop all client's reader threads
-            Client c = (Client) NetworkManager.getInstance().getClientList().get(clientIP);
-            c.stopClientReadingThread();
-            c.getDin().close(); //close client-from-server input stream
-            c.getDout().close();//close client-to-server output stream
-
-        System.out.println("Client with IP: "+c.getClientIP()+" is closed");
-
-        } catch (IOException e) {
-            System.out.println("Unable to close a Client");
-            e.printStackTrace();
-        }
-
+        //Remove Client from Network
+        NetworkManager.getInstance().getClientList().remove(clientIP);
+        System.out.println("Num observers in server: "+Server.getClientObservers().size());
+        System.out.println("Number of Clients Remaining on Network: "+NetworkManager.getInstance().getClientList().size());
+        System.out.println("Client with IP: "+clientIP+" is removed from the Network successfully");
     }
 }

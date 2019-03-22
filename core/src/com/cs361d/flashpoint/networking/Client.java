@@ -8,16 +8,14 @@ import java.io.IOException;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
-public class Client
-{
+public class Client {
 
     // A client has an instance of the game
     public static FlashPointGame clientFPGame = new FlashPointGame();
 
     private Socket s;
-    private DataInputStream din;      // input stream
-
-    private DataOutputStream dout;    // output stream
+    private DataInputStream din;      // client-from-server input stream
+    private DataOutputStream dout;    // client-to-server output stream
     private String clientIP;
     private boolean notStopped = true;
 
