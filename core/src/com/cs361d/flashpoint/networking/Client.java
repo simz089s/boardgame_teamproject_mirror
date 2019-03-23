@@ -56,8 +56,7 @@ public class Client {
             e.printStackTrace();
         }
         catch (IOException e) {
-
-//            e.printStackTrace();
+            e.printStackTrace();
         }
     }
 

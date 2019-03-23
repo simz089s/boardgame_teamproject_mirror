@@ -35,48 +35,34 @@ class ClientHandler implements Runnable {
     // Constantly ready to read a new msg
     public void run() {
 
-        String messageToSend = "";
-        while (notStopped)
-        {
-            try
-            {
+        String messageToSend;
+        while (notStopped) {
+            try {
                 messageToSend = din.readUTF();
                 System.out.println(messageToSend);
 
                 NetworkManager.serverExecuteCommand(messageToSend);
-            } catch (EOFException clientKilled) {
+            } catch (Exception clientKilled) {
                 try {
                     // Closing resources
                     this.din.close();
                     this.dout.close();
                     this.s.close();
-                    System.out.println("Streams and Socket closed for Client with IP: "+ip);
+                    System.out.println("Streams and Socket closed for Client with IP: " + ip);
 
                     // Close Reader Thread
                     stopClientReadFromServerThread();
-                    System.out.println("Reader Thread terminated or Client with IP: "+ip);
+                    System.out.println("Reader Thread terminated or Client with IP: " + ip);
 
                     // Remove Client from Server's and Network's List
                     Server.getServer().closeClient(ip);
                     System.out.println();
 
                 } catch (IOException e) {
-                    System.out.println("Unable to close Streams for Client with IP: "+ip);
+                    System.out.println("Unable to close Streams for Client with IP: " + ip);
                     e.printStackTrace();
-                }
-
-            } catch (IOException e) {
-                e.printStackTrace();
-                try {
-                    this.din.close();
-                    this.dout.close();
-                    System.out.println("Unable to close Streams for Client with IP: "+ip);
-
-                } catch(IOException e1) {
-                    e1.printStackTrace();
                 }
             }
         }
-
     }
 }

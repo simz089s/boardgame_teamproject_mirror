@@ -26,7 +26,7 @@ public class NetworkManager {
   // MCGILL WORLD
   // public static final String DEFAULT_SERVER_IP = "142.157.74.18"; // Simon public ip address
 //  public static final String DEFAULT_SERVER_IP = "142.157.67.193"; // Elvric public ip address
-   final public static String DEFAULT_SERVER_IP = "142.157.149.154"; // DC public ip
+   final public static String DEFAULT_SERVER_IP = "104.222.125.177"; // DC public ip
   public static final int DEFAULT_SERVER_PORT = 54590;
 
   private String serverIP;
@@ -89,7 +89,7 @@ private static HashMap<String, Client> clientList = new HashMap<String, Client>(
       e.printStackTrace();
     }
 
-//    System.out.println("Public IP Address: " + systemipaddress + "\n");
+    System.out.println("Public IP Address: " + systemipaddress + "\n");
     return systemipaddress;
   }
 
@@ -192,7 +192,7 @@ private static HashMap<String, Client> clientList = new HashMap<String, Client>(
           break;
 
         case JOIN:
-          if (!ip.equals(DEFAULT_SERVER_IP) && Server.getServer().getLoadedOrCreatedStatus()) {
+          if (Server.getServer().getLoadedOrCreatedStatus()) {
             if (!Server.getServer().noMorePlayer()
                 && Server.getServer().getLoadedOrCreatedStatus()) {
               Server.getServer().assignFireFighterToClient(ip);
@@ -307,19 +307,19 @@ private static HashMap<String, Client> clientList = new HashMap<String, Client>(
     }
   }
 
-//  public String getMyIPAddress() {
-//    String ipAddress = null;
-//    try {
-//      InetAddress addr = InetAddress.getLocalHost();
-//      ipAddress = addr.getHostAddress();
-//      System.out.println("LOCAL ONE IP Address = " + ipAddress);
-//
-//    } catch (UnknownHostException e) {
-//      e.printStackTrace();
-//    }
-//
-//    return ipAddress;
-//  }
+  public String getMyIPAddress() {
+    String ipAddress = null;
+    try {
+      InetAddress addr = InetAddress.getLocalHost();
+      ipAddress = addr.getHostAddress();
+      System.out.println("LOCAL ONE IP Address = " + ipAddress);
+
+    } catch (UnknownHostException e) {
+      e.printStackTrace();
+    }
+
+    return ipAddress;
+  }
 //
 //  public String getIPByAddress(String address) {
 //    String ipAddress = null;
