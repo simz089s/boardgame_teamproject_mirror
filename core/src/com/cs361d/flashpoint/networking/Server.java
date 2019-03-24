@@ -24,6 +24,9 @@ public class Server implements Runnable
     // Vector to store active client threads
     private static HashMap<String, ClientHandler> clientObservers = new HashMap<String, ClientHandler>();
 
+    // Hash Map to map the users with the Firefighter colors
+    private static HashMap<User, FireFighterColor> fireFighterColors = new HashMap<User, FireFighterColor>();
+
     // Arraylist of client Threads
     static ArrayList<Thread> clientThreads = new ArrayList<Thread>();
 
@@ -224,4 +227,13 @@ public class Server implements Runnable
         System.out.println("Client with IP: "+clientIP+" is removed from the Network successfully");
         System.out.println("Number of Clients Remaining on Network: "+NetworkManager.getInstance().getClientList().size());
     }
+
+    public static HashMap<User, FireFighterColor> getFireFighterColors() {
+        return fireFighterColors;
+    }
+
+    public static void addColorToHashMap(User u, FireFighterColor f){
+        fireFighterColors.put(u,f );
+    }
+
 }

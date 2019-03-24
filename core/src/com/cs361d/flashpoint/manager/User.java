@@ -2,6 +2,7 @@ package com.cs361d.flashpoint.manager;
 
 import com.cs361d.flashpoint.model.BoardElements.FireFighter;
 import com.cs361d.flashpoint.model.BoardElements.FireFighterColor;
+import com.cs361d.flashpoint.networking.Server;
 
 
 public class User {
@@ -15,19 +16,21 @@ public class User {
 
     public void assignFireFighter(FireFighterColor c) {
         myColor = c;
+        Server.addColorToHashMap(this,c );
     }
 
     public boolean isMyTurn() {
-        if (myColor == null) {
+        FireFighterColor color = Server.getFireFighterColors().get(this);
+        if (color == null) {
             return false;
         }
         else {
-            return myColor == FireFighterTurnManager.getInstance().getCurrentFireFighter().getColor();
+            return color == FireFighterTurnManager.getInstance().getCurrentFireFighter().getColor();
         }
     }
 
     public FireFighterColor getColor() {
-        return myColor;
+        return Server.getFireFighterColors().get(this);
     }
     public String getName() {
         return name;
