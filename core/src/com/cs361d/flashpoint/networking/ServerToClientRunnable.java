@@ -6,7 +6,7 @@ import java.io.EOFException;
 import java.io.IOException;
 import java.net.Socket;
 
-class ClientHandler implements Runnable {
+class ServerToClientRunnable implements Runnable {
     private String name;
     private String ip;
     final DataInputStream din;      // server-from-client input stream
@@ -17,7 +17,7 @@ class ClientHandler implements Runnable {
     private boolean notStopped = true;
 
     // constructor
-    public ClientHandler(Socket s, String name, DataInputStream din, DataOutputStream dout, String ip) {
+    public ServerToClientRunnable(Socket s, String name, DataInputStream din, DataOutputStream dout, String ip) {
         this.din = din;
         this.dout = dout;
         this.name = name;
@@ -41,7 +41,7 @@ class ClientHandler implements Runnable {
                 messageToSend = din.readUTF();
                 System.out.println(messageToSend);
 
-                NetworkManager.serverExecuteCommand(messageToSend);
+                Server.serverExecuteCommand(messageToSend);
             } catch (Exception clientKilled) {
                 try {
                     // Closing resources

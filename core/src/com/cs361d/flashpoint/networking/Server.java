@@ -1,10 +1,12 @@
 package com.cs361d.flashpoint.networking;
 
 
-import com.cs361d.flashpoint.manager.FireFighterTurnManager;
-import com.cs361d.flashpoint.manager.User;
+import com.cs361d.flashpoint.manager.*;
 import com.cs361d.flashpoint.model.BoardElements.FireFighter;
 import com.cs361d.flashpoint.model.BoardElements.FireFighterColor;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -22,7 +24,7 @@ public class Server implements Runnable
     private List<FireFighterColor> notYetAssigned = new ArrayList<FireFighterColor>();
 
     // Vector to store active client threads
-    private static HashMap<String, ClientHandler> clientObservers = new HashMap<String, ClientHandler>();
+    private static HashMap<String, ServerToClientRunnable> clientObservers = new HashMap<String, ServerToClientRunnable>();
 
     // Hash Map to map the users with the Firefighter colors
     private static HashMap<User, FireFighterColor> fireFighterColors = new HashMap<User, FireFighterColor>();
@@ -36,12 +38,12 @@ public class Server implements Runnable
     private static Server instance;
     private boolean gameAlreadyLoadedorCreated = false;
     private static List<String> messages = new ArrayList<String>();
-    private boolean notStopped = true;
+    private static boolean notStopped = true;
 
     // counter for clientObservers
     static int i = 0;
 
-    ServerSocket ss;    //Server Socket
+    static ServerSocket ss;    //Server Socket
     Socket s;           //Client socket
     Thread startServer; // DON'T SEND TO SRC CLIENT TWICE
 
@@ -63,7 +65,7 @@ public class Server implements Runnable
                 String ip = s.getInetAddress().toString().replace("/","");
 
                 // Create a new handler object for handling this request.
-                ClientHandler clientObserver = new ClientHandler(s, "client " + i, din, dout, ip);
+                ServerToClientRunnable clientObserver = new ServerToClientRunnable(s, "client " + i, din, dout, ip);
 
                 // Create a new Thread with this client.
                 Thread t = new Thread(clientObserver);
@@ -106,7 +108,7 @@ public class Server implements Runnable
         return instance;
     }
 
-    public static HashMap<String, ClientHandler> getClientObservers() { return clientObservers; }
+    public static HashMap<String, ServerToClientRunnable> getClientObservers() { return clientObservers; }
 
     public static ArrayList<Thread> getClientThreads() { return clientThreads; }
 
@@ -151,7 +153,7 @@ public class Server implements Runnable
     /* Send a message to from server */
     public static synchronized void sendMsgToAllClients(String msg) {
         try {
-            for (ClientHandler mc : Server.clientObservers.values()) {
+            for (ServerToClientRunnable mc : Server.clientObservers.values()) {
                 mc.dout.writeUTF(msg);
             }
         } catch (IOException e) { e.printStackTrace(); }
@@ -159,20 +161,20 @@ public class Server implements Runnable
 
     public synchronized void sendMsgSpecificClient(String ip, ClientCommands command, String message){
         try {
-            ClientHandler client = clientObservers.get(ip);
+            ServerToClientRunnable client = clientObservers.get(ip);
             String msg = NetworkManager.getInstance().createJSON(command.toString(), message);
             client.dout.writeUTF(msg);
         } catch (IOException e) { e.printStackTrace(); }
     }
 
     // Close server process
-    public void closeServer(){
+    public static void closeServer(){
         try {
             // Close every client connection
             for (final String clientIP : Server.clientObservers.keySet()) {
                 // redirect client to login page
                 //this.sendMsgSpecificClient(clientIP,ClientCommands.SETLOGINSCREEN,"");
-                ClientHandler mc = Server.clientObservers.get(clientIP);
+                ServerToClientRunnable mc = Server.clientObservers.get(clientIP);
                 mc.stopClientReadFromServerThread(); // Stop server-to-client writer thread (stop Client Handler)
                 mc.din.close(); //close server-from-client input stream
                 mc.dout.close();//close server-to-client output stream
@@ -202,7 +204,7 @@ public class Server implements Runnable
 
     }
 
-    private void stopServerThread() { notStopped = false;  }
+    private static void stopServerThread() { notStopped = false;  }
 
     /* Get info about the server's machine */
     public static String getMyHostName() {
@@ -234,6 +236,127 @@ public class Server implements Runnable
 
     public static void addColorToHashMap(User u, FireFighterColor f){
         fireFighterColors.put(u,f );
+    }
+
+    // Now all server commands handled in the server
+    public static void serverExecuteCommand(String msg) {
+        try {
+            JSONParser parser = new JSONParser();
+
+            JSONObject jsonObject = (JSONObject) parser.parse(msg);
+            ServerCommands c = ServerCommands.fromString(jsonObject.get("command").toString());
+            String message = jsonObject.get("message").toString();
+            String ip = jsonObject.get("IP").toString();
+            System.out.println(message);
+
+            switch (c) {
+                case ADD_CHAT_MESSAGE:
+                    if (!message.equals("")) {
+                        Server.addMessage(message);
+//            if (BoardScreen.isChatFragment()) {
+//              BoardChatFragment.addMessageToChat(message);
+//            }
+                        Server.sendMsgToAllClients(msg);
+                    } else if (!message.equals("")) {
+                        Server.addMessage(message);
+//            if (BoardScreen.isChatFragment()) {
+//              BoardChatFragment.addMessageToChat(message);
+//            }
+                    }
+//          else if (!message.equals("")) {
+//            Gdx.app.postRunnable(
+//                    new Runnable() {
+//                      @Override
+//                      public void run() {
+//                        if (BoardScreen.isChatFragment()) {
+//                          BoardChatFragment.addMessageToChat(message);
+//                        }
+//                      }
+//                    });
+//          }
+                    break;
+
+                case GET_CHAT_MESSAGES:
+                    JSONArray jsa = new JSONArray();
+                    Iterator<String> it = Server.iteratorForChat();
+                    while (it.hasNext()) {
+                        jsa.add(it.next());
+                    }
+                    Server.getServer()
+                            .sendMsgSpecificClient(ip, ClientCommands.SEND_CHAT_MESSAGES, jsa.toJSONString());
+//            BoardScreen.setSideFragment(Fragment.CHAT);
+//            Iterator<String> it = Server.iteratorForChat();
+//            while (it.hasNext()) {
+//              BoardChatFragment.addMessageToChat(it.next());
+//            }
+//          }
+                    break;
+
+                case GAMESTATE:
+                    Server.sendMsgToAllClients(msg);
+                    break;
+
+                case SAVE:
+                    CreateNewGameManager.loadGameFromString(message);
+                    DBHandler.saveBoardToDB(BoardManager.getInstance().getGameName());
+                    break;
+
+                case SEND_NEWLY_CREATED_BOARD:
+                    System.out.println(!Server.getServer().getLoadedOrCreatedStatus());
+                    if (!Server.getServer().getLoadedOrCreatedStatus()) {
+                        System.out.println(msg);
+                        Server.getServer().changeLoadedStatus(true);
+                        CreateNewGameManager.loadGameFromString(message);
+                        Server.getServer().setFireFighterAssignArray();
+                        Server.getServer().assignFireFighterToClient(ip);
+                        Server.getServer().sendMsgSpecificClient(ip, ClientCommands.SETBOARDSCREEN, "");
+                    }
+                    break;
+
+                case DISCONNECTSERVER:
+                    closeServer(); // disconnect all the clients
+                    break;
+
+                case DISCONNECTCLIENT:
+//            instance.server.closeClient(); // disconnect clients
+                    break;
+
+                case ASK_TO_GET_ASSIGN_FIREFIGHTER:
+                    Server.getServer().assignFireFighterToClient(ip);
+                    break;
+
+                case EXITGAME:
+                    Server.getServer().changeLoadedStatus(false);
+                    for (ServerToClientRunnable mc : Server.getClientObservers().values()) {
+                        //TODO: Only if client is in the game let him exit
+                        mc.dout.writeUTF(msg);
+                    }
+                    break;
+
+                case LOADGAME:
+                    break;
+
+                case JOIN:
+                    if (Server.getServer().getLoadedOrCreatedStatus()) {
+                        if (!Server.getServer().noMorePlayer()
+                                && Server.getServer().getLoadedOrCreatedStatus()) {
+                            Server.getServer().assignFireFighterToClient(ip);
+                            Server.getServer()
+                                    .sendMsgSpecificClient(ip, ClientCommands.GAMESTATE, DBHandler.getBoardAsString());
+                            Server.getServer().sendMsgSpecificClient(ip, ClientCommands.SETBOARDSCREEN, "");
+                        }
+//          } else if (Server.getServer().getLoadedOrCreatedStatus() && !Server.getServer().isEmpty()) {
+//              Server.getServer().assignFireFighterToClient(ip);
+//              BoardScreen.setBoardScreen();
+                    }
+                    break;
+
+                default:
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 }
