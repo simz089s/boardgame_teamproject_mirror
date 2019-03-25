@@ -15,9 +15,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.List;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.cs361d.flashpoint.manager.CreateNewGameManager;
-import com.cs361d.flashpoint.manager.DBHandler;
-import com.cs361d.flashpoint.networking.NetworkManager;
+import com.cs361d.flashpoint.networking.Client;
 import com.cs361d.flashpoint.networking.ServerCommands;
 
 import java.io.File;
@@ -211,7 +209,7 @@ public class LobbyScreen extends FlashPointScreen {
           @Override
           public void clicked(InputEvent event, float x, float y) {
               BGM.stop();
-              NetworkManager.getInstance().sendCommand(ServerCommands.JOIN,"");
+              Client.getInstance().sendCommand(ServerCommands.JOIN,"");
           }
         });
 
@@ -232,8 +230,7 @@ public class LobbyScreen extends FlashPointScreen {
                     @Override
                     public void clicked(InputEvent event, float x, float y) {
                         if (lstLoadGames.getSelected() != null ){
-                            CreateNewGameManager.loadSavedGame(lstLoadGames.getSelected());
-                            NetworkManager.getInstance().sendCommand(ServerCommands.SEND_NEWLY_CREATED_BOARD, DBHandler.getBoardAsString());
+                            Client.getInstance().sendCommand(ServerCommands.LOAD_GAME, lstLoadGames.getSelected());
                         }
                     }
                 });

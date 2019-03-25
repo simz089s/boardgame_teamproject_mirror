@@ -42,6 +42,10 @@ public class Client {
         return instance;
     }
 
+    public static Client getInstance() {
+        return instance;
+    }
+
     private Client(String serverIP, int serverPort) throws IOException {
         try {
 
@@ -94,10 +98,6 @@ public class Client {
             e.printStackTrace();
         }
 
-    }
-
-    public static Server getInstance() {
-        return instance;
     }
 
     public void stopClientReadFromClientHandlerThread() {
@@ -217,10 +217,10 @@ public class Client {
 
                 case SET_GAME_STATE:
                     DBHandler.loadBoardFromString(message);
-
+                    break;
                 case ASSIGN_FIREFIGHTER:
                     User.getInstance().assignFireFighter(FireFighterColor.fromString(message));
-
+                    break;
                 default:
             }
 

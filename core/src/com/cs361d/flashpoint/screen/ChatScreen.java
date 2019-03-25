@@ -17,6 +17,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.List.ListStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.cs361d.flashpoint.networking.Client;
 import com.cs361d.flashpoint.networking.ServerCommands;
 import com.cs361d.flashpoint.networking.NetworkManager;
 
@@ -55,9 +56,6 @@ public class ChatScreen extends FlashPointScreen {
 
     TextButton btnChangePage;
     TextButton btnExit;
-
-    // Get the current network
-    NetworkManager myNetwork = NetworkManager.getInstance();
 
     public static void addMessageToGui(String msg) {
         msgs.add(msg);

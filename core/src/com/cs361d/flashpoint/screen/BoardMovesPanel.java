@@ -17,6 +17,7 @@ import com.cs361d.flashpoint.manager.DBHandler;
 import com.cs361d.flashpoint.manager.FireFighterTurnManager;
 import com.cs361d.flashpoint.manager.User;
 import com.cs361d.flashpoint.model.BoardElements.Direction;
+import com.cs361d.flashpoint.networking.Client;
 import com.cs361d.flashpoint.networking.ServerCommands;
 import com.cs361d.flashpoint.networking.NetworkManager;
 
@@ -150,7 +151,7 @@ public class BoardMovesPanel {
 
                     } else if (moveSelected.equals("SAVE")) {
                         DBHandler.saveBoardToDB(BoardManager.getInstance().getGameName());
-                        NetworkManager.getInstance().sendCommand(ServerCommands.SAVE, DBHandler.getBoardAsString());
+                        Client.getInstance().sendCommand(ServerCommands.SAVE, DBHandler.getBoardAsString());
                         createDialog("Save", "Your game has been successfully saved.");
                     } else {
                         //debugLbl.setText("failed action");

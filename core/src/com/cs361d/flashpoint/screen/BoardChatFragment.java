@@ -40,9 +40,6 @@ public class BoardChatFragment {
     ArrayList<ScrollPane> msgListSP = new ArrayList<ScrollPane>();
     ArrayList<TextField> msgFieldListTF = new ArrayList<TextField>();
 
-    // Get the current network
-    NetworkManager myNetwork = NetworkManager.getInstance();
-
 //    public static void addMessageToGui(String msg) {
 //        messagesArrList.add(msg);
 //        String[] newMsg = messagesArrList.toArray(new String[messagesArrList.size()]);
@@ -113,7 +110,7 @@ public class BoardChatFragment {
 
                     if(!messageInputed.equals("") && !messageInputed.equals(" ")){
                         textFieldMsg.setText("");
-                        Client.(ServerCommands.ADD_CHAT_MESSAGE,messageInputed); //send message over network
+                        Client.getInstance().sendCommand(ServerCommands.ADD_CHAT_MESSAGE,messageInputed); //send message over network
 //                        messagesArrList.add("Y: " + messageInputed);
 //                        String[] newMsg = messagesArrList.toArray(new String[messagesArrList.size()]);
 //                        lstMsg.setItems(newMsg);

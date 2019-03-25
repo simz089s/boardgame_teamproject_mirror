@@ -4,7 +4,6 @@ package com.cs361d.flashpoint.networking;
 import com.cs361d.flashpoint.manager.*;
 import com.cs361d.flashpoint.model.BoardElements.FireFighter;
 import com.cs361d.flashpoint.model.BoardElements.FireFighterColor;
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
@@ -132,7 +131,7 @@ public class Server implements Runnable
         sendCommandToSpecificClient(ClientCommands.ASSIGN_FIREFIGHTER, color.toString(), IP);
     }
 
-    public void setFireFighterAssignArray() {
+    public static void setFireFighterAssignArray() {
         notYetAssigned.clear();
         Iterator<FireFighter> it = FireFighterTurnManager.getInstance().iterator();
         if (!it.hasNext()) {
@@ -257,10 +256,11 @@ public class Server implements Runnable
 //                    }
                     break;
 
-                case LOADGAME:
+                case LOAD_GAME:
 
                     if (!gameLoaded) {
                         DBHandler.loadBoardFromDB(message);
+                        Server.setFireFighterAssignArray();
                         //TODO set false when client leaves game
                         gameLoaded = true;
                         assignFireFighterToClient(ip);

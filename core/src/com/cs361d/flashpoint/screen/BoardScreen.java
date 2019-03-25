@@ -15,6 +15,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.cs361d.flashpoint.manager.*;
 import com.cs361d.flashpoint.model.BoardElements.*;
+import com.cs361d.flashpoint.networking.Client;
 import com.cs361d.flashpoint.networking.Server;
 import com.cs361d.flashpoint.networking.ServerCommands;
 import com.cs361d.flashpoint.networking.NetworkManager;
@@ -553,7 +554,7 @@ public class BoardScreen extends FlashPointScreen {
                     }
                   }
                 };
-            Client.sendCommand(ServerCommands.EXITGAME, "");
+            Client.getInstance().sendCommand(ServerCommands.EXITGAME, "");
           }
         });
 
@@ -620,7 +621,7 @@ public class BoardScreen extends FlashPointScreen {
           public void clicked(InputEvent event, float x, float y) {
             removeAllPrevFragments();
             boardChatFragment.createChatFragment();
-            NetworkManager.getInstance().sendCommand(ServerCommands.GET_CHAT_MESSAGES,"");
+            Client.getInstance().sendCommand(ServerCommands.GET_CHAT_MESSAGES,"");
 
           }
         });
