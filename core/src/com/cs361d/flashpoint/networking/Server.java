@@ -96,8 +96,8 @@ public class Server implements Runnable
 
     }
 
-    public static Server createServer(int serverPort) {
-        instance = new Server(serverPort);
+    public static Server createServer() {
+        instance = new Server(NetworkManager.DEFAULT_SERVER_PORT);
         return instance;
     }
 
@@ -185,10 +185,6 @@ public class Server implements Runnable
     }
 
 
-    public static void addColorToHashMap(String IP, FireFighterColor f){
-        colorsToClient.put(IP,f );
-    }
-
     // Now all server commands handled in the server
     public static void serverExecuteCommand(String msg) {
         try {
@@ -228,13 +224,13 @@ public class Server implements Runnable
                     break;
 
                 case GET_CHAT_MESSAGES:
-                    JSONArray jsa = new JSONArray();
-                    Iterator<String> it = Server.iteratorForChat();
-                    while (it.hasNext()) {
-                        jsa.add(it.next());
-                    }
-                    Server.getServer()
-                            .sendMsgSpecificClient(ip, ClientCommands.SEND_CHAT_MESSAGES, jsa.toJSONString());
+//                    JSONArray jsa = new JSONArray();
+//                    Iterator<String> it = Server.iteratorForChat();
+//                    while (it.hasNext()) {
+//                        jsa.add(it.next());
+//                    }
+//                    Server.getServer()
+//                            .sendMsgSpecificClient(ip, ClientCommands.SEND_CHAT_MESSAGES, jsa.toJSONString());
 //            BoardScreen.setSideFragment(Fragment.CHAT);
 //            Iterator<String> it = Server.iteratorForChat();
 //            while (it.hasNext()) {
@@ -254,11 +250,11 @@ public class Server implements Runnable
 
 
                 case EXITGAME:
-                    Server.getServer().changeLoadedStatus(false);
-                    for (ServerToClientRunnable mc : Server.getClientObservers().values()) {
-                        //TODO: Only if client is in the game let him exit
-                        mc.dout.writeUTF(msg);
-                    }
+//                    Server.getServer().changeLoadedStatus(false);
+//                    for (ServerToClientRunnable mc : Server.getClientObservers().values()) {
+//                        //TODO: Only if client is in the game let him exit
+//                        mc.dout.writeUTF(msg);
+//                    }
                     break;
 
                 case LOADGAME:

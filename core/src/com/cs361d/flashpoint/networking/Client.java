@@ -30,7 +30,19 @@ public class Client {
     private String clientIP;
     private boolean notStopped = true;
 
-    public Client(String serverIP, int serverPort) throws IOException {
+    private static Client instance;
+
+
+    public static Client createClient() {
+        try {
+            instance = new Client(NetworkManager.DEFAULT_SERVER_IP, NetworkManager.DEFAULT_SERVER_PORT);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return instance;
+    }
+
+    private Client(String serverIP, int serverPort) throws IOException {
         try {
 
             // Attempt to connect to server
@@ -82,6 +94,10 @@ public class Client {
             e.printStackTrace();
         }
 
+    }
+
+    public static Server getInstance() {
+        return instance;
     }
 
     public void stopClientReadFromClientHandlerThread() {
@@ -200,9 +216,10 @@ public class Client {
                     break;
 
                 case SET_GAME_STATE:
-                    DBHandler.load;
+                    DBHandler.loadBoardFromString(message);
 
                 case ASSIGN_FIREFIGHTER:
+                    User.getInstance().assignFireFighter(FireFighterColor.fromString(message));
 
                 default:
             }

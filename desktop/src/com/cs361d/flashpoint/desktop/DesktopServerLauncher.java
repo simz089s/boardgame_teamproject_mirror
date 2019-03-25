@@ -9,16 +9,9 @@ import com.cs361d.flashpoint.networking.Server;
 public class DesktopServerLauncher
 {
     public static void main(String[] arg) {
-//        LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-//        new LwjglApplication(new FlashPointGame(), config);
-
-        NetworkManager myNetwork = NetworkManager.getInstance(); // Create a single network
-        Server server = null;
-
         //Check if you should connect as a server or a client
-        if(myNetwork.getMyPublicIP().equals(myNetwork.DEFAULT_SERVER_IP)){
-            server = Server.createServer(NetworkManager.DEFAULT_SERVER_PORT);
-            myNetwork.addServer(server);
+        if(NetworkManager.getMyPublicIP().equals(NetworkManager.DEFAULT_SERVER_IP)){
+            Server.createServer();
         }
         // change window size
 //        config.width = 1225;

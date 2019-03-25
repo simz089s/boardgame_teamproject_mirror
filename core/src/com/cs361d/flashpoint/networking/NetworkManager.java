@@ -30,28 +30,7 @@ public class NetworkManager {
 //  final public static String DEFAULT_SERVER_IP = "142.157.75.165"; // Matty V IP
   public static final int DEFAULT_SERVER_PORT = 54590;
 
-  private String serverIP;
 
-  // variable of type String
-  public Server server;
-
-  // private constructor restricted to this class itself
-  private NetworkManager(String pServerIP, int pServerPort) {
-    serverIP = pServerIP;
-  }
-
-  // static method to create instance of Singleton class
-  public static NetworkManager getInstance() {
-    if (instance == null) {
-      instance =
-          new NetworkManager(NetworkManager.DEFAULT_SERVER_IP, NetworkManager.DEFAULT_SERVER_PORT);
-    }
-    return instance;
-  }
-
-  public void addServer(Server s) {
-    this.server = s;
-  }
 
   // In the controller, because both Server and Client need this class
   public static String createJSON(String command, String msg) {
@@ -81,7 +60,7 @@ public class NetworkManager {
     return systemipaddress;
   }
 
-  public String getMyIPAddress() {
+  public static String getMyIPAddress() {
     String ipAddress = null;
     try {
       InetAddress addr = InetAddress.getLocalHost();

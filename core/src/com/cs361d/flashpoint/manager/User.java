@@ -16,21 +16,19 @@ public class User {
 
     public void assignFireFighter(FireFighterColor c) {
         myColor = c;
-        Server.addColorToHashMap(this,c );
     }
 
     public boolean isMyTurn() {
-        FireFighterColor color = Server.getFireFighterColors().get(this);
-        if (color == null) {
+        if (myColor == null) {
             return false;
         }
         else {
-            return color == FireFighterTurnManager.getInstance().getCurrentFireFighter().getColor();
+            return myColor == FireFighterTurnManager.getInstance().getCurrentFireFighter().getColor();
         }
     }
 
     public FireFighterColor getColor() {
-        return Server.getFireFighterColors().get(this);
+        return myColor;
     }
     public String getName() {
         return name;

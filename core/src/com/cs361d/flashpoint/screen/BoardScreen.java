@@ -548,13 +548,12 @@ public class BoardScreen extends FlashPointScreen {
                 new Dialog("Warning", skinUI, "dialog") {
                   public void result(Object obj) {
                     if ((Boolean) obj) {
-                      Server.getServer().sendCommand(ServerCommands.DISCONNECTSERVER, "");
                       BGM.stop();
                       game.setScreen(game.lobbyScreen);
                     }
                   }
                 };
-            NetworkManager.getInstance().sendCommand(ServerCommands.EXITGAME, "");
+            Client.sendCommand(ServerCommands.EXITGAME, "");
           }
         });
 

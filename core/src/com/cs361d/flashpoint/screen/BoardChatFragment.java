@@ -6,6 +6,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.List;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
+import com.cs361d.flashpoint.networking.Client;
 import com.cs361d.flashpoint.networking.ServerCommands;
 import com.cs361d.flashpoint.networking.NetworkManager;
 
@@ -112,7 +113,7 @@ public class BoardChatFragment {
 
                     if(!messageInputed.equals("") && !messageInputed.equals(" ")){
                         textFieldMsg.setText("");
-                        myNetwork.sendCommand(ServerCommands.ADD_CHAT_MESSAGE,messageInputed); //send message over network
+                        Client.(ServerCommands.ADD_CHAT_MESSAGE,messageInputed); //send message over network
 //                        messagesArrList.add("Y: " + messageInputed);
 //                        String[] newMsg = messagesArrList.toArray(new String[messagesArrList.size()]);
 //                        lstMsg.setItems(newMsg);
