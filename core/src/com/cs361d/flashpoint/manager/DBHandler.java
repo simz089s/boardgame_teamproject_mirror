@@ -67,7 +67,7 @@ public class DBHandler {
 
 
 
-    protected static void loadBoardFromDB(String fileName) {
+    public static void loadBoardFromDB(String fileName) {
         BoardManager myBoardManager = BoardManager.getInstance();
 
         JSONParser parser = new JSONParser();

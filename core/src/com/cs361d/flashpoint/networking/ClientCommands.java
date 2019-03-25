@@ -13,7 +13,8 @@ public enum ClientCommands //Commands sent to client
     SETBOARDSCREEN("SETBOARDSCREEN"),
     EXITGAME("EXIT_GAME"),
     SEND_CHAT_MESSAGES("SEND_CHAT_MESSAGES"),
-    ADD_CHAT_MESSAGE ("ADD_CHAT_MESSAGE");
+    ADD_CHAT_MESSAGE ("ADD_CHAT_MESSAGE"),
+    SET_GAME_STATE("SET_GAME_STATE");
     private String text;
 
     ClientCommands(String text) {

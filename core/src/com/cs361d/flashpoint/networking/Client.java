@@ -2,6 +2,7 @@ package com.cs361d.flashpoint.networking;
 
 import com.badlogic.gdx.Gdx;
 import com.cs361d.flashpoint.manager.CreateNewGameManager;
+import com.cs361d.flashpoint.manager.DBHandler;
 import com.cs361d.flashpoint.manager.User;
 import com.cs361d.flashpoint.model.BoardElements.FireFighterColor;
 import com.cs361d.flashpoint.screen.BoardChatFragment;
@@ -102,7 +103,7 @@ public class Client {
 
 
     /* Send a message to a server */
-    public synchronized void sendMsgToServer(String msg) {
+    private synchronized void sendMsgToServer(String msg) {
         try {
             // write on the output stream
             dout.writeUTF(msg);
@@ -142,10 +143,6 @@ public class Client {
                                     BoardScreen.redrawBoard();
                                 }
                             });
-                    break;
-
-                case ASSIGN_FIREFIGHTER:
-                    User.getInstance().assignFireFighter(FireFighterColor.fromString(message));
                     break;
 
                 case EXITGAME:
@@ -202,6 +199,11 @@ public class Client {
                     }
                     break;
 
+                case SET_GAME_STATE:
+                    DBHandler.load;
+
+                case ASSIGN_FIREFIGHTER:
+
                 default:
             }
 
@@ -210,5 +212,9 @@ public class Client {
             e.printStackTrace();
         }
 
+    }
+    public void sendCommand(ServerCommands command, String msg) {
+        String jsonMsg = NetworkManager.createJSON(command.toString(), msg);
+        this.sendMsgToServer(jsonMsg);
     }
 }

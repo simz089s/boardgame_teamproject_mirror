@@ -34,8 +34,6 @@ public class NetworkManager {
 
   // variable of type String
   public Server server;
-//  public ArrayList<Client> clientList = new ArrayList<Client>();
-private static HashMap<String, Client> clientList = new HashMap<String, Client>();
 
   // private constructor restricted to this class itself
   private NetworkManager(String pServerIP, int pServerPort) {
@@ -55,19 +53,8 @@ private static HashMap<String, Client> clientList = new HashMap<String, Client>(
     this.server = s;
   }
 
-  public void addNewClient(String ip, Client c) { this.clientList.put(ip, c); }
-
-  public HashMap getClientList() { return clientList; }
-
-  public void sendCommand(ServerCommands command, String msg) {
-    String jsonMsg = createJSON(command.toString(), msg);
-    for (Client c: clientList.values()) {
-      if (getMyPublicIP().equals(c.getClientIP()))
-          c.sendMsgToServer(jsonMsg);
-    }
-  }
-
-  public String createJSON(String command, String msg) {
+  // In the controller, because both Server and Client need this class
+  public static String createJSON(String command, String msg) {
 
     JSONObject message = new JSONObject();
     message.put("command", command);
@@ -76,7 +63,7 @@ private static HashMap<String, Client> clientList = new HashMap<String, Client>(
     return message.toString();
   }
 
-  public String getMyPublicIP() {
+  public static String getMyPublicIP() {
     String systemipaddress = "";
     try {
       URL url_name = new URL("http://bot.whatismyipaddress.com");
