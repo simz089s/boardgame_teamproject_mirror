@@ -4,6 +4,7 @@ import com.cs361d.flashpoint.screen.FlashPointGame;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.EOFException;
 import java.io.IOException;
 import java.net.Socket;
 import java.net.UnknownHostException;
@@ -19,7 +20,7 @@ public class Client {
     private String clientIP;
     private boolean notStopped = true;
 
-    public Client(String serverIP, int serverPort) {
+    public Client(String serverIP, int serverPort) throws IOException {
         try {
 
             // Attempt to connect to server
@@ -45,7 +46,24 @@ public class Client {
                                     // read the message sent to this client
                                     msg = din.readUTF();
                                     NetworkManager.clientExecuteCommand(msg);
-                                } catch (IOException e) { e.printStackTrace(); }
+                                } catch (Exception connectionLost) {
+                                    try {
+                                        System.out.println("Server disconnected: closing client...");
+                                        // Closing resources
+                                        din.close();
+                                        dout.close();
+                                        s.close();
+                                        System.out.println("Streams and Socket closed for Client with IP: " + clientIP);
+
+                                        // Close Reader Thread
+                                        stopClientReadFromClientHandlerThread();
+                                        System.out.println("Reader Thread terminated or Client with IP: " + clientIP);
+
+                                    } catch (IOException e) {
+                                        System.out.println("Unable to close Streams for Client with IP: " + clientIP);
+                                        e.printStackTrace();
+                                    }
+                                    }
                             }
                         }
                     });
@@ -55,16 +73,15 @@ public class Client {
             System.out.println("Server Not Found");
             e.printStackTrace();
         }
-        catch (IOException e) {
-            e.printStackTrace();
-        }
+
     }
+
+    public void stopClientReadFromClientHandlerThread(){notStopped = false;}
 
     /* Getters */
     public String getClientIP() { return clientIP; }
     public DataInputStream getDin() { return din; }
     public DataOutputStream getDout() { return dout; }
-
 
 
     /* Send a message to a server */
