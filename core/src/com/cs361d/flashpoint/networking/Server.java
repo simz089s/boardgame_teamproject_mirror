@@ -200,14 +200,14 @@ public class Server implements Runnable {
     }
     if (color != FireFighterColor.NOT_ASSIGNED) {
       JSONObject object = new JSONObject();
-      object.put("title","The player with color " + color + " closed its window!");
-      object.put("message","Welcome back to the lobby!");
+      object.put("title", "The player with color " + color + " closed its window!");
+      object.put("message", "Welcome back to the lobby!");
       colorsToClient.clear();
       notYetAssigned.clear();
       chatMessages.clear();
       gameLoaded = false;
-      Server.sendCommandToAllClients(ClientCommands.EXIT_GAME,"");
-      Server.sendCommandToAllClients(ClientCommands.SHOW_MESSAGE_ON_SCREEN,object.toJSONString());
+      Server.sendCommandToAllClients(ClientCommands.EXIT_GAME, "");
+      Server.sendCommandToAllClients(ClientCommands.SHOW_MESSAGE_ON_SCREEN, object.toJSONString());
     }
     System.out.println("Client with IP: " + clientIP + " is removed from the Network successfully");
     System.out.println("Number of Clients Remaining on Network: " + clientList.size());
@@ -229,11 +229,12 @@ public class Server implements Runnable {
       switch (c) {
         case ADD_CHAT_MESSAGE:
           chatMessages.add(message);
-          Server.sendCommandToAllClients(ClientCommands.ADD_CHAT_MESSAGE,message);
+          Server.sendCommandToAllClients(ClientCommands.ADD_CHAT_MESSAGE, message);
           break;
 
         case GET_CHAT_MESSAGES:
-          Server.sendCommandToSpecificClient(ClientCommands.SEND_CHAT_MESSAGES,getChatAsJsonString(),ip);
+          Server.sendCommandToSpecificClient(
+              ClientCommands.SEND_CHAT_MESSAGES, getChatAsJsonString(), ip);
           break;
 
         case SAVE:
@@ -247,14 +248,15 @@ public class Server implements Runnable {
 
         case EXIT_GAME:
           JSONObject object = new JSONObject();
-          object.put("title","The player: " + message + " left the game");
-          object.put("message","Welcome back to the lobby!");
+          object.put("title", "The player: " + message + " left the game");
+          object.put("message", "Welcome back to the lobby!");
           gameLoaded = false;
           notYetAssigned.clear();
           colorsToClient.clear();
           chatMessages.clear();
           Server.sendCommandToAllClients(ClientCommands.EXIT_GAME, "");
-          Server.sendCommandToAllClients(ClientCommands.SHOW_MESSAGE_ON_SCREEN,object.toJSONString());
+          Server.sendCommandToAllClients(
+              ClientCommands.SHOW_MESSAGE_ON_SCREEN, object.toJSONString());
           break;
 
         case LOAD_GAME:
@@ -281,13 +283,12 @@ public class Server implements Runnable {
               sendCommandToSpecificClient(
                   ClientCommands.SET_GAME_STATE, DBHandler.getBoardAsString(), ip);
               sendCommandToSpecificClient(ClientCommands.SET_BOARD_SCREEN, "", ip);
-            }
-            else {
+            } else {
               JSONObject obj1 = new JSONObject();
               obj1.put("title", "Game currently full");
               obj1.put("message", "The game is full try latter");
               sendCommandToSpecificClient(
-                      ClientCommands.SHOW_MESSAGE_ON_SCREEN, obj1.toJSONString(), ip);
+                  ClientCommands.SHOW_MESSAGE_ON_SCREEN, obj1.toJSONString(), ip);
             }
           } else {
             JSONObject obj1 = new JSONObject();
@@ -312,20 +313,20 @@ public class Server implements Runnable {
             sendCommandToSpecificClient(
                 ClientCommands.SET_GAME_STATE, DBHandler.getBoardAsString(), ip);
             sendCommandToSpecificClient(ClientCommands.SET_BOARD_SCREEN, "", ip);
-          }
-          else {
+          } else {
             JSONObject obj1 = new JSONObject();
             obj1.put("title", "Game already Loaded");
             obj1.put("message", "There is a game already loaded");
             sendCommandToSpecificClient(
-                    ClientCommands.SHOW_MESSAGE_ON_SCREEN, obj1.toJSONString(), ip);
+                ClientCommands.SHOW_MESSAGE_ON_SCREEN, obj1.toJSONString(), ip);
           }
           break;
 
         case SET_INITIAL_SPECIALITY:
-          if (FireFighterTurnManagerAdvance.getInstance().setInitialSpeciality(FireFighterAdvanceSpecialities.fromString(message))) {
+          if (FireFighterTurnManagerAdvance.getInstance()
+              .setInitialSpeciality(FireFighterAdvanceSpecialities.fromString(message))) {
             mustSendAndRefresh = true;
-        }
+          }
           break;
 
         case CHOOSE_INITIAL_POSITION:
@@ -339,9 +340,9 @@ public class Server implements Runnable {
 
         case SET_AMBULANCE:
           jsonObject = (JSONObject) parser.parse(message);
-           i = Integer.parseInt(jsonObject.get("i").toString());
-           j = Integer.parseInt(jsonObject.get("j").toString());
-           t = BoardManager.getInstance().getTileAt(i, j);
+          i = Integer.parseInt(jsonObject.get("i").toString());
+          j = Integer.parseInt(jsonObject.get("j").toString());
+          t = BoardManager.getInstance().getTileAt(i, j);
           (BoardManagerAdvanced.getInstance()).addAmbulance(i, j);
           mustSendAndRefresh = true;
           break;
@@ -358,6 +359,7 @@ public class Server implements Runnable {
         case ACCEPT_MOVE_BY_CAPTAIN:
           FireFighterTurnManagerAdvance.getInstance().setAccept(Boolean.parseBoolean(message));
           FireFighterTurnManagerAdvance.getInstance().stopWaiting();
+          break;
 
         default:
           // the command must be an action command
@@ -387,7 +389,8 @@ public class Server implements Runnable {
     this.clientList.put(ip, c);
   }
 
-  public static synchronized void serverExecuteGameCommand(String gameCommand, String message, String ip) {
+  public static synchronized void serverExecuteGameCommand(
+      String gameCommand, String message, String ip) {
 
     Actions action = Actions.fromString(gameCommand);
     JSONParser parser = new JSONParser();
@@ -441,17 +444,20 @@ public class Server implements Runnable {
         case MOVE_WITH_HAZMAT:
           jsonObject = (JSONObject) parser.parse(message);
           direction = Direction.fromString(jsonObject.get("direction").toString());
-          mustSendAndRefresh = FireFighterTurnManagerAdvance.getInstance().moveWithHazmat(direction);
+          mustSendAndRefresh =
+              FireFighterTurnManagerAdvance.getInstance().moveWithHazmat(direction);
           break;
         case DRIVE_AMBULANCE:
           jsonObject = (JSONObject) parser.parse(message);
           direction = Direction.fromString(jsonObject.get("direction").toString());
-          mustSendAndRefresh = FireFighterTurnManagerAdvance.getInstance().driveAmbulance(direction);
+          mustSendAndRefresh =
+              FireFighterTurnManagerAdvance.getInstance().driveAmbulance(direction);
           break;
         case DRIVE_FIRETRUCK:
           jsonObject = (JSONObject) parser.parse(message);
           direction = Direction.fromString(jsonObject.get("direction").toString());
-          mustSendAndRefresh = FireFighterTurnManagerAdvance.getInstance().driveFireTruck(direction);
+          mustSendAndRefresh =
+              FireFighterTurnManagerAdvance.getInstance().driveFireTruck(direction);
           break;
         case REMOVE_HAZMAT:
           mustSendAndRefresh = FireFighterTurnManagerAdvance.getInstance().disposeHazmat();
@@ -461,14 +467,15 @@ public class Server implements Runnable {
           jsonObject = (JSONObject) parser.parse(message);
           int i = Integer.parseInt(jsonObject.get("i").toString());
           int j = Integer.parseInt(jsonObject.get("j").toString());
-          Tile t = BoardManager.getInstance().getTileAt(i,j);
+          Tile t = BoardManager.getInstance().getTileAt(i, j);
           mustSendAndRefresh = FireFighterTurnManagerAdvance.getInstance().flipPOI(t);
           break;
         case CURE_VICTIM:
           mustSendAndRefresh = FireFighterTurnManagerAdvance.getInstance().treatVictim();
           break;
         case CREW_CHANGE:
-          if (FireFighterTurnManagerAdvance.getInstance().crewChange(FireFighterAdvanceSpecialities.fromString(message))) {
+          if (FireFighterTurnManagerAdvance.getInstance()
+              .crewChange(FireFighterAdvanceSpecialities.fromString(message))) {
             mustSendAndRefresh = true;
           }
           break;
@@ -478,7 +485,9 @@ public class Server implements Runnable {
           FireFighterColor color = FireFighterColor.fromString(jsonObject.get("color").toString());
           action = Actions.fromString(jsonObject.get("action").toString());
           direction = Direction.fromString(jsonObject.get("direction").toString());
-          mustSendAndRefresh = FireFighterTurnManagerAdvance.getInstance().fireCaptainCommand(color, action, direction);
+          mustSendAndRefresh =
+              FireFighterTurnManagerAdvance.getInstance()
+                  .fireCaptainCommand(color, action, direction);
           break;
 
         default:
@@ -503,5 +512,4 @@ public class Server implements Runnable {
     }
     return array.toJSONString();
   }
-
 }

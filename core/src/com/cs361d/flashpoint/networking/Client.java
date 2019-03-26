@@ -3,6 +3,7 @@ package com.cs361d.flashpoint.networking;
 import com.badlogic.gdx.Gdx;
 import com.cs361d.flashpoint.manager.CreateNewGameManager;
 import com.cs361d.flashpoint.manager.User;
+import com.cs361d.flashpoint.model.BoardElements.Direction;
 import com.cs361d.flashpoint.model.BoardElements.FireFighterColor;
 import com.cs361d.flashpoint.screen.*;
 import org.json.simple.JSONArray;
@@ -208,6 +209,19 @@ public class Client {
                   BoardScreen.redrawBoard();
                 }
               });
+          break;
+
+        case ASK_TO_ACCEPT_MOVE:
+          jsonObject = (JSONObject) parser.parse(message);
+          final Actions actions = Actions.fromString(jsonObject.get("action").toString());
+          final Direction d = Direction.fromString(jsonObject.get("direction").toString());
+          Gdx.app.postRunnable(
+                  new Runnable() {
+                    @Override
+                    public void run() {
+                      BoardAcceptCaptainCmd.drawAcceptCaptainCmdPanel(actions,d);
+                    }
+                  });
           break;
 
         case SHOW_MESSAGE_ON_SCREEN:

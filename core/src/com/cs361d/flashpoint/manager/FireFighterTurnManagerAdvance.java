@@ -580,6 +580,7 @@ public class FireFighterTurnManagerAdvance extends FireFighterTurnManager {
       return false;
     }
     boolean worked = false;
+    sendAproval(color,action,d);
     if (accept) {
       if (fadv.setForFireCaptainAction((FireCaptain) getCurrentFireFighter())) {
         FIREFIGHTERS.addFirst(fadv);
