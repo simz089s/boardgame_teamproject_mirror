@@ -966,9 +966,9 @@ public class BoardScreen extends FlashPointScreen {
         } else if (FireFighterTurnManagerAdvance.getInstance().getCurrentFireFighter().getSpeciality() == FireFighterAdvanceSpecialities.NO_SPECIALITY) {
           boardDialog.drawDialog(
                   "Specialty", "Choose your initial specialty on the right panel.");
-          addFilterOnTileForChooseInitPos();
           boardChooseRolePanel.drawChooseSpecialtyPanel();
         } else if(!FireFighterTurnManager.getInstance().currentHasTile()){
+          removeAllPrevFragments();
             if (User.getInstance().isMyTurn() || true) {
               addFilterOnTileForChooseInitPos();
               boardChooseRolePanel.drawChooseSpecialtyPanel();
