@@ -43,6 +43,7 @@ public class BoardAcceptCaptainCmd {
 
         Label label = new Label(action.toString(), skinUI);
         label.setFontScale(1.5f);
+        label.setColor(Color.BLACK);
 
         ImageButton directionImg = new ImageButton(BoardMovesPanel.getTextureForDirectionsTable(direction));
 
@@ -88,10 +89,10 @@ public class BoardAcceptCaptainCmd {
         specialtiesTable.row();
         specialtiesTable.add(btnConfirmYes).size(btnConfirmYes.getWidth(), btnConfirmYes.getHeight());
         specialtiesTable.row();
-        specialtiesTable.add(btnConfirmYes).size(btnConfirmNo.getWidth(), btnConfirmNo.getHeight());
+        specialtiesTable.add(btnConfirmNo).size(btnConfirmNo.getWidth(), btnConfirmNo.getHeight());
 
         specialtiesTable.setPosition(
-                1050,
+                1000,
                 Gdx.graphics.getHeight() - 350);
 
         specialtiesTablesList.add(specialtiesTable);
