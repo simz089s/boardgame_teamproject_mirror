@@ -319,6 +319,7 @@ public class BoardCaptainCommand {
     }
 
     private void removeTableDirectionsPanel() {
+        removeMovePanel();
         for (int i = 0; i < directionsTableList.size(); i++) {
             directionsTableList.get(i).remove();
         }
