@@ -756,8 +756,7 @@ public class BoardScreen extends FlashPointScreen {
           @Override
           public void clicked(InputEvent event, float x, float y) {
             if (User.getInstance().isMyTurn()) {
-              removeAllPrevFragments();
-              boardMovesPanel.drawMovesAndDirectionsPanel();
+              redrawBoard();
             }
           }
         });
@@ -963,15 +962,16 @@ public class BoardScreen extends FlashPointScreen {
                   "Engine position",
                   "Choose the fire engine's initial position (green tiles).");
           addFilterOnTileForEngine();
+        } else if(!FireFighterTurnManager.getInstance().currentHasTile()){
+            if (User.getInstance().isMyTurn() || true) {
+              boardDialog.drawDialog(
+                      "Specialty", "Choose your initial position on the board.");
+              addFilterOnTileForChooseInitPos();
+            }
         } else if (FireFighterTurnManagerAdvance.getInstance().getCurrentFireFighter().getSpeciality() == FireFighterAdvanceSpecialities.NO_SPECIALITY) {
           boardDialog.drawDialog(
                   "Specialty", "Choose your initial specialty on the right panel.");
           boardChooseRolePanel.drawChooseSpecialtyPanel();
-        } else if(!FireFighterTurnManager.getInstance().currentHasTile()){
-            if (User.getInstance().isMyTurn() || true) {
-              addFilterOnTileForChooseInitPos();
-              boardChooseRolePanel.drawChooseSpecialtyPanel();
-            }
         } else {
           boardMovesPanel.drawMovesAndDirectionsPanel();
         }
