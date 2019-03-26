@@ -14,7 +14,7 @@ public enum FireFighterColor {
     this.text = text;
   }
 
-  public String toString() {
+  public String toText() {
     return this.text;
   }
 
