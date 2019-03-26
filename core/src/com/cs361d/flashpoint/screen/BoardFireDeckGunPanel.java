@@ -97,7 +97,7 @@ public class BoardFireDeckGunPanel {
         fireDeckGunTable.add(btnFireCol).size(btnFireRow.getWidth(), btnFireRow.getHeight());
 
         fireDeckGunTable.setPosition(
-                1000,
+                900,
                 Gdx.graphics.getHeight() - 350);
 
         fireDeckGunTablesList.add(fireDeckGunTable);
