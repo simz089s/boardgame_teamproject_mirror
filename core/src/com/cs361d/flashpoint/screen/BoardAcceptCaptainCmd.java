@@ -18,11 +18,10 @@ import com.cs361d.flashpoint.networking.ServerCommands;
 import java.util.ArrayList;
 
 import static com.cs361d.flashpoint.screen.BoardScreen.boardMovesPanel;
+import static com.cs361d.flashpoint.screen.BoardScreen.stage;
 import static com.cs361d.flashpoint.screen.FlashPointScreen.skinUI;
 
 public class BoardAcceptCaptainCmd {
-
-    static Stage stage;
 
     static Table specialtiesTable;
 
@@ -35,11 +34,6 @@ public class BoardAcceptCaptainCmd {
     static TextButton btnConfirmNo;
 
     static ArrayList<Table> specialtiesTablesList = new ArrayList<Table>();
-
-    // constructor
-    public BoardAcceptCaptainCmd(Stage stage){
-        this.stage = stage;
-    }
 
     public static void drawAcceptCaptainCmdPanel(Actions action, Direction direction) {
 
