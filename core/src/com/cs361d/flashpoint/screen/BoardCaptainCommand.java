@@ -21,6 +21,8 @@ import org.json.simple.JSONObject;
 
 import java.util.ArrayList;
 
+import static com.cs361d.flashpoint.screen.BoardScreen.boardMovesPanel;
+
 public class BoardCaptainCommand {
 
     final int DIRECTION_BUTTON_SIZE = 50;
@@ -168,8 +170,6 @@ public class BoardCaptainCommand {
         directionTable.add();
 
         directionTable.setPosition(1000, Gdx.graphics.getHeight() - directionTable.getHeight() - 550);
-
-        final BoardMovesPanel boardMovesPanel = new BoardMovesPanel(stage);
 
                 btnDirectionU.addListener(
                 new InputListener() {
