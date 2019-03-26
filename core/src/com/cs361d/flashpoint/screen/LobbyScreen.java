@@ -24,7 +24,7 @@ import java.util.ArrayList;
 public class LobbyScreen extends FlashPointScreen {
 
     SpriteBatch batch;
-
+    static BoardDialog boardDialog;
     Texture txtrBG;
     Sprite spriteBG;
 
@@ -67,7 +67,7 @@ public class LobbyScreen extends FlashPointScreen {
 
         stage = new Stage();
         batch = new SpriteBatch();
-
+        boardDialog = new BoardDialog(stage);
         txtrBG = new Texture("lobby.png");
         spriteBG = new Sprite(txtrBG);
         //spriteBG.setScale(0.6f);
@@ -359,6 +359,10 @@ public class LobbyScreen extends FlashPointScreen {
         if (game.getScreen() == game.lobbyScreen) {
             game.setScreen(game.lobbyScreen);
         }
+    }
+
+    public static BoardDialog getDialog() {
+        return boardDialog;
     }
 
 }

@@ -55,7 +55,7 @@ class ServerToClientRunnable implements Runnable {
                     System.out.println("Reader Thread terminated or Client with IP: " + ip);
 
                     // Remove Client from Server's and Network's List
-                    Server.getServer().closeClient(ip);
+                    Server.closeClient(ip);
                     System.out.println();
 
                 } catch (IOException e) {

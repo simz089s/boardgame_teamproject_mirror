@@ -1,11 +1,9 @@
 package com.cs361d.flashpoint.manager;
 
-import com.badlogic.gdx.utils.Json;
 import com.cs361d.flashpoint.model.BoardElements.*;
 import com.cs361d.flashpoint.model.FireFighterSpecialities.FireFighterAdvanced;
 import com.cs361d.flashpoint.networking.ClientCommands;
 import com.cs361d.flashpoint.networking.Server;
-import com.cs361d.flashpoint.screen.BoardScreen;
 import org.jetbrains.annotations.NotNull;
 import org.json.simple.JSONObject;
 
@@ -294,7 +292,7 @@ public class FireFighterTurnManager implements Iterable<FireFighter> {
     if (ip == null) {
       throw new IllegalArgumentException("The color " + getCurrentFireFighter().getColor().toString() +" is not assigned to a client");
     }
-    Server.sendCommandToSpecificClient(ClientCommands.SHOW_MESSAGE_ON_GAME_SCREEN,obj.toJSONString(),ip);
+    Server.sendCommandToSpecificClient(ClientCommands.SHOW_MESSAGE_ON_SCREEN,obj.toJSONString(),ip);
 
   }
 

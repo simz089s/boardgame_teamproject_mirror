@@ -19,9 +19,6 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.*;
 
-import static com.cs361d.flashpoint.screen.Actions.*;
-import static com.cs361d.flashpoint.screen.BoardScreen.addFilterOnChoosePOIChoosePos;
-
 public class Server implements Runnable {
 
   private static List<FireFighterColor> notYetAssigned = new ArrayList<FireFighterColor>();
@@ -144,13 +141,14 @@ public class Server implements Runnable {
     return notYetAssigned.isEmpty();
   }
 
-  public static synchronized void assignFireFighterToClient(String IP) {
+  public static synchronized boolean assignFireFighterToClient(String IP) {
     if (notYetAssigned.isEmpty()) {
-      return;
+      return false;
     }
     FireFighterColor color = notYetAssigned.remove(0);
     colorsToClient.put(color, IP);
     sendCommandToSpecificClient(ClientCommands.ASSIGN_FIREFIGHTER, color.toString(), IP);
+    return true;
   }
 
   public static void setFireFighterAssignArray() {
@@ -202,12 +200,29 @@ public class Server implements Runnable {
   }
 
   // Remove Client from Server's and Network's List
-  public void closeClient(String clientIP) {
+  public static void closeClient(String clientIP) {
     // Remove clientHandler from Hashmap
     clientObservers.remove(clientIP);
 
     // Remove Client from Network
     clientList.remove(clientIP);
+    FireFighterColor color = FireFighterColor.NOT_ASSIGNED;
+    for (FireFighterColor c : colorsToClient.keySet()) {
+      if (clientIP == colorsToClient.get(c)) {
+        color = c;
+        break;
+      }
+    }
+    if (color != FireFighterColor.NOT_ASSIGNED) {
+      JSONObject object = new JSONObject();
+      object.put("title","The player with color " + color + " closed its widow!");
+      object.put("message","Welcome back to the lobby!");
+      colorsToClient.clear();
+      notYetAssigned.clear();
+      gameLoaded = false;
+      Server.sendCommandToAllClients(ClientCommands.EXIT_GAME,"");
+      Server.sendCommandToAllClients(ClientCommands.SHOW_MESSAGE_ON_SCREEN,object.toJSONString());
+    }
     System.out.println("Client with IP: " + clientIP + " is removed from the Network successfully");
     System.out.println("Number of Clients Remaining on Network: " + clientList.size());
   }
@@ -270,18 +285,21 @@ public class Server implements Runnable {
         case SAVE:
           DBHandler.saveBoardToDB(BoardManager.getInstance().getGameName());
           JSONObject obj = new JSONObject();
-          obj.put("title","Saved Game");
-          obj.put("message","Game successfully saved!");
-          Server.sendCommandToSpecificClient(ClientCommands.SHOW_MESSAGE_ON_GAME_SCREEN,obj.toJSONString(),ip);
+          obj.put("title", "Saved Game");
+          obj.put("message", "Game successfully saved!");
+          Server.sendCommandToSpecificClient(
+              ClientCommands.SHOW_MESSAGE_ON_SCREEN, obj.toJSONString(), ip);
           break;
 
         case EXIT_GAME:
-          //                    Server.getServer().changeLoadedStatus(false);
-          //                    for (ServerToClientRunnable mc :
-          // Server.getClientObservers().values()) {
-          //                        //TODO: Only if client is in the game let him exit
-          //                        mc.dout.writeUTF(msg);
-          //                    }
+          JSONObject object = new JSONObject();
+          object.put("title","The player: " + message + " left the game");
+          object.put("message","Welcome back to the lobby!");
+          gameLoaded = false;
+          notYetAssigned.clear();
+          colorsToClient.clear();
+          Server.sendCommandToAllClients(ClientCommands.EXIT_GAME, "");
+          Server.sendCommandToAllClients(ClientCommands.SHOW_MESSAGE_ON_SCREEN,object.toJSONString());
           break;
 
         case LOAD_GAME:
@@ -294,15 +312,35 @@ public class Server implements Runnable {
             sendCommandToSpecificClient(
                 ClientCommands.SET_GAME_STATE, DBHandler.getBoardAsString(), ip);
             sendCommandToSpecificClient(ClientCommands.SET_BOARD_SCREEN, "", ip);
+          } else {
+            JSONObject obj1 = new JSONObject();
+            obj1.put("title", "A game is already Loaded");
+            obj1.put("message", "Wait or try to join the game");
+            sendCommandToSpecificClient(
+                ClientCommands.SHOW_MESSAGE_ON_SCREEN, obj1.toJSONString(), ip);
           }
           break;
 
         case JOIN:
-          if (!gameLoaded) {
-            assignFireFighterToClient(ip);
+          if (gameLoaded) {
+            if (assignFireFighterToClient(ip)) {
+              sendCommandToSpecificClient(
+                  ClientCommands.SET_GAME_STATE, DBHandler.getBoardAsString(), ip);
+              sendCommandToSpecificClient(ClientCommands.SET_BOARD_SCREEN, "", ip);
+            }
+            else {
+              JSONObject obj1 = new JSONObject();
+              obj1.put("title", "Game currently full");
+              obj1.put("message", "The game is full try latter");
+              sendCommandToSpecificClient(
+                      ClientCommands.SHOW_MESSAGE_ON_SCREEN, obj1.toJSONString(), ip);
+            }
+          } else {
+            JSONObject obj1 = new JSONObject();
+            obj1.put("title", "No game Loaded");
+            obj1.put("message", "There are no game loaded feel free to create or load one");
             sendCommandToSpecificClient(
-                ClientCommands.SET_GAME_STATE, DBHandler.getBoardAsString(), ip);
-            sendCommandToSpecificClient(ClientCommands.SET_BOARD_SCREEN, "", ip);
+                ClientCommands.SHOW_MESSAGE_ON_SCREEN, obj1.toJSONString(), ip);
           }
           break;
 

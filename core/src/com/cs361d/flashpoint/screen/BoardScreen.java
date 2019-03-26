@@ -647,7 +647,7 @@ public class BoardScreen extends FlashPointScreen {
           @Override
           public void clicked(InputEvent event, float x, float y) {
             audioMusic.stop();
-            game.setScreen(game.lobbyScreen);
+            Client.getInstance().sendCommand(ServerCommands.EXIT_GAME,User.getInstance().getName());
           }
         });
 
@@ -736,7 +736,7 @@ public class BoardScreen extends FlashPointScreen {
   // show MovesAndDirectionsPanel on resume
   private static void createResumeButton() {
 
-    Texture myTexture = new Texture(Gdx.files.internal("icons/resumeBtn_" + "RED" + ".png"));
+    Texture myTexture = new Texture(Gdx.files.internal("icons/resumeBtn_" + User.getInstance().getColor() + ".png"));
 
     TextureRegion myTextureRegion = new TextureRegion(myTexture);
     TextureRegionDrawable myTexRegionDrawable = new TextureRegionDrawable(myTextureRegion);
@@ -968,5 +968,14 @@ public class BoardScreen extends FlashPointScreen {
 
   public static BoardDialog getDialog() {
     return boardDialog;
+  }
+
+  public static void displayMessage(String title, String message) {
+    if (game.getScreen() == game.boardScreen) {
+      boardDialog.drawDialog(title,message);
+    }
+    else {
+      LobbyScreen.getDialog().drawDialog(title,message);
+    }
   }
 }

@@ -2,7 +2,6 @@ package com.cs361d.flashpoint.networking;
 
 import com.badlogic.gdx.Gdx;
 import com.cs361d.flashpoint.manager.CreateNewGameManager;
-import com.cs361d.flashpoint.manager.DBHandler;
 import com.cs361d.flashpoint.manager.User;
 import com.cs361d.flashpoint.model.BoardElements.FireFighterColor;
 import com.cs361d.flashpoint.screen.Actions;
@@ -15,7 +14,6 @@ import org.json.simple.parser.JSONParser;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
-import java.io.EOFException;
 import java.io.IOException;
 import java.net.Socket;
 import java.net.UnknownHostException;
@@ -217,7 +215,7 @@ public class Client {
               });
           break;
 
-        case SHOW_MESSAGE_ON_GAME_SCREEN:
+        case SHOW_MESSAGE_ON_SCREEN:
           jsonObject = (JSONObject) parser.parse(message);
           final String title = jsonObject.get("title").toString();
           final String message1 = jsonObject.get("message").toString();
@@ -225,7 +223,7 @@ public class Client {
               new Runnable() {
                 @Override
                 public void run() {
-                  BoardScreen.getDialog().drawDialog(title, message1);
+                  BoardScreen.displayMessage(title, message1);
                 }
               });
           break;
