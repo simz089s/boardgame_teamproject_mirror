@@ -426,6 +426,7 @@ public class FireFighterTurnManagerAdvance extends FireFighterTurnManager {
         }
         replaceFireFigherAfterVehicleMove(getCurrentFireFighter(), newLocation, d);
         verifyVeteranVacinityToAddAp();
+        return true;
       }
     }
     sendMessageToGui("You must be standing on the fire truck and have at least 2 AP.");
