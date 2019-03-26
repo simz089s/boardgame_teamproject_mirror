@@ -219,7 +219,7 @@ public class Client {
                   new Runnable() {
                     @Override
                     public void run() {
-                      BoardAcceptCaptainCmd.drawAcceptCaptainCmdPanel(actions,d);
+                      BoardAcceptCaptainCmdFragment.drawAcceptCaptainCmdPanel(actions,d);
                     }
                   });
           break;

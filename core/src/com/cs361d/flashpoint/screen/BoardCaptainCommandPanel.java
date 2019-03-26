@@ -23,7 +23,7 @@ import java.util.ArrayList;
 
 import static com.cs361d.flashpoint.screen.BoardScreen.boardMovesPanel;
 
-public class BoardCaptainCommand {
+public class BoardCaptainCommandPanel {
 
     final int DIRECTION_BUTTON_SIZE = 50;
 
@@ -42,7 +42,7 @@ public class BoardCaptainCommand {
     ArrayList<Table> directionsTableList = new ArrayList<Table>();
 
     // constructor
-    public BoardCaptainCommand(Stage stage) {
+    public BoardCaptainCommandPanel(Stage stage) {
         this.stage = stage;
         boardDialog = new BoardDialog(stage);
     }

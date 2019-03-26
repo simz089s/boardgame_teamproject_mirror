@@ -20,18 +20,14 @@ import static com.cs361d.flashpoint.screen.BoardScreen.removeAllPrevFragments;
 import static com.cs361d.flashpoint.screen.BoardScreen.stage;
 import static com.cs361d.flashpoint.screen.FlashPointScreen.skinUI;
 
-public class BoardAcceptCaptainCmd {
+public class BoardAcceptCaptainCmdFragment {
 
-    static Table specialtiesTable;
-
-    static ScrollPane.ScrollPaneStyle scrollStyle;
-    static List<String> listOptions;
-    static List.ListStyle listStyle;
+    static Table acceptCmdTable;
 
     static TextButton btnConfirmYes;
     static TextButton btnConfirmNo;
 
-    static ArrayList<Table> specialtiesTablesList = new ArrayList<Table>();
+    static ArrayList<Table> acceptCmdTablesList = new ArrayList<Table>();
 
     public static void drawAcceptCaptainCmdPanel(Actions action, Direction direction) {
 
@@ -81,29 +77,29 @@ public class BoardAcceptCaptainCmd {
                     }
                 });
 
-        specialtiesTable = new Table();
+        acceptCmdTable = new Table();
 
-        specialtiesTable.add(label).size(label.getWidth(), label.getHeight());
-        specialtiesTable.row();
-        specialtiesTable.add(directionImg).size(100, 100);
-        specialtiesTable.row();
-        specialtiesTable.add(btnConfirmYes).size(btnConfirmYes.getWidth(), btnConfirmYes.getHeight());
-        specialtiesTable.row().size(btnConfirmYes.getWidth(), btnConfirmYes.getHeight());
-        specialtiesTable.add(btnConfirmNo).size(btnConfirmNo.getWidth(), btnConfirmNo.getHeight());
+        acceptCmdTable.add(label).size(label.getWidth(), label.getHeight());
+        acceptCmdTable.row();
+        acceptCmdTable.add(directionImg).size(100, 100);
+        acceptCmdTable.row();
+        acceptCmdTable.add(btnConfirmYes).size(btnConfirmYes.getWidth(), btnConfirmYes.getHeight());
+        acceptCmdTable.row().size(btnConfirmYes.getWidth(), btnConfirmYes.getHeight());
+        acceptCmdTable.add(btnConfirmNo).size(btnConfirmNo.getWidth(), btnConfirmNo.getHeight());
 
-        specialtiesTable.setPosition(
+        acceptCmdTable.setPosition(
                 1000,
                 Gdx.graphics.getHeight() - 350);
 
-        specialtiesTablesList.add(specialtiesTable);
-        stage.addActor(specialtiesTable);
+        acceptCmdTablesList.add(acceptCmdTable);
+        stage.addActor(acceptCmdTable);
     }
 
     public static void removeAcceptCaptainCmdPanel(){
-        for (int i = 0; i < specialtiesTablesList.size(); i++) {
-            specialtiesTablesList.get(i).remove();
+        for (int i = 0; i < acceptCmdTablesList.size(); i++) {
+            acceptCmdTablesList.get(i).remove();
         }
-        specialtiesTablesList.clear();
+        acceptCmdTablesList.clear();
     }
 
 
