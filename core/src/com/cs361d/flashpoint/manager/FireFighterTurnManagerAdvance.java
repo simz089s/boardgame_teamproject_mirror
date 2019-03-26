@@ -30,7 +30,7 @@ public class FireFighterTurnManagerAdvance extends FireFighterTurnManager {
     if (FIREFIGHTERS.contains(f) || !(f instanceof FireFighterAdvanced)) {
       throw new IllegalArgumentException();
     }
-    FIREFIGHTERS.add(((FireFighterAdvanced) f));
+    FIREFIGHTERS.add(f);
     if (FIREFIGHTERS.size() > MAX_NUMBER_OF_PLAYERS) {
       throw new IllegalStateException();
     }
@@ -43,7 +43,12 @@ public class FireFighterTurnManagerAdvance extends FireFighterTurnManager {
           != FireFighterAdvanceSpecialities.NO_SPECIALITY) {
         throw new IllegalArgumentException("This fireFighter already has a speciality");
       }
-      FIREFIGHTERS.addFirst(FireFighterAdvanced.createFireFighter(f.getColor(), speciality));
+      FireFighterAdvanced newF = FireFighterAdvanced.createFireFighter(f.getColor(), speciality);
+      FIREFIGHTERS.addLast(newF);
+      Tile currentTile = f.getTile();
+      f.removeFromBoard();
+      newF.setTile(currentTile);
+
       return true;
     } else {
       sendMessageToGui("That speciality is not available");
@@ -65,7 +70,6 @@ public class FireFighterTurnManagerAdvance extends FireFighterTurnManager {
         getCurrentFireFighter().resetActionPoints();
         verifyVeteranVacinityToAddAp();
       }
-      sendChangeToNetwork();
     } else {
       sendMessageToGui("You cannot end turn as you are currently on a tile with fire");
     }
@@ -363,8 +367,7 @@ public class FireFighterTurnManagerAdvance extends FireFighterTurnManager {
 
   @Override
   public boolean chooseInitialPosition(Tile t) throws IllegalAccessException {
-    FireFighter f = FIREFIGHTERS.removeFirst();
-    FIREFIGHTERS.addLast(f);
+    FireFighter f = FIREFIGHTERS.getFirst();
     if (f.getTile() != null) {
       throw new IllegalAccessException("The FireFighter has already been assigned a tile");
     }
@@ -375,7 +378,6 @@ public class FireFighterTurnManagerAdvance extends FireFighterTurnManager {
         ((FireFighterAdvanced) fi).veteranBonus();
       }
     }
-    sendChangeToNetwork();
     return FIREFIGHTERS.getFirst().getTile() != null;
   }
 

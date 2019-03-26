@@ -323,7 +323,6 @@ public class Server implements Runnable {
         case SET_INITIAL_SPECIALITY:
           if (FireFighterTurnManagerAdvance.getInstance().setInitialSpeciality(FireFighterAdvanceSpecialities.fromString(message))) {
             mustSendAndRefresh = true;
-            refreshCrewChangePanel = true;
         }
           break;
 
@@ -335,6 +334,7 @@ public class Server implements Runnable {
           FireFighterTurnManager.getInstance().chooseInitialPosition(t);
           mustSendAndRefresh = true;
           break;
+
         case SET_AMBULANCE:
           jsonObject = (JSONObject) parser.parse(message);
            i = Integer.parseInt(jsonObject.get("i").toString());
@@ -358,9 +358,6 @@ public class Server implements Runnable {
       if (mustSendAndRefresh) {
         Server.sendCommandToAllClients(ClientCommands.SET_GAME_STATE, DBHandler.getBoardAsString());
         Server.sendCommandToAllClients(ClientCommands.REFRESH_BOARD_SCREEN, "");
-      }
-      if (refreshCrewChangePanel) {
-        Server.sendCommandToSpecificClient(ClientCommands.END_OF_SPECIALITY_CHANGE,"",ip);
       }
 
     } catch (Exception e) {
@@ -465,7 +462,6 @@ public class Server implements Runnable {
         case CREW_CHANGE:
           if (FireFighterTurnManagerAdvance.getInstance().crewChange(FireFighterAdvanceSpecialities.fromString(message))) {
             mustSendAndRefresh = true;
-            refreshCrewChangePanel = true;
           }
           break;
 
@@ -474,9 +470,6 @@ public class Server implements Runnable {
       if (mustSendAndRefresh) {
         Server.sendCommandToAllClients(ClientCommands.SET_GAME_STATE, DBHandler.getBoardAsString());
         Server.sendCommandToAllClients(ClientCommands.REFRESH_BOARD_SCREEN, "");
-      }
-      if (refreshCrewChangePanel) {
-        Server.sendCommandToSpecificClient(ClientCommands.END_OF_SPECIALITY_CHANGE,"",ip);
       }
     } catch (ParseException e) {
       e.printStackTrace();

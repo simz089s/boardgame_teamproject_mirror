@@ -61,11 +61,6 @@ public abstract class FireFighterAdvanced extends FireFighter {
     if (currentTile != null) {
       currentTile.removeFirefighter(this);
     }
-    if (SPECIALITY == FireFighterAdvanceSpecialities.NO_SPECIALITY) {
-      // TODO put that line back active again
-      // throw new IllegalArgumentException("Cannot Place a FireFighter on board with no
-      // speciality");
-    }
     this.currentTile = t;
     t.addFirefighter(this);
   }

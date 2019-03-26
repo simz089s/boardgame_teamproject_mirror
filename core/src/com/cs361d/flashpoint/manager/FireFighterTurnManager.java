@@ -39,7 +39,6 @@ public class FireFighterTurnManager implements Iterable<FireFighter> {
       throw new IllegalAccessException("The FireFighter has already been assigned a tile");
     }
     f.setTile(t);
-    sendChangeToNetwork();
     return FIREFIGHTERS.getFirst().getTile() != null;
   }
 
@@ -60,7 +59,6 @@ public class FireFighterTurnManager implements Iterable<FireFighter> {
       FIREFIGHTERS.addLast(last);
       BoardManager.getInstance().endTurnFireSpread();
       last.resetActionPoints();
-      sendChangeToNetwork();
     } else {
       sendMessageToGui("You cannot end turn as you are currently on a tile with fire");
     }
@@ -135,7 +133,6 @@ public class FireFighterTurnManager implements Iterable<FireFighter> {
     }
     if (getCurrentFireFighter().chopAP()) {
       if (o.applyDamage()) {
-        sendChangeToNetwork();
         return true;
       }
     }
@@ -272,8 +269,6 @@ public class FireFighterTurnManager implements Iterable<FireFighter> {
     }
     FIREFIGHTERS = newList;
   }
-
-  protected void sendChangeToNetwork() {}
 
   public static void useFireFighterGameManagerAdvanced() {
     instance = new FireFighterTurnManagerAdvance();
