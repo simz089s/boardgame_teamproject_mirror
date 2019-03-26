@@ -88,7 +88,7 @@ public class BoardAcceptCaptainCmd {
         specialtiesTable.add(directionImg).size(100, 100);
         specialtiesTable.row();
         specialtiesTable.add(btnConfirmYes).size(btnConfirmYes.getWidth(), btnConfirmYes.getHeight());
-        specialtiesTable.row();
+        specialtiesTable.row().size(btnConfirmYes.getWidth(), btnConfirmYes.getHeight());
         specialtiesTable.add(btnConfirmNo).size(btnConfirmNo.getWidth(), btnConfirmNo.getHeight());
 
         specialtiesTable.setPosition(
