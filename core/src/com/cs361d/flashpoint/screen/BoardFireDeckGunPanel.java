@@ -27,7 +27,7 @@ public class BoardFireDeckGunPanel {
 
     static ArrayList<Table> fireDeckGunTablesList = new ArrayList<Table>();
 
-    public static void drawFireDeckGunPanel(Actions action, Direction direction) {
+    public static void drawFireDeckGunPanel() {
 
         removeAllPrevFragments();
 
@@ -35,11 +35,9 @@ public class BoardFireDeckGunPanel {
             return;
         }
 
-        Label label = new Label(action.toString(), skinUI);
+        Label label = new Label("What do you want to do?", skinUI);
         label.setFontScale(1.5f);
         label.setColor(Color.BLACK);
-
-        ImageButton directionImg = new ImageButton(BoardMovesPanel.getTextureForDirectionsTable(direction));
 
         // confirm button creation
 
@@ -86,7 +84,7 @@ public class BoardFireDeckGunPanel {
 
         fireDeckGunTable.add(label).size(label.getWidth(), label.getHeight());
         fireDeckGunTable.row();
-        fireDeckGunTable.add(directionImg).size(100, 100);
+        fireDeckGunTable.add().size(btnAccept.getWidth(), btnAccept.getHeight()); // just a space
         fireDeckGunTable.row();
         fireDeckGunTable.add(btnAccept).size(btnAccept.getWidth(), btnAccept.getHeight());
         fireDeckGunTable.row();
