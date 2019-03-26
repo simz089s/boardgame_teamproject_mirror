@@ -15,6 +15,7 @@ public enum Actions {
   FIRE_DECK_GUN("FIRE DECK GUN"),
   CREW_CHANGE("CREW CHANGE"),
   REMOVE_HAZMAT("REMOVE HAZMAT"),
+  COMMAND_OTHER_FIREFIGHTER("COMMAND OTHER FIREFIGHTER"),
   CURE_VICTIM("CURE VICTIM"),
   FLIP_POI("FLIP POI"),
   END_TURN("END TURN"),
@@ -109,6 +110,12 @@ public enum Actions {
     list.add(CREW_CHANGE);
     list.add(END_TURN);
     list.add(SAVE);
+    return list;
+  }
+
+  public static List<Actions> fireCaptainActions() {
+    List<Actions> list = advancedActions();
+    list.add(list.size()-2,COMMAND_OTHER_FIREFIGHTER);
     return list;
   }
 

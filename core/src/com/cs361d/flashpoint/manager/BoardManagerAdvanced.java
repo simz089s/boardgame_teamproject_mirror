@@ -124,9 +124,6 @@ public class BoardManagerAdvanced extends BoardManager {
       boolean veteranBonus,
       FireFighterAdvanceSpecialities role,
       boolean firstTurn) {
-    if (role == FireFighterAdvanceSpecialities.NO_SPECIALITY) {
-      throw new IllegalArgumentException("A fireFighter on the board must have a role");
-    }
     FireFighterAdvanced f = FireFighterAdvanced.createFireFighter(color, role);
     FireFighterTurnManagerAdvance fta =
         (FireFighterTurnManagerAdvance) (FireFighterTurnManager.getInstance());
