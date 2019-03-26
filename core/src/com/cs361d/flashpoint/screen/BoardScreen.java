@@ -968,7 +968,6 @@ public class BoardScreen extends FlashPointScreen {
                   "Specialty", "Choose your initial specialty on the right panel.");
           boardChooseRolePanel.drawChooseSpecialtyPanel();
         } else if(!FireFighterTurnManager.getInstance().currentHasTile()){
-          removeAllPrevFragments();
             if (User.getInstance().isMyTurn() || true) {
               addFilterOnTileForChooseInitPos();
               boardChooseRolePanel.drawChooseSpecialtyPanel();
@@ -985,7 +984,6 @@ public class BoardScreen extends FlashPointScreen {
             boardChooseRolePanel.drawChooseSpecialtyPanel();
           }
         } else {
-          removeAllPrevFragments();
           boardMovesPanel.drawMovesAndDirectionsPanel();
         }
       }
