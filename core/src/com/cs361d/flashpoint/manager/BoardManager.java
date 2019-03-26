@@ -2,7 +2,6 @@ package com.cs361d.flashpoint.manager;
 
 import com.cs361d.flashpoint.model.BoardElements.*;
 import com.cs361d.flashpoint.model.FireFighterSpecialities.FireFighterAdvanced;
-import com.cs361d.flashpoint.networking.Commands;
 import com.cs361d.flashpoint.networking.NetworkManager;
 import com.cs361d.flashpoint.networking.Server;
 import com.cs361d.flashpoint.screen.BoardDialog;
@@ -595,17 +594,7 @@ public class BoardManager implements Iterable<Tile> {
       JSONObject msCarrier = new JSONObject();
       msCarrier.put("title", title);
       msCarrier.put("endmessage", msg);
-      NetworkManager.getInstance().sendCommand(Commands.END_GAME, msCarrier.toJSONString());
-  }
-
-  public void endGameOnboard(String title, String msg) {
-    if (Server.amIServer()) {
-      Server.getServer().changeLoadedStatus(false);
-  }
-    if (BoardScreen.isOnBoardScreen()) {
-      BoardScreen.getDialog().drawEndGameDialog(title, msg);
-      // DBHandler.removeGameFile(gameName);
-    }
+      //TODO End game
   }
 
   public boolean gameHasEnded() {

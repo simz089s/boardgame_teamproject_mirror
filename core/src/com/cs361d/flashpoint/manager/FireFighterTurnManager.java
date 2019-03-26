@@ -2,11 +2,8 @@ package com.cs361d.flashpoint.manager;
 
 import com.cs361d.flashpoint.model.BoardElements.*;
 import com.cs361d.flashpoint.model.FireFighterSpecialities.FireFighterAdvanced;
-import com.cs361d.flashpoint.networking.Commands;
-import com.cs361d.flashpoint.screen.BoardDialog;
 import com.cs361d.flashpoint.screen.BoardScreen;
 import org.jetbrains.annotations.NotNull;
-import com.cs361d.flashpoint.networking.NetworkManager;
 import java.util.*;
 import java.util.List;
 
@@ -267,8 +264,7 @@ public class FireFighterTurnManager implements Iterable<FireFighter> {
   }
 
   protected void sendChangeToNetwork() {
-//    if (!BoardManager.getInstance().gameHasEnded())
-//      NetworkManager.getInstance().sendCommand(Commands.GAMESTATE, DBHandler.getBoardAsString());
+
   }
 
   public static void useFireFighterGameManagerAdvanced() {

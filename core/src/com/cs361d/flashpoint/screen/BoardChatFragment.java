@@ -7,8 +7,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.List;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.cs361d.flashpoint.manager.User;
-import com.cs361d.flashpoint.networking.Commands;
-import com.cs361d.flashpoint.networking.NetworkManager;
+import com.cs361d.flashpoint.networking.Client;
+import com.cs361d.flashpoint.networking.ServerCommands;
 
 import java.util.ArrayList;
 
@@ -33,9 +33,6 @@ public class BoardChatFragment {
 
     ArrayList<ScrollPane> msgListSP = new ArrayList<ScrollPane>();
     ArrayList<TextField> msgFieldListTF = new ArrayList<TextField>();
-
-    // Get the current network
-    NetworkManager myNetwork = NetworkManager.getInstance();
 
     public static void addMessageToChat(String msg) {
         messagesArrList.add(msg);
@@ -110,7 +107,7 @@ public class BoardChatFragment {
                     if(!messageInputed.equals("") && !messageInputed.equals(" ")){
                         textFieldMsg.setText("");
                         String fullMessage = User.getInstance().getName() + ": " + messageInputed;
-                        NetworkManager.getInstance().sendCommand(Commands.ADD_CHAT_MESSAGE, fullMessage);
+                        Client.getInstance().sendCommand(ServerCommands.ADD_CHAT_MESSAGE, fullMessage);
                         scrollPaneMsg.setActor(lstMsg);
                         scrollPaneMsg.layout();
                         scrollPaneMsg.scrollTo(0, 0, 0, 0);

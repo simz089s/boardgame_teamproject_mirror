@@ -1,11 +1,11 @@
 package com.cs361d.flashpoint.networking;
 
 
-import com.cs361d.flashpoint.manager.FireFighterTurnManager;
-import com.cs361d.flashpoint.manager.User;
+import com.cs361d.flashpoint.manager.*;
 import com.cs361d.flashpoint.model.BoardElements.FireFighter;
 import com.cs361d.flashpoint.model.BoardElements.FireFighterColor;
-import com.cs361d.flashpoint.screen.FlashPointGame;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -20,44 +20,32 @@ import java.util.*;
 public class Server implements Runnable
 {
 
-    private List<FireFighterColor> notYetAssigned = new ArrayList<FireFighterColor>();
-    // Server has an instance of the game
-    public FlashPointGame serverFPGame = new FlashPointGame();
+    private static List<FireFighterColor> notYetAssigned = new ArrayList<FireFighterColor>();
 
-    // Vector to store active client threads
-    static HashMap<String, ClientHandler> clientThreads = new HashMap<String, ClientHandler>();
+    // Vector to store server to client threads
+    private final static HashMap<String, ServerToClientRunnable> clientObservers = new HashMap<String, ServerToClientRunnable>();
+
+    // Map between IP and client
+    private final static HashMap<String, Client> clientList = new HashMap<String, Client>();
+
+    // Hash Map to map the users wirth the Firefighter colors
+    private final static HashMap<FireFighterColor, String> colorsToClient = new HashMap<FireFighterColor, String>();
+
+    // Arraylist of client Threads
+    //static ArrayList<Thread> clientThreads = new ArrayList<Thread>();
+
+
     private static Server instance;
-    private boolean gameAlreadyLoadedorCreated = false;
+    private static boolean gameLoaded = false;
     private static List<String> messages = new ArrayList<String>();
-    // counter for clientThreads
+
+    // counter for clientObservers
     static int i = 0;
 
-    ServerSocket ss;    //Server Socket
+    static ServerSocket ss;    //Server Socket
     Socket s;           //Client socket
     Thread startServer; // DON'T SEND TO SRC CLIENT TWICE
 
-    private Server(int serverPort) {
-
-        try {
-            ss = new ServerSocket(serverPort);
-            startServer = new Thread(this);
-            startServer.start();
-
-        } catch (IOException e) { e.printStackTrace(); }
-
-    }
-
-    public static Server createServer(int serverPort) {
-        instance = new Server(serverPort);
-        return instance;
-    }
-
-    public static Server getServer() {
-        if (instance == null) {
-            throw new IllegalArgumentException("You are not the server you should not ask to access it");
-        }
-        return instance;
-    }
     @Override
     public void run() {
         // running infinite loop for getting client request
@@ -73,72 +61,103 @@ public class Server implements Runnable
 
                 System.out.println("Creating a new handler for this client...");
 
+                String ip = s.getInetAddress().toString().replace("/","");
+
                 // Create a new handler object for handling this request.
-                ClientHandler clientObserver = new ClientHandler(s, "client " + i, din, dout, serverFPGame);
+                ServerToClientRunnable clientObserver = new ServerToClientRunnable(s, "client " + i, din, dout, ip);
 
                 // Create a new Thread with this client.
                 Thread t = new Thread(clientObserver);
-
                 System.out.println("Adding this client to active client list");
 
-                // add this client to active clientThreads list
-                String ip = s.getInetAddress().toString().replace("/","");
-                clientThreads.put(ip, clientObserver);
+                // add this client to active clientObservers list
+                clientObservers.put(ip, clientObserver);
 
                 System.out.println("Client Ip is: " + s.getInetAddress().toString());
+                System.out.println();
 
-                // start the thread for the client.
-                t.start();
+                t.start();  // start the thread for the client
 
-                // increment i for new client.
-                // i is used for naming only, and can be replaced by any naming scheme
-                i++;
+                i++; // increment i for new client
 
             } catch (IOException e) { e.printStackTrace(); }
         }
     }
 
-
-    /* Send a message to from server */
-    public synchronized void sendMsg(String msg) {
+    //Constructor
+    private Server(int serverPort) {
         try {
-            for (ClientHandler mc : Server.clientThreads.values()) {
-                mc.dout.writeUTF(msg);
-            }
-//            updateServerGui(msg); //update your own Gui
+            ss = new ServerSocket(serverPort);
+            startServer = new Thread(this);
+            startServer.start();
 
         } catch (IOException e) { e.printStackTrace(); }
+
     }
 
-    public synchronized void sendMsgSpecificClient(String ip, Commands command, String message){
-        try {
-            // Get the specific client handler
-            if (ip.equals(NetworkManager.getInstance().getMyPublicIP())) {
-                return;
-            }
-            ClientHandler client = clientThreads.get(ip);
+    public static Server createServer() {
+        instance = new Server(NetworkManager.DEFAULT_SERVER_PORT);
+        return instance;
+    }
 
-            String msg = NetworkManager.getInstance().createJSON(command, message);
-            client.dout.writeUTF(msg);
+    public static Server getServer() {
+        if (instance == null) {
+            throw new IllegalArgumentException("You are not the server you should not ask to access it");
+        }
+        return instance;
+    }
 
-            updateServerGui(msg);
+    //public static ArrayList<Thread> getClientThreads() { return clientThreads; }
 
-        } catch (IOException e) {
-            e.printStackTrace();
+    public boolean isEmpty() { return notYetAssigned.isEmpty(); }
+
+    // To iterate through the chat messages
+    public static Iterator<String> iteratorForChat(){ return messages.iterator(); }
+
+    // Function to add messages
+    public static synchronized void addMessage(String message){ messages.add(message);}
+
+    public void changeLoadedStatus(boolean status) { gameLoaded = status; }
+    public boolean getLoadedOrCreatedStatus() { return gameLoaded; }
+    public static boolean noMorePlayer() { return notYetAssigned.isEmpty(); }
+
+
+    public static synchronized void  assignFireFighterToClient(String IP) {
+        if (notYetAssigned.isEmpty()) {
+            return;
+        }
+        FireFighterColor color = notYetAssigned.remove(0);
+        colorsToClient.put(color, IP);
+        sendCommandToSpecificClient(ClientCommands.ASSIGN_FIREFIGHTER, color.toString(), IP);
+    }
+
+    public static void setFireFighterAssignArray() {
+        notYetAssigned.clear();
+        Iterator<FireFighter> it = FireFighterTurnManager.getInstance().iterator();
+        if (!it.hasNext()) {
+            throw new IllegalArgumentException("Cannot call this function if the game board has not been initialized");
+        }
+        while (it.hasNext()) {
+            FireFighter f = it.next();
+            notYetAssigned.add(f.getColor());
         }
     }
 
-    /* Update GUI of the Server based on sent String*/
-    public void updateServerGui(String msg) {
-        /* Get the command from the string read
-         * CHATWAIT: waiting screen chat changes
-         * ADD_CHAT_MESSAGE: in-game chat changes
-         * GAMESTATE: gameState changes
-         * */
-        try { NetworkManager.executeCommand(msg); }
-        catch (Exception e) { e.printStackTrace(); }
+    /* Send a message to from server */
+    private static synchronized void sendMsgToAllClients(String msg) {
+        try {
+            for (ServerToClientRunnable mc : Server.clientObservers.values()) {
+                mc.dout.writeUTF(msg);
+            }
+        } catch (IOException e) { e.printStackTrace(); }
     }
 
+    private static synchronized void sendMsgSpecificClient(String message, String IP){
+        try {
+            ServerToClientRunnable client = clientObservers.get(IP);
+            client.dout.writeUTF(message);
+        } catch (IOException e) { e.printStackTrace(); }
+    }
 
     /* Get info about the server's machine */
     public static String getMyHostName() {
@@ -153,67 +172,129 @@ public class Server implements Runnable
         return hostname;
     }
 
-    public void closeServer(){
+    // Remove Client from Server's and Network's List
+    public void closeClient(String clientIP) {
+        //Remove clientHandler from Hashmap
+        clientObservers.remove(clientIP);
+
+        //Remove Client from Network
+        clientList.remove(clientIP);
+        System.out.println("Client with IP: "+clientIP+" is removed from the Network successfully");
+        System.out.println("Number of Clients Remaining on Network: "+clientList.size());
+    }
+
+
+    // Now all server commands handled in the server
+    public static void serverExecuteCommand(String msg) {
         try {
-            // Close every client and redirect to login page
-            for (ClientHandler mc : Server.clientThreads.values()) {
-                mc.din.close(); //close client input stream
-                mc.dout.close();//close client output stream
-                mc.s.close();   //close client socket
+            JSONParser parser = new JSONParser();
+
+            JSONObject jsonObject = (JSONObject) parser.parse(msg);
+            ServerCommands c = ServerCommands.fromString(jsonObject.get("command").toString());
+            String message = jsonObject.get("message").toString();
+            String ip = jsonObject.get("IP").toString();
+            System.out.println(message);
+
+            switch (c) {
+                case ADD_CHAT_MESSAGE:
+                    if (!message.equals("")) {
+                        Server.addMessage(message);
+//            if (BoardScreen.isChatFragment()) {
+//              BoardChatFragment.addMessageToChat(message);
+//            }
+                        Server.sendMsgToAllClients(msg);
+                    } else if (!message.equals("")) {
+                        Server.addMessage(message);
+//            if (BoardScreen.isChatFragment()) {
+//              BoardChatFragment.addMessageToChat(message);
+//            }
+                    }
+//          else if (!message.equals("")) {
+//            Gdx.app.postRunnable(
+//                    new Runnable() {
+//                      @Override
+//                      public void run() {
+//                        if (BoardScreen.isChatFragment()) {
+//                          BoardChatFragment.addMessageToChat(message);
+//                        }
+//                      }
+//                    });
+//          }
+                    break;
+
+                case GET_CHAT_MESSAGES:
+//                    JSONArray jsa = new JSONArray();
+//                    Iterator<String> it = Server.iteratorForChat();
+//                    while (it.hasNext()) {
+//                        jsa.add(it.next());
+//                    }
+//                    Server.getServer()
+//                            .sendMsgSpecificClient(ip, ClientCommands.SEND_CHAT_MESSAGES, jsa.toJSONString());
+//            BoardScreen.setSideFragment(Fragment.CHAT);
+//            Iterator<String> it = Server.iteratorForChat();
+//            while (it.hasNext()) {
+//              BoardChatFragment.addMessageToChat(it.next());
+//            }
+//          }
+                    break;
+
+                case GAMESTATE:
+                    Server.sendMsgToAllClients(msg);
+                    break;
+
+                case SAVE:
+                    CreateNewGameManager.loadGameFromString(message);
+                    DBHandler.saveBoardToDB(BoardManager.getInstance().getGameName());
+                    break;
+
+
+                case EXITGAME:
+//                    Server.getServer().changeLoadedStatus(false);
+//                    for (ServerToClientRunnable mc : Server.getClientObservers().values()) {
+//                        //TODO: Only if client is in the game let him exit
+//                        mc.dout.writeUTF(msg);
+//                    }
+                    break;
+
+                case LOAD_GAME:
+
+                    if (!gameLoaded) {
+                        DBHandler.loadBoardFromDB(message);
+                        Server.setFireFighterAssignArray();
+                        //TODO set false when client leaves game
+                        gameLoaded = true;
+                        assignFireFighterToClient(ip);
+                        sendCommandToSpecificClient(ClientCommands.SET_GAME_STATE, DBHandler.getBoardAsString(), ip);
+                        sendCommandToSpecificClient(ClientCommands.SETBOARDSCREEN, "", ip);
+                    }
+                    break;
+
+                case JOIN:
+                    if (!gameLoaded) {
+                        assignFireFighterToClient(ip);
+                        sendCommandToSpecificClient(ClientCommands.SET_GAME_STATE, DBHandler.getBoardAsString(), ip);
+                        sendCommandToSpecificClient(ClientCommands.SETBOARDSCREEN, "", ip);
+                    }
+                    break;
+
+                default:
             }
-            ss.close();         //close server socket
 
-        } catch (IOException e) { e.printStackTrace(); }
-
-    }
-
-    public synchronized void  assignFireFighterToClient(String IP) {
-        if (notYetAssigned.isEmpty()) {
-            return;
-        }
-        FireFighterColor color = notYetAssigned.remove(0);
-        if (IP.equals(NetworkManager.getInstance().getMyPublicIP())) {
-            User.getInstance().assignFireFighter(color);
-        }
-        else {
-            sendMsgSpecificClient(IP, Commands.ASSIGN_FIREFIGHTER, color.toString());
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
-    public static boolean amIServer() {
-        return instance != null;
+
+    public static void sendCommandToAllClients(ClientCommands command, String msg) {
+        String jsonMsg = NetworkManager.createJSON(command.toString(), msg);
+        sendMsgToAllClients(jsonMsg);
     }
 
-    public void setFireFighterAssignArray() {
-        notYetAssigned.clear();
-        Iterator<FireFighter> it = FireFighterTurnManager.getInstance().iterator();
-        if (!it.hasNext()) {
-            throw new IllegalArgumentException("Cannot call this function if the game board has not been initialized");
-        }
-        while (it.hasNext()) {
-            FireFighter f = it.next();
-            notYetAssigned.add(f.getColor());
-        }
-    }
-    public boolean isEmpty() {
-        return notYetAssigned.isEmpty();
+    public static void sendCommandToSpecificClient(ClientCommands command, String msg, String IP) {
+        String jsonMsg = NetworkManager.createJSON(command.toString(), msg);
+        sendMsgSpecificClient(jsonMsg, IP);
     }
 
-    public static Iterator<String> iteratorForChat() {
-        return messages.iterator();
-    }
-
-    public synchronized static void addMessage(String msg) {
-        messages.add(msg);
-    }
-
-    public void changeLoadedStatus(boolean status) {
-        gameAlreadyLoadedorCreated = status;
-    }
-    public boolean getLoadedOrCreatedStatus() {
-        return gameAlreadyLoadedorCreated;
-    }
-    public boolean noMorePlayer() {
-        return notYetAssigned.isEmpty();
-    }
+    public void addNewClient(String ip, Client c) { this.clientList.put(ip, c); }
 
 }

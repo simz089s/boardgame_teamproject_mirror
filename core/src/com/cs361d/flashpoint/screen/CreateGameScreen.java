@@ -12,8 +12,6 @@ import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.cs361d.flashpoint.manager.*;
-import com.cs361d.flashpoint.networking.Commands;
-import com.cs361d.flashpoint.networking.NetworkManager;
 
 public class CreateGameScreen extends FlashPointScreen {
 
