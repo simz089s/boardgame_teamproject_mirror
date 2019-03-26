@@ -42,7 +42,7 @@ public class BoardFireDeckGunPanel {
         // confirm button creation
 
         btnAccept = new TextButton(DriverResponse.ACCEPT.toString(), skinUI, "default");
-        btnAccept.setWidth(150);
+        btnAccept.setWidth(200);
         btnAccept.setHeight(25);
         btnAccept.setColor(Color.GREEN);
         btnAccept.addListener(
@@ -55,7 +55,7 @@ public class BoardFireDeckGunPanel {
                 });
 
         btnFireRow = new TextButton(DriverResponse.THROW_ROW_DIE.toString(), skinUI, "default");
-        btnFireRow.setWidth(150);
+        btnFireRow.setWidth(200);
         btnFireRow.setHeight(25);
         btnFireRow.setColor(Color.SKY);
         btnFireRow.addListener(
@@ -68,7 +68,7 @@ public class BoardFireDeckGunPanel {
                 });
 
         btnFireCol = new TextButton(DriverResponse.THROW_COLUMN_DIE.toString(), skinUI, "default");
-        btnFireCol.setWidth(150);
+        btnFireCol.setWidth(200);
         btnFireCol.setHeight(25);
         btnFireCol.setColor(Color.SKY);
         btnFireCol.addListener(
@@ -97,7 +97,7 @@ public class BoardFireDeckGunPanel {
         fireDeckGunTable.add(btnFireCol).size(btnFireRow.getWidth(), btnFireRow.getHeight());
 
         fireDeckGunTable.setPosition(
-                900,
+                1000,
                 Gdx.graphics.getHeight() - 350);
 
         fireDeckGunTablesList.add(fireDeckGunTable);
