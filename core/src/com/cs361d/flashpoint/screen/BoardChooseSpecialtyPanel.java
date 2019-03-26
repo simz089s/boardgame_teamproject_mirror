@@ -120,6 +120,9 @@ public class BoardChooseSpecialtyPanel {
     }
 
     public void removeChooseSpecialtyPanel(){
+        for (int i = 0; i < specialtiesTablesList.size(); i++) {
+            specialtiesTablesList.get(i).remove();
+        }
         specialtiesTablesList.clear();
     }
 
