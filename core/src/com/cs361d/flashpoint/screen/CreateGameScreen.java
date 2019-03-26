@@ -12,6 +12,9 @@ import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.cs361d.flashpoint.manager.*;
+import com.cs361d.flashpoint.networking.Client;
+import com.cs361d.flashpoint.networking.ServerCommands;
+import org.json.simple.JSONObject;
 
 public class CreateGameScreen extends FlashPointScreen {
 
@@ -112,7 +115,7 @@ public class CreateGameScreen extends FlashPointScreen {
 
               String mapSelected = lstGameBoard.getSelected();
               String diffSelected = lstDifficulty.getSelected();
-
+              String name = gameNameField.getText();
               MapKind mk = MapKind.MAP1;
 
               if (mapSelected.equals("MAP 2")) {
@@ -123,10 +126,13 @@ public class CreateGameScreen extends FlashPointScreen {
               //                                mk = MapKind.RANDOM;
               //                            }
 
-              CreateNewGameManager.createNewGame(
-                  gameNameField.getText(), numPlayers, mk, Difficulty.fromString(diffSelected));
-                game.setScreen(game.boardScreen);
-                BGM.stop();
+                JSONObject obj = new JSONObject();
+              obj.put("name",name);
+              obj.put("numPlayers",numPlayers);
+              obj.put("mapKind",mk.toString());
+              obj.put("Difficulty",diffSelected);
+              BGM.stop();
+                Client.getInstance().sendCommand(ServerCommands.CREATE_GAME,obj.toJSONString());
 
             } else {
               createDialog("Warning", "Invalid or empty game name!");

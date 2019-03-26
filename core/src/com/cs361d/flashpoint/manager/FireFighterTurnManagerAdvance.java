@@ -51,7 +51,7 @@ public class FireFighterTurnManagerAdvance extends FireFighterTurnManager {
 
   // Covers the veteran bonusRemovove
   @Override
-  public void endTurn() throws IllegalAccessException {
+  public void endTurn() {
     FireFighter fireFighter = getCurrentFireFighter();
     if (!fireFighter.getTile().hasFire()) {
       FireFighterAdvanced last = (FireFighterAdvanced) FIREFIGHTERS.removeFirst();
@@ -189,7 +189,7 @@ public class FireFighterTurnManagerAdvance extends FireFighterTurnManager {
   }
 
   @Override
-  public void move(Direction d) {
+  public boolean move(Direction d) {
     FireFighter f = getCurrentFireFighter();
     if (canMove(d)) {
       if (f.moveAP(d)) {
@@ -205,20 +205,25 @@ public class FireFighterTurnManagerAdvance extends FireFighterTurnManager {
         }
         verifyVeteranVacinityToAddAp();
         flipAdjacentPOIForRescueDog();
-        sendChangeToNetwork();
+        return true;
       } else {
         sendMessageToGui(
             "You do not have enough AP to move to that spot you need 1 ap to move to a tile with smoke or nothing"
                 + " and 2 to move on a tile with fire");
+        return false;
       }
     }
+    return false;
   }
 
   @Override
-  public void moveWithVictim(Direction d) {
-    super.moveWithVictim(d);
-    verifyVeteranVacinityToAddAp();
-    flipAdjacentPOIForRescueDog();
+  public boolean moveWithVictim(Direction d) {
+    if (super.moveWithVictim(d)) {
+      verifyVeteranVacinityToAddAp();
+      flipAdjacentPOIForRescueDog();
+      return true;
+      }
+    return false;
   }
 
   public String[] getAvailableSpecialities() {

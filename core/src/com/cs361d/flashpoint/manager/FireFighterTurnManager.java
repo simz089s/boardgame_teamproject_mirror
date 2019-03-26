@@ -1,9 +1,14 @@
 package com.cs361d.flashpoint.manager;
 
+import com.badlogic.gdx.utils.Json;
 import com.cs361d.flashpoint.model.BoardElements.*;
 import com.cs361d.flashpoint.model.FireFighterSpecialities.FireFighterAdvanced;
+import com.cs361d.flashpoint.networking.ClientCommands;
+import com.cs361d.flashpoint.networking.Server;
 import com.cs361d.flashpoint.screen.BoardScreen;
 import org.jetbrains.annotations.NotNull;
+import org.json.simple.JSONObject;
+
 import java.util.*;
 import java.util.List;
 
@@ -49,7 +54,7 @@ public class FireFighterTurnManager implements Iterable<FireFighter> {
     f.removeFromBoard();
   }
 
-  public void endTurn() throws IllegalAccessException {
+  public void endTurn() {
 
     FireFighter fireFighter = getCurrentFireFighter();
     if (!fireFighter.getTile().hasFire()) {
@@ -63,7 +68,7 @@ public class FireFighterTurnManager implements Iterable<FireFighter> {
     }
   }
 
-  public void move(Direction d) {
+  public boolean move(Direction d) {
     FireFighter f = getCurrentFireFighter();
     if (canMove(d)) {
       if (f.moveAP(d)) {
@@ -78,16 +83,18 @@ public class FireFighterTurnManager implements Iterable<FireFighter> {
             BoardManager.getInstance().addNewPointInterest();
           }
         }
-        sendChangeToNetwork();
+        return true;
       } else {
         sendMessageToGui(
             "You do not have enough AP to move to that spot you need 1 ap to move to a tile with smoke or nothing"
                 + " and 2 to move on a tile with fire");
+        return false;
       }
     }
+    return false;
   }
 
-  public void moveWithVictim(Direction d) {
+  public boolean moveWithVictim(Direction d) {
     if (canMoveWithVictim(d)) {
       FireFighter f = getCurrentFireFighter();
       if (f.moveWithVictimAP()) {
@@ -98,15 +105,17 @@ public class FireFighterTurnManager implements Iterable<FireFighter> {
         newTile.setVictim(v);
         f.setTile(newTile);
         if (!BoardManager.getInstance().verifyVictimRescueStatus(newTile)) {
-          sendChangeToNetwork();
-         }
+          return true;
+        }
       } else {
         sendMessageToGui("You need 2 AP to move with a victim");
+        return false;
       }
     }
+    return false;
   }
 
-  public void chopWall(Direction d) {
+  public boolean chopWall(Direction d) {
 
     // Don't let him chop wall if ap < 3
     if ((getCurrentFireFighter().getTile().hasFire())
@@ -114,49 +123,51 @@ public class FireFighterTurnManager implements Iterable<FireFighter> {
       sendMessageToGui(
           "You cannot chop a wall if either you have less than 2 AP points"
               + " and you stand on a tile with fire and have less than 3 ap points");
-      return;
+      return false;
     }
 
     Obstacle o = getCurrentFireFighter().getTile().getObstacle(d);
     if (o.isDoor()) {
       sendMessageToGui("Open, close or destroyed doors cannot be chopped");
-      return;
+      return false;
     }
     if (o.isDestroyed()) {
       sendMessageToGui("You cannot chop the air or a wall with 2 damage" + " markers.");
-      return;
+      return false;
     }
     if (getCurrentFireFighter().chopAP()) {
       if (o.applyDamage()) {
         sendChangeToNetwork();
-        }
-    } else {
-      sendMessageToGui("You need 2 ap to chop a wall");
+        return true;
+      }
     }
+    sendMessageToGui("You need 2 ap to chop a wall");
+    return false;
   }
 
-  public void interactWithDoor(Direction d) {
+  public boolean interactWithDoor(Direction d) {
 
     // Don't let him interact with door if ap < 2
     if ((getCurrentFireFighter().getTile().hasFire())
-        && (getCurrentFireFighter().getActionPointsLeft() < 2)) return;
+        && (getCurrentFireFighter().getActionPointsLeft() < 2)) return false;
 
     Obstacle o = getCurrentFireFighter().getTile().getObstacle(d);
     if (!o.isDoor()) {
       sendMessageToGui("You cannot open the air or a wall");
-      return;
+      return false;
     }
     if (o.isDestroyed()) {
       sendMessageToGui("You cannot interact with a destroyed door");
-      return;
+      return false;
     }
     if (getCurrentFireFighter().openCloseDoorAP()) {
       o.interactWithDoor();
-      sendChangeToNetwork();
+      return true;
     }
+    return false;
   }
 
-  public void extinguishFire(Direction d) {
+  public boolean extinguishFire(Direction d) {
 
     // Don't let him extenguish another Tile's fire or smoke if ap < 2
     if ((getCurrentFireFighter().getTile().hasFire())
@@ -165,7 +176,7 @@ public class FireFighterTurnManager implements Iterable<FireFighter> {
       sendMessageToGui(
           "You cannot end on a tile with fire on it so you cannot perform t"
               + "hat move since if you did that rule would not be repsected.");
-      return;
+      return false;
     }
     Tile tileToExtinguish = getCurrentFireFighter().getTile().getAdjacentTile(d);
     if (tileToExtinguish == null
@@ -173,7 +184,7 @@ public class FireFighterTurnManager implements Iterable<FireFighter> {
         || getCurrentFireFighter().getTile().hasObstacle(d)) {
       sendMessageToGui(
           "The tile you are trying to extinguish does not contain smoke or fire or there is an obstacle blocking the way");
-      return;
+      return false;
     }
     if (getCurrentFireFighter().extinguishAP()) {
       if (tileToExtinguish.hasFire()) {
@@ -181,9 +192,10 @@ public class FireFighterTurnManager implements Iterable<FireFighter> {
       } else if (tileToExtinguish.hasSmoke()) {
         tileToExtinguish.setFireStatus(FireStatus.EMPTY);
       }
-      sendChangeToNetwork();
+      return true;
     } else {
       sendMessageToGui("You need at least 1 AP to extingish a Tile");
+      return false;
     }
   }
 
@@ -263,9 +275,7 @@ public class FireFighterTurnManager implements Iterable<FireFighter> {
     FIREFIGHTERS = newList;
   }
 
-  protected void sendChangeToNetwork() {
-
-  }
+  protected void sendChangeToNetwork() {}
 
   public static void useFireFighterGameManagerAdvanced() {
     instance = new FireFighterTurnManagerAdvance();
@@ -277,7 +287,15 @@ public class FireFighterTurnManager implements Iterable<FireFighter> {
   }
 
   public void sendMessageToGui(String message) {
-    BoardScreen.getDialog().drawDialog("Action rejected", message);
+    JSONObject obj = new JSONObject();
+    obj.put("title","Action rejected");
+    obj.put("message",message);
+    String ip = Server.getClientIP(getCurrentFireFighter().getColor());
+    if (ip == null) {
+      throw new IllegalArgumentException("The color " + getCurrentFireFighter().getColor().toString() +" is not assigned to a client");
+    }
+    Server.sendCommandToSpecificClient(ClientCommands.SHOW_MESSAGE_ON_GAME_SCREEN,obj.toJSONString(),ip);
+
   }
 
   @NotNull

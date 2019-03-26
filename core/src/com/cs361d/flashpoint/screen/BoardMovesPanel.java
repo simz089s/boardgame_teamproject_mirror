@@ -14,6 +14,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.cs361d.flashpoint.manager.*;
 import com.cs361d.flashpoint.model.BoardElements.Direction;
+import com.cs361d.flashpoint.networking.Client;
+import org.json.simple.JSONObject;
+
 import java.util.ArrayList;
 import static com.cs361d.flashpoint.screen.BoardScreen.*;
 
@@ -48,24 +51,9 @@ public class BoardMovesPanel {
     boolean actionDone = false; //TODO
 
     FireFighterTurnManager fireFighterTurnManager = FireFighterTurnManager.getInstance();
-    switch(move) {
-      case MOVE:
-        fireFighterTurnManager.move(direction);
-        break;
-      case MOVE_WITH_VICTIM:
-        fireFighterTurnManager.moveWithVictim(direction);
-        break;
-      case CHOP:
-        fireFighterTurnManager.chopWall(direction);
-        break;
-      case EXTINGUISH:
-        fireFighterTurnManager.extinguishFire(direction);
-        break;
-      case INTERACT_WITH_DOOR:
-        fireFighterTurnManager.interactWithDoor(direction);
-        break;
-      default:
-    }
+    JSONObject obj = new JSONObject();
+    obj.put("direction",direction.toString());
+    Client.getInstance().sendCommand(move,obj.toJSONString());
 
     if ((FireFighterTurnManager.getInstance() instanceof FireFighterTurnManagerAdvance)) {
       FireFighterTurnManagerAdvance fireFighterTurnManagerAdvance = (FireFighterTurnManagerAdvance) fireFighterTurnManager;
@@ -144,18 +132,10 @@ public class BoardMovesPanel {
                   drawDirectionsPanelTable(move);
                   break;
                 case END_TURN:
-                  try {
-                    fireFighterTurnManager.endTurn();
-                  } catch (IllegalAccessException e) {
-                    e.printStackTrace();
-                  }
-
-                  redrawAfterMove();
-
+                  Client.getInstance().sendCommand(Actions.END_TURN,"");
                   break;
                 case SAVE:
-                  DBHandler.saveBoardToDB(BoardManager.getInstance().getGameName());
-                  boardDialog.drawDialog("Save", "Your game has been successfully saved.");
+                  Client.getInstance().sendCommand(Actions.SAVE,"");
                   break;
                 default:
               }
@@ -166,7 +146,6 @@ public class BoardMovesPanel {
                 switch(move) {
                   case FIRE_DECK_GUN:
                     FireFighterTurnManagerAdvance.getInstance().fireDeckGun();
-                    redrawAfterMove();
                     break;
                   case MOVE_WITH_HAZMAT:
                     drawDirectionsPanelTable(move);
@@ -313,15 +292,6 @@ public class BoardMovesPanel {
 
     directionsTableList.add(directionTable);
     stage.addActor(directionTable);
-  }
-
-  private void redrawAfterMove() {
-    clearAllGameUnits();
-    drawGameUnitsOnTile();
-    drawEngineTilesColor();
-    boardGameInfoLabel.drawGameInfoLabel();
-    removeAllPrevFragments();
-    boardMovesPanel.drawMovesAndDirectionsPanel();
   }
 
   // helper

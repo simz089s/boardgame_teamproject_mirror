@@ -71,7 +71,7 @@ public class DBHandler {
 
 
 
-    public static void loadBoardFromDB(String fileName) {
+    protected static void loadBoardFromDB(String fileName) {
 
         String path = "db/" + fileName + ".json";
 
@@ -285,7 +285,7 @@ public class DBHandler {
 
 
 
-    public static void loadBoardFromString(String jsonString) {
+    protected static void loadBoardFromString(String jsonString) {
 
         JSONParser parser = new JSONParser();
 

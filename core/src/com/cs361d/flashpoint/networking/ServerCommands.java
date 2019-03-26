@@ -2,19 +2,16 @@ package com.cs361d.flashpoint.networking;
 
 public enum ServerCommands
 {
-    //CHATWAIT("chatwait"),
-//    CHATGAME("CHAT_GAME"),
-    GAMESTATE("gamestate"),
     SAVE("SAVE"),
     SEND_NEWLY_CREATED_BOARD("SEND_NEWLY_CREATED_BOARD"),
-//    ASSIGN_FIREFIGHTER("ASSIGN_FIREFIGHTER"),
-    ASK_TO_GET_ASSIGN_FIREFIGHTER("ASK_TO_GET_ASSIGN_FIREFIGHTER"),
     JOIN("join"),
     LOAD_GAME("LOAD_GAME"),
-//    SETBOARDSCREEN("SETBOARDSCREEN"),
-    EXITGAME("exitgame"),
+    EXIT_GAME("exit_game"),
     ADD_CHAT_MESSAGE("ADD_CHAT_MESSAGE"),
-    GET_CHAT_MESSAGES("GET_CHAT_MESSAGES");
+    GET_CHAT_MESSAGES("GET_CHAT_MESSAGES"),
+    NULL_COMMAND("NULL_COMMAND"),
+    CHOOSE_INITIAL_POSITION("CHOOSE_INITIAL_POSITION"),
+    CREATE_GAME("CREATE_GAME");
 
     private String text;
 
@@ -28,6 +25,6 @@ public enum ServerCommands
                 return c;
             }
         }
-        throw new IllegalArgumentException("The string " + text + " does not exist");
+        return NULL_COMMAND;
     }
 }

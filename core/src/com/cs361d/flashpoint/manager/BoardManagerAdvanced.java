@@ -36,7 +36,7 @@ public class BoardManagerAdvanced extends BoardManager {
   }
 
   @Override
-  public void endTurnFireSpread() throws IllegalAccessException {
+  public void endTurnFireSpread() {
     verifyRemoveHazmatOutside();
     Tile hitLocation;
     int numExec = 0;

@@ -1,10 +1,23 @@
 package com.cs361d.flashpoint.networking;
+
+import com.badlogic.gdx.Gdx;
+import com.cs361d.flashpoint.manager.*;
+import com.cs361d.flashpoint.model.BoardElements.FireFighterColor;
+import com.cs361d.flashpoint.screen.BoardChatFragment;
+import com.cs361d.flashpoint.screen.BoardScreen;
+
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.InetAddress;
 import java.net.URL;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 
 public class NetworkManager {
 
@@ -14,7 +27,7 @@ public class NetworkManager {
   // public static final String DEFAULT_SERVER_IP = "142.157.74.18"; // Simon public ip address
 //  public static final String DEFAULT_SERVER_IP = "142.157.67.193"; // Elvric public ip address
    //final public static String DEFAULT_SERVER_IP = "142.157.149.154"; // DC public ip
-  final public static String DEFAULT_SERVER_IP = "132.216.234.238 "; // Matty V IP
+  final public static String DEFAULT_SERVER_IP = "132.216.234.238"; // Matty V IP
   public static final int DEFAULT_SERVER_PORT = 54590;
 
 

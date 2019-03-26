@@ -15,6 +15,9 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.cs361d.flashpoint.manager.*;
 import com.cs361d.flashpoint.model.BoardElements.*;
+import com.cs361d.flashpoint.networking.Client;
+import com.cs361d.flashpoint.networking.ServerCommands;
+import org.json.simple.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,9 +36,9 @@ public class BoardScreen extends FlashPointScreen {
 
   // choose init pos clickable tiles
   final String[] CHOOSE_INIT_POS_TILES = {
-          "0-0", "1-0", "2-0", "3-0", "4-0", "5-0", "6-0", "7-0", "0-1", "0-2", "0-3", "0-4", "0-5",
-          "0-6", "0-7", "0-8", "0-9", "1-9", "2-9", "3-9", "4-9", "5-9", "6-9", "7-1", "7-2", "7-3",
-          "7-4", "7-5", "7-6", "7-7", "7-8", "7-9",
+    "0-0", "1-0", "2-0", "3-0", "4-0", "5-0", "6-0", "7-0", "0-1", "0-2", "0-3", "0-4", "0-5",
+    "0-6", "0-7", "0-8", "0-9", "1-9", "2-9", "3-9", "4-9", "5-9", "6-9", "7-1", "7-2", "7-3",
+    "7-4", "7-5", "7-6", "7-7", "7-8", "7-9",
   };
 
   // choose pos on knock down
@@ -50,7 +53,8 @@ public class BoardScreen extends FlashPointScreen {
   Sprite spriteBG;
   static Stage stage;
 
-  private static Music audioMusic = Gdx.audio.newMusic(Gdx.files.internal("playlist/battle_normal01.mp3"));
+  private static Music audioMusic =
+      Gdx.audio.newMusic(Gdx.files.internal("playlist/battle_normal01.mp3"));
 
   static BoardDialog boardDialog;
 
@@ -60,7 +64,6 @@ public class BoardScreen extends FlashPointScreen {
   static BoardChatFragment boardChatFragment;
   static BoardCheatSFragment boardCheatSFragment;
   static BoardStatsFragment boardStatsFragment;
-
 
   static ImageButton btnExit;
   static ImageButton btnResume;
@@ -117,116 +120,130 @@ public class BoardScreen extends FlashPointScreen {
         tilesImg[i][j].setHeight(TILE_SIZE);
         tilesImg[i][j].setWidth(TILE_SIZE);
         tilesImg[i][j].setPosition(
-                j * TILE_SIZE + leftPadding + (j + 1) * WALL_THICKNESS,
-                curYPos - topPadding - (i + 1) * WALL_THICKNESS);
+            j * TILE_SIZE + leftPadding + (j + 1) * WALL_THICKNESS,
+            curYPos - topPadding - (i + 1) * WALL_THICKNESS);
 
         final int i_pos = i;
         final int j_pos = j;
 
         tilesImg[i][j].addListener(
-                new ClickListener() {
-                  @Override
-                  public void clicked(InputEvent event, float x, float y) {
+            new ClickListener() {
+              @Override
+              public void clicked(InputEvent event, float x, float y) {
 
-                    // some boolean checks for advanced version
-                    boolean isAdvancedVersion = BoardManager.getInstance().isAdvanced();
-                    boolean hasNoSpecialty = isAdvancedVersion &&
-                            !((FireFighterTurnManagerAdvance) FireFighterTurnManagerAdvance.getInstance()).currentHasSpeciality();
-                    boolean isAmbulanceNotSet = isAdvancedVersion
-                            && !((BoardManagerAdvanced) BoardManagerAdvanced.getInstance()).hasAmbulancePlaced();
-                    boolean isEngineNotSet = isAdvancedVersion
-                            && !((BoardManagerAdvanced) BoardManagerAdvanced.getInstance()).hasFireTruckPlaced();
+                // some boolean checks for advanced version
+                boolean isAdvancedVersion = BoardManager.getInstance().isAdvanced();
+                boolean hasNoSpecialty =
+                    isAdvancedVersion
+                        && !((FireFighterTurnManagerAdvance)
+                                FireFighterTurnManagerAdvance.getInstance())
+                            .currentHasSpeciality();
+                boolean isAmbulanceNotSet =
+                    isAdvancedVersion
+                        && !((BoardManagerAdvanced) BoardManagerAdvanced.getInstance())
+                            .hasAmbulancePlaced();
+                boolean isEngineNotSet =
+                    isAdvancedVersion
+                        && !((BoardManagerAdvanced) BoardManagerAdvanced.getInstance())
+                            .hasFireTruckPlaced();
 
-                    // set init vehicles position
-                    if (isAmbulanceNotSet && DBHandler.isPresentInArr(getAmbulanceClickableTiles(), i_pos + "-" + j_pos)){
-                      ((BoardManagerAdvanced) BoardManagerAdvanced.getInstance()).addAmbulance(i_pos, j_pos);
-                      removeAllFilterOnTile();
-                      drawGameUnitsOnTile();
-                      boardDialog.drawDialog("Engine position", "Choose the fire engine's initial position (green tiles).");
-                      addFilterOnTileForEngine();
-                    } else if (isEngineNotSet && DBHandler.isPresentInArr(getEngineClickableTiles(), i_pos + "-" + j_pos)){
+                // set init vehicles position
+                if (isAmbulanceNotSet
+                    && DBHandler.isPresentInArr(
+                        getAmbulanceClickableTiles(), i_pos + "-" + j_pos)) {
+                  ((BoardManagerAdvanced) BoardManagerAdvanced.getInstance())
+                      .addAmbulance(i_pos, j_pos);
+                  removeAllFilterOnTile();
+                  drawGameUnitsOnTile();
+                  boardDialog.drawDialog(
+                      "Engine position",
+                      "Choose the fire engine's initial position (green tiles).");
+                  addFilterOnTileForEngine();
+                } else if (isEngineNotSet
+                    && DBHandler.isPresentInArr(getEngineClickableTiles(), i_pos + "-" + j_pos)) {
 
-                      if(isAmbulanceNotSet){
-                        return;
-                      }
-
-                      ((BoardManagerAdvanced) BoardManagerAdvanced.getInstance()).addFireTruck(i_pos, j_pos);
-                      removeAllFilterOnTile();
-                      drawGameUnitsOnTile();
-                      boardDialog.drawDialog("Specialty", "Choose your initial specialty on the right panel.");
-                      addFilterOnTileForChooseInitPos();
-                      boardChooseRolePanel.drawChooseSpecialtyPanel();
-                    }
-
-                    // choose init position
-                    if (!FireFighterTurnManager.getInstance().currentHasTile()
-                            && DBHandler.isPresentInArr(CHOOSE_INIT_POS_TILES, i_pos + "-" + j_pos)
-                    ) {
-
-                      if(hasNoSpecialty || (isAmbulanceNotSet || isEngineNotSet)){
-                        return;
-                      }
-
-                      clearAllGameUnits();
-                      Tile[][] tiles = BoardManager.getInstance().getTiles();
-
-                      try {
-                        FireFighterTurnManager.getInstance().chooseInitialPosition(tiles[i_pos][j_pos]);
-                      } catch (IllegalAccessException e) {
-                        e.printStackTrace();
-                      }
-                      try {
-                        Thread.sleep(100);
-                      } catch (InterruptedException e) {
-                        e.printStackTrace();
-                      }
-                      removeAllFilterOnTile();
-                      drawGameUnitsOnTile();
-                      boardGameInfoLabel.drawGameInfoLabel();
-
-                      if (!FireFighterTurnManager.getInstance().currentHasTile()) {
-                        addFilterOnTileForChooseInitPos();
-                        boardChooseRolePanel.drawChooseSpecialtyPanel();
-                      } else {
-                        createAllGameButtons();
-
-                        // moves panel
-                        removeAllPrevFragments();
-                        boardMovesPanel.drawMovesAndDirectionsPanel();
-
-                        drawEngineTilesColor();
-                      }
-                    }
-
-                    // choose tile on knock down
-                    if (activateKnockDownChoosePos && isClickableTileOnKnockDown(i_pos, j_pos)) {
-                      BoardManager.getInstance()
-                              .chooseForKnockedDown(
-                                      BoardManager.getInstance().getTiles()[i_pos][j_pos],
-                                      knockedDownFirefigher);
-
-                      activateKnockDownChoosePos = false;
-
-                      removeAllFilterOnTile();
-                      clearAllGameUnits();
-                      drawGameUnitsOnTile();
-                      boardGameInfoLabel.drawGameInfoLabel();
-                    }
-
-                    // TODO: choose flip POI
-                    if (activateFlipPOIChoosePos && isClickableTileOnFlipPOI(i_pos, j_pos)) {
-
-                      ((FireFighterTurnManagerAdvance) FireFighterTurnManager.getInstance()).flipPOI(BoardManager.getInstance().getTiles()[i_pos][j_pos]);
-
-                      activateKnockDownChoosePos = false;
-
-                      removeAllFilterOnTile();
-                      clearAllGameUnits();
-                      drawGameUnitsOnTile();
-                      boardGameInfoLabel.drawGameInfoLabel();
-                    }
+                  if (isAmbulanceNotSet) {
+                    return;
                   }
-                });
+
+                  ((BoardManagerAdvanced) BoardManagerAdvanced.getInstance())
+                      .addFireTruck(i_pos, j_pos);
+                  removeAllFilterOnTile();
+                  drawGameUnitsOnTile();
+                  boardDialog.drawDialog(
+                      "Specialty", "Choose your initial specialty on the right panel.");
+                  addFilterOnTileForChooseInitPos();
+                  boardChooseRolePanel.drawChooseSpecialtyPanel();
+                }
+
+                // choose init position
+                if (!FireFighterTurnManager.getInstance().currentHasTile()
+                    && DBHandler.isPresentInArr(CHOOSE_INIT_POS_TILES, i_pos + "-" + j_pos)) {
+
+                  if (hasNoSpecialty || (isAmbulanceNotSet || isEngineNotSet)) {
+                    return;
+                  }
+
+                  clearAllGameUnits();
+                  Tile[][] tiles = BoardManager.getInstance().getTiles();
+                  JSONObject obj = new JSONObject();
+                  obj.put("i", i_pos);
+                  obj.put("j", j_pos);
+                  Client.getInstance()
+                      .sendCommand(ServerCommands.CHOOSE_INITIAL_POSITION, obj.toJSONString());
+                  try {
+                    Thread.sleep(100);
+                  } catch (InterruptedException e) {
+                    e.printStackTrace();
+                  }
+                  removeAllFilterOnTile();
+                  drawGameUnitsOnTile();
+                  boardGameInfoLabel.drawGameInfoLabel();
+
+                  if (!FireFighterTurnManager.getInstance().currentHasTile()) {
+                    addFilterOnTileForChooseInitPos();
+                    boardChooseRolePanel.drawChooseSpecialtyPanel();
+                  } else {
+                    createAllGameButtons();
+
+                    // moves panel
+                    removeAllPrevFragments();
+                    boardMovesPanel.drawMovesAndDirectionsPanel();
+
+                    drawEngineTilesColor();
+                  }
+                }
+
+                // choose tile on knock down
+                if (activateKnockDownChoosePos && isClickableTileOnKnockDown(i_pos, j_pos)) {
+                  BoardManager.getInstance()
+                      .chooseForKnockedDown(
+                          BoardManager.getInstance().getTiles()[i_pos][j_pos],
+                          knockedDownFirefigher);
+
+                  activateKnockDownChoosePos = false;
+
+                  removeAllFilterOnTile();
+                  clearAllGameUnits();
+                  drawGameUnitsOnTile();
+                  boardGameInfoLabel.drawGameInfoLabel();
+                }
+
+                // TODO: choose flip POI
+                if (activateFlipPOIChoosePos && isClickableTileOnFlipPOI(i_pos, j_pos)) {
+
+                  ((FireFighterTurnManagerAdvance) FireFighterTurnManager.getInstance())
+                      .flipPOI(BoardManager.getInstance().getTiles()[i_pos][j_pos]);
+
+                  activateKnockDownChoosePos = false;
+
+                  removeAllFilterOnTile();
+                  clearAllGameUnits();
+                  drawGameUnitsOnTile();
+                  boardGameInfoLabel.drawGameInfoLabel();
+                }
+              }
+            });
 
         stage.addActor(tilesImg[i][j]);
       }
@@ -237,17 +254,21 @@ public class BoardScreen extends FlashPointScreen {
     boardGameInfoLabel.drawGameInfoLabel();
     drawGameUnitsOnTile();
 
-    boolean isAmbulanceNotSet = BoardManager.getInstance().isAdvanced()
+    boolean isAmbulanceNotSet =
+        BoardManager.getInstance().isAdvanced()
             && !((BoardManagerAdvanced) BoardManagerAdvanced.getInstance()).hasAmbulancePlaced();
-    boolean isEngineNotSet = BoardManager.getInstance().isAdvanced()
+    boolean isEngineNotSet =
+        BoardManager.getInstance().isAdvanced()
             && !((BoardManagerAdvanced) BoardManagerAdvanced.getInstance()).hasFireTruckPlaced();
 
-    if(isAmbulanceNotSet || isEngineNotSet){
-      boardDialog.drawDialog("Ambulance position", "Choose the ambulance's initial position (green tiles).");
+    if (isAmbulanceNotSet || isEngineNotSet) {
+      boardDialog.drawDialog(
+          "Ambulance position", "Choose the ambulance's initial position (green tiles).");
       addFilterOnTileForAmbulance();
     } else if (!FireFighterTurnManager.getInstance().currentHasTile()) { // choose init pos (family)
       //   if(User.getInstance().isMyTurn()) {
-      boardDialog.drawDialog("Initial position", "Choose your initial position on the board (green tiles).");
+      boardDialog.drawDialog(
+          "Initial position", "Choose your initial position on the board (green tiles).");
       addFilterOnTileForChooseInitPos();
       boardChooseRolePanel.drawChooseSpecialtyPanel();
       //   }
@@ -323,26 +344,26 @@ public class BoardScreen extends FlashPointScreen {
       switch (d) {
         case TOP:
           gameUnit.setPosition(
-                  myTile.getX() + myTile.getWidth() / 2 - gameUnit.getHeight() / 2,
-                  myTile.getY() + myTile.getHeight() - gameUnit.getHeight() / 2);
+              myTile.getX() + myTile.getWidth() / 2 - gameUnit.getHeight() / 2,
+              myTile.getY() + myTile.getHeight() - gameUnit.getHeight() / 2);
           break;
 
         case BOTTOM:
           gameUnit.setPosition(
-                  myTile.getX() + myTile.getWidth() / 2 - gameUnit.getHeight() / 2,
-                  myTile.getY() - gameUnit.getHeight() / 2);
+              myTile.getX() + myTile.getWidth() / 2 - gameUnit.getHeight() / 2,
+              myTile.getY() - gameUnit.getHeight() / 2);
           break;
 
         case LEFT:
           gameUnit.setPosition(
-                  myTile.getX() - gameUnit.getWidth() / 2,
-                  myTile.getY() + myTile.getHeight() / 2 - gameUnit.getHeight() / 2);
+              myTile.getX() - gameUnit.getWidth() / 2,
+              myTile.getY() + myTile.getHeight() / 2 - gameUnit.getHeight() / 2);
           break;
 
         case RIGHT:
           gameUnit.setPosition(
-                  myTile.getX() + myTile.getWidth() - gameUnit.getWidth() / 2,
-                  myTile.getY() + myTile.getHeight() / 2 - gameUnit.getHeight() / 2);
+              myTile.getX() + myTile.getWidth() - gameUnit.getWidth() / 2,
+              myTile.getY() + myTile.getHeight() / 2 - gameUnit.getHeight() / 2);
           break;
         default:
           throw new IllegalArgumentException("That argument does not exist");
@@ -434,15 +455,15 @@ public class BoardScreen extends FlashPointScreen {
     Image gameUnit;
 
     // Vehicles
-    if(tiles[i][j].hasAmbulance()){
-      if((i == 0 || i == 7) && (!tiles[i][j - 1].hasAmbulance())) { // horizontally positioned
+    if (tiles[i][j].hasAmbulance()) {
+      if ((i == 0 || i == 7) && (!tiles[i][j - 1].hasAmbulance())) { // horizontally positioned
         gameUnit = new Image(new Texture("game_units/vehicles/h_ambulance.png"));
         gameUnit.setHeight(60);
         gameUnit.setWidth(100);
         gameUnit.setPosition(myTile.getX() + 25, myTile.getY() + 8);
         gameUnits.add(gameUnit);
         stage.addActor(gameUnit);
-      } else if ((j == 0 || j == 9) && (!tiles[i + 1][j].hasAmbulance())){ // vertically positioned
+      } else if ((j == 0 || j == 9) && (!tiles[i + 1][j].hasAmbulance())) { // vertically positioned
         gameUnit = new Image(new Texture("game_units/vehicles/v_ambulance.png"));
         gameUnit.setHeight(100);
         gameUnit.setWidth(60);
@@ -450,15 +471,15 @@ public class BoardScreen extends FlashPointScreen {
         gameUnits.add(gameUnit);
         stage.addActor(gameUnit);
       }
-    } else if (tiles[i][j].hasFireTruck()){
-      if((i == 0 || i == 7) && (!tiles[i][j - 1].hasFireTruck())) { // horizontally positioned
+    } else if (tiles[i][j].hasFireTruck()) {
+      if ((i == 0 || i == 7) && (!tiles[i][j - 1].hasFireTruck())) { // horizontally positioned
         gameUnit = new Image(new Texture("game_units/vehicles/h_engine.png"));
         gameUnit.setHeight(60);
         gameUnit.setWidth(100);
         gameUnit.setPosition(myTile.getX() + 25, myTile.getY() + 8);
         gameUnits.add(gameUnit);
         stage.addActor(gameUnit);
-      } else if ((j == 0 || j == 9) && (!tiles[i + 1][j].hasFireTruck())){ // vertically positioned
+      } else if ((j == 0 || j == 9) && (!tiles[i + 1][j].hasFireTruck())) { // vertically positioned
         gameUnit = new Image(new Texture("game_units/vehicles/v_engine.png"));
         gameUnit.setHeight(100);
         gameUnit.setWidth(60);
@@ -498,7 +519,7 @@ public class BoardScreen extends FlashPointScreen {
             break;
           default:
             throw new IllegalArgumentException(
-                    "FireFighter color " + f.getColor() + " does not exists");
+                "FireFighter color " + f.getColor() + " does not exists");
         }
         gameUnit.setHeight(30);
         gameUnit.setWidth(30);
@@ -516,17 +537,17 @@ public class BoardScreen extends FlashPointScreen {
       gameUnit.setHeight(30);
       gameUnit.setWidth(30);
       gameUnit.setPosition(
-              myTile.getX() + myTile.getHeight() / 2 + 7, myTile.getY() + myTile.getHeight() / 2 + 7);
+          myTile.getX() + myTile.getHeight() / 2 + 7, myTile.getY() + myTile.getHeight() / 2 + 7);
       gameUnits.add(gameUnit);
       stage.addActor(gameUnit);
 
-      if (tiles[i][j].getVictim().isCured()){
+      if (tiles[i][j].getVictim().isCured()) {
         Image healMarker = new Image(new Texture("game_units/Heal_Marker.png"));
         healMarker.setHeight(15);
         healMarker.setWidth(15);
         healMarker.setPosition(
-                myTile.getX() + myTile.getHeight() / 2 + 10,
-                myTile.getY() + myTile.getHeight() / 2 + 10);
+            myTile.getX() + myTile.getHeight() / 2 + 10,
+            myTile.getY() + myTile.getHeight() / 2 + 10);
         gameUnits.add(healMarker);
         stage.addActor(healMarker);
       }
@@ -597,11 +618,7 @@ public class BoardScreen extends FlashPointScreen {
     }
   }
 
-
-
   // menu buttons
-
-
 
   private void createAllGameButtons() {
     createCheatSButton();
@@ -626,12 +643,13 @@ public class BoardScreen extends FlashPointScreen {
     btnExit.setPosition(xPosBtnExit, yPosBtnExit);
 
     btnExit.addListener(
-            new ClickListener() {
-              @Override
-              public void clicked(InputEvent event, float x, float y) {
-                audioMusic.stop();
-                game.setScreen(game.lobbyScreen);
-              }});
+        new ClickListener() {
+          @Override
+          public void clicked(InputEvent event, float x, float y) {
+            audioMusic.stop();
+            game.setScreen(game.lobbyScreen);
+          }
+        });
 
     stage.addActor(btnExit);
   }
@@ -652,12 +670,12 @@ public class BoardScreen extends FlashPointScreen {
     btnCheatS.setPosition(xPosBtnCheatS, yPosBtnCheatS);
 
     btnCheatS.addListener(
-            new ClickListener() {
-              @Override
-              public void clicked(InputEvent event, float x, float y) {
-                setSideFragment(Fragment.CHEATSHEET);
-              }
-            });
+        new ClickListener() {
+          @Override
+          public void clicked(InputEvent event, float x, float y) {
+            setSideFragment(Fragment.CHEATSHEET);
+          }
+        });
 
     stage.addActor(btnCheatS);
   }
@@ -678,12 +696,12 @@ public class BoardScreen extends FlashPointScreen {
     btnStats.setPosition(xPosBtnStats, yPosBtnStats);
 
     btnStats.addListener(
-            new ClickListener() {
-              @Override
-              public void clicked(InputEvent event, float x, float y) {
-                setSideFragment(Fragment.STATS);
-              }
-            });
+        new ClickListener() {
+          @Override
+          public void clicked(InputEvent event, float x, float y) {
+            setSideFragment(Fragment.STATS);
+          }
+        });
 
     stage.addActor(btnStats);
   }
@@ -699,19 +717,18 @@ public class BoardScreen extends FlashPointScreen {
     btnChat.setWidth(50);
     btnChat.setHeight(50);
 
-
     final float xPosBtnChat = Gdx.graphics.getWidth() - btnExit.getWidth() - 8;
     final float yPosBtnChat = Gdx.graphics.getHeight() - btnExit.getHeight() * 2 - 50;
 
     btnChat.setPosition(xPosBtnChat, yPosBtnChat);
 
     btnChat.addListener(
-            new ClickListener() {
-              @Override
-              public void clicked(InputEvent event, float x, float y) {
-                setSideFragment(Fragment.CHAT);
-              }
-            });
+        new ClickListener() {
+          @Override
+          public void clicked(InputEvent event, float x, float y) {
+            setSideFragment(Fragment.CHAT);
+          }
+        });
 
     stage.addActor(btnChat);
   }
@@ -734,24 +751,20 @@ public class BoardScreen extends FlashPointScreen {
     btnResume.setPosition(x, y);
 
     btnResume.addListener(
-            new ClickListener() {
-              @Override
-              public void clicked(InputEvent event, float x, float y) {
-                removeAllPrevFragments();
-                boardMovesPanel.drawMovesAndDirectionsPanel();
-              }
-            });
+        new ClickListener() {
+          @Override
+          public void clicked(InputEvent event, float x, float y) {
+            removeAllPrevFragments();
+            boardMovesPanel.drawMovesAndDirectionsPanel();
+          }
+        });
 
-    //if (User.getInstance().isMyTurn()) {
+    // if (User.getInstance().isMyTurn()) {
     stage.addActor(btnResume);
-    //}
+    // }
   }
 
-
-
   // add filters
-
-
 
   private void addFilterOnTileForChooseInitPos() {
     for (int i = 0; i < CHOOSE_INIT_POS_TILES.length; i++) {
@@ -776,8 +789,8 @@ public class BoardScreen extends FlashPointScreen {
   private void addFilterOnTileForAmbulance() {
     Tile[][] tiles = BoardManager.getInstance().getTiles();
     for (int i = 0; i < tiles.length; i++) {
-      for (int j = 0; j < tiles[i].length; j ++){
-        if (tiles[i][j].canContainAmbulance()){
+      for (int j = 0; j < tiles[i].length; j++) {
+        if (tiles[i][j].canContainAmbulance()) {
           tilesImg[i][j].setColor(Color.GREEN);
         }
       }
@@ -787,8 +800,8 @@ public class BoardScreen extends FlashPointScreen {
   private void addFilterOnTileForEngine() {
     Tile[][] tiles = BoardManager.getInstance().getTiles();
     for (int i = 0; i < tiles.length; i++) {
-      for (int j = 0; j < tiles[i].length; j ++){
-        if (tiles[i][j].canContainFireTruck()){
+      for (int j = 0; j < tiles[i].length; j++) {
+        if (tiles[i][j].canContainFireTruck()) {
           tilesImg[i][j].setColor(Color.GREEN);
         }
       }
@@ -806,11 +819,7 @@ public class BoardScreen extends FlashPointScreen {
     activateFlipPOIChoosePos = true;
   }
 
-
-
   // remove GUI elements
-
-
 
   public static void clearAllGameUnits() {
     for (int i = 0; i < gameUnits.size(); i++) {
@@ -835,11 +844,7 @@ public class BoardScreen extends FlashPointScreen {
     }
   }
 
-
-
   // helper methods
-
-
 
   private boolean isClickableTileOnKnockDown(int i_input, int j_input) {
     for (int i = 0; i < clickableTilesOnKnockDownArr.size(); i++) {
@@ -859,7 +864,7 @@ public class BoardScreen extends FlashPointScreen {
     List<Tile> tiles = BoardManagerAdvanced.getInstance().tilesWithPOI();
 
     for (int i = 0; i < tiles.size(); i++) {
-      if(tiles.get(i).getI() == i_input && tiles.get(i).getJ() == j_input ){
+      if (tiles.get(i).getI() == i_input && tiles.get(i).getJ() == j_input) {
         return true;
       }
     }
@@ -873,8 +878,8 @@ public class BoardScreen extends FlashPointScreen {
 
     Tile[][] tiles = BoardManager.getInstance().getTiles();
     for (int i = 0; i < NUMBER_OF_ROWS; i++) {
-      for (int j = 0; j < NUMBER_OF_COLS; j ++){
-        if (tiles[i][j].canContainAmbulance()){
+      for (int j = 0; j < NUMBER_OF_COLS; j++) {
+        if (tiles[i][j].canContainAmbulance()) {
           clickableTiles.add(i + "-" + j);
         }
       }
@@ -889,8 +894,8 @@ public class BoardScreen extends FlashPointScreen {
 
     Tile[][] tiles = BoardManager.getInstance().getTiles();
     for (int i = 0; i < NUMBER_OF_ROWS; i++) {
-      for (int j = 0; j < NUMBER_OF_COLS; j ++){
-        if (tiles[i][j].canContainFireTruck()){
+      for (int j = 0; j < NUMBER_OF_COLS; j++) {
+        if (tiles[i][j].canContainFireTruck()) {
           clickableTiles.add(i + "-" + j);
         }
       }
@@ -898,7 +903,6 @@ public class BoardScreen extends FlashPointScreen {
 
     return clickableTiles.toArray(new String[0]);
   }
-
 
   public static void redrawBoard() {
     if (game.getScreen() == game.boardScreen) {
@@ -922,21 +926,32 @@ public class BoardScreen extends FlashPointScreen {
     game.setScreen(game.boardScreen);
   }
 
-  public static void setSideFragment(Fragment fragment){
+  public static void setSideFragment(Fragment fragment) {
 
     removeAllPrevFragments();
 
-    if (fragment == Fragment.CHEATSHEET){
+    if (fragment == Fragment.CHEATSHEET) {
       boardCheatSFragment.drawCheatSFragment();
-    } else if (fragment == Fragment.STATS){
+    } else if (fragment == Fragment.STATS) {
       boardStatsFragment.drawStatsFragment();
-    } else if (fragment == Fragment.CHAT){
+    } else if (fragment == Fragment.CHAT) {
       boardChatFragment.createChatFragment();
-    } else if (fragment == Fragment.CHOOSESPECIALTY){
+    } else if (fragment == Fragment.CHOOSESPECIALTY) {
       boardChooseRolePanel.drawChooseSpecialtyPanel();
     }
 
     currentFragment = fragment;
+  }
+
+  public static void redrawAfterMove() {
+    if (game.getScreen() == game.boardScreen) {
+      clearAllGameUnits();
+      drawGameUnitsOnTile();
+      drawEngineTilesColor();
+      boardGameInfoLabel.drawGameInfoLabel();
+      removeAllPrevFragments();
+      boardMovesPanel.drawMovesAndDirectionsPanel();
+    }
   }
 
   public static boolean isChatFragment() {
@@ -951,7 +966,7 @@ public class BoardScreen extends FlashPointScreen {
     return currentFragment == Fragment.STATS;
   }
 
-  public static BoardDialog getDialog(){
+  public static BoardDialog getDialog() {
     return boardDialog;
   }
 }

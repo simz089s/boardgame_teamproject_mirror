@@ -34,6 +34,7 @@ public class BoardManager implements Iterable<Tile> {
   public void setGameEnded() {
     gameEnded = true;
   }
+
   protected static BoardManager instance = new BoardManager();
 
   // Get the only object available
@@ -90,7 +91,6 @@ public class BoardManager implements Iterable<Tile> {
     colorList.add(FireFighterColor.WHITE);
     colorList.add(FireFighterColor.YELLOW);
   }
-
 
   public void setGameName(String name) {
     this.gameName = name;
@@ -190,7 +190,7 @@ public class BoardManager implements Iterable<Tile> {
   }
 
   // Spread the fire at the end of the turn
-  public void endTurnFireSpread() throws IllegalAccessException {
+  public void endTurnFireSpread() {
     int i = 1 + (int) (Math.random() * (ROWS - 2));
     int j = 1 + (int) (Math.random() * (COLUMNS - 2));
     Tile hitLocation = TILE_MAP[i][j];
@@ -211,14 +211,14 @@ public class BoardManager implements Iterable<Tile> {
 
   protected void checkVictimsAndAdd() {
     int numVictimToAdd = 3;
-    for (int i = 0; i <ROWS; i++) {
+    for (int i = 0; i < ROWS; i++) {
       for (int j = 0; j < COLUMNS; j++) {
         if (TILE_MAP[i][j].hasPointOfInterest()) {
           numVictimToAdd--;
         }
       }
     }
-    while(numVictimToAdd>0) {
+    while (numVictimToAdd > 0) {
       addNewPointInterest();
       numVictimToAdd--;
     }
@@ -490,8 +490,8 @@ public class BoardManager implements Iterable<Tile> {
       }
       f.setTile(tiles.get(0));
     } else if (tiles.size() > 1) {
-     // BoardScreen.addFilterOnKnockDownChoosePos(f, tiles);
-     // f.removeFromBoard();
+      // BoardScreen.addFilterOnKnockDownChoosePos(f, tiles);
+      // f.removeFromBoard();
       // TODO modify in the future
       f.setTile(tiles.get(0));
     } else {
@@ -531,7 +531,8 @@ public class BoardManager implements Iterable<Tile> {
     int j = t.getJ();
     if (i == 0 || i == ROWS - 1 || j == 0 || j == COLUMNS - 1) {
       if (t.hasRealVictim()) {
-        BoardScreen.getDialog().drawDialog("Victim Saved", "Congratulations, you saved one victim!");
+        BoardScreen.getDialog()
+            .drawDialog("Victim Saved", "Congratulations, you saved one victim!");
         numVictimSaved++;
         t.setNullVictim();
       }
@@ -591,10 +592,14 @@ public class BoardManager implements Iterable<Tile> {
   }
 
   public void endGameMessage(String title, String msg) {
-      JSONObject msCarrier = new JSONObject();
-      msCarrier.put("title", title);
-      msCarrier.put("endmessage", msg);
-      //TODO End game
+    JSONObject msCarrier = new JSONObject();
+    msCarrier.put("title", title);
+    msCarrier.put("endmessage", msg);
+    // TODO End game
+  }
+
+  public Tile getTileAt(int i, int j) {
+    return TILE_MAP[i][j];
   }
 
   public boolean gameHasEnded() {
