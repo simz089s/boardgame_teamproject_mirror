@@ -142,11 +142,8 @@ public class BoardCaptainCommand {
 
     private void drawDirectionPanelTable(final FireFighterColor color, final Actions moveSelected) {
 
-        removeMovePanel();
-
         ImageButton btnDirectionU = new ImageButton(getTextureForDirectionsTable(Direction.TOP));
         ImageButton btnDirectionD = new ImageButton(getTextureForDirectionsTable(Direction.BOTTOM));
-        ImageButton btnDirectionCurr = new ImageButton(getTextureForDirectionsTable(Direction.NODIRECTION));
         ImageButton btnDirectionL = new ImageButton(getTextureForDirectionsTable(Direction.LEFT));
         ImageButton btnDirectionR = new ImageButton(getTextureForDirectionsTable(Direction.RIGHT));
 
@@ -172,7 +169,9 @@ public class BoardCaptainCommand {
 
         directionTable.setPosition(1000, Gdx.graphics.getHeight() - directionTable.getHeight() - 550);
 
-        btnDirectionU.addListener(
+        final BoardMovesPanel boardMovesPanel = new BoardMovesPanel(stage);
+
+                btnDirectionU.addListener(
                 new InputListener() {
                     @Override
                     public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
@@ -183,6 +182,8 @@ public class BoardCaptainCommand {
                         obj.put("direction", Direction.TOP);
 
                         Client.getInstance().sendCommand(Actions.COMMAND_OTHER_FIREFIGHTER, obj.toJSONString());
+                        removeTableDirectionsPanel();
+                        boardMovesPanel.drawMovesAndDirectionsPanel();
                         return true;
                     }
                 });
@@ -198,6 +199,8 @@ public class BoardCaptainCommand {
                         obj.put("direction", Direction.BOTTOM);
 
                         Client.getInstance().sendCommand(Actions.COMMAND_OTHER_FIREFIGHTER, obj.toJSONString());
+                        removeTableDirectionsPanel();
+                        boardMovesPanel.drawMovesAndDirectionsPanel();
                         return true;
                     }
                 });
@@ -212,6 +215,8 @@ public class BoardCaptainCommand {
                         obj.put("direction", Direction.LEFT);
 
                         Client.getInstance().sendCommand(Actions.COMMAND_OTHER_FIREFIGHTER, obj.toJSONString());
+                        removeTableDirectionsPanel();
+                        boardMovesPanel.drawMovesAndDirectionsPanel();
                         return true;
                     }
                 });
@@ -226,6 +231,8 @@ public class BoardCaptainCommand {
                         obj.put("direction", Direction.RIGHT);
 
                         Client.getInstance().sendCommand(Actions.COMMAND_OTHER_FIREFIGHTER, obj.toJSONString());
+                        removeTableDirectionsPanel();
+                        boardMovesPanel.drawMovesAndDirectionsPanel();
                         return true;
                     }
                 });
@@ -309,5 +316,12 @@ public class BoardCaptainCommand {
         }
 
         movesList.clear();
+    }
+
+    private void removeTableDirectionsPanel() {
+        for (int i = 0; i < directionsTableList.size(); i++) {
+            directionsTableList.get(i).remove();
+        }
+        directionsTableList.clear();
     }
 }
