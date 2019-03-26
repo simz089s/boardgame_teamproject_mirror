@@ -159,26 +159,19 @@ public class Client {
                 }
               });
           break;
+
         case SEND_CHAT_MESSAGES:
+          final JSONArray jsa = (JSONArray) parser.parse(message);
           Gdx.app.postRunnable(
               new Runnable() {
                 @Override
                 public void run() {
-                  //                      BoardScreen.setSideFragment(Fragment.CHAT);
+                  BoardScreen.setSideFragment(Fragment.CHAT);
+                  for (Object a : jsa) {
+                    BoardChatFragment.addMessageToChat(a.toString());
+                  }
                 }
               });
-          JSONArray jsa = (JSONArray) parser.parse(message);
-          for (Object a : jsa) {
-            final String newMessage = a.toString();
-            Gdx.app.postRunnable(
-                new Runnable() {
-                  @Override
-                  public void run() {
-                    final String msg = newMessage;
-                    BoardChatFragment.addMessageToChat(msg);
-                  }
-                });
-          }
           break;
 
         case ADD_CHAT_MESSAGE:
@@ -187,8 +180,9 @@ public class Client {
                 new Runnable() {
                   @Override
                   public void run() {
-                    //                      if (BoardScreen.isChatFragment())
-                    BoardChatFragment.addMessageToChat(message);
+                    if (BoardScreen.isChatFragment()) {
+                      BoardChatFragment.addMessageToChat(message);
+                    }
                   }
                 });
           }

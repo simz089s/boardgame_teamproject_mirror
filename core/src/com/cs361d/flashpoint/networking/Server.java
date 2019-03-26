@@ -7,6 +7,7 @@ import com.cs361d.flashpoint.model.BoardElements.FireFighterColor;
 import com.cs361d.flashpoint.model.BoardElements.Tile;
 import com.cs361d.flashpoint.model.FireFighterSpecialities.FireFighterAdvanceSpecialities;
 import com.cs361d.flashpoint.screen.Actions;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -36,12 +37,9 @@ public class Server implements Runnable {
   private static final HashMap<FireFighterColor, String> colorsToClient =
       new HashMap<FireFighterColor, String>();
 
-  // Arraylist of client Threads
-  // static ArrayList<Thread> clientThreads = new ArrayList<Thread>();
-
   private static Server instance;
   private static boolean gameLoaded = false;
-  private static List<String> messages = new ArrayList<String>();
+  private static List<String> chatMessages = new ArrayList<String>();
 
   // counter for clientObservers
   static int i = 0;
@@ -78,7 +76,7 @@ public class Server implements Runnable {
         // add this client to active clientObservers list
         clientObservers.put(ip, clientObserver);
 
-        System.out.println("Client Ip is: " + s.getInetAddress().toString());
+        System.out.println("Client Ip is: " + ip);
         System.out.println();
 
         t.start(); // start the thread for the client
@@ -119,24 +117,6 @@ public class Server implements Runnable {
 
   public boolean isEmpty() {
     return notYetAssigned.isEmpty();
-  }
-
-  // To iterate through the chat messages
-  public static Iterator<String> iteratorForChat() {
-    return messages.iterator();
-  }
-
-  // Function to add messages
-  public static synchronized void addMessage(String message) {
-    messages.add(message);
-  }
-
-  public void changeLoadedStatus(boolean status) {
-    gameLoaded = status;
-  }
-
-  public boolean getLoadedOrCreatedStatus() {
-    return gameLoaded;
   }
 
   public static boolean noMorePlayer() {
@@ -210,7 +190,7 @@ public class Server implements Runnable {
     clientList.remove(clientIP);
     FireFighterColor color = FireFighterColor.NOT_ASSIGNED;
     for (FireFighterColor c : colorsToClient.keySet()) {
-      if (clientIP == colorsToClient.get(c)) {
+      if (clientIP.equals(colorsToClient.get(c))) {
         color = c;
         break;
       }
@@ -221,6 +201,7 @@ public class Server implements Runnable {
       object.put("message","Welcome back to the lobby!");
       colorsToClient.clear();
       notYetAssigned.clear();
+      chatMessages.clear();
       gameLoaded = false;
       Server.sendCommandToAllClients(ClientCommands.EXIT_GAME,"");
       Server.sendCommandToAllClients(ClientCommands.SHOW_MESSAGE_ON_SCREEN,object.toJSONString());
@@ -244,46 +225,12 @@ public class Server implements Runnable {
 
       switch (c) {
         case ADD_CHAT_MESSAGE:
-          if (!message.equals("")) {
-            Server.addMessage(message);
-            //            if (BoardScreen.isChatFragment()) {
-            //              BoardChatFragment.addMessageToChat(message);
-            //            }
-            Server.sendMsgToAllClients(msg);
-          } else if (!message.equals("")) {
-            Server.addMessage(message);
-            //            if (BoardScreen.isChatFragment()) {
-            //              BoardChatFragment.addMessageToChat(message);
-            //            }
-          }
-          //          else if (!message.equals("")) {
-          //            Gdx.app.postRunnable(
-          //                    new Runnable() {
-          //                      @Override
-          //                      public void run() {
-          //                        if (BoardScreen.isChatFragment()) {
-          //                          BoardChatFragment.addMessageToChat(message);
-          //                        }
-          //                      }
-          //                    });
-          //          }
+          chatMessages.add(message);
+          Server.sendCommandToAllClients(ClientCommands.ADD_CHAT_MESSAGE,message);
           break;
 
         case GET_CHAT_MESSAGES:
-          //                    JSONArray jsa = new JSONArray();
-          //                    Iterator<String> it = Server.iteratorForChat();
-          //                    while (it.hasNext()) {
-          //                        jsa.add(it.next());
-          //                    }
-          //                    Server.getServer()
-          //                            .sendMsgSpecificClient(ip,
-          // ClientCommands.SEND_CHAT_MESSAGES, jsa.toJSONString());
-          //            BoardScreen.setSideFragment(Fragment.CHAT);
-          //            Iterator<String> it = Server.iteratorForChat();
-          //            while (it.hasNext()) {
-          //              BoardChatFragment.addMessageToChat(it.next());
-          //            }
-          //          }
+          Server.sendCommandToSpecificClient(ClientCommands.SEND_CHAT_MESSAGES,getChatAsJsonString(),ip);
           break;
 
         case SAVE:
@@ -302,6 +249,7 @@ public class Server implements Runnable {
           gameLoaded = false;
           notYetAssigned.clear();
           colorsToClient.clear();
+          chatMessages.clear();
           Server.sendCommandToAllClients(ClientCommands.EXIT_GAME, "");
           Server.sendCommandToAllClients(ClientCommands.SHOW_MESSAGE_ON_SCREEN,object.toJSONString());
           break;
@@ -310,7 +258,6 @@ public class Server implements Runnable {
           if (!gameLoaded) {
             CreateNewGameManager.loadSavedGame(message);
             Server.setFireFighterAssignArray();
-            // TODO set false when client leaves game
             gameLoaded = true;
             assignFireFighterToClient(ip);
             sendCommandToSpecificClient(
@@ -511,5 +458,13 @@ public class Server implements Runnable {
 
   public static String getClientIP(FireFighterColor color) {
     return colorsToClient.get(color);
+  }
+
+  public static String getChatAsJsonString() {
+    JSONArray array = new JSONArray();
+    for (String message : chatMessages) {
+      array.add(message);
+    }
+    return array.toJSONString();
   }
 }
