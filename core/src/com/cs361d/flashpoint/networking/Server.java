@@ -12,7 +12,9 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-import java.io.*;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -56,8 +58,8 @@ public class Server implements Runnable {
         System.out.println("New client request received : " + s);
 
         // obtain input and output streams or the client
-        DataInputStream din = new DataInputStream(new BufferedInputStream(s.getInputStream()));
-        DataOutputStream dout = new DataOutputStream(new BufferedOutputStream(s.getOutputStream()));
+        DataInputStream din = new DataInputStream(s.getInputStream());
+        DataOutputStream dout = new DataOutputStream(s.getOutputStream());
 
         System.out.println("Creating a new handler for this client...");
 

@@ -46,8 +46,8 @@ public class Client {
       s = new Socket(serverIP, serverPort);
 
       // obtaining input and out streams
-      din = new DataInputStream(new BufferedInputStream(s.getInputStream()));
-      dout = new DataOutputStream(new BufferedOutputStream(s.getOutputStream()));
+      din = new DataInputStream(s.getInputStream());
+      dout = new DataOutputStream(s.getOutputStream());
 
       // obtain client IP address
       clientIP = s.getInetAddress().toString().replace("/", "");
@@ -59,11 +59,16 @@ public class Client {
                 @Override
                 public void run() {
                   while (notStopped) {
-                    String msg;
                     try {
                       // read the message sent to this client
-                      msg = din.readUTF();
-                      clientExecuteCommand(msg);
+                      final String msg = din.readUTF();
+                      Thread newThread = new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                       clientExecuteCommand(msg);
+                        }
+                      });
+                      newThread.run();
                     } catch (Exception connectionLost) {
                       try {
                         System.out.println("Server disconnected: closing client...");
@@ -129,7 +134,7 @@ public class Client {
   }
 
   // Now in client
-  public static void clientExecuteCommand(String msg) {
+  public synchronized static void clientExecuteCommand(String msg) {
     try {
       JSONParser parser = new JSONParser();
 
