@@ -9,9 +9,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
@@ -48,8 +46,8 @@ public class Client {
       s = new Socket(serverIP, serverPort);
 
       // obtaining input and out streams
-      din = new DataInputStream(s.getInputStream());
-      dout = new DataOutputStream(s.getOutputStream());
+      din = new DataInputStream(new BufferedInputStream(s.getInputStream()));
+      dout = new DataOutputStream(new BufferedOutputStream(s.getOutputStream()));
 
       // obtain client IP address
       clientIP = s.getInetAddress().toString().replace("/", "");
