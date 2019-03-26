@@ -965,7 +965,7 @@ public class BoardScreen extends FlashPointScreen {
         } else if(!FireFighterTurnManager.getInstance().currentHasTile()){
             if (User.getInstance().isMyTurn() || true) {
               boardDialog.drawDialog(
-                      "Specialty", "Choose your initial position on the board.");
+                      "Initial position", "Choose your initial position on the board.");
               addFilterOnTileForChooseInitPos();
             }
         } else if (FireFighterTurnManagerAdvance.getInstance().getCurrentFireFighter().getSpeciality() == FireFighterAdvanceSpecialities.NO_SPECIALITY) {
