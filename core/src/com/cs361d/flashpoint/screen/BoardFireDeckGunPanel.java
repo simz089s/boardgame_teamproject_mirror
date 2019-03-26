@@ -19,7 +19,7 @@ import static com.cs361d.flashpoint.screen.FlashPointScreen.skinUI;
 
 public class BoardFireDeckGunPanel {
 
-    static Table FireDeckGunTable;
+    static Table fireDeckGunTable;
 
     static TextButton btnAccept;
     static TextButton btnFireRow;
@@ -82,24 +82,28 @@ public class BoardFireDeckGunPanel {
                     }
                 });
 
-        FireDeckGunTable = new Table();
+        fireDeckGunTable = new Table();
 
-        FireDeckGunTable.add(label).size(label.getWidth(), label.getHeight());
-        FireDeckGunTable.row();
-        FireDeckGunTable.add(directionImg).size(100, 100);
-        FireDeckGunTable.row();
-        FireDeckGunTable.add(btnAccept).size(btnAccept.getWidth(), btnAccept.getHeight());
-        FireDeckGunTable.row().size(btnAccept.getWidth(), btnAccept.getHeight());
-        FireDeckGunTable.add(btnFireRow).size(btnFireRow.getWidth(), btnFireRow.getHeight());
-        FireDeckGunTable.row().size(btnAccept.getWidth(), btnAccept.getHeight());
-        FireDeckGunTable.add(btnFireCol).size(btnFireRow.getWidth(), btnFireRow.getHeight());
+        fireDeckGunTable.add(label).size(label.getWidth(), label.getHeight());
+        fireDeckGunTable.row();
+        fireDeckGunTable.add(directionImg).size(100, 100);
+        fireDeckGunTable.row();
+        fireDeckGunTable.add(btnAccept).size(btnAccept.getWidth(), btnAccept.getHeight());
+        fireDeckGunTable.row();
+        fireDeckGunTable.add().size(btnAccept.getWidth(), btnAccept.getHeight()); // just a space
+        fireDeckGunTable.row();
+        fireDeckGunTable.add(btnFireRow).size(btnFireRow.getWidth(), btnFireRow.getHeight());
+        fireDeckGunTable.row();
+        fireDeckGunTable.add().size(btnAccept.getWidth(), btnAccept.getHeight()); // just a space
+        fireDeckGunTable.row();
+        fireDeckGunTable.add(btnFireCol).size(btnFireRow.getWidth(), btnFireRow.getHeight());
 
-        FireDeckGunTable.setPosition(
+        fireDeckGunTable.setPosition(
                 1000,
                 Gdx.graphics.getHeight() - 350);
 
-        fireDeckGunTablesList.add(FireDeckGunTable);
-        stage.addActor(FireDeckGunTable);
+        fireDeckGunTablesList.add(fireDeckGunTable);
+        stage.addActor(fireDeckGunTable);
     }
 
     public static void removeFireDeckGunPanel(){

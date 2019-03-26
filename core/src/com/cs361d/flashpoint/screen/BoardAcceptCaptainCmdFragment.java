@@ -84,7 +84,9 @@ public class BoardAcceptCaptainCmdFragment {
         acceptCmdTable.add(directionImg).size(100, 100);
         acceptCmdTable.row();
         acceptCmdTable.add(btnConfirmYes).size(btnConfirmYes.getWidth(), btnConfirmYes.getHeight());
-        acceptCmdTable.row().size(btnConfirmYes.getWidth(), btnConfirmYes.getHeight());
+        acceptCmdTable.row();
+        acceptCmdTable.add().size(btnConfirmYes.getWidth(), btnConfirmYes.getHeight()); // just a space
+        acceptCmdTable.row();
         acceptCmdTable.add(btnConfirmNo).size(btnConfirmNo.getWidth(), btnConfirmNo.getHeight());
 
         acceptCmdTable.setPosition(

@@ -821,11 +821,8 @@ public class BoardScreen extends FlashPointScreen {
     activateFlipPOIChoosePos = true;
   }
 
-  public static void addFilterOnFireDeckGun() {
-    List<Tile> tiles = BoardManagerAdvanced.getInstance().tilesWithPOI(); // TODO
-    for (int i = 0; i < tiles.size(); i++) {
-      tilesImg[tiles.get(i).getI()][tiles.get(i).getJ()].setColor(Color.NAVY);
-    }
+  public static void addFilterOnFireDeckGun(int i, int j) {
+    tilesImg[i][j].setColor(Color.NAVY);
   }
 
 

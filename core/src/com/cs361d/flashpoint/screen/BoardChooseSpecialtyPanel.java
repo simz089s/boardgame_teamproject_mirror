@@ -102,7 +102,7 @@ public class BoardChooseSpecialtyPanel {
 
         specialtiesTable.add(scrollPaneSpecialties).size(scrollPaneSpecialties.getWidth(), scrollPaneSpecialties.getHeight());
         specialtiesTable.row();
-        specialtiesTable.add().size(scrollPaneSpecialties.getWidth(), btnConfirm.getHeight());
+        specialtiesTable.add().size(scrollPaneSpecialties.getWidth(), btnConfirm.getHeight()); // just a space
         specialtiesTable.row();
         specialtiesTable.add(btnConfirm).size(scrollPaneSpecialties.getWidth(), btnConfirm.getHeight());
 
