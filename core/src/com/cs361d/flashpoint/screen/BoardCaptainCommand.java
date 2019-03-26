@@ -179,7 +179,7 @@ public class BoardCaptainCommand {
                         JSONObject obj = new JSONObject();
                         obj.put("color", color.toString());
                         obj.put("action", moveSelected.toString());
-                        obj.put("direction", Direction.TOP);
+                        obj.put("direction", Direction.TOP.toString());
 
                         Client.getInstance().sendCommand(Actions.COMMAND_OTHER_FIREFIGHTER, obj.toJSONString());
                         removeTableDirectionsPanel();
@@ -196,7 +196,7 @@ public class BoardCaptainCommand {
                         JSONObject obj = new JSONObject();
                         obj.put("color", color.toString());
                         obj.put("action", moveSelected.toString());
-                        obj.put("direction", Direction.BOTTOM);
+                        obj.put("direction", Direction.BOTTOM.toString());
 
                         Client.getInstance().sendCommand(Actions.COMMAND_OTHER_FIREFIGHTER, obj.toJSONString());
                         removeTableDirectionsPanel();
@@ -212,7 +212,7 @@ public class BoardCaptainCommand {
                         JSONObject obj = new JSONObject();
                         obj.put("color", color.toString());
                         obj.put("action", moveSelected.toString());
-                        obj.put("direction", Direction.LEFT);
+                        obj.put("direction", Direction.LEFT.toString());
 
                         Client.getInstance().sendCommand(Actions.COMMAND_OTHER_FIREFIGHTER, obj.toJSONString());
                         removeTableDirectionsPanel();
@@ -228,7 +228,7 @@ public class BoardCaptainCommand {
                         JSONObject obj = new JSONObject();
                         obj.put("color", color.toString());
                         obj.put("action", moveSelected.toString());
-                        obj.put("direction", Direction.RIGHT);
+                        obj.put("direction", Direction.RIGHT.toString());
 
                         Client.getInstance().sendCommand(Actions.COMMAND_OTHER_FIREFIGHTER, obj.toJSONString());
                         removeTableDirectionsPanel();
