@@ -35,7 +35,7 @@ public class BoardScreen extends FlashPointScreen {
   static ArrayList<Image> gameUnits = new ArrayList<Image>();
 
   // choose init pos clickable tiles
-  final String[] CHOOSE_INIT_POS_TILES = {
+  static final String[] CHOOSE_INIT_POS_TILES = {
     "0-0", "1-0", "2-0", "3-0", "4-0", "5-0", "6-0", "7-0", "0-1", "0-2", "0-3", "0-4", "0-5",
     "0-6", "0-7", "0-8", "0-9", "1-9", "2-9", "3-9", "4-9", "5-9", "6-9", "7-1", "7-2", "7-3",
     "7-4", "7-5", "7-6", "7-7", "7-8", "7-9",
@@ -170,41 +170,40 @@ public class BoardScreen extends FlashPointScreen {
                 }
 
                 // choose init position
-                if (!FireFighterTurnManager.getInstance().currentHasTile()
+                if (!FireFighterTurnManager.getInstance().currentHasTile() && User.getInstance().isMyTurn()
                     && DBHandler.isPresentInArr(CHOOSE_INIT_POS_TILES, i_pos + "-" + j_pos)) {
 
                   if (hasNoSpecialty || (isAmbulanceNotSet || isEngineNotSet)) {
                     return;
                   }
 
-                  clearAllGameUnits();
-                  Tile[][] tiles = BoardManager.getInstance().getTiles();
                   JSONObject obj = new JSONObject();
                   obj.put("i", i_pos);
                   obj.put("j", j_pos);
                   Client.getInstance()
                       .sendCommand(ServerCommands.CHOOSE_INITIAL_POSITION, obj.toJSONString());
-                  try {
-                    Thread.sleep(100);
-                  } catch (InterruptedException e) {
-                    e.printStackTrace();
-                  }
-                  removeAllFilterOnTile();
-                  drawGameUnitsOnTile();
-                  boardGameInfoLabel.drawGameInfoLabel();
-
-                  if (!FireFighterTurnManager.getInstance().currentHasTile()) {
-                    addFilterOnTileForChooseInitPos();
-                    boardChooseRolePanel.drawChooseSpecialtyPanel();
-                  } else {
-                    createAllGameButtons();
-
-                    // moves panel
-                    removeAllPrevFragments();
-                    boardMovesPanel.drawMovesAndDirectionsPanel();
-
-                    drawEngineTilesColor();
-                  }
+//                  try {
+//                    Thread.sleep(100);
+//                  } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                  }
+//                  clearAllGameUnits();
+//                  removeAllFilterOnTile();
+//                  drawGameUnitsOnTile();
+//                  boardGameInfoLabel.drawGameInfoLabel();
+//
+//                  if (!FireFighterTurnManager.getInstance().currentHasTile()) {
+//                    addFilterOnTileForChooseInitPos();
+//                    boardChooseRolePanel.drawChooseSpecialtyPanel();
+//                  } else {
+//                    createAllGameButtons();
+//
+//                    // moves panel
+//                    removeAllPrevFragments();
+//                    boardMovesPanel.drawMovesAndDirectionsPanel();
+//
+//                    drawEngineTilesColor();
+//                  }
                 }
 
                 // choose tile on knock down
@@ -237,8 +236,8 @@ public class BoardScreen extends FlashPointScreen {
       }
     }
 
-    // permanent board GUI elements
-    createExitButton();
+    // GUI elements creation (first time)
+    createAllGameButtons();
     boardGameInfoLabel.drawGameInfoLabel();
     drawGameUnitsOnTile();
 
@@ -253,21 +252,20 @@ public class BoardScreen extends FlashPointScreen {
       boardDialog.drawDialog(
           "Ambulance position", "Choose the ambulance's initial position (green tiles).");
       addFilterOnTileForAmbulance();
-    } else if (!FireFighterTurnManager.getInstance().currentHasTile()) { // choose init pos (family)
-      //   if(User.getInstance().isMyTurn()) {
+    } else if (!FireFighterTurnManager.getInstance().currentHasTile() && User.getInstance().isMyTurn()) { // choose init pos (family)
       boardDialog.drawDialog(
           "Initial position", "Choose your initial position on the board (green tiles).");
       addFilterOnTileForChooseInitPos();
       boardChooseRolePanel.drawChooseSpecialtyPanel();
-      //   }
     } else {
-      createAllGameButtons();
+
+      redrawBoard();
 
       // moves panel
-      removeAllPrevFragments();
-      boardMovesPanel.drawMovesAndDirectionsPanel();
-
-      drawEngineTilesColor();
+//      removeAllPrevFragments();
+//      boardMovesPanel.drawMovesAndDirectionsPanel();
+//
+//      drawEngineTilesColor();
     }
 
     Gdx.input.setInputProcessor(stage);
@@ -609,6 +607,7 @@ public class BoardScreen extends FlashPointScreen {
   // menu buttons
 
   private void createAllGameButtons() {
+    createExitButton();
     createCheatSButton();
     createStatsButton();
     createChatButton();
@@ -757,7 +756,7 @@ public class BoardScreen extends FlashPointScreen {
 
   // add filters
 
-  private void addFilterOnTileForChooseInitPos() {
+  private static void addFilterOnTileForChooseInitPos() {
     for (int i = 0; i < CHOOSE_INIT_POS_TILES.length; i++) {
       int i_pos = Integer.parseInt(CHOOSE_INIT_POS_TILES[i].split("-")[0]);
       int j_pos = Integer.parseInt(CHOOSE_INIT_POS_TILES[i].split("-")[1]);
@@ -827,7 +826,7 @@ public class BoardScreen extends FlashPointScreen {
     boardStatsFragment.removeStatsFragment();
   }
 
-  private void removeAllFilterOnTile() {
+  private static void removeAllFilterOnTile() {
     for (int i = 0; i < tilesImg.length; i++) {
       for (int j = 0; j < tilesImg[i].length; j++) {
         tilesImg[i][j].setColor(Color.WHITE);
@@ -895,11 +894,11 @@ public class BoardScreen extends FlashPointScreen {
     return clickableTiles.toArray(new String[0]);
   }
 
-  public static void redrawBoard() {
-    if (game.getScreen() == game.boardScreen) {
-      setBoardScreen();
-    }
-  }
+//  public static void redrawBoard() {
+//    if (game.getScreen() == game.boardScreen) {
+//      setBoardScreen();
+//    }
+//  }
 
   public static boolean isOnBoardScreen() {
     return game.getScreen() == game.boardScreen;
@@ -934,14 +933,25 @@ public class BoardScreen extends FlashPointScreen {
     currentFragment = fragment;
   }
 
-  public static void redrawAfterMove() {
+  // REDRAW FOR NETWORK
+  public static void redrawBoard() {
     if (game.getScreen() == game.boardScreen) {
       clearAllGameUnits();
       drawGameUnitsOnTile();
-      drawEngineTilesColor();
       boardGameInfoLabel.drawGameInfoLabel();
-      removeAllPrevFragments();
-      boardMovesPanel.drawMovesAndDirectionsPanel();
+
+      removeAllFilterOnTile();
+      drawEngineTilesColor();
+
+      if (!FireFighterTurnManager.getInstance().currentHasTile()) {
+        if (User.getInstance().isMyTurn()) {
+          addFilterOnTileForChooseInitPos();
+          boardChooseRolePanel.drawChooseSpecialtyPanel();
+        }
+      } else {
+        removeAllPrevFragments();
+        boardMovesPanel.drawMovesAndDirectionsPanel();
+      }
     }
   }
 

@@ -204,7 +204,7 @@ public class Client {
               new Runnable() {
                 @Override
                 public void run() {
-                  BoardScreen.redrawAfterMove();
+                  BoardScreen.redrawBoard();
                 }
               });
           break;
@@ -229,6 +229,15 @@ public class Client {
                   BoardChooseSpecialtyPanel.endOfSpecialityChoice();
                 }
               });
+          break;
+        case REFRESH_BOARD_SCREEN_AFTER_CHOOSEINITPOS:
+          Gdx.app.postRunnable(
+                  new Runnable() {
+                    @Override
+                    public void run() {
+                      BoardScreen.redrawBoard();
+                    }
+                  });
           break;
         default:
       }
