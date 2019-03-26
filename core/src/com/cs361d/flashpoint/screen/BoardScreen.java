@@ -744,8 +744,10 @@ public class BoardScreen extends FlashPointScreen {
         new ClickListener() {
           @Override
           public void clicked(InputEvent event, float x, float y) {
-            removeAllPrevFragments();
-            boardMovesPanel.drawMovesAndDirectionsPanel();
+            if (User.getInstance().isMyTurn()) {
+              removeAllPrevFragments();
+              boardMovesPanel.drawMovesAndDirectionsPanel();
+            }
           }
         });
 
