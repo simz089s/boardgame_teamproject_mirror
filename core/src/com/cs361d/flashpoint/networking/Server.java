@@ -8,6 +8,7 @@ import com.cs361d.flashpoint.model.BoardElements.Tile;
 import com.cs361d.flashpoint.model.FireFighterSpecialities.FireFighterAdvanceSpecialities;
 import com.cs361d.flashpoint.model.FireFighterSpecialities.FireFighterAdvanced;
 import com.cs361d.flashpoint.screen.Actions;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -344,6 +345,7 @@ public class Server implements Runnable {
           (BoardManagerAdvanced.getInstance()).addAmbulance(i, j);
           mustSendAndRefresh = true;
           break;
+
         case SET_FIRETRUCK:
           jsonObject = (JSONObject) parser.parse(message);
           i = Integer.parseInt(jsonObject.get("i").toString());
@@ -352,6 +354,11 @@ public class Server implements Runnable {
           (BoardManagerAdvanced.getInstance()).addFireTruck(i, j);
           mustSendAndRefresh = true;
           break;
+
+        case ACCEPT_MOVE_BY_CAPTAIN:
+          FireFighterTurnManagerAdvance.getInstance().setAccept(Boolean.parseBoolean(message));
+          FireFighterTurnManagerAdvance.getInstance().stopWaiting();
+
         default:
           // the command must be an action command
           serverExecuteGameCommand(jsonObject.get("command").toString(), message, ip);

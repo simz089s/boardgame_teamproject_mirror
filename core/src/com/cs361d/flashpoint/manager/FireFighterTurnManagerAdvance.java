@@ -1,16 +1,28 @@
 package com.cs361d.flashpoint.manager;
 
+import com.badlogic.gdx.utils.Json;
 import com.cs361d.flashpoint.model.BoardElements.*;
 import com.cs361d.flashpoint.model.FireFighterSpecialities.*;
+import com.cs361d.flashpoint.networking.ClientCommands;
 import com.cs361d.flashpoint.networking.Server;
 import com.cs361d.flashpoint.screen.Actions;
+import org.json.simple.JSONObject;
+
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class FireFighterTurnManagerAdvance extends FireFighterTurnManager {
   protected final ArrayList<FireFighterAdvanceSpecialities> FREESPECIALITIES =
       new ArrayList<FireFighterAdvanceSpecialities>(9);
+
+  private final AtomicBoolean wait = new AtomicBoolean(true);
+  private boolean accept = false;
+
+  public void setAccept(boolean val) {
+    this.accept = val;
+  }
 
   public static FireFighterTurnManagerAdvance getInstance() {
     return (FireFighterTurnManagerAdvance) instance;
@@ -23,6 +35,10 @@ public class FireFighterTurnManagerAdvance extends FireFighterTurnManager {
     for (FireFighterAdvanceSpecialities s : FireFighterAdvanceSpecialities.values()) {
       FREESPECIALITIES.add(s);
     }
+  }
+
+  public void stopWaiting() {
+    wait.set(false);
   }
 
   @Override
@@ -59,7 +75,7 @@ public class FireFighterTurnManagerAdvance extends FireFighterTurnManager {
   // Covers the veteran bonusRemovove
   @Override
   public void endTurn() {
-    //TODO do not end turn if all users are not yet present
+    // TODO do not end turn if all users are not yet present
     FireFighter fireFighter = getCurrentFireFighter();
     if (!fireFighter.getTile().hasFire()) {
       FireFighterAdvanced last = (FireFighterAdvanced) FIREFIGHTERS.removeFirst();
@@ -558,35 +574,39 @@ public class FireFighterTurnManagerAdvance extends FireFighterTurnManager {
     this.sendToCaptain = true;
     String ip = Server.getClientIP(fadv.getColor());
     if (ip == null) {
-      sendMessageToGui("The current player you are trying to move is not yet assigned to a User please wait");
+      sendMessageToGui(
+          "The current player you are trying to move is not yet assigned to a User please wait");
       this.sendToCaptain = false;
       return false;
     }
-    // TODO ask for consent of user
     boolean worked = false;
-    if (fadv.setForFireCaptainAction((FireCaptain) getCurrentFireFighter())) {
-      FIREFIGHTERS.addFirst(fadv);
-      switch (action) {
-        case MOVE:
-          worked = move(d);
-          break;
+    if (accept) {
+      if (fadv.setForFireCaptainAction((FireCaptain) getCurrentFireFighter())) {
+        FIREFIGHTERS.addFirst(fadv);
+        switch (action) {
+          case MOVE:
+            worked = move(d);
+            break;
 
-        case MOVE_WITH_VICTIM:
-          worked = moveWithVictim(d);
-          break;
+          case MOVE_WITH_VICTIM:
+            worked = moveWithVictim(d);
+            break;
 
-        case MOVE_WITH_HAZMAT:
-          worked = moveWithHazmat(d);
-          break;
+          case MOVE_WITH_HAZMAT:
+            worked = moveWithHazmat(d);
+            break;
 
-        case INTERACT_WITH_DOOR:
-          worked = interactWithDoor(d);
-          break;
-        default:
+          case INTERACT_WITH_DOOR:
+            worked = interactWithDoor(d);
+            break;
+          default:
+        }
+        FIREFIGHTERS.removeFirst();
+        getCurrentFireFighter().setSpecialActionPoints(fadv.getActionPointsLeft());
+        fadv.resetSavedActionPoints();
       }
-      FIREFIGHTERS.removeFirst();
-      getCurrentFireFighter().setSpecialActionPoints(fadv.getSpecialActionPoints());
-      fadv.resetSavedActionPoints();
+    } else {
+      sendMessageToGui("The user of the " + color + "fireFighter rejected the move");
     }
     this.sendToCaptain = false;
     return worked;
@@ -615,5 +635,16 @@ public class FireFighterTurnManagerAdvance extends FireFighterTurnManager {
     }
 
     return actionsList;
+  }
+
+  private void sendAproval(FireFighterColor color, Actions action, Direction direction) {
+    final JSONObject object = new JSONObject();
+    object.put("direction", direction.toString());
+    object.put("action", action.toString());
+    final String ip = Server.getClientIP(color);
+    Server.sendCommandToSpecificClient(
+        ClientCommands.ASK_TO_ACCEPT_MOVE, object.toJSONString(), ip);
+    while (wait.get()) ;
+    wait.set(true);
   }
 }
