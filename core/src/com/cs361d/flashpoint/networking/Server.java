@@ -197,7 +197,7 @@ public class Server implements Runnable {
     }
     if (color != FireFighterColor.NOT_ASSIGNED) {
       JSONObject object = new JSONObject();
-      object.put("title","The player with color " + color + " closed its widow!");
+      object.put("title","The player with color " + color + " closed its window!");
       object.put("message","Welcome back to the lobby!");
       colorsToClient.clear();
       notYetAssigned.clear();

@@ -279,14 +279,15 @@ public abstract class FireFighterAdvanced extends FireFighter {
     return f;
   }
 
-  public void setForFireCaptainAction(FireCaptain fc) {
+  public boolean setForFireCaptainAction(FireCaptain fc) {
     this.specialActionPointToSave = this.specialActionPoints;
     this.actionPointToSave = this.actionPoints;
     this.actionPoints = fc.getSpecialActionPoints();
     this.specialActionPoints = 0;
+    return true;
   }
 
-  public void resetSaveActionPoints() {
+  public void resetSavedActionPoints() {
     this.specialActionPoints = this.specialActionPointToSave;
     this.actionPoints = this.specialActionPoints;
   }

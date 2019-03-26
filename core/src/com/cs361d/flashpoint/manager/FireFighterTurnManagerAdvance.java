@@ -536,9 +536,12 @@ public class FireFighterTurnManagerAdvance extends FireFighterTurnManager {
     return colorList;
   }
 
-  public boolean FireCaptainCommand(FireFighterColor color, Actions action, Direction d) {
+  public boolean fireCaptainCommand(FireFighterColor color, Actions action, Direction d) {
+    if (!(getCurrentFireFighter() instanceof FireCaptain)) {
+      sendMessageToGui("You are not the fire captain");
+      return false;
+    }
     FireFighterAdvanced fadv = null;
-    int index = 0;
     for (FireFighter f : FIREFIGHTERS) {
       if (f.getColor() == color) {
         fadv = (FireFighterAdvanced) f;
@@ -548,16 +551,32 @@ public class FireFighterTurnManagerAdvance extends FireFighterTurnManager {
     if (fadv == null) {
       throw new IllegalArgumentException("The color" + color + " is not in the list");
     }
-    fadv.setForFireCaptainAction((FireCaptain) getCurrentFireFighter());
-    FIREFIGHTERS.addFirst(fadv);
-    switch (action) {
-      case MOVE:
-        move(d);
-      case MOVE_WITH_VICTIM:
-      case MOVE_WITH_HAZMAT:
-      case INTERACT_WITH_DOOR:
+    boolean worked = false;
+    if (fadv.setForFireCaptainAction((FireCaptain) getCurrentFireFighter())) {
+      FIREFIGHTERS.addFirst(fadv);
+      switch (action) {
+        case MOVE:
+          worked = move(d);
+          break;
+
+        case MOVE_WITH_VICTIM:
+          worked = moveWithVictim(d);
+          break;
+
+        case MOVE_WITH_HAZMAT:
+          worked = moveWithHazmat(d);
+          break;
+
+        case INTERACT_WITH_DOOR:
+          worked = interactWithDoor(d);
+          break;
+        default:
+      }
+      FIREFIGHTERS.removeFirst();
+      getCurrentFireFighter().setSpecialActionPoints(fadv.getSpecialActionPoints());
+      fadv.resetSavedActionPoints();
     }
-    return true;
+    return worked;
   }
 
   public List<Actions> getFireFighterPossibleActions(FireFighterColor color) {
@@ -584,7 +603,4 @@ public class FireFighterTurnManagerAdvance extends FireFighterTurnManager {
 
     return actionsList;
   }
-  // TODO
-  // verify the veteran vacinity at the begining of each turn;
-  // Flip the markes in ajacentSpace
 }
