@@ -64,12 +64,14 @@ public class Client {
                     try {
                       // read the message sent to this client
                       final String msg = din.readUTF();
-                      Thread newThread = new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                       clientExecuteCommand(msg);
-                        }
-                      });
+                      Thread newThread =
+                          new Thread(
+                              new Runnable() {
+                                @Override
+                                public void run() {
+                                  clientExecuteCommand(msg);
+                                }
+                              });
                       newThread.run();
                     } catch (Exception connectionLost) {
                       try {
@@ -136,7 +138,7 @@ public class Client {
   }
 
   // Now in client
-  public synchronized static void clientExecuteCommand(String msg) {
+  public static synchronized void clientExecuteCommand(String msg) {
     try {
       JSONParser parser = new JSONParser();
 
@@ -216,12 +218,30 @@ public class Client {
           final Actions actions = Actions.fromString(jsonObject.get("action").toString());
           final Direction d = Direction.fromString(jsonObject.get("direction").toString());
           Gdx.app.postRunnable(
-                  new Runnable() {
-                    @Override
-                    public void run() {
-                      BoardAcceptCaptainCmdFragment.drawAcceptCaptainCmdPanel(actions,d);
-                    }
-                  });
+              new Runnable() {
+                @Override
+                public void run() {
+                  BoardAcceptCaptainCmdFragment.drawAcceptCaptainCmdPanel(actions, d);
+                }
+              });
+          break;
+
+        case ASK_DRIVER_MSG:
+          final JSONObject jsob = (JSONObject) parser.parse(message);
+          final JSONArray iArray = (JSONArray) parser.parse(jsob.get("i").toString());
+          final JSONArray jArray = (JSONArray) parser.parse(jsob.get("j").toString());
+          Gdx.app.postRunnable(
+              new Runnable() {
+                @Override
+                public void run() {
+                  for (int i = 0; i < iArray.size(); i++) {
+                    BoardScreen.addFilterOnFireDeckGun(
+                        Integer.parseInt(iArray.get(i).toString()),
+                        Integer.parseInt(jArray.get(i).toString()));
+                  }
+                  BoardFireDeckGunPanel.drawFireDeckGunPanel();
+                }
+              });
           break;
 
         case SHOW_MESSAGE_ON_SCREEN:

@@ -516,16 +516,25 @@ public class BoardManagerAdvanced extends BoardManager {
   }
 
   public void fireDeckGunOnTile(Tile t) {
-    t.setFireStatus(FireStatus.EMPTY);
+    List<Tile> list = getTilesReachedByDeckGun(t);
+    for (Tile tile : list) {
+      tile.setFireStatus(FireStatus.EMPTY);
+    }
+  }
+
+  public List<Tile> getTilesReachedByDeckGun(Tile t) {
+    List<Tile> tiles = new ArrayList<Tile>(5);
+    tiles.add(t);
     for (Direction d : Direction.values()) {
       if (d != Direction.NODIRECTION && d != Direction.NULLDIRECTION) {
         if (!t.hasObstacle(d)) {
           Tile next = t.getAdjacentTile(d);
           if (next != null) {
-            next.setFireStatus(FireStatus.EMPTY);
+            tiles.add(next);
           }
         }
       }
     }
+    return tiles;
   }
 }

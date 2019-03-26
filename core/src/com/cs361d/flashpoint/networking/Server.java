@@ -6,9 +6,7 @@ import com.cs361d.flashpoint.model.BoardElements.FireFighter;
 import com.cs361d.flashpoint.model.BoardElements.FireFighterColor;
 import com.cs361d.flashpoint.model.BoardElements.Tile;
 import com.cs361d.flashpoint.model.FireFighterSpecialities.FireFighterAdvanceSpecialities;
-import com.cs361d.flashpoint.model.FireFighterSpecialities.FireFighterAdvanced;
 import com.cs361d.flashpoint.screen.Actions;
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -22,7 +20,6 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Server implements Runnable {
 
@@ -358,6 +355,12 @@ public class Server implements Runnable {
 
         case ACCEPT_MOVE_BY_CAPTAIN:
           FireFighterTurnManagerAdvance.getInstance().setAccept(Boolean.parseBoolean(message));
+          FireFighterTurnManagerAdvance.getInstance().stopWaiting();
+          break;
+
+        case SEND_DRIVER_MSG:
+          DriverResponse response = DriverResponse.fromString(message);
+          FireFighterTurnManagerAdvance.getInstance().setDriverResponse(response);
           FireFighterTurnManagerAdvance.getInstance().stopWaiting();
           break;
 

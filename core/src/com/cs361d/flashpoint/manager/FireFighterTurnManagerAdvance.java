@@ -1,11 +1,12 @@
 package com.cs361d.flashpoint.manager;
 
-import com.badlogic.gdx.utils.Json;
 import com.cs361d.flashpoint.model.BoardElements.*;
 import com.cs361d.flashpoint.model.FireFighterSpecialities.*;
 import com.cs361d.flashpoint.networking.ClientCommands;
+import com.cs361d.flashpoint.networking.DriverResponse;
 import com.cs361d.flashpoint.networking.Server;
 import com.cs361d.flashpoint.screen.Actions;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import java.util.ArrayList;
@@ -19,9 +20,14 @@ public class FireFighterTurnManagerAdvance extends FireFighterTurnManager {
 
   private final AtomicBoolean wait = new AtomicBoolean(true);
   private boolean accept = false;
+  private DriverResponse response = DriverResponse.ACCEPT;
 
   public void setAccept(boolean val) {
     this.accept = val;
+  }
+
+  public void setDriverResponse(DriverResponse response) {
+    this.response = response;
   }
 
   public static FireFighterTurnManagerAdvance getInstance() {
@@ -440,7 +446,7 @@ public class FireFighterTurnManagerAdvance extends FireFighterTurnManager {
         for (Tile t : newLocation) {
           t.setCarrierStatus(CarrierStatus.HASFIRETRUCK);
         }
-        replaceFireFigherAfterVehicleMove(getCurrentFireFighter(), newLocation, d);
+        repositionFireFighterAfterFireTruckMove(getCurrentFireFighter(), newLocation, d);
         verifyVeteranVacinityToAddAp();
         return true;
       }
@@ -449,7 +455,7 @@ public class FireFighterTurnManagerAdvance extends FireFighterTurnManager {
     return false;
   }
 
-  public void replaceFireFigherAfterVehicleMove(
+  public void repositionFireFighterAfterFireTruckMove(
       FireFighterAdvanced f, List<Tile> newVehTile, Direction d) {
     Tile currentTile = f.getTile();
     int i = currentTile.getI();
@@ -457,13 +463,13 @@ public class FireFighterTurnManagerAdvance extends FireFighterTurnManager {
     switch (d) {
       case TOP:
         if (j == 0) {
-          if (currentTile.getAdjacentTile(Direction.BOTTOM).canContainAmbulance()) {
+          if (currentTile.getAdjacentTile(Direction.BOTTOM).canContainFireTruck()) {
             f.setTile(newVehTile.get(1));
           } else {
             f.setTile(newVehTile.get(0));
           }
         } else {
-          if (currentTile.getAdjacentTile(Direction.BOTTOM).canContainAmbulance()) {
+          if (currentTile.getAdjacentTile(Direction.BOTTOM).canContainFireTruck()) {
             f.setTile(newVehTile.get(0));
           } else {
             f.setTile(newVehTile.get(1));
@@ -472,13 +478,13 @@ public class FireFighterTurnManagerAdvance extends FireFighterTurnManager {
         break;
       case BOTTOM:
         if (j == 0) {
-          if (currentTile.getAdjacentTile(Direction.BOTTOM).canContainAmbulance()) {
+          if (currentTile.getAdjacentTile(Direction.BOTTOM).canContainFireTruck()) {
             f.setTile(newVehTile.get(0));
           } else {
             f.setTile(newVehTile.get(1));
           }
         } else {
-          if (currentTile.getAdjacentTile(Direction.BOTTOM).canContainAmbulance()) {
+          if (currentTile.getAdjacentTile(Direction.BOTTOM).canContainFireTruck()) {
             f.setTile(newVehTile.get(1));
           } else {
             f.setTile(newVehTile.get(0));
@@ -487,13 +493,13 @@ public class FireFighterTurnManagerAdvance extends FireFighterTurnManager {
         break;
       case RIGHT:
         if (i == 0) {
-          if (currentTile.getAdjacentTile(Direction.LEFT).canContainAmbulance()) {
+          if (currentTile.getAdjacentTile(Direction.LEFT).canContainFireTruck()) {
             f.setTile(newVehTile.get(1));
           } else {
             f.setTile(newVehTile.get(0));
           }
         } else {
-          if (currentTile.getAdjacentTile(Direction.LEFT).canContainAmbulance()) {
+          if (currentTile.getAdjacentTile(Direction.LEFT).canContainFireTruck()) {
             f.setTile(newVehTile.get(0));
           } else {
             f.setTile(newVehTile.get(1));
@@ -502,13 +508,13 @@ public class FireFighterTurnManagerAdvance extends FireFighterTurnManager {
         break;
       case LEFT:
         if (i == 0) {
-          if (currentTile.getAdjacentTile(Direction.LEFT).canContainAmbulance()) {
+          if (currentTile.getAdjacentTile(Direction.LEFT).canContainFireTruck()) {
             f.setTile(newVehTile.get(0));
           } else {
             f.setTile(newVehTile.get(1));
           }
         } else {
-          if (currentTile.getAdjacentTile(Direction.LEFT).canContainAmbulance()) {
+          if (currentTile.getAdjacentTile(Direction.LEFT).canContainFireTruck()) {
             f.setTile(newVehTile.get(1));
           } else {
             f.setTile(newVehTile.get(0));
@@ -537,13 +543,45 @@ public class FireFighterTurnManagerAdvance extends FireFighterTurnManager {
     if (getCurrentFireFighter().fireTheDeckGunAp()) {
       int row = (int) (Math.random() * 3);
       int column = (int) (Math.random() * 4);
-      BoardManagerAdvanced.getInstance().fireDeckGunOnTile(tiles[row][column]);
-      return true;
+      if (getCurrentFireFighter() instanceof Driver) {
+        sendDriverMessage(tiles[row][column]);
+        switch (response) {
+          case THROW_ROW_DIE:
+            row = (int) (Math.random() * 3);
+            break;
+          case THROW_COLUMN_DIE:
+            column = (int) (Math.random() * 4);
+            break;
+            default:
+        }
+        BoardManagerAdvanced.getInstance().fireDeckGunOnTile(tiles[row][column]);
+        return true;
+      } else {
+        BoardManagerAdvanced.getInstance().fireDeckGunOnTile(tiles[row][column]);
+        return true;
+      }
     } else {
       sendMessageToGui(
           "You need more AP to fire the deck gun 4 if you are not the Driver 2 otherwise");
       return false;
     }
+  }
+
+  private void sendDriverMessage(Tile t) {
+    List<Tile> list = BoardManagerAdvanced.getInstance().getTilesReachedByDeckGun(t);
+    JSONArray iArray = new JSONArray();
+    JSONArray jArray = new JSONArray();
+    for (Tile tile : list) {
+      iArray.add(tile.getI());
+      jArray.add(tile.getJ());
+    }
+    JSONObject all = new JSONObject();
+    all.put("i", iArray);
+    all.put("j", jArray);
+    String ip = Server.getClientIP(getCurrentFireFighter().getColor());
+    Server.sendCommandToSpecificClient(ClientCommands.ASK_DRIVER_MSG, all.toJSONString(), ip);
+    while (wait.get()) ;
+    wait.set(true);
   }
 
   public List<FireFighterColor> getColorForFireCaptain() {
@@ -580,7 +618,7 @@ public class FireFighterTurnManagerAdvance extends FireFighterTurnManager {
       return false;
     }
     boolean worked = false;
-    sendAproval(color,action,d);
+    sendAproval(color, action, d);
     if (accept) {
       if (fadv.setForFireCaptainAction((FireCaptain) getCurrentFireFighter())) {
         FIREFIGHTERS.addFirst(fadv);
