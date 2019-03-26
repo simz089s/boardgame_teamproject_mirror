@@ -29,6 +29,7 @@ public class Client {
   public static Client createClient() {
     try {
       instance = new Client(NetworkManager.DEFAULT_SERVER_IP, NetworkManager.DEFAULT_SERVER_PORT);
+      System.out.println("Client is starting...");
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -220,25 +221,6 @@ public class Client {
                   BoardScreen.displayMessage(title, message1);
                 }
               });
-          break;
-
-        case END_OF_SPECIALITY_CHANGE:
-          Gdx.app.postRunnable(
-              new Runnable() {
-                @Override
-                public void run() {
-                  BoardChooseSpecialtyPanel.endOfSpecialityChoice();
-                }
-              });
-          break;
-        case REFRESH_BOARD_SCREEN_AFTER_CHOOSEINITPOS:
-          Gdx.app.postRunnable(
-                  new Runnable() {
-                    @Override
-                    public void run() {
-                      BoardScreen.redrawBoard();
-                    }
-                  });
           break;
         default:
       }

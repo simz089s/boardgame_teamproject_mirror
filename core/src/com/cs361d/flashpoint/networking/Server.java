@@ -103,6 +103,7 @@ public class Server implements Runnable {
 
   public static Server createServer() {
     instance = new Server(NetworkManager.DEFAULT_SERVER_PORT);
+    System.out.println("Server is starting...");
     return instance;
   }
 
@@ -334,7 +335,22 @@ public class Server implements Runnable {
           FireFighterTurnManager.getInstance().chooseInitialPosition(t);
           mustSendAndRefresh = true;
           break;
-
+        case SET_AMBULANCE:
+          jsonObject = (JSONObject) parser.parse(message);
+           i = Integer.parseInt(jsonObject.get("i").toString());
+           j = Integer.parseInt(jsonObject.get("j").toString());
+           t = BoardManager.getInstance().getTileAt(i, j);
+          (BoardManagerAdvanced.getInstance()).addAmbulance(i, j);
+          mustSendAndRefresh = true;
+          break;
+        case SET_FIRETRUCK:
+          jsonObject = (JSONObject) parser.parse(message);
+          i = Integer.parseInt(jsonObject.get("i").toString());
+          j = Integer.parseInt(jsonObject.get("j").toString());
+          t = BoardManager.getInstance().getTileAt(i, j);
+          (BoardManagerAdvanced.getInstance()).addFireTruck(i, j);
+          mustSendAndRefresh = true;
+          break;
         default:
           // the command must be an action command
           serverExecuteGameCommand(jsonObject.get("command").toString(), message, ip);
