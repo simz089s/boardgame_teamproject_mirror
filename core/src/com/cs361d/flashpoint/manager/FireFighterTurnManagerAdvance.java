@@ -458,60 +458,60 @@ public class FireFighterTurnManagerAdvance extends FireFighterTurnManager {
       case TOP:
         if (j == 0) {
           if (currentTile.getAdjacentTile(Direction.BOTTOM).canContainAmbulance()) {
-            f.setTile(newVehTile.get(0));
-          } else {
             f.setTile(newVehTile.get(1));
+          } else {
+            f.setTile(newVehTile.get(0));
           }
         } else {
           if (currentTile.getAdjacentTile(Direction.BOTTOM).canContainAmbulance()) {
-            f.setTile(newVehTile.get(1));
-          } else {
             f.setTile(newVehTile.get(0));
+          } else {
+            f.setTile(newVehTile.get(1));
           }
         }
         break;
       case BOTTOM:
         if (j == 0) {
           if (currentTile.getAdjacentTile(Direction.BOTTOM).canContainAmbulance()) {
-            f.setTile(newVehTile.get(1));
-          } else {
             f.setTile(newVehTile.get(0));
+          } else {
+            f.setTile(newVehTile.get(1));
           }
         } else {
           if (currentTile.getAdjacentTile(Direction.BOTTOM).canContainAmbulance()) {
-            f.setTile(newVehTile.get(0));
-          } else {
             f.setTile(newVehTile.get(1));
+          } else {
+            f.setTile(newVehTile.get(0));
           }
         }
         break;
       case RIGHT:
         if (i == 0) {
           if (currentTile.getAdjacentTile(Direction.LEFT).canContainAmbulance()) {
-            f.setTile(newVehTile.get(0));
-          } else {
             f.setTile(newVehTile.get(1));
+          } else {
+            f.setTile(newVehTile.get(0));
           }
         } else {
           if (currentTile.getAdjacentTile(Direction.LEFT).canContainAmbulance()) {
-            f.setTile(newVehTile.get(1));
-          } else {
             f.setTile(newVehTile.get(0));
+          } else {
+            f.setTile(newVehTile.get(1));
           }
         }
         break;
       case LEFT:
         if (i == 0) {
           if (currentTile.getAdjacentTile(Direction.LEFT).canContainAmbulance()) {
-            f.setTile(newVehTile.get(1));
-          } else {
             f.setTile(newVehTile.get(0));
+          } else {
+            f.setTile(newVehTile.get(1));
           }
         } else {
           if (currentTile.getAdjacentTile(Direction.LEFT).canContainAmbulance()) {
-            f.setTile(newVehTile.get(0));
-          } else {
             f.setTile(newVehTile.get(1));
+          } else {
+            f.setTile(newVehTile.get(0));
           }
         }
         break;
