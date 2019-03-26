@@ -6,6 +6,7 @@ import com.cs361d.flashpoint.model.BoardElements.FireFighter;
 import com.cs361d.flashpoint.model.BoardElements.FireFighterColor;
 import com.cs361d.flashpoint.model.BoardElements.Tile;
 import com.cs361d.flashpoint.model.FireFighterSpecialities.FireFighterAdvanceSpecialities;
+import com.cs361d.flashpoint.model.FireFighterSpecialities.FireFighterAdvanced;
 import com.cs361d.flashpoint.screen.Actions;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -120,7 +121,7 @@ public class Server implements Runnable {
     return notYetAssigned.isEmpty();
   }
 
-  public static boolean noMorePlayer() {
+  public static boolean joinCompleted() {
     return notYetAssigned.isEmpty();
   }
 
@@ -465,6 +466,14 @@ public class Server implements Runnable {
           }
           break;
 
+        case COMMAND_OTHER_FIREFIGHTER:
+          jsonObject = (JSONObject) parser.parse(message);
+          FireFighterColor color = FireFighterColor.fromString(jsonObject.get("color").toString());
+          action = Actions.fromString(jsonObject.get("action").toString());
+          direction = Direction.fromString(jsonObject.get("direction").toString());
+          mustSendAndRefresh = FireFighterTurnManagerAdvance.getInstance().fireCaptainCommand(color, action, direction);
+          break;
+
         default:
       }
       if (mustSendAndRefresh) {
@@ -487,4 +496,5 @@ public class Server implements Runnable {
     }
     return array.toJSONString();
   }
+
 }
