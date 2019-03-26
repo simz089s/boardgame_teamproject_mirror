@@ -296,17 +296,27 @@ public class Server implements Runnable {
           break;
 
         case CREATE_GAME:
-          jsonObject = (JSONObject) parser.parse(message);
-          int numPlayers = Integer.parseInt(jsonObject.get("numPlayers").toString());
-          MapKind mapKind = MapKind.fromString(jsonObject.get("mapKind").toString());
-          String name = jsonObject.get("name").toString();
-          Difficulty difficulty = Difficulty.fromString(jsonObject.get("Difficulty").toString());
-          CreateNewGameManager.createNewGame(name, numPlayers, mapKind, difficulty);
-          Server.setFireFighterAssignArray();
-          assignFireFighterToClient(ip);
-          sendCommandToSpecificClient(
-              ClientCommands.SET_GAME_STATE, DBHandler.getBoardAsString(), ip);
-          sendCommandToSpecificClient(ClientCommands.SET_BOARD_SCREEN, "", ip);
+          if (!gameLoaded) {
+            gameLoaded = true;
+            jsonObject = (JSONObject) parser.parse(message);
+            int numPlayers = Integer.parseInt(jsonObject.get("numPlayers").toString());
+            MapKind mapKind = MapKind.fromString(jsonObject.get("mapKind").toString());
+            String name = jsonObject.get("name").toString();
+            Difficulty difficulty = Difficulty.fromString(jsonObject.get("Difficulty").toString());
+            CreateNewGameManager.createNewGame(name, numPlayers, mapKind, difficulty);
+            Server.setFireFighterAssignArray();
+            assignFireFighterToClient(ip);
+            sendCommandToSpecificClient(
+                ClientCommands.SET_GAME_STATE, DBHandler.getBoardAsString(), ip);
+            sendCommandToSpecificClient(ClientCommands.SET_BOARD_SCREEN, "", ip);
+          }
+          else {
+            JSONObject obj1 = new JSONObject();
+            obj1.put("title", "Game already Loaded");
+            obj1.put("message", "There is a game already loaded");
+            sendCommandToSpecificClient(
+                    ClientCommands.SHOW_MESSAGE_ON_SCREEN, obj1.toJSONString(), ip);
+          }
           break;
 
         case SET_INITIAL_SPECIALITY:

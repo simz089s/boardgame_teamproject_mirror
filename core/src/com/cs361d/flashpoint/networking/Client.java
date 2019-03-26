@@ -221,6 +221,7 @@ public class Client {
                 }
               });
           break;
+
         case END_OF_SPECIALITY_CHANGE:
           Gdx.app.postRunnable(
               new Runnable() {

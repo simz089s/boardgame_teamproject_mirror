@@ -2,6 +2,7 @@ package com.cs361d.flashpoint.manager;
 
 import com.cs361d.flashpoint.model.BoardElements.*;
 import com.cs361d.flashpoint.model.FireFighterSpecialities.*;
+import com.cs361d.flashpoint.screen.Actions;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -166,13 +167,12 @@ public class FireFighterTurnManagerAdvance extends FireFighterTurnManager {
               continue;
             }
             validTiles.add(adjacentTile);
-            while(dist < 4 && !adjacentTile.hasObstacle(d)) {
+            while (dist < 4 && !adjacentTile.hasObstacle(d)) {
               adjacentTile = adjacentTile.getAdjacentTile(d);
               if (adjacentTile != null && adjacentTile.hasNoFireAndNoSmoke()) {
-                 validTiles.add(adjacentTile);
-                 dist++;
-              }
-              else {
+                validTiles.add(adjacentTile);
+                dist++;
+              } else {
                 break;
               }
             }
@@ -229,7 +229,7 @@ public class FireFighterTurnManagerAdvance extends FireFighterTurnManager {
       verifyVeteranVacinityToAddAp();
       flipAdjacentPOIForRescueDog();
       return true;
-      }
+    }
     return false;
   }
 
@@ -526,6 +526,64 @@ public class FireFighterTurnManagerAdvance extends FireFighterTurnManager {
     }
   }
 
+  public List<FireFighterColor> getColorForFireCaptain() {
+    List<FireFighterColor> colorList = new ArrayList<FireFighterColor>();
+    for (FireFighter f : FIREFIGHTERS) {
+      if (!(f instanceof FireCaptain)) {
+        colorList.add(f.getColor());
+      }
+    }
+    return colorList;
+  }
+
+  public boolean FireCaptainCommand(FireFighterColor color, Actions action, Direction d) {
+    FireFighterAdvanced fadv = null;
+    int index = 0;
+    for (FireFighter f : FIREFIGHTERS) {
+      if (f.getColor() == color) {
+        fadv = (FireFighterAdvanced) f;
+        break;
+      }
+    }
+    if (fadv == null) {
+      throw new IllegalArgumentException("The color" + color + " is not in the list");
+    }
+    fadv.setForFireCaptainAction((FireCaptain) getCurrentFireFighter());
+    FIREFIGHTERS.addFirst(fadv);
+    switch (action) {
+      case MOVE:
+        move(d);
+      case MOVE_WITH_VICTIM:
+      case MOVE_WITH_HAZMAT:
+      case INTERACT_WITH_DOOR:
+    }
+    return true;
+  }
+
+  public List<Actions> getFireFighterPossibleActions(FireFighterColor color) {
+    FireFighterAdvanced fadv = null;
+    List<Actions> actionsList = new ArrayList<Actions>();
+    actionsList.add(Actions.MOVE);
+    actionsList.add(Actions.MOVE_WITH_VICTIM);
+    actionsList.add(Actions.MOVE_WITH_HAZMAT);
+    actionsList.add(Actions.INTERACT_WITH_DOOR);
+
+    for (FireFighter f : FIREFIGHTERS) {
+      if (f.getColor() == color) {
+        fadv = (FireFighterAdvanced) f;
+        break;
+      }
+    }
+    if (fadv == null) {
+      throw new IllegalArgumentException("The color" + color + " is not in the list");
+    }
+    if (fadv instanceof RescueDog) {
+      actionsList.remove(Actions.MOVE_WITH_HAZMAT);
+      actionsList.remove(Actions.INTERACT_WITH_DOOR);
+    }
+
+    return actionsList;
+  }
   // TODO
   // verify the veteran vacinity at the begining of each turn;
   // Flip the markes in ajacentSpace

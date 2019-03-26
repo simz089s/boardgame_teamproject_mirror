@@ -17,7 +17,10 @@ public abstract class FireFighterAdvanced extends FireFighter {
   protected boolean hadVeteranBonus = false;
   protected final FireFighterAdvanceSpecialities SPECIALITY;
   protected int maxSpecialAp = 0;
-  protected boolean firstTurn = false;
+  protected boolean firstTurn;
+  private int actionPointToSave = 0;
+  private int specialActionPointToSave = 0;
+
   protected static final Map<FireFighterColor, FireFighterAdvanced> FIREFIGHTERS =
       new HashMap<FireFighterColor, FireFighterAdvanced>();
 
@@ -274,5 +277,17 @@ public abstract class FireFighterAdvanced extends FireFighter {
       FIREFIGHTERS.put(color, f);
     }
     return f;
+  }
+
+  public void setForFireCaptainAction(FireCaptain fc) {
+    this.specialActionPointToSave = this.specialActionPoints;
+    this.actionPointToSave = this.actionPoints;
+    this.actionPoints = fc.getSpecialActionPoints();
+    this.specialActionPoints = 0;
+  }
+
+  public void resetSaveActionPoints() {
+    this.specialActionPoints = this.specialActionPointToSave;
+    this.actionPoints = this.specialActionPoints;
   }
 }
