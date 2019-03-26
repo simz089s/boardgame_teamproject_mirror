@@ -18,6 +18,7 @@ import com.cs361d.flashpoint.networking.ServerCommands;
 import java.util.ArrayList;
 
 import static com.cs361d.flashpoint.screen.BoardScreen.boardMovesPanel;
+import static com.cs361d.flashpoint.screen.BoardScreen.removeAllPrevFragments;
 import static com.cs361d.flashpoint.screen.BoardScreen.stage;
 import static com.cs361d.flashpoint.screen.FlashPointScreen.skinUI;
 
@@ -36,6 +37,8 @@ public class BoardAcceptCaptainCmd {
     static ArrayList<Table> specialtiesTablesList = new ArrayList<Table>();
 
     public static void drawAcceptCaptainCmdPanel(Actions action, Direction direction) {
+
+        removeAllPrevFragments();
 
         if (!BoardManager.getInstance().isAdvanced()) {
             return;
@@ -110,11 +113,11 @@ public class BoardAcceptCaptainCmd {
         specialtiesTable.row();
         specialtiesTable.add().size(scrollPane.getWidth(), btnConfirmYes.getHeight());
         specialtiesTable.row();
-        specialtiesTable.add().size(btnConfirmYes.getWidth(), btnConfirmYes.getHeight());
-        specialtiesTable.add().size(btnConfirmNo.getWidth(), btnConfirmNo.getHeight());
+        specialtiesTable.add(btnConfirmYes).size(btnConfirmYes.getWidth(), btnConfirmYes.getHeight());
+        specialtiesTable.add(btnConfirmYes).size(btnConfirmNo.getWidth(), btnConfirmNo.getHeight());
 
         specialtiesTable.setPosition(
-                1000,
+                1050,
                 Gdx.graphics.getHeight() - 350);
 
         specialtiesTablesList.add(specialtiesTable);
