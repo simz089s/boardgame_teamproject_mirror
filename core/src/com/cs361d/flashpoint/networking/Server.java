@@ -5,6 +5,7 @@ import com.cs361d.flashpoint.model.BoardElements.Direction;
 import com.cs361d.flashpoint.model.BoardElements.FireFighter;
 import com.cs361d.flashpoint.model.BoardElements.FireFighterColor;
 import com.cs361d.flashpoint.model.BoardElements.Tile;
+import com.cs361d.flashpoint.model.FireFighterSpecialities.FireFighterAdvanceSpecialities;
 import com.cs361d.flashpoint.screen.Actions;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -18,10 +19,11 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Server implements Runnable {
 
-  private static List<FireFighterColor> notYetAssigned = new ArrayList<FireFighterColor>();
+  private static final List<FireFighterColor> notYetAssigned = new ArrayList<FireFighterColor>();
 
   // Vector to store server to client threads
   private static final HashMap<String, ServerToClientRunnable> clientObservers =
@@ -238,6 +240,8 @@ public class Server implements Runnable {
       String ip = jsonObject.get("IP").toString();
       System.out.println(message);
       boolean mustSendAndRefresh = false;
+      boolean refreshCrewChangePanel = false;
+
       switch (c) {
         case ADD_CHAT_MESSAGE:
           if (!message.equals("")) {
@@ -358,6 +362,13 @@ public class Server implements Runnable {
           sendCommandToSpecificClient(ClientCommands.SET_BOARD_SCREEN, "", ip);
           break;
 
+        case SET_INITIAL_SPECIALITY:
+          if (FireFighterTurnManagerAdvance.getInstance().setInitialSpeciality(FireFighterAdvanceSpecialities.fromString(message))) {
+            mustSendAndRefresh = true;
+            refreshCrewChangePanel = true;
+        }
+          break;
+
         case CHOOSE_INITIAL_POSITION:
           jsonObject = (JSONObject) parser.parse(message);
           int i = Integer.parseInt(jsonObject.get("i").toString());
@@ -369,11 +380,14 @@ public class Server implements Runnable {
 
         default:
           // the command must be an action command
-          serverExecuteGameCommand(jsonObject.get("command").toString(), message);
+          serverExecuteGameCommand(jsonObject.get("command").toString(), message, ip);
       }
       if (mustSendAndRefresh) {
         Server.sendCommandToAllClients(ClientCommands.SET_GAME_STATE, DBHandler.getBoardAsString());
         Server.sendCommandToAllClients(ClientCommands.REFRESH_BOARD_SCREEN, "");
+      }
+      if (refreshCrewChangePanel) {
+        Server.sendCommandToSpecificClient(ClientCommands.END_OF_SPECIALITY_CHANGE,"",ip);
       }
 
     } catch (Exception e) {
@@ -395,13 +409,14 @@ public class Server implements Runnable {
     this.clientList.put(ip, c);
   }
 
-  public static synchronized void serverExecuteGameCommand(String gameCommand, String message) {
+  public static synchronized void serverExecuteGameCommand(String gameCommand, String message, String ip) {
 
     Actions action = Actions.fromString(gameCommand);
     JSONParser parser = new JSONParser();
     try {
       Direction direction;
       boolean mustSendAndRefresh = false;
+      boolean refreshCrewChangePanel = false;
       switch (action) {
         case MOVE:
           JSONObject jsonObject = (JSONObject) parser.parse(message);
@@ -442,28 +457,52 @@ public class Server implements Runnable {
           break;
 
         case FIRE_DECK_GUN:
-          FireFighterTurnManagerAdvance.getInstance().fireDeckGun();
+          mustSendAndRefresh = FireFighterTurnManagerAdvance.getInstance().fireDeckGun();
           break;
 
         case MOVE_WITH_HAZMAT:
+          jsonObject = (JSONObject) parser.parse(message);
+          direction = Direction.fromString(jsonObject.get("direction").toString());
+          mustSendAndRefresh = FireFighterTurnManagerAdvance.getInstance().moveWithHazmat(direction);
           break;
         case DRIVE_AMBULANCE:
+          jsonObject = (JSONObject) parser.parse(message);
+          direction = Direction.fromString(jsonObject.get("direction").toString());
+          mustSendAndRefresh = FireFighterTurnManagerAdvance.getInstance().driveAmbulance(direction);
           break;
         case DRIVE_FIRETRUCK:
+          jsonObject = (JSONObject) parser.parse(message);
+          direction = Direction.fromString(jsonObject.get("direction").toString());
+          mustSendAndRefresh = FireFighterTurnManagerAdvance.getInstance().driveFireTruck(direction);
           break;
         case REMOVE_HAZMAT:
+          mustSendAndRefresh = FireFighterTurnManagerAdvance.getInstance().disposeHazmat();
           break;
-        case FLIP_POI: // TODO
+        case FLIP_POI:
+          jsonObject = (JSONObject) parser.parse(message);
+          int i = Integer.parseInt(jsonObject.get("i").toString());
+          int j = Integer.parseInt(jsonObject.get("j").toString());
+          Tile t = BoardManager.getInstance().getTileAt(i,j);
+          mustSendAndRefresh = FireFighterTurnManagerAdvance.getInstance().flipPOI(t);
           break;
         case CURE_VICTIM:
+          mustSendAndRefresh = FireFighterTurnManagerAdvance.getInstance().treatVictim();
           break;
         case CREW_CHANGE:
+          if (FireFighterTurnManagerAdvance.getInstance().crewChange(FireFighterAdvanceSpecialities.fromString(message))) {
+            mustSendAndRefresh = true;
+            refreshCrewChangePanel = true;
+          }
           break;
+
         default:
       }
       if (mustSendAndRefresh) {
         Server.sendCommandToAllClients(ClientCommands.SET_GAME_STATE, DBHandler.getBoardAsString());
         Server.sendCommandToAllClients(ClientCommands.REFRESH_BOARD_SCREEN, "");
+      }
+      if (refreshCrewChangePanel) {
+        Server.sendCommandToSpecificClient(ClientCommands.END_OF_SPECIALITY_CHANGE,"",ip);
       }
     } catch (ParseException e) {
       e.printStackTrace();

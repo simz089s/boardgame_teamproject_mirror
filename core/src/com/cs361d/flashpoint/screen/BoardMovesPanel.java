@@ -54,24 +54,6 @@ public class BoardMovesPanel {
     JSONObject obj = new JSONObject();
     obj.put("direction",direction.toString());
     Client.getInstance().sendCommand(move,obj.toJSONString());
-
-    if ((FireFighterTurnManager.getInstance() instanceof FireFighterTurnManagerAdvance)) {
-      FireFighterTurnManagerAdvance fireFighterTurnManagerAdvance = (FireFighterTurnManagerAdvance) fireFighterTurnManager;
-      switch(move) {
-        case MOVE_WITH_HAZMAT:
-          fireFighterTurnManagerAdvance.moveWithHazmat(direction);
-          break;
-        case DRIVE_FIRETRUCK:
-          fireFighterTurnManagerAdvance.driveFireTruck(direction);
-          break;
-        case DRIVE_AMBULANCE:
-          fireFighterTurnManagerAdvance.driveAmbulance(direction);
-          break;
-        default:
-      }
-    }
-
-    redrawAfterMove();
   }
 
   public void drawMovesAndDirectionsPanel() {
@@ -145,7 +127,7 @@ public class BoardMovesPanel {
                 FireFighterTurnManagerAdvance fireFighterTurnManagerAdvance = (FireFighterTurnManagerAdvance) fireFighterTurnManager;
                 switch(move) {
                   case FIRE_DECK_GUN:
-                    FireFighterTurnManagerAdvance.getInstance().fireDeckGun();
+                    Client.getInstance().sendCommand(Actions.FIRE_DECK_GUN,"");
                     break;
                   case MOVE_WITH_HAZMAT:
                     drawDirectionsPanelTable(move);
@@ -157,15 +139,13 @@ public class BoardMovesPanel {
                     drawDirectionsPanelTable(move);
                     break;
                   case REMOVE_HAZMAT:
-                    fireFighterTurnManagerAdvance.disposeHazmat();
-                    redrawAfterMove();
+                    Client.getInstance().sendCommand(Actions.REMOVE_HAZMAT,"");
                     break;
-                  case FLIP_POI: //TODO
+                  case FLIP_POI:
                     addFilterOnChoosePOIChoosePos();
                     break;
                   case CURE_VICTIM:
-                    fireFighterTurnManagerAdvance.treatVictim();
-                    redrawAfterMove();
+                    Client.getInstance().sendCommand(Actions.CURE_VICTIM,"");
                     break;
                   case CREW_CHANGE:
                     removeMovesAndDirectionsPanel();

@@ -9,7 +9,8 @@ public enum ClientCommands //Commands sent to client
     SEND_CHAT_MESSAGES("SEND_CHAT_MESSAGES"),
     ADD_CHAT_MESSAGE ("ADD_CHAT_MESSAGE"),
     SHOW_MESSAGE_ON_SCREEN("SHOW_MESSAGE_ON_SCREEN"),
-    SET_GAME_STATE("SET_GAME_STATE");
+    SET_GAME_STATE("SET_GAME_STATE"),
+    END_OF_SPECIALITY_CHANGE("END_OF_SPECIALITY_CHANGE");
     private String text;
 
     ClientCommands(String text) {

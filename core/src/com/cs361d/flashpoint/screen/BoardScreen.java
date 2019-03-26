@@ -135,24 +135,17 @@ public class BoardScreen extends FlashPointScreen {
                 boolean isAdvancedVersion = BoardManager.getInstance().isAdvanced();
                 boolean hasNoSpecialty =
                     isAdvancedVersion
-                        && !((FireFighterTurnManagerAdvance)
-                                FireFighterTurnManagerAdvance.getInstance())
-                            .currentHasSpeciality();
+                        && !(FireFighterTurnManagerAdvance.getInstance().currentHasSpeciality());
                 boolean isAmbulanceNotSet =
-                    isAdvancedVersion
-                        && !((BoardManagerAdvanced) BoardManagerAdvanced.getInstance())
-                            .hasAmbulancePlaced();
+                    isAdvancedVersion && !(BoardManagerAdvanced.getInstance()).hasAmbulancePlaced();
                 boolean isEngineNotSet =
-                    isAdvancedVersion
-                        && !((BoardManagerAdvanced) BoardManagerAdvanced.getInstance())
-                            .hasFireTruckPlaced();
+                    isAdvancedVersion && !(BoardManagerAdvanced.getInstance()).hasFireTruckPlaced();
 
                 // set init vehicles position
                 if (isAmbulanceNotSet
                     && DBHandler.isPresentInArr(
                         getAmbulanceClickableTiles(), i_pos + "-" + j_pos)) {
-                  ((BoardManagerAdvanced) BoardManagerAdvanced.getInstance())
-                      .addAmbulance(i_pos, j_pos);
+                  (BoardManagerAdvanced.getInstance()).addAmbulance(i_pos, j_pos);
                   removeAllFilterOnTile();
                   drawGameUnitsOnTile();
                   boardDialog.drawDialog(
@@ -166,7 +159,7 @@ public class BoardScreen extends FlashPointScreen {
                     return;
                   }
 
-                  ((BoardManagerAdvanced) BoardManagerAdvanced.getInstance())
+                  (BoardManagerAdvanced.getInstance())
                       .addFireTruck(i_pos, j_pos);
                   removeAllFilterOnTile();
                   drawGameUnitsOnTile();
@@ -229,18 +222,13 @@ public class BoardScreen extends FlashPointScreen {
                   boardGameInfoLabel.drawGameInfoLabel();
                 }
 
-                // TODO: choose flip POI
                 if (activateFlipPOIChoosePos && isClickableTileOnFlipPOI(i_pos, j_pos)) {
-
-                  ((FireFighterTurnManagerAdvance) FireFighterTurnManager.getInstance())
-                      .flipPOI(BoardManager.getInstance().getTiles()[i_pos][j_pos]);
-
-                  activateKnockDownChoosePos = false;
-
+                  JSONObject obj = new JSONObject();
+                  obj.put("i", i_pos);
+                  obj.put("j", j_pos);
                   removeAllFilterOnTile();
-                  clearAllGameUnits();
-                  drawGameUnitsOnTile();
-                  boardGameInfoLabel.drawGameInfoLabel();
+                  Client.getInstance().sendCommand(Actions.FLIP_POI, obj.toJSONString());
+                  activateKnockDownChoosePos = false;
                 }
               }
             });
@@ -647,7 +635,8 @@ public class BoardScreen extends FlashPointScreen {
           @Override
           public void clicked(InputEvent event, float x, float y) {
             audioMusic.stop();
-            Client.getInstance().sendCommand(ServerCommands.EXIT_GAME,User.getInstance().getName());
+            Client.getInstance()
+                .sendCommand(ServerCommands.EXIT_GAME, User.getInstance().getName());
           }
         });
 
@@ -736,7 +725,9 @@ public class BoardScreen extends FlashPointScreen {
   // show MovesAndDirectionsPanel on resume
   private static void createResumeButton() {
 
-    Texture myTexture = new Texture(Gdx.files.internal("icons/resumeBtn_" + User.getInstance().getColor() + ".png"));
+    Texture myTexture =
+        new Texture(
+            Gdx.files.internal("icons/resumeBtn_" + User.getInstance().getColor() + ".png"));
 
     TextureRegion myTextureRegion = new TextureRegion(myTexture);
     TextureRegionDrawable myTexRegionDrawable = new TextureRegionDrawable(myTextureRegion);
@@ -797,7 +788,7 @@ public class BoardScreen extends FlashPointScreen {
     }
   }
 
-  private void addFilterOnTileForEngine() {
+  public static void addFilterOnTileForEngine() {
     Tile[][] tiles = BoardManager.getInstance().getTiles();
     for (int i = 0; i < tiles.length; i++) {
       for (int j = 0; j < tiles[i].length; j++) {
@@ -972,10 +963,9 @@ public class BoardScreen extends FlashPointScreen {
 
   public static void displayMessage(String title, String message) {
     if (game.getScreen() == game.boardScreen) {
-      boardDialog.drawDialog(title,message);
-    }
-    else {
-      LobbyScreen.getDialog().drawDialog(title,message);
+      boardDialog.drawDialog(title, message);
+    } else {
+      LobbyScreen.getDialog().drawDialog(title, message);
     }
   }
 }

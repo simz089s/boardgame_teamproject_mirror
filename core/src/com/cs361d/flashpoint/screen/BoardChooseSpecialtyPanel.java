@@ -11,6 +11,8 @@ import com.cs361d.flashpoint.manager.BoardManager;
 import com.cs361d.flashpoint.manager.BoardManagerAdvanced;
 import com.cs361d.flashpoint.manager.FireFighterTurnManagerAdvance;
 import com.cs361d.flashpoint.model.FireFighterSpecialities.FireFighterAdvanceSpecialities;
+import com.cs361d.flashpoint.networking.Client;
+import com.cs361d.flashpoint.networking.ServerCommands;
 
 import java.util.ArrayList;
 
@@ -85,15 +87,11 @@ public class BoardChooseSpecialtyPanel {
                         String specialtySelected = lstSpecialties.getSelected();
 
                         // set init specialty
-                        if (! ((FireFighterTurnManagerAdvance) FireFighterTurnManagerAdvance.getInstance()).currentHasSpeciality()){
-                            ((FireFighterTurnManagerAdvance) FireFighterTurnManagerAdvance.getInstance())
-                                    .setInitialSpeciality(FireFighterAdvanceSpecialities.fromString(specialtySelected));
+                        if (! FireFighterTurnManagerAdvance.getInstance().currentHasSpeciality()){
+                            Client.getInstance().sendCommand(ServerCommands.SET_INITIAL_SPECIALITY,specialtySelected);
                         } else { // crew change
-                            ((FireFighterTurnManagerAdvance) FireFighterTurnManagerAdvance.getInstance())
-                                    .crewChange(FireFighterAdvanceSpecialities.fromString(specialtySelected));
+                            Client.getInstance().sendCommand(Actions.CREW_CHANGE,specialtySelected);
 
-                            boardMovesPanel.drawMovesAndDirectionsPanel();
-                            boardGameInfoLabel.drawGameInfoLabel();
                         }
 
                         removeChooseSpecialtyPanel();
@@ -122,11 +120,12 @@ public class BoardChooseSpecialtyPanel {
     }
 
     public void removeChooseSpecialtyPanel(){
-        for (int i = 0; i < specialtiesTablesList.size(); i++) {
-            specialtiesTablesList.get(i).remove();
-        }
-
         specialtiesTablesList.clear();
+    }
+
+    public static void endOfSpecialityChoice() {
+        boardMovesPanel.drawMovesAndDirectionsPanel();
+        boardGameInfoLabel.drawGameInfoLabel();
     }
 
 }

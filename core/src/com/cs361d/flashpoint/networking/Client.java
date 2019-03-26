@@ -4,10 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.cs361d.flashpoint.manager.CreateNewGameManager;
 import com.cs361d.flashpoint.manager.User;
 import com.cs361d.flashpoint.model.BoardElements.FireFighterColor;
-import com.cs361d.flashpoint.screen.Actions;
-import com.cs361d.flashpoint.screen.BoardChatFragment;
-import com.cs361d.flashpoint.screen.BoardScreen;
-import com.cs361d.flashpoint.screen.FlashPointGame;
+import com.cs361d.flashpoint.screen.*;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -224,6 +221,15 @@ public class Client {
                 @Override
                 public void run() {
                   BoardScreen.displayMessage(title, message1);
+                }
+              });
+          break;
+        case END_OF_SPECIALITY_CHANGE:
+          Gdx.app.postRunnable(
+              new Runnable() {
+                @Override
+                public void run() {
+                  BoardChooseSpecialtyPanel.endOfSpecialityChoice();
                 }
               });
           break;

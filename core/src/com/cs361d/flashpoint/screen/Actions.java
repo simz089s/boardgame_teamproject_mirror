@@ -86,19 +86,19 @@ public enum Actions {
 
   public static List<Actions> hazmatTechnicianActions() {
     List<Actions> list = advancedActions();
-    list.add(REMOVE_HAZMAT);
+    list.add(list.size()-2, REMOVE_HAZMAT);
     return list;
   }
 
   public static List<Actions> paramedicActions() {
     List<Actions> list = advancedActions();
-    list.add(CURE_VICTIM);
+    list.add(list.size()-2, CURE_VICTIM);
     return list;
   }
 
   public static List<Actions> imagingTechnicianActions() {
     List<Actions> list = advancedActions();
-    list.add(FLIP_POI);
+    list.add(list.size()-2,FLIP_POI);
     return list;
   }
 
