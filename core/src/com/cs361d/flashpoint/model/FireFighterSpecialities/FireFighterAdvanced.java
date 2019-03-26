@@ -284,6 +284,6 @@ public abstract class FireFighterAdvanced extends FireFighter {
 
   public void resetSavedActionPoints() {
     this.specialActionPoints = this.specialActionPointToSave;
-    this.actionPoints = this.specialActionPoints;
+    this.actionPoints = this.actionPointToSave;
   }
 }

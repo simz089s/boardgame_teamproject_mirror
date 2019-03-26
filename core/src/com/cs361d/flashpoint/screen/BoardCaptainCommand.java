@@ -199,7 +199,6 @@ public class BoardCaptainCommand {
 
                         Client.getInstance().sendCommand(Actions.COMMAND_OTHER_FIREFIGHTER, obj.toJSONString());
                         removeTableDirectionsPanel();
-                        boardMovesPanel.drawMovesAndDirectionsPanel();
                         return true;
                     }
                 });
@@ -215,7 +214,6 @@ public class BoardCaptainCommand {
 
                         Client.getInstance().sendCommand(Actions.COMMAND_OTHER_FIREFIGHTER, obj.toJSONString());
                         removeTableDirectionsPanel();
-                        boardMovesPanel.drawMovesAndDirectionsPanel();
                         return true;
                     }
                 });
@@ -231,7 +229,6 @@ public class BoardCaptainCommand {
 
                         Client.getInstance().sendCommand(Actions.COMMAND_OTHER_FIREFIGHTER, obj.toJSONString());
                         removeTableDirectionsPanel();
-                        boardMovesPanel.drawMovesAndDirectionsPanel();
                         return true;
                     }
                 });
