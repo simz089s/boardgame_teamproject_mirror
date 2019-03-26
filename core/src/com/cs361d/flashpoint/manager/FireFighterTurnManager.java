@@ -1,6 +1,7 @@
 package com.cs361d.flashpoint.manager;
 
 import com.cs361d.flashpoint.model.BoardElements.*;
+import com.cs361d.flashpoint.model.FireFighterSpecialities.FireCaptain;
 import com.cs361d.flashpoint.model.FireFighterSpecialities.FireFighterAdvanced;
 import com.cs361d.flashpoint.networking.ClientCommands;
 import com.cs361d.flashpoint.networking.Server;
@@ -16,6 +17,7 @@ public class FireFighterTurnManager implements Iterable<FireFighter> {
   protected LinkedList<FireFighter> FIREFIGHTERS = new LinkedList<FireFighter>();
   protected boolean allAssigned = false;
   boolean firstCall = true;
+  protected boolean sendToCaptain = false;
   protected static FireFighterTurnManager instance = new FireFighterTurnManager();
 
   public static FireFighterTurnManager getInstance() {
@@ -283,7 +285,19 @@ public class FireFighterTurnManager implements Iterable<FireFighter> {
     JSONObject obj = new JSONObject();
     obj.put("title","Action rejected");
     obj.put("message",message);
-    String ip = Server.getClientIP(getCurrentFireFighter().getColor());
+    String ip = null;
+    // Here if the command comes from the captain we send the result to its screen
+    if (this.sendToCaptain) {
+      for (FireFighter f : FIREFIGHTERS) {
+          if (f instanceof FireCaptain) {
+            ip = Server.getClientIP(f.getColor());
+            break;
+          }
+      }
+
+    } else {
+      ip = Server.getClientIP(getCurrentFireFighter().getColor());
+      }
     if (ip == null) {
       throw new IllegalArgumentException("The color " + getCurrentFireFighter().getColor().toString() +" is not assigned to a client");
     }

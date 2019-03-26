@@ -2,8 +2,8 @@ package com.cs361d.flashpoint.manager;
 
 import com.cs361d.flashpoint.model.BoardElements.*;
 import com.cs361d.flashpoint.model.FireFighterSpecialities.*;
+import com.cs361d.flashpoint.networking.Server;
 import com.cs361d.flashpoint.screen.Actions;
-
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -59,6 +59,7 @@ public class FireFighterTurnManagerAdvance extends FireFighterTurnManager {
   // Covers the veteran bonusRemovove
   @Override
   public void endTurn() {
+    //TODO do not end turn if all users are not yet present
     FireFighter fireFighter = getCurrentFireFighter();
     if (!fireFighter.getTile().hasFire()) {
       FireFighterAdvanced last = (FireFighterAdvanced) FIREFIGHTERS.removeFirst();
@@ -553,6 +554,14 @@ public class FireFighterTurnManagerAdvance extends FireFighterTurnManager {
     if (fadv == null) {
       throw new IllegalArgumentException("The color" + color + " is not in the list");
     }
+    this.sendToCaptain = true;
+    String ip = Server.getClientIP(fadv.getColor());
+    if (ip == null) {
+      sendMessageToGui("The current player you are trying to move is not yet assigned to a User please wait");
+      this.sendToCaptain = false;
+      return false;
+    }
+    // TODO ask for consent of user
     boolean worked = false;
     if (fadv.setForFireCaptainAction((FireCaptain) getCurrentFireFighter())) {
       FIREFIGHTERS.addFirst(fadv);
@@ -578,6 +587,7 @@ public class FireFighterTurnManagerAdvance extends FireFighterTurnManager {
       getCurrentFireFighter().setSpecialActionPoints(fadv.getSpecialActionPoints());
       fadv.resetSavedActionPoints();
     }
+    this.sendToCaptain = false;
     return worked;
   }
 
