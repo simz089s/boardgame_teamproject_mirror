@@ -181,10 +181,10 @@ public class BoardScreen extends FlashPointScreen {
                 }
 
                 // choose init position
-                if (!FireFighterTurnManager.getInstance().currentHasTile() && User.getInstance().isMyTurn()
-                    && DBHandler.isPresentInArr(CHOOSE_INIT_POS_TILES, i_pos + "-" + j_pos)) {
+                if (!FireFighterTurnManager.getInstance().currentHasTile() 
+                    && DBHandler.isPresentInArr(CHOOSE_INIT_POS_TILES, i_pos + "-" + j_pos)) { // && User.getInstance().isMyTurn()
 
-                  if (hasNoSpecialty || (isAmbulanceNotSet || isEngineNotSet)) {
+                  if (isAmbulanceNotSet || isEngineNotSet) {
                     return;
                   }
 
