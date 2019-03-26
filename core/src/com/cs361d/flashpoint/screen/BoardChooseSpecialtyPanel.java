@@ -123,9 +123,5 @@ public class BoardChooseSpecialtyPanel {
         specialtiesTablesList.clear();
     }
 
-    public static void endOfSpecialityChoice() {
-        boardMovesPanel.drawMovesAndDirectionsPanel();
-        boardGameInfoLabel.drawGameInfoLabel();
-    }
 
 }

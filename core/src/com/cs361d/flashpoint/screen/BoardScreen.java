@@ -15,6 +15,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.cs361d.flashpoint.manager.*;
 import com.cs361d.flashpoint.model.BoardElements.*;
+import com.cs361d.flashpoint.model.FireFighterSpecialities.FireFighterAdvanceSpecialities;
 import com.cs361d.flashpoint.networking.Client;
 import com.cs361d.flashpoint.networking.ServerCommands;
 import org.json.simple.JSONObject;
@@ -145,13 +146,19 @@ public class BoardScreen extends FlashPointScreen {
                 if (isAmbulanceNotSet
                     && DBHandler.isPresentInArr(
                         getAmbulanceClickableTiles(), i_pos + "-" + j_pos)) {
-                  (BoardManagerAdvanced.getInstance()).addAmbulance(i_pos, j_pos);
-                  removeAllFilterOnTile();
-                  drawGameUnitsOnTile();
-                  boardDialog.drawDialog(
-                      "Engine position",
-                      "Choose the fire engine's initial position (green tiles).");
-                  addFilterOnTileForEngine();
+
+                  JSONObject obj = new JSONObject();
+                  obj.put("i", i_pos);
+                  obj.put("j", j_pos);
+                  Client.getInstance()
+                          .sendCommand(ServerCommands.SET_AMBULANCE, obj.toJSONString());
+
+//                  removeAllFilterOnTile();
+//                  drawGameUnitsOnTile();
+//                  boardDialog.drawDialog(
+//                      "Engine position",
+//                      "Choose the fire engine's initial position (green tiles).");
+//                  addFilterOnTileForEngine();
                 } else if (isEngineNotSet
                     && DBHandler.isPresentInArr(getEngineClickableTiles(), i_pos + "-" + j_pos)) {
 
@@ -159,14 +166,18 @@ public class BoardScreen extends FlashPointScreen {
                     return;
                   }
 
-                  (BoardManagerAdvanced.getInstance())
-                      .addFireTruck(i_pos, j_pos);
-                  removeAllFilterOnTile();
-                  drawGameUnitsOnTile();
-                  boardDialog.drawDialog(
-                      "Specialty", "Choose your initial specialty on the right panel.");
-                  addFilterOnTileForChooseInitPos();
-                  boardChooseRolePanel.drawChooseSpecialtyPanel();
+                  JSONObject obj = new JSONObject();
+                  obj.put("i", i_pos);
+                  obj.put("j", j_pos);
+                  Client.getInstance()
+                          .sendCommand(ServerCommands.SET_FIRETRUCK, obj.toJSONString());
+
+//                  removeAllFilterOnTile();
+//                  drawGameUnitsOnTile();
+//                  boardDialog.drawDialog(
+//                      "Specialty", "Choose your initial specialty on the right panel.");
+//                  addFilterOnTileForChooseInitPos();
+//                  boardChooseRolePanel.drawChooseSpecialtyPanel();
                 }
 
                 // choose init position
@@ -938,22 +949,49 @@ public class BoardScreen extends FlashPointScreen {
   // REDRAW FOR NETWORK
   public static void redrawBoard() {
     if (game.getScreen() == game.boardScreen) {
+      removeAllPrevFragments();
       clearAllGameUnits();
-      drawGameUnitsOnTile();
-      boardGameInfoLabel.drawGameInfoLabel();
-
       removeAllFilterOnTile();
+
       drawEngineTilesColor();
 
-      if (!FireFighterTurnManager.getInstance().currentHasTile()) {
-        if (User.getInstance().isMyTurn()) {
+      if (BoardManager.getInstance().isAdvanced()) {
+        if (!(BoardManagerAdvanced.getInstance()).hasAmbulancePlaced()) {
+
+        } else if (!(BoardManagerAdvanced.getInstance()).hasFireTruckPlaced()) {
+          boardDialog.drawDialog(
+                  "Engine position",
+                  "Choose the fire engine's initial position (green tiles).");
+          addFilterOnTileForEngine();
+        } else if (FireFighterTurnManagerAdvance.getInstance().getCurrentFireFighter().getSpeciality() == FireFighterAdvanceSpecialities.NO_SPECIALITY) {
+          boardDialog.drawDialog(
+                  "Specialty", "Choose your initial specialty on the right panel.");
           addFilterOnTileForChooseInitPos();
           boardChooseRolePanel.drawChooseSpecialtyPanel();
+        } else if(!FireFighterTurnManager.getInstance().currentHasTile()){
+            if (User.getInstance().isMyTurn() || true) {
+              addFilterOnTileForChooseInitPos();
+              boardChooseRolePanel.drawChooseSpecialtyPanel();
+            }
+        } else {
+          boardMovesPanel.drawMovesAndDirectionsPanel();
         }
+
       } else {
-        removeAllPrevFragments();
-        boardMovesPanel.drawMovesAndDirectionsPanel();
+
+        if (!FireFighterTurnManager.getInstance().currentHasTile()) {
+          if (User.getInstance().isMyTurn() || true) {
+            addFilterOnTileForChooseInitPos();
+            boardChooseRolePanel.drawChooseSpecialtyPanel();
+          }
+        } else {
+          removeAllPrevFragments();
+          boardMovesPanel.drawMovesAndDirectionsPanel();
+        }
       }
+
+      drawGameUnitsOnTile();
+      boardGameInfoLabel.drawGameInfoLabel();
     }
   }
 
