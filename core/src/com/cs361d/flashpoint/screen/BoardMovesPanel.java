@@ -151,6 +151,11 @@ public class BoardMovesPanel {
                     removeMovesAndDirectionsPanel();
                     boardChooseRolePanel.drawChooseSpecialtyPanel();
                     break;
+                  case COMMAND_OTHER_FIREFIGHTER:
+                    removeMovesAndDirectionsPanel();
+                    BoardCaptainCommand boardCaptainCommand = new BoardCaptainCommand(stage);
+                    boardCaptainCommand.drawColorsPanel();
+                    break;
                   default:
                 }
               }
