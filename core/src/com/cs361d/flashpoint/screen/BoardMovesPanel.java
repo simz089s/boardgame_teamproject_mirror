@@ -290,7 +290,7 @@ public class BoardMovesPanel {
     return Actions.convertToStringArray(Actions.basicActions());
   }
 
-  private TextureRegionDrawable getTextureForDirectionsTable(Direction d) {
+  public static TextureRegionDrawable getTextureForDirectionsTable(Direction d) {
 
     Texture myTexture = null;
 

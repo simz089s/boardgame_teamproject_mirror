@@ -4,13 +4,11 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.List;
-import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.cs361d.flashpoint.manager.BoardManager;
 import com.cs361d.flashpoint.manager.FireFighterTurnManagerAdvance;
+import com.cs361d.flashpoint.manager.User;
 import com.cs361d.flashpoint.model.BoardElements.Direction;
 import com.cs361d.flashpoint.networking.Client;
 import com.cs361d.flashpoint.networking.ServerCommands;
@@ -26,7 +24,6 @@ public class BoardAcceptCaptainCmd {
 
     static Table specialtiesTable;
 
-    static ScrollPane scrollPane;
     static ScrollPane.ScrollPaneStyle scrollStyle;
     static List<String> listOptions;
     static List.ListStyle listStyle;
@@ -44,34 +41,10 @@ public class BoardAcceptCaptainCmd {
             return;
         }
 
-        String[] cmdInfoFromCaptain = new String[2];
+        Label label = new Label(action.toString(), skinUI);
+        label.setFontScale(1.5f);
 
-        cmdInfoFromCaptain[0] = action.toString();
-        cmdInfoFromCaptain[1] = direction.toString();
-
-        // list style
-        listStyle = new List.ListStyle();
-        listStyle.font = Font.get(22); // font size
-        listStyle.fontColorUnselected = Color.BLACK;
-        listStyle.fontColorSelected = Color.BLACK;
-        listStyle.selection = TextureLoader.getDrawable(50, 100, Color.SKY );
-
-        listOptions = new List<String>(listStyle);
-        listOptions.setItems(cmdInfoFromCaptain);
-
-        // scrollPane style
-        scrollStyle = new ScrollPane.ScrollPaneStyle();
-        scrollStyle.vScrollKnob = TextureLoader.getDrawable(15, 15, Color.DARK_GRAY);
-        scrollStyle.vScroll = TextureLoader.getDrawable(15, 15, Color.LIGHT_GRAY);
-
-        scrollPane = new ScrollPane(listOptions, scrollStyle);
-        scrollPane.setOverscroll(false, false);
-        scrollPane.setFadeScrollBars(false);
-        scrollPane.setScrollingDisabled(true, false);
-        scrollPane.setTransform(true);
-        scrollPane.setScale(1.0f);
-        scrollPane.setWidth(300);
-        scrollPane.setHeight(300);
+        ImageButton directionImg = new ImageButton(BoardMovesPanel.getTextureForDirectionsTable(direction));
 
         // confirm button creation
 
@@ -109,11 +82,12 @@ public class BoardAcceptCaptainCmd {
 
         specialtiesTable = new Table();
 
-        specialtiesTable.add(scrollPane).size(scrollPane.getWidth(), scrollPane.getHeight());
+        specialtiesTable.add(label).size(label.getWidth(), label.getHeight());
         specialtiesTable.row();
-        specialtiesTable.add().size(scrollPane.getWidth(), btnConfirmYes.getHeight());
+        specialtiesTable.add(directionImg).size(100, 100);
         specialtiesTable.row();
         specialtiesTable.add(btnConfirmYes).size(btnConfirmYes.getWidth(), btnConfirmYes.getHeight());
+        specialtiesTable.row();
         specialtiesTable.add(btnConfirmYes).size(btnConfirmNo.getWidth(), btnConfirmNo.getHeight());
 
         specialtiesTable.setPosition(
