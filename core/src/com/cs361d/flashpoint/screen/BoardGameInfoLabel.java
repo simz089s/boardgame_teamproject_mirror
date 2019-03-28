@@ -39,7 +39,7 @@ public class BoardGameInfoLabel {
 
         String specialty = "\n";
         if(BoardManager.getInstance().isAdvanced()) {
-            specialty = "\nSpecialty: " + ((FireFighterAdvanced) FireFighterTurnManager.getInstance().getCurrentFireFighter()).getSpeciality();
+            specialty = "\n[ " + ((FireFighterAdvanced) FireFighterTurnManager.getInstance().getCurrentFireFighter()).getSpeciality() + " ]";
         }
 
         String specialAP = "";

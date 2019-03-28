@@ -180,28 +180,6 @@ public class BoardScreen extends FlashPointScreen {
                   obj.put("j", j_pos);
                   Client.getInstance()
                       .sendCommand(ServerCommands.CHOOSE_INITIAL_POSITION, obj.toJSONString());
-//                  try {
-//                    Thread.sleep(100);
-//                  } catch (InterruptedException e) {
-//                    e.printStackTrace();
-//                  }
-//                  clearAllGameUnits();
-//                  removeAllFilterOnTile();
-//                  drawGameUnitsOnTile();
-//                  boardGameInfoLabel.drawGameInfoLabel();
-//
-//                  if (!FireFighterTurnManager.getInstance().currentHasTile()) {
-//                    addFilterOnTileForChooseInitPos();
-//                    boardChooseRolePanel.drawChooseSpecialtyPanel();
-//                  } else {
-//                    createAllGameButtons();
-//
-//                    // moves panel
-//                    removeAllPrevFragments();
-//                    boardMovesPanel.drawMovesAndDirectionsPanel();
-//
-//                    drawEngineTilesColor();
-//                  }
                 }
 
                 // choose tile on knock down
@@ -258,12 +236,6 @@ public class BoardScreen extends FlashPointScreen {
     } else {
 
       redrawBoard();
-
-      // moves panel
-//      removeAllPrevFragments();
-//      boardMovesPanel.drawMovesAndDirectionsPanel();
-//
-//      drawEngineTilesColor();
     }
 
     Gdx.input.setInputProcessor(stage);
