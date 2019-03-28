@@ -482,7 +482,7 @@ public class Server implements Runnable {
 
         case DRIVE_AMBULANCE:
           direction = Direction.fromString(message);
-          FireFighterTurnManagerAdvance.getInstance().driveAmbulance(direction);
+          mustSendAndRefresh = FireFighterTurnManagerAdvance.getInstance().driveAmbulance(direction);
           break;
         case DRIVE_FIRETRUCK:
           direction = Direction.fromString(message);
