@@ -9,7 +9,6 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 import java.io.*;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -241,6 +240,7 @@ public class DBHandler {
         JSONObject pointOfInterest = new JSONObject();
         pointOfInterest.put("revealed", false);
         pointOfInterest.put("status", -1);
+          pointOfInterest.put("revealed", false);
         currentTile.put("POI", pointOfInterest);
 
         // Fire status
@@ -286,13 +286,13 @@ public class DBHandler {
     JSONObject gameParams = (JSONObject) jsonObject.get("gameParams");
     Object diff = gameParams.get("difficulty");
     if (diff == null || Difficulty.FAMILLY == Difficulty.fromString(diff.toString())) {
-      loadFamilyBoard(jsonString);
+      loadFamBoardFromJSONStr(jsonString);
     } else {
-      loadAdvancedBoard(jsonString);
+      loadAdvBoardFromJSONStr(jsonString);
     }
   }
 
-  private static void loadAdvancedBoard(String jsonString) {
+  private static void loadAdvBoardFromJSONStr(String jsonString) {
     BoardManager.useExperienceGameManager();
 
     try {
@@ -463,7 +463,7 @@ public class DBHandler {
     }
   }
 
-  private static void loadFamilyBoard(String jsonString) {
+  private static void loadFamBoardFromJSONStr(String jsonString) {
     try {
       BoardManager myBoardManager = BoardManager.getInstance();
       JSONParser parser = new JSONParser();
@@ -614,13 +614,13 @@ public class DBHandler {
   public static String getBoardAsString() {
 
     if (BoardManager.getInstance() instanceof BoardManagerAdvanced) {
-      return getBoardAsStringAdvanced();
+      return getJSONStrFromAdvBoard();
     } else {
-      return getBoardAsStringFamily();
+      return getJSONStrFromFamBoard();
     }
   }
 
-  private static String getBoardAsStringAdvanced() {
+  private static String getJSONStrFromAdvBoard() {
 
     BoardManagerAdvanced boardManager = (BoardManagerAdvanced) BoardManager.getInstance();
 
@@ -689,7 +689,7 @@ public class DBHandler {
       JSONObject pointOfInterestObj = new JSONObject();
       if (boardManager.getTiles()[i][j].hasPointOfInterest()) {
         pointOfInterestObj.put("revealed", boardManager.getTiles()[i][j].getVictim().isRevealed());
-
+        pointOfInterestObj.put("cured", boardManager.getTiles()[i][j].getVictim().isCured());
         if (boardManager.getTiles()[i][j].getVictim().isFalseAlarm()) {
           pointOfInterestObj.put("status", 0);
         } else if (!boardManager.getTiles()[i][j].getVictim().isFalseAlarm()) {
@@ -777,7 +777,7 @@ public class DBHandler {
     return newObj.toJSONString();
   }
 
-  private static String getBoardAsStringFamily() {
+  private static String getJSONStrFromFamBoard() {
 
     BoardManager boardManager = BoardManager.getInstance();
 
@@ -838,7 +838,6 @@ public class DBHandler {
       JSONObject pointOfInterestObj = new JSONObject();
       if (boardManager.getTiles()[i][j].hasPointOfInterest()) {
         pointOfInterestObj.put("revealed", boardManager.getTiles()[i][j].getVictim().isRevealed());
-        pointOfInterestObj.put("cured", boardManager.getTiles()[i][j].getVictim().isCured());
         if (boardManager.getTiles()[i][j].getVictim().isFalseAlarm()) {
           pointOfInterestObj.put("status", 0);
         } else if (!boardManager.getTiles()[i][j].getVictim().isFalseAlarm()) {
