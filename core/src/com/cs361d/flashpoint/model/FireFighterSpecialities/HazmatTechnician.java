@@ -8,12 +8,16 @@ import java.util.List;
 public class HazmatTechnician extends FireFighterAdvanced {
 
   public HazmatTechnician(FireFighterColor color) {
-    super(color, 4, 0, FireFighterAdvanceSpecialities.HAZMAT_TECHNICIAN);
+    super(color, 4, 0, FireFighterAdvanceSpecialities.HAZMAT_TECHNICIAN, true);
   }
 
   @Override
   public List<Actions> getActions() {
-    return Actions.hazmatTechnicianActions();
+    List<Actions> actions = Actions.hazmatTechnicianActions();
+    if (!isFirstMove()) {
+      actions.remove(Actions.CREW_CHANGE);
+    }
+    return actions;
   }
 
   public boolean removeHazmatAp() {
@@ -22,6 +26,7 @@ public class HazmatTechnician extends FireFighterAdvanced {
     }
     else {
       actionPoints -= 2;
+      firstMoveDone();
       return true;
     }
   }

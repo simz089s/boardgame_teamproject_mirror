@@ -1,10 +1,10 @@
 package com.cs361d.flashpoint.model.FireFighterSpecialities;
 
+import com.cs361d.flashpoint.model.BoardElements.Direction;
 import com.cs361d.flashpoint.model.BoardElements.FireFighter;
 import com.cs361d.flashpoint.model.BoardElements.FireFighterColor;
 import com.cs361d.flashpoint.model.BoardElements.Tile;
 import com.cs361d.flashpoint.screen.Actions;
-import com.cs361d.flashpoint.screen.BoardScreen;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,7 +17,7 @@ public abstract class FireFighterAdvanced extends FireFighter {
   protected boolean firstTurn;
   private int actionPointToSave = 0;
   private int specialActionPointToSave = 0;
-
+  private boolean firstMove = true;
   protected static final Map<FireFighterColor, FireFighterAdvanced> FIREFIGHTERS =
       new HashMap<FireFighterColor, FireFighterAdvanced>();
 
@@ -25,11 +25,12 @@ public abstract class FireFighterAdvanced extends FireFighter {
       FireFighterColor color,
       int actionPoints,
       int specialActionPoints,
-      FireFighterAdvanceSpecialities role) {
+      FireFighterAdvanceSpecialities role, boolean firstMove) {
     super(color, actionPoints);
     this.specialActionPoints = specialActionPoints;
     this.SPECIALITY = role;
     this.firstTurn = true;
+    this.firstMove = firstMove;
   }
 
   public void firstTurnDone() {
@@ -46,7 +47,11 @@ public abstract class FireFighterAdvanced extends FireFighter {
 
   @Override
   public List<Actions> getActions() {
-    return Actions.advancedActions();
+    List<Actions> actions = Actions.advancedActions();
+    if (!firstTurn) {
+      actions.remove(Actions.CREW_CHANGE);
+    }
+    return actions;
   }
 
   public static void reset() {
@@ -156,6 +161,44 @@ public abstract class FireFighterAdvanced extends FireFighter {
   }
 
   @Override
+  public boolean chopAP() {
+    if(super.chopAP())
+    {
+      firstMoveDone();
+      return true;
+    }
+    return false;
+  }
+
+  @Override
+  public boolean openCloseDoorAP() {
+    if(super.openCloseDoorAP()) {
+      firstMoveDone();
+      return true;
+    }
+    return false;
+  }
+
+  @Override
+  public boolean extinguishAP() {
+    if (super.extinguishAP()) {
+      firstMoveDone();
+      return true;
+    }
+    return false;
+  }
+
+  @Override
+  public boolean moveAP(Direction d) {
+    if (super.moveAP(d)) {
+      firstMoveDone();
+      return true;
+    }
+    return false;
+  }
+
+
+  @Override
   public void resetActionPoints() {
     this.actionPoints += actionsPointPerTurn;
     if (this.actionPoints > maxActionPoint) {
@@ -163,6 +206,7 @@ public abstract class FireFighterAdvanced extends FireFighter {
     }
     this.specialActionPoints = maxSpecialAp;
     this.hadVeteranBonus = false;
+    this.firstMove = true;
   }
 
   public void setActionPoint(int points) {
@@ -189,6 +233,7 @@ public abstract class FireFighterAdvanced extends FireFighter {
       return false;
     }
     actionPoints -= 2;
+    firstMoveDone();
     return true;
   }
 
@@ -202,6 +247,7 @@ public abstract class FireFighterAdvanced extends FireFighter {
       return false;
     }
     actionPoints -= cost;
+    firstMoveDone();
     return true;
   }
 
@@ -210,6 +256,7 @@ public abstract class FireFighterAdvanced extends FireFighter {
       return false;
     } else {
       actionPoints -= 4;
+      firstMoveDone();
       return true;
     }
   }
@@ -219,6 +266,7 @@ public abstract class FireFighterAdvanced extends FireFighter {
       return false;
     } else {
       actionPoints -= 2;
+      firstMoveDone();
       return true;
     }
   }
@@ -257,6 +305,7 @@ public abstract class FireFighterAdvanced extends FireFighter {
       return false;
     } else {
       actionPoints -= 2;
+      firstMoveDone();
       return true;
     }
   }
@@ -288,5 +337,17 @@ public abstract class FireFighterAdvanced extends FireFighter {
   public void resetSavedActionPoints() {
     this.specialActionPoints = this.specialActionPointToSave;
     this.actionPoints = this.actionPointToSave;
+  }
+
+  public boolean isFirstMove() {
+    return firstMove;
+  }
+
+  public void setFirstMove(boolean firstMove) {
+    this.firstMove = firstMove;
+  }
+
+  protected void firstMoveDone() {
+    this.firstMove = false;
   }
 }

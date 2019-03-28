@@ -4,7 +4,7 @@ import com.cs361d.flashpoint.model.BoardElements.FireFighterColor;
 
 public class CAFSFirefighter extends FireFighterAdvanced {
   public CAFSFirefighter(FireFighterColor color) {
-    super(color,3,3, FireFighterAdvanceSpecialities.CAFS_FIREFIGHTER);
+    super(color,3,3, FireFighterAdvanceSpecialities.CAFS_FIREFIGHTER, true);
     this.maxSpecialAp = 3;
     this.actionsPointPerTurn = 3;
   }
@@ -13,6 +13,7 @@ public class CAFSFirefighter extends FireFighterAdvanced {
   public boolean extinguishAP() {
     if (!(specialActionPoints < 1)) {
       specialActionPoints--;
+      firstMoveDone();
       return true;
     }
     else {

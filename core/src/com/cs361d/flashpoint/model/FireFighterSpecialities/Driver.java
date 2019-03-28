@@ -5,7 +5,7 @@ import com.cs361d.flashpoint.model.BoardElements.FireFighterColor;
 public class Driver extends FireFighterAdvanced {
 
   public Driver(FireFighterColor color) {
-    super(color, 4, 0, FireFighterAdvanceSpecialities.DRIVER);
+    super(color, 4, 0, FireFighterAdvanceSpecialities.DRIVER, true);
     this.maxSpecialAp = 0;
   }
 
@@ -16,6 +16,7 @@ public class Driver extends FireFighterAdvanced {
     }
     else {
       actionPoints -= 2;
+      firstMoveDone();
       return true;
     }
   }

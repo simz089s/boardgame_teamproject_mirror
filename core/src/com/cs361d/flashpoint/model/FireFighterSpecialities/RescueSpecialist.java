@@ -6,7 +6,7 @@ import com.cs361d.flashpoint.model.BoardElements.FireFighterColor;
 public class RescueSpecialist extends FireFighterAdvanced {
 
   public RescueSpecialist(FireFighterColor color) {
-    super(color, 4, 3, FireFighterAdvanceSpecialities.RESCUE_SPECIALIST);
+    super(color, 4, 3, FireFighterAdvanceSpecialities.RESCUE_SPECIALIST, true);
     this.maxSpecialAp = 3;
   }
 
@@ -18,6 +18,7 @@ public class RescueSpecialist extends FireFighterAdvanced {
     }
     if (specialActionPoints > cost) {
       specialActionPoints -= cost;
+      firstMoveDone();
       return true;
     } else {
       return super.moveAP(d);
@@ -28,6 +29,7 @@ public class RescueSpecialist extends FireFighterAdvanced {
   public boolean chopAP() {
     if (!(actionPoints < 1)) {
       actionPoints--;
+      firstMoveDone();
       return true;
     }
     return false;
@@ -37,6 +39,7 @@ public class RescueSpecialist extends FireFighterAdvanced {
   public boolean extinguishAP() {
     if (!(actionPoints < 2)) {
       actionPoints -= 2;
+      firstMoveDone();
       return true;
     }
     return false;

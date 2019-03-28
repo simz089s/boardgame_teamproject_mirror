@@ -112,6 +112,7 @@ public class FireFighterTurnManagerAdvance extends FireFighterTurnManager {
       newF.setTile(currentTile);
       FIREFIGHTERS.removeFirst();
       FIREFIGHTERS.addFirst(newF);
+      newF.setFirstMove(false);
       return true;
     } else {
       sendActionRejectedMessageToCurrentPlayer(
