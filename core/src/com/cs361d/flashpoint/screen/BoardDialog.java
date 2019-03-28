@@ -29,7 +29,7 @@ public class BoardDialog {
 
     public void drawDialog(String title, String message) {
         Dialog dialog =
-                new Dialog(title, skinUI, "dialog") {
+                new Dialog("   " + title + "   ", skinUI, "dialog") {
                     public void result(Object obj) {
                         remove();
                     }

@@ -2,6 +2,8 @@ package com.cs361d.flashpoint.screen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
@@ -9,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Json;
 import com.cs361d.flashpoint.manager.BoardManager;
 import com.cs361d.flashpoint.model.BoardElements.Direction;
@@ -49,15 +52,15 @@ public class BoardOnKnockDownPanel {
         label.setFontScale(1.3f);
         label.setColor(Color.BLACK);
         label.setPosition(
-                800,
+                900,
                 Gdx.graphics.getHeight() - 300);
 
         btnStayKnockDown = new TextButton("Get knocked down!", skinUI, "default");
         btnStayKnockDown.setWidth(label.getWidth());
-        btnStayKnockDown.setHeight(30);
-        btnStayKnockDown.setColor(Color.GREEN);
+        btnStayKnockDown.setHeight(35);
+        btnStayKnockDown.setColor(Color.CHARTREUSE);
         btnStayKnockDown.setPosition(
-                800,
+                900,
                 Gdx.graphics.getHeight() - 350);
 
         btnStayKnockDown.addListener(
@@ -81,10 +84,16 @@ public class BoardOnKnockDownPanel {
 
     private static void drawDirectionsPanelTable(List<Direction> directions) {
 
+        Texture myTexture = new Texture(Gdx.files.internal("icons/arrow_r.png"));
+        TextureRegion myTextureRegion = new TextureRegion(myTexture);
+        TextureRegionDrawable myTexRegionDrawable = new TextureRegionDrawable(myTextureRegion);
+
         ImageButton btnDirectionU = new ImageButton(BoardMovesPanel.getTextureForDirectionsTable(Direction.TOP));
         ImageButton btnDirectionD = new ImageButton(BoardMovesPanel.getTextureForDirectionsTable(Direction.BOTTOM));
         ImageButton btnDirectionL = new ImageButton(BoardMovesPanel.getTextureForDirectionsTable(Direction.LEFT));
         ImageButton btnDirectionR = new ImageButton(BoardMovesPanel.getTextureForDirectionsTable(Direction.RIGHT));
+
+        ImageButton btnDirectionEmpty = new ImageButton(myTexRegionDrawable);
 
         directionTable = new Table();
 
@@ -92,27 +101,37 @@ public class BoardOnKnockDownPanel {
 
         if (directions.contains(Direction.TOP)) {
             directionTable.add(btnDirectionU).size(DIRECTION_BUTTON_SIZE, DIRECTION_BUTTON_SIZE);
+        } else {
+            directionTable.add(btnDirectionEmpty).size(DIRECTION_BUTTON_SIZE, DIRECTION_BUTTON_SIZE);
         }
+
         directionTable.add();
 
         directionTable.row();
         if (directions.contains(Direction.LEFT)) {
             directionTable.add(btnDirectionL).size(DIRECTION_BUTTON_SIZE, DIRECTION_BUTTON_SIZE);
+        } else {
+            directionTable.add(btnDirectionEmpty).size(DIRECTION_BUTTON_SIZE, DIRECTION_BUTTON_SIZE);
         }
 
         directionTable.add();
 
         if (directions.contains(Direction.RIGHT)) {
             directionTable.add(btnDirectionR).size(DIRECTION_BUTTON_SIZE, DIRECTION_BUTTON_SIZE);
+        } else {
+            directionTable.add(btnDirectionEmpty).size(DIRECTION_BUTTON_SIZE, DIRECTION_BUTTON_SIZE);
         }
 
         directionTable.row();
 
-        directionTable.add();
+        directionTable.add(btnDirectionEmpty);
 
         if (directions.contains(Direction.BOTTOM)) {
             directionTable.add(btnDirectionD).size(DIRECTION_BUTTON_SIZE, DIRECTION_BUTTON_SIZE);
+        } else {
+            directionTable.add(btnDirectionEmpty).size(DIRECTION_BUTTON_SIZE, DIRECTION_BUTTON_SIZE);
         }
+
         directionTable.add();
 
         directionTable.setPosition(1000, Gdx.graphics.getHeight() - directionTable.getHeight() - 550);
