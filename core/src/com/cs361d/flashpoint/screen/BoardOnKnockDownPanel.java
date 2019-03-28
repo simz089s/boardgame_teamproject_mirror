@@ -84,7 +84,7 @@ public class BoardOnKnockDownPanel {
 
     private static void drawDirectionsPanelTable(List<Direction> directions) {
 
-        Texture myTexture = new Texture(Gdx.files.internal("icons/arrow_r.png"));
+        Texture myTexture = new Texture(Gdx.files.internal("icons/arrow_empty.png"));
         TextureRegion myTextureRegion = new TextureRegion(myTexture);
         TextureRegionDrawable myTexRegionDrawable = new TextureRegionDrawable(myTextureRegion);
 
@@ -108,13 +108,14 @@ public class BoardOnKnockDownPanel {
         directionTable.add();
 
         directionTable.row();
+
         if (directions.contains(Direction.LEFT)) {
             directionTable.add(btnDirectionL).size(DIRECTION_BUTTON_SIZE, DIRECTION_BUTTON_SIZE);
         } else {
             directionTable.add(btnDirectionEmpty).size(DIRECTION_BUTTON_SIZE, DIRECTION_BUTTON_SIZE);
         }
 
-        directionTable.add();
+        directionTable.add(btnDirectionEmpty);
 
         if (directions.contains(Direction.RIGHT)) {
             directionTable.add(btnDirectionR).size(DIRECTION_BUTTON_SIZE, DIRECTION_BUTTON_SIZE);
@@ -124,8 +125,8 @@ public class BoardOnKnockDownPanel {
 
         directionTable.row();
 
-        directionTable.add(btnDirectionEmpty);
-
+        directionTable.add();
+        
         if (directions.contains(Direction.BOTTOM)) {
             directionTable.add(btnDirectionD).size(DIRECTION_BUTTON_SIZE, DIRECTION_BUTTON_SIZE);
         } else {
