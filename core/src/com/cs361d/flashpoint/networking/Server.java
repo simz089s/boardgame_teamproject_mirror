@@ -6,7 +6,6 @@ import com.cs361d.flashpoint.model.BoardElements.FireFighter;
 import com.cs361d.flashpoint.model.BoardElements.FireFighterColor;
 import com.cs361d.flashpoint.model.BoardElements.Tile;
 import com.cs361d.flashpoint.model.FireFighterSpecialities.FireFighterAdvanceSpecialities;
-import com.cs361d.flashpoint.model.FireFighterSpecialities.FireFighterAdvanced;
 import com.cs361d.flashpoint.screen.Actions;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;

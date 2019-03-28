@@ -2,7 +2,6 @@ package com.cs361d.flashpoint.manager;
 
 import com.cs361d.flashpoint.model.BoardElements.*;
 import com.cs361d.flashpoint.model.FireFighterSpecialities.*;
-import com.cs361d.flashpoint.networking.Client;
 import com.cs361d.flashpoint.networking.ClientCommands;
 import com.cs361d.flashpoint.networking.DriverResponse;
 import com.cs361d.flashpoint.networking.Server;

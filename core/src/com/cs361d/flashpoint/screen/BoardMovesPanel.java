@@ -15,7 +15,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.cs361d.flashpoint.manager.*;
 import com.cs361d.flashpoint.model.BoardElements.Direction;
 import com.cs361d.flashpoint.networking.Client;
-import org.json.simple.JSONObject;
 
 import java.util.ArrayList;
 import static com.cs361d.flashpoint.screen.BoardScreen.*;

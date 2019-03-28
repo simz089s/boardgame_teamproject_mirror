@@ -1,10 +1,8 @@
 package com.cs361d.flashpoint.manager;
 
 import com.cs361d.flashpoint.model.BoardElements.*;
-import com.cs361d.flashpoint.model.FireFighterSpecialities.FireCaptain;
 import com.cs361d.flashpoint.networking.ClientCommands;
 import com.cs361d.flashpoint.networking.Server;
-import com.cs361d.flashpoint.screen.BoardScreen;
 import org.jetbrains.annotations.NotNull;
 import org.json.simple.JSONObject;
 

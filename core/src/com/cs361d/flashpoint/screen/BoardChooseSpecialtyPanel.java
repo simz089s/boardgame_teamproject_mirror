@@ -3,21 +3,16 @@ package com.cs361d.flashpoint.screen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.cs361d.flashpoint.manager.BoardManager;
-import com.cs361d.flashpoint.manager.BoardManagerAdvanced;
 import com.cs361d.flashpoint.manager.FireFighterTurnManagerAdvance;
-import com.cs361d.flashpoint.model.FireFighterSpecialities.FireFighterAdvanceSpecialities;
 import com.cs361d.flashpoint.networking.Client;
 import com.cs361d.flashpoint.networking.ServerCommands;
 
 import java.util.ArrayList;
 
-import static com.cs361d.flashpoint.screen.BoardScreen.boardGameInfoLabel;
-import static com.cs361d.flashpoint.screen.BoardScreen.boardMovesPanel;
 import static com.cs361d.flashpoint.screen.FlashPointScreen.skinUI;
 
 public class BoardChooseSpecialtyPanel {

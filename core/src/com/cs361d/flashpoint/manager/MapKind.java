@@ -1,7 +1,5 @@
 package com.cs361d.flashpoint.manager;
 
-import com.cs361d.flashpoint.model.BoardElements.CarrierStatus;
-
 public enum MapKind {
     MAP1("map1"),
     MAP2("map2"),

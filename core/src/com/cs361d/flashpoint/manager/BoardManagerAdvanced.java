@@ -1,17 +1,10 @@
 package com.cs361d.flashpoint.manager;
 
 import com.cs361d.flashpoint.model.BoardElements.*;
-import com.cs361d.flashpoint.model.FireFighterSpecialities.FireCaptain;
 import com.cs361d.flashpoint.model.FireFighterSpecialities.FireFighterAdvanceSpecialities;
 import com.cs361d.flashpoint.model.FireFighterSpecialities.FireFighterAdvanced;
 import com.cs361d.flashpoint.networking.ClientCommands;
 import com.cs361d.flashpoint.networking.Server;
-import com.cs361d.flashpoint.screen.BoardDialog;
-import com.cs361d.flashpoint.screen.BoardScreen;
-import org.json.simple.JSONObject;
-import sun.invoke.empty.Empty;
-
-import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;

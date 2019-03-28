@@ -1,13 +1,10 @@
 package com.cs361d.flashpoint.model.FireFighterSpecialities;
 
-import com.cs361d.flashpoint.manager.FireFighterTurnManager;
-import com.cs361d.flashpoint.manager.FireFighterTurnManagerAdvance;
 import com.cs361d.flashpoint.model.BoardElements.FireFighter;
 import com.cs361d.flashpoint.model.BoardElements.FireFighterColor;
 import com.cs361d.flashpoint.model.BoardElements.Tile;
 import com.cs361d.flashpoint.screen.Actions;
 import com.cs361d.flashpoint.screen.BoardScreen;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
