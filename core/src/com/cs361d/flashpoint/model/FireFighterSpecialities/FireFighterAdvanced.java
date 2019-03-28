@@ -1,13 +1,10 @@
 package com.cs361d.flashpoint.model.FireFighterSpecialities;
 
-import com.cs361d.flashpoint.manager.FireFighterTurnManager;
-import com.cs361d.flashpoint.manager.FireFighterTurnManagerAdvance;
 import com.cs361d.flashpoint.model.BoardElements.FireFighter;
 import com.cs361d.flashpoint.model.BoardElements.FireFighterColor;
 import com.cs361d.flashpoint.model.BoardElements.Tile;
 import com.cs361d.flashpoint.screen.Actions;
 import com.cs361d.flashpoint.screen.BoardScreen;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -170,7 +167,10 @@ public abstract class FireFighterAdvanced extends FireFighter {
 
   public void setActionPoint(int points) {
     if (points > maxActionPoint) {
-      actionPoints = maxActionPoint;
+        actionPoints = maxActionPoint;
+      if (hadVeteranBonus) {
+        actionPoints++;
+      }
     } else {
       actionPoints = points;
     }
@@ -232,13 +232,13 @@ public abstract class FireFighterAdvanced extends FireFighter {
     }
   }
 
-  public void veteranBonus() {
+  public boolean veteranBonus() {
     if (!hadVeteranBonus) {
       actionPoints++;
       hadVeteranBonus = true;
-      BoardScreen.getDialog()
-          .drawDialog("Extra AP", "Congratulation you just gained one extra AP from the veteran!");
-    }
+      return true;
+      }
+    return false;
   }
 
   public void setHadVeteranBonus(boolean value) {

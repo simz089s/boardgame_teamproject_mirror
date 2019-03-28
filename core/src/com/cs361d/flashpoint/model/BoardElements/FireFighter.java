@@ -1,8 +1,6 @@
 package com.cs361d.flashpoint.model.BoardElements;
 
-import com.cs361d.flashpoint.model.FireFighterSpecialities.FireFighterAdvanceSpecialities;
 import com.cs361d.flashpoint.screen.Actions;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
