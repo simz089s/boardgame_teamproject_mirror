@@ -531,9 +531,9 @@ public class BoardManager implements Iterable<Tile> {
       if (t.hasRealVictim()) {
         t.setNullVictim();
         numVictimSaved++;
-        Server.sendCommandToAllClients(ClientCommands.SET_GAME_STATE, DBHandler.getBoardAsString());
-        Server.sendCommandToAllClients(ClientCommands.REFRESH_BOARD_SCREEN,"");
-        sendMessageToGUI("Victim Saved", "Congratulations, you saved one victim!");
+        Server.sendToClientsInGame(ClientCommands.SET_GAME_STATE, DBHandler.getBoardAsString());
+        Server.sendToClientsInGame(ClientCommands.REFRESH_BOARD_SCREEN,"");
+        sendMessageToGUI("Victim Saved", "Congratulations, a victim was saved!");
         return true;
       }
     }
@@ -627,13 +627,6 @@ public class BoardManager implements Iterable<Tile> {
     JSONObject obj = new JSONObject();
     obj.put("title",title);
     obj.put("message",message);
-    String ip = null;
-    // Here if the command comes from the captain we send the result to its screen
-      ip = Server.getClientIP(FireFighterTurnManager.getInstance().getCurrentFireFighter().getColor());
-    if (ip == null) {
-      throw new IllegalArgumentException("The color " + FireFighterTurnManager.getInstance().getCurrentFireFighter().getColor() +" is not assigned to a client");
-    }
-    Server.sendCommandToSpecificClient(ClientCommands.SHOW_MESSAGE_ON_SCREEN,obj.toJSONString(),ip);
-
+    Server.sendToClientsInGame(ClientCommands.SHOW_MESSAGE_ON_SCREEN,obj.toJSONString());
   }
 }

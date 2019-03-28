@@ -285,7 +285,7 @@ public class Server implements Runnable {
                   isEmpty() ? "game is now full!" : notYetAssigned.size() + " players left to join";
               obj1.put("title", "A new player joined the game");
               obj1.put("message", "The player: " + message + " joined the game, " + rightSide);
-              sendCommandToAllClients(ClientCommands.SHOW_MESSAGE_ON_SCREEN, obj1.toJSONString());
+              sendToClientsInGame(ClientCommands.SHOW_MESSAGE_ON_SCREEN, obj1.toJSONString());
 
             } else {
               JSONObject obj1 = new JSONObject();
@@ -376,8 +376,8 @@ public class Server implements Runnable {
           serverExecuteGameCommand(jsonObject.get("command").toString(), message, ip);
       }
       if (mustSendAndRefresh) {
-        Server.sendCommandToAllClients(ClientCommands.SET_GAME_STATE, DBHandler.getBoardAsString());
-        Server.sendCommandToAllClients(ClientCommands.REFRESH_BOARD_SCREEN, "");
+        Server.sendToClientsInGame(ClientCommands.SET_GAME_STATE, DBHandler.getBoardAsString());
+        Server.sendToClientsInGame(ClientCommands.REFRESH_BOARD_SCREEN, "");
       }
 
     } catch (Exception e) {
@@ -407,7 +407,6 @@ public class Server implements Runnable {
     try {
       Direction direction;
       boolean mustSendAndRefresh = false;
-      boolean refreshCrewChangePanel = false;
       switch (action) {
         case MOVE:
           direction = Direction.fromString(message);
@@ -462,6 +461,7 @@ public class Server implements Runnable {
           mustSendAndRefresh =
               FireFighterTurnManagerAdvance.getInstance().driveFireTruck(direction);
           break;
+
         case REMOVE_HAZMAT:
           mustSendAndRefresh = FireFighterTurnManagerAdvance.getInstance().disposeHazmat();
           break;
@@ -473,6 +473,7 @@ public class Server implements Runnable {
           Tile t = BoardManager.getInstance().getTileAt(i, j);
           mustSendAndRefresh = FireFighterTurnManagerAdvance.getInstance().flipPOI(t);
           break;
+
         case CURE_VICTIM:
           mustSendAndRefresh = FireFighterTurnManagerAdvance.getInstance().treatVictim();
           break;
@@ -506,8 +507,8 @@ public class Server implements Runnable {
         default:
       }
       if (mustSendAndRefresh) {
-        Server.sendCommandToAllClients(ClientCommands.SET_GAME_STATE, DBHandler.getBoardAsString());
-        Server.sendCommandToAllClients(ClientCommands.REFRESH_BOARD_SCREEN, "");
+        Server.sendToClientsInGame(ClientCommands.SET_GAME_STATE, DBHandler.getBoardAsString());
+        Server.sendToClientsInGame(ClientCommands.REFRESH_BOARD_SCREEN, "");
       }
     } catch (ParseException e) {
       e.printStackTrace();
@@ -524,5 +525,11 @@ public class Server implements Runnable {
       array.add(message);
     }
     return array.toJSONString();
+  }
+
+  public static void sendToClientsInGame(ClientCommands command, String message) {
+    for (String ip : colorsToClient.values()) {
+        sendCommandToSpecificClient(command, message, ip);
+    }
   }
 }

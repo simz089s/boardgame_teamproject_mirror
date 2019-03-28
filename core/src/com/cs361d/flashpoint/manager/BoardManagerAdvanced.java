@@ -177,8 +177,8 @@ public class BoardManagerAdvanced extends BoardManager {
       if (t.hasRealVictim() && t.hasAmbulance()) {
         numVictimSaved++;
         t.setNullVictim();
-        Server.sendCommandToAllClients(ClientCommands.SET_GAME_STATE, DBHandler.getBoardAsString());
-        Server.sendCommandToAllClients(ClientCommands.REFRESH_BOARD_SCREEN,"");
+        Server.sendToClientsInGame(ClientCommands.SET_GAME_STATE, DBHandler.getBoardAsString());
+        Server.sendToClientsInGame(ClientCommands.REFRESH_BOARD_SCREEN,"");
         sendMessageToGUI("Victim Saved", "Congratulations, you saved one victim!");
         return true;
       }
