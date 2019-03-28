@@ -1,10 +1,7 @@
 package com.cs361d.flashpoint.networking;
 
 import com.cs361d.flashpoint.manager.*;
-import com.cs361d.flashpoint.model.BoardElements.Direction;
-import com.cs361d.flashpoint.model.BoardElements.FireFighter;
-import com.cs361d.flashpoint.model.BoardElements.FireFighterColor;
-import com.cs361d.flashpoint.model.BoardElements.Tile;
+import com.cs361d.flashpoint.model.BoardElements.*;
 import com.cs361d.flashpoint.model.FireFighterSpecialities.FireFighterAdvanceSpecialities;
 import com.cs361d.flashpoint.model.FireFighterSpecialities.FireFighterAdvanced;
 import com.cs361d.flashpoint.screen.Actions;
@@ -378,8 +375,8 @@ public class Server implements Runnable {
           break;
 
         case ASK_DRIVER_MSG:
-          DriverResponse response = DriverResponse.fromString(message);
-          FireFighterTurnManagerAdvance.getInstance().setDriverResponse(response);
+          UserResponse response = UserResponse.fromString(message);
+          FireFighterTurnManagerAdvance.getInstance().setUserResponse(response);
           FireFighterTurnManagerAdvance.getInstance().stopWaiting();
           break;
 
@@ -395,6 +392,12 @@ public class Server implements Runnable {
             BoardManagerAdvanced.getInstance().moveForKnowckDown(f, d);
           }
           BoardManagerAdvanced.getInstance().stopWaiting();
+          break;
+
+        case REPLY_MOVE_WITH_VEHICULE:
+          FireFighterTurnManagerAdvance.getInstance().setUserResponse(UserResponse.fromString(message));
+          FireFighterTurnManagerAdvance.getInstance().stopWaiting();
+          mustSendAndRefresh = true;
           break;
 
         default:
@@ -479,8 +482,7 @@ public class Server implements Runnable {
 
         case DRIVE_AMBULANCE:
           direction = Direction.fromString(message);
-          mustSendAndRefresh =
-              FireFighterTurnManagerAdvance.getInstance().driveAmbulance(direction);
+          FireFighterTurnManagerAdvance.getInstance().driveAmbulance(direction);
           break;
         case DRIVE_FIRETRUCK:
           direction = Direction.fromString(message);
