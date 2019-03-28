@@ -74,6 +74,7 @@ public class BoardOnKnockDownPanel {
 
                         label.remove();
                         btnStayKnockDown.remove();
+                        removeTableDirectionsPanel();
                     }
                 });
 
@@ -126,7 +127,7 @@ public class BoardOnKnockDownPanel {
         directionTable.row();
 
         directionTable.add();
-        
+
         if (directions.contains(Direction.BOTTOM)) {
             directionTable.add(btnDirectionD).size(DIRECTION_BUTTON_SIZE, DIRECTION_BUTTON_SIZE);
         } else {
@@ -135,7 +136,7 @@ public class BoardOnKnockDownPanel {
 
         directionTable.add();
 
-        directionTable.setPosition(1000, Gdx.graphics.getHeight() - directionTable.getHeight() - 550);
+        directionTable.setPosition(1000, Gdx.graphics.getHeight() - directionTable.getHeight() - 450);
 
 
     btnDirectionU.addListener(
