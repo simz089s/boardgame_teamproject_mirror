@@ -10,13 +10,11 @@ import com.cs361d.flashpoint.screen.*;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-import sun.java2d.opengl.OGLContext;
 
 import java.io.*;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class Client {
@@ -157,7 +155,7 @@ public class Client {
               new Runnable() {
                 @Override
                 public void run() {
-                  BoardScreen.setLobbyPage();
+                  BoardScreen.setLobbyPageOutOfGame();
                 }
               });
           break;
@@ -297,6 +295,7 @@ public class Client {
                           }
                       });
               break;
+
           case LOAD_SAVED_GAMES:
              final ArrayList<String> games = new ArrayList<String>();
               for (Object o: (JSONArray) parser.parse(message)
@@ -311,6 +310,16 @@ public class Client {
                               BoardScreen.setLobbyPage();
                           }
                       });
+              break;
+          case REFRESH_LOBBY_SCREEN:
+              Gdx.app.postRunnable(
+                      new Runnable() {
+                          @Override
+                          public void run() {
+                              BoardScreen.removeAllPrevFragments();
+                          }
+                      });
+
               break;
         default:
       }

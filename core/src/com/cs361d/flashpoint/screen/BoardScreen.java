@@ -747,7 +747,7 @@ public class BoardScreen extends FlashPointScreen {
     activateKnockDownChoosePos = true;
   }
 
-  private void addFilterOnTileForAmbulance() {
+  private static void addFilterOnTileForAmbulance() {
     Tile[][] tiles = BoardManager.getInstance().getTiles();
     for (int i = 0; i < tiles.length; i++) {
       for (int j = 0; j < tiles[i].length; j++) {
@@ -880,11 +880,16 @@ public class BoardScreen extends FlashPointScreen {
     return game.getScreen() == game.boardScreen;
   }
 
-  public static void setLobbyPage() {
+  public static void setLobbyPageOutOfGame() {
     audioMusic.stop();
     if (game.getScreen() == game.boardScreen) {
       Client.getInstance().sendCommand(ServerCommands.GET_SAVED_GAMES,"");
     }
+  }
+
+  public static void setLobbyPage() {
+    audioMusic.stop();
+      Client.getInstance().sendCommand(ServerCommands.GET_SAVED_GAMES,"");
   }
 
   public static void setBoardScreen() {
@@ -922,6 +927,9 @@ public class BoardScreen extends FlashPointScreen {
 
       if (BoardManager.getInstance().isAdvanced()) { // experienced version
         if (!(BoardManagerAdvanced.getInstance()).hasAmbulancePlaced()) {
+          boardDialog.drawDialog(
+                  "Ambulance position", "Choose the ambulance's initial position (green tiles).");
+          addFilterOnTileForAmbulance();
 
         } else if (!(BoardManagerAdvanced.getInstance()).hasFireTruckPlaced()) {
           gameSetupActions = GameSetupActions.PLACE_FIRETRUCK;
