@@ -12,11 +12,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-import com.badlogic.gdx.utils.Json;
 import com.cs361d.flashpoint.manager.BoardManager;
 import com.cs361d.flashpoint.model.BoardElements.Direction;
 import com.cs361d.flashpoint.networking.Client;
-import com.cs361d.flashpoint.networking.Server;
 import com.cs361d.flashpoint.networking.ServerCommands;
 import org.json.simple.JSONObject;
 
@@ -24,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.cs361d.flashpoint.screen.BoardScreen.removeAllPrevFragments;
+import static com.cs361d.flashpoint.screen.BoardScreen.setCurrentFragment;
 import static com.cs361d.flashpoint.screen.BoardScreen.stage;
 import static com.cs361d.flashpoint.screen.FlashPointScreen.skinUI;
 
@@ -40,13 +39,15 @@ public class BoardOnKnockDownPanel {
 
     public static void drawOnKnockDownPanel(List<Direction> directions) {
 
+        if (!BoardManager.getInstance().isAdvanced()) {
+            return;
+        }
+
         removeAllPrevFragments();
 
         drawDirectionsPanelTable(directions);
 
-        if (!BoardManager.getInstance().isAdvanced()) {
-            return;
-        }
+        setCurrentFragment(Fragment.CALL_FOR_ACTION);
 
         label = new Label("What do you want to do?", skinUI);
         label.setFontScale(1.3f);
@@ -211,6 +212,8 @@ public class BoardOnKnockDownPanel {
             directionsTableList.get(i).remove();
         }
         directionsTableList.clear();
+
+        setCurrentFragment(Fragment.EMPTY);
     }
 
 

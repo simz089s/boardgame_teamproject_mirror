@@ -901,7 +901,7 @@ public class BoardScreen extends FlashPointScreen {
     } else if (fragment == Fragment.STATS) {
       boardStatsFragment.drawStatsFragment();
     } else if (fragment == Fragment.CHAT) {
-      boardChatFragment.createChatFragment();
+      boardChatFragment.drawChatFragment();
     } else if (fragment == Fragment.CHOOSESPECIALTY) {
       boardChooseRolePanel.drawChooseSpecialtyPanel();
     }
@@ -978,6 +978,10 @@ public class BoardScreen extends FlashPointScreen {
     }
   }
 
+  public static void setCurrentFragment(Fragment currFrag){
+    currentFragment = currFrag;
+  }
+
   public static boolean isChatFragment() {
     return currentFragment == Fragment.CHAT;
   }
@@ -988,6 +992,10 @@ public class BoardScreen extends FlashPointScreen {
 
   public static boolean isStatsFragment() {
     return currentFragment == Fragment.STATS;
+  }
+
+  public static boolean isCallForActionFragment() {
+    return currentFragment == Fragment.CALL_FOR_ACTION;
   }
 
   public static BoardDialog getDialog() {

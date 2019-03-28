@@ -13,6 +13,7 @@ import com.cs361d.flashpoint.networking.ServerCommands;
 import java.util.ArrayList;
 
 import static com.cs361d.flashpoint.screen.BoardScreen.removeAllPrevFragments;
+import static com.cs361d.flashpoint.screen.BoardScreen.setCurrentFragment;
 import static com.cs361d.flashpoint.screen.BoardScreen.stage;
 import static com.cs361d.flashpoint.screen.FlashPointScreen.skinUI;
 
@@ -24,11 +25,13 @@ public class BoardFireDeckGunPanel {
 
     public static void drawFireDeckGunPanel() {
 
-        removeAllPrevFragments();
-
         if (!BoardManager.getInstance().isAdvanced()) {
             return;
         }
+
+        removeAllPrevFragments();
+
+        setCurrentFragment(Fragment.CALL_FOR_ACTION);
 
         Label label = new Label("What do you want to do?", skinUI);
         label.setFontScale(1.5f);
@@ -70,6 +73,8 @@ public class BoardFireDeckGunPanel {
             fireDeckGunTablesList.get(i).remove();
         }
         fireDeckGunTablesList.clear();
+
+        setCurrentFragment(Fragment.EMPTY);
     }
 
 

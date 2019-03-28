@@ -5,6 +5,7 @@ public enum Fragment {
     CHOOSESPECIALTY("choose_specialty"),
     STATS("stats"),
     EMPTY("empty"),
+    CALL_FOR_ACTION("CALL_FOR_ACTION"),
     CHAT("chat");
 
     private String text;

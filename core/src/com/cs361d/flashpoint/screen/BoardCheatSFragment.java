@@ -36,6 +36,10 @@ public class BoardCheatSFragment {
 
     public void drawCheatSFragment() {
 
+        if(BoardScreen.isCallForActionFragment()){
+            return;
+        }
+
         // scrollPane style
         scrollStyle = new ScrollPane.ScrollPaneStyle();
         scrollStyle.vScrollKnob = TextureLoader.getDrawable(15, 15, Color.DARK_GRAY);

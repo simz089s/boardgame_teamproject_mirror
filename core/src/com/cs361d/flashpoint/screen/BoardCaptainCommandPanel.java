@@ -20,7 +20,7 @@ import org.json.simple.JSONObject;
 
 import java.util.ArrayList;
 
-import static com.cs361d.flashpoint.screen.BoardScreen.boardMovesPanel;
+import static com.cs361d.flashpoint.screen.BoardScreen.setCurrentFragment;
 
 public class BoardCaptainCommandPanel {
 
@@ -49,6 +49,8 @@ public class BoardCaptainCommandPanel {
     public void drawColorsPanel() {
 
         if (User.getInstance().isMyTurn() || true) {
+
+            setCurrentFragment(Fragment.CALL_FOR_ACTION);
 
             // list style
             listStyle = new List.ListStyle();
@@ -180,7 +182,7 @@ public class BoardCaptainCommandPanel {
                         obj.put("action", moveSelected.toString());
                         obj.put("direction", Direction.TOP.toString());
 
-                        Client.getInstance().sendCommand(Actions.COMMAND_OTHER_FIREFIGHTER, obj.toJSONString());
+                        Client.getInstance().sendCommand(Actions.COMMAND_FIREMEN, obj.toJSONString());
                         removeTableDirectionsPanel();
                         return true;
                     }
@@ -196,7 +198,7 @@ public class BoardCaptainCommandPanel {
                         obj.put("action", moveSelected.toString());
                         obj.put("direction", Direction.BOTTOM.toString());
 
-                        Client.getInstance().sendCommand(Actions.COMMAND_OTHER_FIREFIGHTER, obj.toJSONString());
+                        Client.getInstance().sendCommand(Actions.COMMAND_FIREMEN, obj.toJSONString());
                         removeTableDirectionsPanel();
                         return true;
                     }
@@ -211,7 +213,7 @@ public class BoardCaptainCommandPanel {
                         obj.put("action", moveSelected.toString());
                         obj.put("direction", Direction.LEFT.toString());
 
-                        Client.getInstance().sendCommand(Actions.COMMAND_OTHER_FIREFIGHTER, obj.toJSONString());
+                        Client.getInstance().sendCommand(Actions.COMMAND_FIREMEN, obj.toJSONString());
                         removeTableDirectionsPanel();
                         return true;
                     }
@@ -226,7 +228,7 @@ public class BoardCaptainCommandPanel {
                         obj.put("action", moveSelected.toString());
                         obj.put("direction", Direction.RIGHT.toString());
 
-                        Client.getInstance().sendCommand(Actions.COMMAND_OTHER_FIREFIGHTER, obj.toJSONString());
+                        Client.getInstance().sendCommand(Actions.COMMAND_FIREMEN, obj.toJSONString());
                         removeTableDirectionsPanel();
                         return true;
                     }
@@ -319,5 +321,7 @@ public class BoardCaptainCommandPanel {
             directionsTableList.get(i).remove();
         }
         directionsTableList.clear();
+
+        setCurrentFragment(Fragment.EMPTY);
     }
 }

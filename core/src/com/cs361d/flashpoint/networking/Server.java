@@ -514,7 +514,7 @@ public class Server implements Runnable {
           }
           break;
 
-        case COMMAND_OTHER_FIREFIGHTER:
+        case COMMAND_FIREMEN:
           jsonObject = (JSONObject) parser.parse(message);
           FireFighterColor color = FireFighterColor.fromString(jsonObject.get("color").toString());
           action = Actions.fromString(jsonObject.get("action").toString());

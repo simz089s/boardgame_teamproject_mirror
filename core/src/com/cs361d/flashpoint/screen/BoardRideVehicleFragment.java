@@ -17,6 +17,7 @@ import org.json.simple.JSONObject;
 import java.util.ArrayList;
 
 import static com.cs361d.flashpoint.screen.BoardScreen.removeAllPrevFragments;
+import static com.cs361d.flashpoint.screen.BoardScreen.setCurrentFragment;
 import static com.cs361d.flashpoint.screen.BoardScreen.stage;
 import static com.cs361d.flashpoint.screen.FlashPointScreen.skinUI;
 
@@ -31,11 +32,13 @@ public class BoardRideVehicleFragment {
 
     public static void drawRideVehicleFragment(final CarrierStatus carrierStatus) {
 
-        removeAllPrevFragments();
-
         if (!BoardManager.getInstance().isAdvanced()) {
             return;
         }
+
+        removeAllPrevFragments();
+
+        setCurrentFragment(Fragment.CALL_FOR_ACTION);
 
         String vehicleOfInterest = "";
 
@@ -107,5 +110,7 @@ public class BoardRideVehicleFragment {
             rideVehicleTablesList.get(i).remove();
         }
         rideVehicleTablesList.clear();
+
+        setCurrentFragment(Fragment.EMPTY);
     }
 }

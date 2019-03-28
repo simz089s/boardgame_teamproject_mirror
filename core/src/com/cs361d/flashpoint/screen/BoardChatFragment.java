@@ -49,7 +49,12 @@ public class BoardChatFragment {
 //        messagesArrList.add("G: wait, can't find the explosives");
     }
 
-    public void createChatFragment() {
+    public void drawChatFragment() {
+
+        if(BoardScreen.isCallForActionFragment()){
+            return;
+        }
+
         // list style
         listStyle = new List.ListStyle();
         listStyle.font = Font.get(18); // font size

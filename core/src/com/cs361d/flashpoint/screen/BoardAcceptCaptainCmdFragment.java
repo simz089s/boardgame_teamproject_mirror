@@ -12,9 +12,7 @@ import com.cs361d.flashpoint.networking.ServerCommands;
 
 import java.util.ArrayList;
 
-import static com.cs361d.flashpoint.screen.BoardScreen.boardMovesPanel;
-import static com.cs361d.flashpoint.screen.BoardScreen.removeAllPrevFragments;
-import static com.cs361d.flashpoint.screen.BoardScreen.stage;
+import static com.cs361d.flashpoint.screen.BoardScreen.*;
 import static com.cs361d.flashpoint.screen.FlashPointScreen.skinUI;
 
 public class BoardAcceptCaptainCmdFragment {
@@ -28,11 +26,13 @@ public class BoardAcceptCaptainCmdFragment {
 
     public static void drawAcceptCaptainCmdPanel(Actions action, Direction direction) {
 
-        removeAllPrevFragments();
-
         if (!BoardManager.getInstance().isAdvanced()) {
             return;
         }
+
+        removeAllPrevFragments();
+
+        setCurrentFragment(Fragment.CALL_FOR_ACTION);
 
         Label label = new Label(action.toString(), skinUI);
         label.setFontScale(1.5f);
@@ -99,6 +99,8 @@ public class BoardAcceptCaptainCmdFragment {
             acceptCmdTablesList.get(i).remove();
         }
         acceptCmdTablesList.clear();
+
+        setCurrentFragment(Fragment.EMPTY);
     }
 
 

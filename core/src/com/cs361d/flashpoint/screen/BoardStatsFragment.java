@@ -34,6 +34,10 @@ public class BoardStatsFragment {
 
     public void drawStatsFragment() {
 
+        if(BoardScreen.isCallForActionFragment()){
+            return;
+        }
+
         String[] gamesStatsArr = createStats();
 
         // list style

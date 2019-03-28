@@ -135,7 +135,7 @@ public class BoardMovesPanel {
                     boardChooseRolePanel.drawChooseSpecialtyPanel();
                     break;
 
-                  case COMMAND_OTHER_FIREFIGHTER:
+                  case COMMAND_FIREMEN:
                     removeMovesAndDirectionsPanel();
                     BoardCaptainCommandPanel boardCaptainCommand = new BoardCaptainCommandPanel(stage);
                     boardCaptainCommand.drawColorsPanel();
