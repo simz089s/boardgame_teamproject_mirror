@@ -12,6 +12,7 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 import java.io.*;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -925,6 +926,117 @@ public class DBHandler {
 
         return newObj.toJSONString();
     }
+
+
+
+
+    public static String[] getInfoForLobbyGameOnSelect(String fileName) {
+
+        ArrayList<String> retArr = new ArrayList<String>();
+
+        String path = "db/" + fileName + ".json";
+
+        BufferedReader reader = null;
+        try {
+            reader = new BufferedReader(new FileReader(path));
+            StringBuilder stringBuilder = new StringBuilder();
+            String line = null;
+            while ((line = reader.readLine()) != null) {
+                stringBuilder.append(line);
+            }
+            reader.close();
+
+            String content = stringBuilder.toString();
+
+            retArr = getInfoForLobbyGame(content);
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        String[] stringArray = retArr.toArray(new String[0]);
+
+        return stringArray;
+    }
+
+    private static ArrayList<String> getInfoForLobbyGame(String jsonString) {
+
+        ArrayList<String> retArr = new ArrayList<String>();
+
+        try {
+
+            JSONParser parser = new JSONParser();
+            JSONObject jsonObject = (JSONObject) parser.parse(jsonString);
+
+            JSONObject gameParams = (JSONObject) jsonObject.get("gameParams");
+            retArr.add(("Game: " + gameParams.get("gameName")).toUpperCase());
+            retArr.add("");
+            retArr.add("Number of victims lost: " + gameParams.get("numVictimsLost"));
+            retArr.add("Number of victims saved: " + gameParams.get("numVictimsSaved"));
+            retArr.add("Number of false alarm removed: " + gameParams.get("numFalseAlarmRemoved"));
+            retArr.add("Number of walls left: " + gameParams.get("numDamageLeft"));
+
+            if (gameParams.get("numHotSpotLeft") != null){
+                retArr.add("");
+                retArr.add("Number of hot spots left: " + gameParams.get("numHotSpotLeft"));
+            }
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return retArr;
+    }
+
+
+    public static boolean isGameAdvForLobbyImg(String fileName) {
+
+        boolean isGameAdv = false;
+
+        String path = "db/" + fileName + ".json";
+
+        BufferedReader reader = null;
+        try {
+            reader = new BufferedReader(new FileReader(path));
+            StringBuilder stringBuilder = new StringBuilder();
+            String line = null;
+            while ((line = reader.readLine()) != null) {
+                stringBuilder.append(line);
+            }
+            reader.close();
+
+            String content = stringBuilder.toString();
+
+            isGameAdv = isGameAdvForLobby(content);
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return isGameAdv;
+    }
+
+    private static boolean isGameAdvForLobby(String jsonString) {
+        try {
+
+            JSONParser parser = new JSONParser();
+            JSONObject jsonObject = (JSONObject) parser.parse(jsonString);
+
+            JSONObject gameParams = (JSONObject) jsonObject.get("gameParams");
+
+            return (gameParams.get("numHotSpotLeft") != null);
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
 
 
     // helper

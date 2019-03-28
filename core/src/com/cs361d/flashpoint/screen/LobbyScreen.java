@@ -11,10 +11,12 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.cs361d.flashpoint.manager.DBHandler;
 import com.cs361d.flashpoint.manager.User;
 import com.cs361d.flashpoint.networking.Client;
 import com.cs361d.flashpoint.networking.ServerCommands;
@@ -35,13 +37,17 @@ public class LobbyScreen extends FlashPointScreen {
     Label btnIndicationLabel;
 
     // load saved game list
-    ScrollPane scrollPaneLoadGameList;
-    ScrollPane.ScrollPaneStyle scrollStyle2;
-    List<String> lstLoadGames;
-    List.ListStyle listStyle2;
-    String[] availableGames = {""};
+    ScrollPane scrollPaneLoadGameList, scrollPaneGameInfoList;
+    ScrollPane.ScrollPaneStyle scrollStyle;
+    List<String> lstLoadGames, lstGameInfoPanel;
+    List.ListStyle listStyle;
+
+    ArrayList<ScrollPane> gameInfoPanelList = new ArrayList<ScrollPane>();
+    ArrayList<Image> gameDiffImgList = new ArrayList<Image>();
 
     ImageButton btnLogout, btnJoin, btnLoad, btnCreateGame;
+
+    Image gameDifficultyImg;
 
     Stage stage;
 
@@ -333,7 +339,7 @@ public class LobbyScreen extends FlashPointScreen {
         loadGamesLabel.setColor(Color.BLACK);
 
         loadGamesLabel.setPosition(
-                50,
+                Gdx.graphics.getWidth() / 2,
                 (Gdx.graphics.getHeight() - debugLbl.getHeight() - 50));
 
         stage.addActor(loadGamesLabel);
@@ -343,39 +349,101 @@ public class LobbyScreen extends FlashPointScreen {
 
     private void createSavedGamesList(String[] messages) {
         // list style
-        listStyle2 = new List.ListStyle();
-        listStyle2.font = Font.get(25); // font size
-        listStyle2.fontColorUnselected = Color.BLACK;
-        listStyle2.fontColorSelected = Color.BLACK;
-        listStyle2.selection = TextureLoader.getDrawable(50, 100, Color.YELLOW );
+        listStyle = new List.ListStyle();
+        listStyle.font = Font.get(25); // font size
+        listStyle.fontColorUnselected = Color.BLACK;
+        listStyle.fontColorSelected = Color.BLACK;
+        listStyle.selection = TextureLoader.getDrawable(50, 100, Color.YELLOW );
 
-        lstLoadGames = new List<String>(listStyle2);
+        lstLoadGames = new List<String>(listStyle);
         lstLoadGames.setItems(messages);
 
         // scrollPane style
-        scrollStyle2 = new ScrollPane.ScrollPaneStyle();
-        scrollStyle2.vScrollKnob = TextureLoader.getDrawable(15, 15, Color.DARK_GRAY);
-        scrollStyle2.vScroll = TextureLoader.getDrawable(15, 15, Color.LIGHT_GRAY);
+        scrollStyle = new ScrollPane.ScrollPaneStyle();
+        scrollStyle.vScrollKnob = TextureLoader.getDrawable(15, 15, Color.DARK_GRAY);
+        scrollStyle.vScroll = TextureLoader.getDrawable(15, 15, Color.LIGHT_GRAY);
 
-        scrollPaneLoadGameList = new ScrollPane(lstLoadGames, scrollStyle2);
+        scrollPaneLoadGameList = new ScrollPane(lstLoadGames, scrollStyle);
         scrollPaneLoadGameList.setOverscroll(false, false);
         //scrollPaneLoadGameList.setFadeScrollBars(false);
         scrollPaneLoadGameList.setScrollingDisabled(true, false);
         scrollPaneLoadGameList.setTransform(true);
         scrollPaneLoadGameList.setScale(1.0f);
-        scrollPaneLoadGameList.setWidth(Gdx.graphics.getWidth() / 2 - 10);
-        scrollPaneLoadGameList.setHeight(Gdx.graphics.getHeight() - 100);
+        scrollPaneLoadGameList.setWidth(380);
+        scrollPaneLoadGameList.setHeight(Gdx.graphics.getHeight() - 250);
         //scrollMessage.setBounds(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight() + 100);
         scrollPaneLoadGameList.setPosition(
-                50,
+                Gdx.graphics.getWidth() / 2,
                 Gdx.graphics.getHeight() - scrollPaneLoadGameList.getHeight() - 80);
 
+        lstLoadGames.addListener(
+                new InputListener() {
+                    @Override
+                    public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                        removeGameInfoElements();
+                        createGameInfoPanel(lstLoadGames.getSelected());
+                        createGameDifficultyImg(lstLoadGames.getSelected());
+                        return true;
+                    }
+                });
+
         stage.addActor(scrollPaneLoadGameList);
+    }
+
+    private void createGameInfoPanel(String gameName) {
+        // list style
+        listStyle = new List.ListStyle();
+        listStyle.font = Font.get(25); // font size
+        listStyle.fontColorUnselected = Color.BLACK;
+        listStyle.fontColorSelected = Color.BLACK;
+        listStyle.selection = TextureLoader.getDrawable(50, 100, Color.CLEAR );
+
+        lstGameInfoPanel = new List<String>(listStyle);
+        lstGameInfoPanel.setItems(DBHandler.getInfoForLobbyGameOnSelect(gameName));
+
+        // scrollPane style
+        scrollStyle = new ScrollPane.ScrollPaneStyle();
+        scrollStyle.vScrollKnob = TextureLoader.getDrawable(15, 15, Color.DARK_GRAY);
+        scrollStyle.vScroll = TextureLoader.getDrawable(15, 15, Color.LIGHT_GRAY);
+
+        scrollPaneGameInfoList = new ScrollPane(lstGameInfoPanel, scrollStyle);
+        scrollPaneGameInfoList.setOverscroll(false, false);
+        //scrollPaneLoadGameList.setFadeScrollBars(false);
+        scrollPaneGameInfoList.setScrollingDisabled(true, false);
+        scrollPaneGameInfoList.setTransform(true);
+        scrollPaneGameInfoList.setScale(1.0f);
+        scrollPaneGameInfoList.setWidth(Gdx.graphics.getWidth() / 2 - 10);
+        scrollPaneGameInfoList.setHeight(Gdx.graphics.getHeight() - 100);
+        //scrollMessage.setBounds(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight() + 100);
+        scrollPaneGameInfoList.setPosition(
+                60,
+                Gdx.graphics.getHeight() - scrollPaneGameInfoList.getHeight() - 20);
+
+        gameInfoPanelList.add(scrollPaneGameInfoList);
+        stage.addActor(scrollPaneGameInfoList);
+    }
+
+    private void createGameDifficultyImg(String filename) {
+
+        boolean isGameAdv = DBHandler.isGameAdvForLobbyImg(filename);
+
+        String imagefileName = isGameAdv ? "advLobby.png" : "famLobby.png";
+        gameDifficultyImg = new Image(new Texture(imagefileName));
+        gameDifficultyImg.setHeight(232);
+        gameDifficultyImg.setWidth(407);
+        gameDifficultyImg.setPosition(
+                50,
+                150);
+
+        gameDiffImgList.add(gameDifficultyImg);
+        stage.addActor(gameDifficultyImg);
     }
 
 
 
     // helper
+
+
 
     // get saved games from file system
     public ArrayList<String> listFilesOfSavedGames() {
@@ -405,6 +473,20 @@ public class LobbyScreen extends FlashPointScreen {
 
     public static BoardDialog getDialog() {
         return boardDialog;
+    }
+
+    private void removeGameInfoElements(){
+        for (int i = 0; i < gameInfoPanelList.size(); i++) {
+            gameInfoPanelList.get(i).remove();
+        }
+
+        gameInfoPanelList.clear();
+
+        for (int i = 0; i < gameDiffImgList.size(); i++) {
+            gameDiffImgList.get(i).remove();
+        }
+
+        gameDiffImgList.clear();
     }
 
 }
