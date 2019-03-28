@@ -9,10 +9,13 @@ import com.cs361d.flashpoint.screen.*;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import sun.java2d.opengl.OGLContext;
 
 import java.io.*;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Client {
 
@@ -253,6 +256,21 @@ public class Client {
                 @Override
                 public void run() {
                   BoardScreen.displayMessage(title, message1);
+                }
+              });
+          break;
+
+        case ASK_WISH_ABOUT_KNOWCK_DOWN:
+          JSONArray array = (JSONArray) parser.parse(message);
+          final List<Direction> directions = new ArrayList<Direction>();
+          for (Object o : array) {
+            directions.add(Direction.fromString(o.toString()));
+          }
+          Gdx.app.postRunnable(
+              new Runnable() {
+                @Override
+                public void run() {
+                  BoardOnKnockDownPanel.drawOnKnockDownPanel(directions);
                 }
               });
           break;

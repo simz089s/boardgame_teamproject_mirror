@@ -2,6 +2,9 @@ package com.cs361d.flashpoint.model.BoardElements;
 
 import com.cs361d.flashpoint.manager.Difficulty;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public enum Direction {
     TOP("top"),
     BOTTOM("bottom"),
@@ -26,5 +29,14 @@ public enum Direction {
     }
     Direction(String text){
         this.text = text;
+    }
+
+    public static List<Direction> outwardDirections() {
+        List<Direction> directionList = new ArrayList<Direction>();
+        directionList.add(TOP);
+        directionList.add(BOTTOM);
+        directionList.add(RIGHT);
+        directionList.add(LEFT);
+        return directionList;
     }
 }

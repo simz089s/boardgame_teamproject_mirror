@@ -9,10 +9,16 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.Json;
 import com.cs361d.flashpoint.manager.BoardManager;
 import com.cs361d.flashpoint.model.BoardElements.Direction;
+import com.cs361d.flashpoint.networking.Client;
+import com.cs361d.flashpoint.networking.Server;
+import com.cs361d.flashpoint.networking.ServerCommands;
+import org.json.simple.JSONObject;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static com.cs361d.flashpoint.screen.BoardScreen.removeAllPrevFragments;
 import static com.cs361d.flashpoint.screen.BoardScreen.stage;
@@ -29,7 +35,7 @@ public class BoardOnKnockDownPanel {
 
     static ArrayList<Table> directionsTableList = new ArrayList<Table>();
 
-    public static void drawOnKnockDownPanel(ArrayList<Direction> directions) {
+    public static void drawOnKnockDownPanel(List<Direction> directions) {
 
         removeAllPrevFragments();
 
@@ -40,24 +46,28 @@ public class BoardOnKnockDownPanel {
         }
 
         label = new Label("What do you want to do?", skinUI);
-        label.setFontScale(1.5f);
+        label.setFontScale(1.3f);
         label.setColor(Color.BLACK);
         label.setPosition(
-                1000,
+                800,
                 Gdx.graphics.getHeight() - 300);
 
         btnStayKnockDown = new TextButton("Get knocked down!", skinUI, "default");
         btnStayKnockDown.setWidth(label.getWidth());
-        btnStayKnockDown.setHeight(25);
+        btnStayKnockDown.setHeight(30);
         btnStayKnockDown.setColor(Color.GREEN);
         btnStayKnockDown.setPosition(
-                1000,
+                800,
                 Gdx.graphics.getHeight() - 350);
 
         btnStayKnockDown.addListener(
                 new ClickListener() {
                     @Override
                     public void clicked(InputEvent event, float x, float y) {
+                        JSONObject obj = new JSONObject();
+                        obj.put("value", true);
+                        obj.put("direction", Direction.NODIRECTION.toString());
+                        Client.getInstance().sendCommand(ServerCommands.REPLY_KNOWCKED_DOWN_CHOICE, obj.toJSONString());
 
                         label.remove();
                         btnStayKnockDown.remove();
@@ -69,11 +79,10 @@ public class BoardOnKnockDownPanel {
     }
 
 
-    private static void drawDirectionsPanelTable(ArrayList<Direction> directions) {
+    private static void drawDirectionsPanelTable(List<Direction> directions) {
 
         ImageButton btnDirectionU = new ImageButton(BoardMovesPanel.getTextureForDirectionsTable(Direction.TOP));
         ImageButton btnDirectionD = new ImageButton(BoardMovesPanel.getTextureForDirectionsTable(Direction.BOTTOM));
-        ImageButton btnDirectionCurr = new ImageButton(BoardMovesPanel.getTextureForDirectionsTable(Direction.NODIRECTION));
         ImageButton btnDirectionL = new ImageButton(BoardMovesPanel.getTextureForDirectionsTable(Direction.LEFT));
         ImageButton btnDirectionR = new ImageButton(BoardMovesPanel.getTextureForDirectionsTable(Direction.RIGHT));
 
@@ -108,40 +117,50 @@ public class BoardOnKnockDownPanel {
 
         directionTable.setPosition(1000, Gdx.graphics.getHeight() - directionTable.getHeight() - 550);
 
-        btnDirectionU.addListener(
-                new InputListener() {
-                    @Override
-                    public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
 
-                        removeTableDirectionsPanel();
-                        return true;
-                    }
-                });
+    btnDirectionU.addListener(
+        new InputListener() {
+          @Override
+          public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+            JSONObject obj = new JSONObject();
+            obj.put("value", false);
+            obj.put("direction", Direction.TOP.toString());
+            Client.getInstance().sendCommand(ServerCommands.REPLY_KNOWCKED_DOWN_CHOICE, obj.toJSONString());
+              label.remove();
+              btnStayKnockDown.remove();
+            removeTableDirectionsPanel();
+            return true;
+          }
+        });
+
 
         btnDirectionD.addListener(
                 new InputListener() {
                     @Override
                     public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
 
+                        JSONObject obj = new JSONObject();
+                        obj.put("value", false);
+                        obj.put("direction", Direction.BOTTOM.toString());
+                        Client.getInstance().sendCommand(ServerCommands.REPLY_KNOWCKED_DOWN_CHOICE, obj.toJSONString());
+                        label.remove();
+                        btnStayKnockDown.remove();
                         removeTableDirectionsPanel();
                         return true;
                     }
                 });
 
-        btnDirectionCurr.addListener(
-                new InputListener() {
-                    @Override
-                    public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-
-                        removeTableDirectionsPanel();
-                        return true;
-                    }
-                });
 
         btnDirectionL.addListener(
                 new InputListener() {
                     @Override
                     public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                        JSONObject obj = new JSONObject();
+                        obj.put("value", false);
+                        obj.put("direction", Direction.LEFT.toString());
+                        Client.getInstance().sendCommand(ServerCommands.REPLY_KNOWCKED_DOWN_CHOICE, obj.toJSONString());
+                        label.remove();
+                        btnStayKnockDown.remove();
                         removeTableDirectionsPanel();
                         return true;
                     }
@@ -151,6 +170,12 @@ public class BoardOnKnockDownPanel {
                 new InputListener() {
                     @Override
                     public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                        JSONObject obj = new JSONObject();
+                        obj.put("value", false);
+                        obj.put("direction", Direction.RIGHT.toString());
+                        Client.getInstance().sendCommand(ServerCommands.REPLY_KNOWCKED_DOWN_CHOICE, obj.toJSONString());
+                        label.remove();
+                        btnStayKnockDown.remove();
                         removeTableDirectionsPanel();
                         return true;
                     }

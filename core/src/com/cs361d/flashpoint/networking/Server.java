@@ -6,6 +6,7 @@ import com.cs361d.flashpoint.model.BoardElements.FireFighter;
 import com.cs361d.flashpoint.model.BoardElements.FireFighterColor;
 import com.cs361d.flashpoint.model.BoardElements.Tile;
 import com.cs361d.flashpoint.model.FireFighterSpecialities.FireFighterAdvanceSpecialities;
+import com.cs361d.flashpoint.model.FireFighterSpecialities.FireFighterAdvanced;
 import com.cs361d.flashpoint.screen.Actions;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -367,7 +368,6 @@ public class Server implements Runnable {
           jsonObject = (JSONObject) parser.parse(message);
           i = Integer.parseInt(jsonObject.get("i").toString());
           j = Integer.parseInt(jsonObject.get("j").toString());
-          t = BoardManager.getInstance().getTileAt(i, j);
           (BoardManagerAdvanced.getInstance()).addFireTruck(i, j);
           mustSendAndRefresh = true;
           break;
@@ -381,6 +381,20 @@ public class Server implements Runnable {
           DriverResponse response = DriverResponse.fromString(message);
           FireFighterTurnManagerAdvance.getInstance().setDriverResponse(response);
           FireFighterTurnManagerAdvance.getInstance().stopWaiting();
+          break;
+
+        case REPLY_KNOWCKED_DOWN_CHOICE:
+          jsonObject = (JSONObject) parser.parse(message);
+          boolean letKnowckDown = (Boolean) jsonObject.get("value");
+          Direction d = Direction.fromString(jsonObject.get("direction").toString());
+          if (!letKnowckDown) {
+            FireFighterColor color = getColorFromIP(ip);
+            FireFighterAdvanced f =
+                FireFighterTurnManagerAdvance.getInstance().getFireFighter(color);
+            BoardManagerAdvanced.getInstance().setLetKnockedDown(false);
+            BoardManagerAdvanced.getInstance().moveForKnowckDown(f, d);
+          }
+          BoardManagerAdvanced.getInstance().stopWaiting();
           break;
 
         default:
@@ -541,7 +555,16 @@ public class Server implements Runnable {
 
   public static void sendToClientsInGame(ClientCommands command, String message) {
     for (String ip : colorsToClient.values()) {
-        sendCommandToSpecificClient(command, message, ip);
+      sendCommandToSpecificClient(command, message, ip);
     }
+  }
+
+  public static FireFighterColor getColorFromIP(String ip) {
+    for (FireFighterColor color : colorsToClient.keySet()) {
+      if (colorsToClient.get(color).equals(ip)) {
+        return color;
+      }
+    }
+    return FireFighterColor.NOT_ASSIGNED;
   }
 }

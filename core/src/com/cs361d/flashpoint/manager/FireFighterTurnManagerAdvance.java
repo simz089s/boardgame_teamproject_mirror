@@ -771,4 +771,13 @@ public class FireFighterTurnManagerAdvance extends FireFighterTurnManager {
       return true;
     }
   }
+
+  public FireFighterAdvanced getFireFighter(FireFighterColor color) {
+    for (FireFighter f : FIREFIGHTERS) {
+      if (f.getColor() == color) {
+        return (FireFighterAdvanced) f;
+      }
+    }
+    return null;
+  }
 }

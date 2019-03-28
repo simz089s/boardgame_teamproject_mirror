@@ -511,6 +511,10 @@ public class BoardManager implements Iterable<Tile> {
     for (Tile[] rows : TILE_MAP) {
       for (Tile t : rows) {
         if (t.hasFire()) {
+          if (t.hasAmbulance()) {
+            t.setFireStatus(FireStatus.EMPTY);
+            continue;
+          }
           tiles.add(t);
         }
       }
