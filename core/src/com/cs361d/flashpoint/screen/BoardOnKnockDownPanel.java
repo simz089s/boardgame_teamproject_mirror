@@ -58,6 +58,7 @@ public class BoardOnKnockDownPanel {
                 new ClickListener() {
                     @Override
                     public void clicked(InputEvent event, float x, float y) {
+
                         label.remove();
                         btnStayKnockDown.remove();
                     }
@@ -111,6 +112,7 @@ public class BoardOnKnockDownPanel {
                 new InputListener() {
                     @Override
                     public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+
                         removeTableDirectionsPanel();
                         return true;
                     }
@@ -120,6 +122,7 @@ public class BoardOnKnockDownPanel {
                 new InputListener() {
                     @Override
                     public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+
                         removeTableDirectionsPanel();
                         return true;
                     }
@@ -129,6 +132,7 @@ public class BoardOnKnockDownPanel {
                 new InputListener() {
                     @Override
                     public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+
                         removeTableDirectionsPanel();
                         return true;
                     }

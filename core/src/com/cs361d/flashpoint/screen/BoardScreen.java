@@ -153,12 +153,6 @@ public class BoardScreen extends FlashPointScreen {
                   Client.getInstance()
                           .sendCommand(ServerCommands.SET_AMBULANCE, obj.toJSONString());
 
-//                  removeAllFilterOnTile();
-//                  drawGameUnitsOnTile();
-//                  boardDialog.drawDialog(
-//                      "Engine position",
-//                      "Choose the fire engine's initial position (green tiles).");
-//                  addFilterOnTileForEngine();
                 } else if (isEngineNotSet
                     && DBHandler.isPresentInArr(getEngineClickableTiles(), i_pos + "-" + j_pos)) {
 
@@ -171,13 +165,6 @@ public class BoardScreen extends FlashPointScreen {
                   obj.put("j", j_pos);
                   Client.getInstance()
                           .sendCommand(ServerCommands.SET_FIRETRUCK, obj.toJSONString());
-
-//                  removeAllFilterOnTile();
-//                  drawGameUnitsOnTile();
-//                  boardDialog.drawDialog(
-//                      "Specialty", "Choose your initial specialty on the right panel.");
-//                  addFilterOnTileForChooseInitPos();
-//                  boardChooseRolePanel.drawChooseSpecialtyPanel();
                 }
 
                 // choose init position

@@ -3,14 +3,11 @@ package com.cs361d.flashpoint.screen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
-import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.cs361d.flashpoint.manager.BoardManager;
-import com.cs361d.flashpoint.model.BoardElements.Direction;
 
 import java.util.ArrayList;
 
@@ -20,8 +17,12 @@ import static com.cs361d.flashpoint.screen.FlashPointScreen.skinUI;
 
 public class BoardRideVehicleFragment {
 
+    static Table rideVehicleTable;
+
     static Label label;
     static TextButton btnAcceptRide, btnRefuseRide;
+
+    static ArrayList<Table> rideVehicleTablesList = new ArrayList<Table>();
 
     public static void drawRideVehicleFragment() {
 
@@ -34,17 +35,11 @@ public class BoardRideVehicleFragment {
         label = new Label("Do you want to ride to the new vehicle's location?", skinUI);
         label.setFontScale(1.5f);
         label.setColor(Color.BLACK);
-        btnAcceptRide.setPosition(
-                1000,
-                Gdx.graphics.getHeight() - 300);
 
         btnAcceptRide = new TextButton("Yes", skinUI, "default");
         btnAcceptRide.setWidth(label.getWidth());
         btnAcceptRide.setHeight(25);
-        btnAcceptRide.setColor(Color.GREEN);
-        btnAcceptRide.setPosition(
-                1000,
-                Gdx.graphics.getHeight() - 350);
+        btnAcceptRide.setColor(Color.CHARTREUSE);
 
         btnAcceptRide.addListener(
                 new ClickListener() {
@@ -60,22 +55,40 @@ public class BoardRideVehicleFragment {
         btnRefuseRide.setWidth(label.getWidth());
         btnRefuseRide.setHeight(25);
         btnRefuseRide.setColor(Color.PINK);
-        btnRefuseRide.setPosition(
-                1000,
-                Gdx.graphics.getHeight() - 400);
 
         btnRefuseRide.addListener(
                 new ClickListener() {
                     @Override
                     public void clicked(InputEvent event, float x, float y) {
-                        label.remove();
-                        btnAcceptRide.remove();
-                        btnRefuseRide.remove();
+                        removeRideVehiclePanel();
                     }
                 });
 
-        stage.addActor(label);
-        stage.addActor(btnAcceptRide);
-        stage.addActor(btnRefuseRide);
+
+        rideVehicleTable = new Table();
+
+        rideVehicleTable.add(label).size(label.getWidth(), label.getHeight());
+        rideVehicleTable.row();
+        rideVehicleTable.add().size(btnAcceptRide.getWidth(), btnAcceptRide.getHeight()); // just a space
+        rideVehicleTable.row();
+        rideVehicleTable.add(btnAcceptRide).size(label.getWidth(), btnAcceptRide.getHeight());
+        rideVehicleTable.row();
+        rideVehicleTable.add().size(btnAcceptRide.getWidth(), btnAcceptRide.getHeight()); // just a space
+        rideVehicleTable.row();
+        rideVehicleTable.add(btnRefuseRide).size(label.getWidth(), btnRefuseRide.getHeight());
+
+        rideVehicleTable.setPosition(
+                1000,
+                Gdx.graphics.getHeight() - 350);
+
+        rideVehicleTablesList.add(rideVehicleTable);
+        stage.addActor(rideVehicleTable);
+    }
+
+    public static void removeRideVehiclePanel(){
+        for (int i = 0; i < rideVehicleTablesList.size(); i++) {
+            rideVehicleTablesList.get(i).remove();
+        }
+        rideVehicleTablesList.clear();
     }
 }
