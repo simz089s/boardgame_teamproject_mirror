@@ -72,7 +72,7 @@ public class Client {
                                   clientExecuteCommand(msg);
                                 }
                               });
-                      newThread.run();
+                      newThread.start();
                     } catch (Exception connectionLost) {
                       try {
                         System.out.println("Server disconnected: closing client...");

@@ -7,7 +7,7 @@ import java.util.List;
 
 public class StructuralEngineer extends FireFighterAdvanced {
   protected StructuralEngineer(FireFighterColor color) {
-    super(color, 4, 0, FireFighterAdvanceSpecialities.STRUCTURAL_ENGINEER);
+    super(color, 4, 0, FireFighterAdvanceSpecialities.STRUCTURAL_ENGINEER, true);
   }
 
   public boolean clearAp() {
@@ -15,6 +15,7 @@ public class StructuralEngineer extends FireFighterAdvanced {
       return false;
     } else {
       actionPoints--;
+      firstMoveDone();
       return true;
     }
   }
@@ -24,12 +25,17 @@ public class StructuralEngineer extends FireFighterAdvanced {
       return false;
     } else {
       actionPoints -= 2;
+      firstMoveDone();
       return true;
     }
   }
 
-    @Override
-    public List<Actions> getActions() {
-        return Actions.structuralEngineerActions();
+  @Override
+  public List<Actions> getActions() {
+    List<Actions> actions = Actions.structuralEngineerActions();
+    if (!isFirstMove()) {
+      actions.remove(crewChangeAP());
     }
+    return actions;
+  }
 }

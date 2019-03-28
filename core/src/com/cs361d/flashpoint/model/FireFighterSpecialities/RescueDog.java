@@ -13,7 +13,7 @@ import java.util.List;
 public class RescueDog extends FireFighterAdvanced {
 
     public RescueDog(FireFighterColor color) {
-        super(color, 12, 0, FireFighterAdvanceSpecialities.RESCUE_DOG);
+        super(color, 12, 0, FireFighterAdvanceSpecialities.RESCUE_DOG, true);
         this.maxActionPoint = 18;
         this.actionsPointPerTurn = 12;
     }
@@ -38,6 +38,7 @@ public class RescueDog extends FireFighterAdvanced {
             }
             else {
                 actionPoints -= 2;
+                firstMoveDone();
                 return true;
             }
         }
@@ -46,6 +47,7 @@ public class RescueDog extends FireFighterAdvanced {
                 return false;
             }
             else {
+                firstMoveDone();
                 actionPoints--;
                 return true;
             }
@@ -63,6 +65,7 @@ public class RescueDog extends FireFighterAdvanced {
             }
             else {
                 actionPoints -= 4;
+                firstMoveDone();
                 return true;
             }
         }
@@ -95,6 +98,10 @@ public class RescueDog extends FireFighterAdvanced {
 
     @Override
     public List<Actions> getActions() {
-        return Actions.rescueDogActions();
+        List<Actions> actions = Actions.rescueDogActions();
+        if (!isFirstMove()) {
+            actions.remove(Actions.CREW_CHANGE);
+        }
+        return actions;
     }
 }

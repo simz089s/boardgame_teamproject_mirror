@@ -7,12 +7,13 @@ import java.util.List;
 
 public class Paramedic extends FireFighterAdvanced{
   public Paramedic(FireFighterColor color) {
-    super(color, 4, 0, FireFighterAdvanceSpecialities.PARAMEDIC);
+    super(color, 4, 0, FireFighterAdvanceSpecialities.PARAMEDIC, true);
   }
 
   public boolean treatVictimAP() {
     if (!(actionPoints < 1)) {
       actionPoints--;
+      firstMoveDone();
       return true;
     }
     return false;
@@ -22,6 +23,7 @@ public class Paramedic extends FireFighterAdvanced{
   public boolean extinguishAP() {
     if (!(actionPoints < 2)) {
       actionPoints -= 2;
+      firstMoveDone();
       return true;
     }
     return false;
@@ -29,6 +31,10 @@ public class Paramedic extends FireFighterAdvanced{
 
   @Override
   public List<Actions> getActions() {
-    return Actions.paramedicActions();
+    List<Actions> actions = Actions.paramedicActions();
+    if (!isFirstMove()) {
+      actions.remove(Actions.CREW_CHANGE);
+    }
+    return actions;
   }
 }

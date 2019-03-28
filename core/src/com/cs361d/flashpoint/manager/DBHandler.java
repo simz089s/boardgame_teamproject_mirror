@@ -428,9 +428,10 @@ public class DBHandler {
                         int numSpecialAP = Integer.parseInt("" + firefighterParams.get("numSpecialAP"));
                         boolean hadVeteranBonus = (Boolean) firefighterParams.get("hadVeteranBonus");
                         boolean firstTurn = (Boolean) firefighterParams.get("firstTurn");
+                        boolean firstMove = (Boolean) firefighterParams.get("firstMove");
                         FireFighterAdvanceSpecialities specialty = FireFighterAdvanceSpecialities.
                                 fromString("" + firefighterParams.get("specialty"));
-                        myBoardManager.addFireFighter(i, j, fc, numAP, numSpecialAP, hadVeteranBonus, specialty, firstTurn);
+                        myBoardManager.addFireFighter(i, j, fc, numAP, numSpecialAP, hadVeteranBonus, specialty, firstTurn, firstMove);
                     }
                 }
 
@@ -675,6 +676,7 @@ public class DBHandler {
                     firefighterParams.put("hadVeteranBonus", fAdvanced.getHadVeteranBonus());
                     firefighterParams.put("specialty", fAdvanced.getSpeciality().toString());
                     firefighterParams.put("firstTurn",fAdvanced.isFirstTurn());
+                    firefighterParams.put("firstMove",fAdvanced.isFirstMove());
                     newFirefightersList.add(firefighterParams);
                 }
             }

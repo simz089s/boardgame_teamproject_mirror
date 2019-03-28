@@ -7,12 +7,16 @@ import java.util.List;
 
 public class ImagingTechnician extends FireFighterAdvanced {
   public ImagingTechnician(FireFighterColor color) {
-    super(color, 4, 0, FireFighterAdvanceSpecialities.IMAGING_TECHNICIAN);
+    super(color, 4, 0, FireFighterAdvanceSpecialities.IMAGING_TECHNICIAN, true);
   }
 
   @Override
   public List<Actions> getActions() {
-    return Actions.imagingTechnicianActions();
+    List<Actions> actions = Actions.imagingTechnicianActions();
+    if (!isFirstMove()) {
+      actions.remove(Actions.CREW_CHANGE);
+    }
+    return actions;
   }
 
   public boolean flipPOIAP() {
@@ -21,6 +25,7 @@ public class ImagingTechnician extends FireFighterAdvanced {
     }
     else {
       actionPoints--;
+      firstMoveDone();
       return true;
     }
   }

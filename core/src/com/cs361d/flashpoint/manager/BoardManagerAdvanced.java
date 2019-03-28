@@ -119,11 +119,12 @@ public class BoardManagerAdvanced extends BoardManager {
       int specialApPoints,
       boolean veteranBonus,
       FireFighterAdvanceSpecialities role,
-      boolean firstTurn) {
+      boolean firstTurn, boolean firstMove) {
     FireFighterAdvanced f = FireFighterAdvanced.createFireFighter(color, role);
     FireFighterTurnManagerAdvance fta =
         (FireFighterTurnManagerAdvance) (FireFighterTurnManager.getInstance());
     fta.removeSpecilty(role);
+    f.setFirstMove(firstMove);
     f.setHadVeteranBonus(veteranBonus);
     f.setActionPoint(actionPoints);
     f.setSpecialActionPoints(specialApPoints);

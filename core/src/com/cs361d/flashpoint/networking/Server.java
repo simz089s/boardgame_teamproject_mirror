@@ -224,13 +224,17 @@ public class Server implements Runnable {
 
       switch (c) {
         case ADD_CHAT_MESSAGE:
-          chatMessages.add(message);
-          Server.sendCommandToAllClients(ClientCommands.ADD_CHAT_MESSAGE, message);
+          synchronized (Server.class) {
+            chatMessages.add(message);
+            Server.sendCommandToAllClients(ClientCommands.ADD_CHAT_MESSAGE, message);
+          }
           break;
 
         case GET_CHAT_MESSAGES:
-          Server.sendCommandToSpecificClient(
-              ClientCommands.SEND_CHAT_MESSAGES, getChatAsJsonString(), ip);
+          synchronized (Server.class) {
+            Server.sendCommandToSpecificClient(
+                ClientCommands.SEND_CHAT_MESSAGES, getChatAsJsonString(), ip);
+          }
           break;
 
         case SAVE:
@@ -256,72 +260,81 @@ public class Server implements Runnable {
           break;
 
         case LOAD_GAME:
-          if (!gameLoaded) {
-            CreateNewGameManager.loadSavedGame(message);
-            Server.setFireFighterAssignArray();
-            gameLoaded = true;
-            assignFireFighterToClient(ip);
-            sendCommandToSpecificClient(
-                ClientCommands.SET_GAME_STATE, DBHandler.getBoardAsString(), ip);
-            sendCommandToSpecificClient(ClientCommands.SET_BOARD_SCREEN, "", ip);
-          } else {
-            JSONObject obj1 = new JSONObject();
-            obj1.put("title", "A game is already Loaded");
-            obj1.put("message", "Wait or try to join the game");
-            sendCommandToSpecificClient(
-                ClientCommands.SHOW_MESSAGE_ON_SCREEN, obj1.toJSONString(), ip);
+          synchronized (Server.class) {
+            if (!gameLoaded) {
+              CreateNewGameManager.loadSavedGame(message);
+              Server.setFireFighterAssignArray();
+              gameLoaded = true;
+              assignFireFighterToClient(ip);
+              sendCommandToSpecificClient(
+                  ClientCommands.SET_GAME_STATE, DBHandler.getBoardAsString(), ip);
+              sendCommandToSpecificClient(ClientCommands.SET_BOARD_SCREEN, "", ip);
+            } else {
+              JSONObject obj1 = new JSONObject();
+              obj1.put("title", "A game is already Loaded");
+              obj1.put("message", "Wait or try to join the game");
+              sendCommandToSpecificClient(
+                  ClientCommands.SHOW_MESSAGE_ON_SCREEN, obj1.toJSONString(), ip);
+            }
           }
           break;
 
         case JOIN:
-          if (gameLoaded) {
-            if (assignFireFighterToClient(ip)) {
-              sendCommandToSpecificClient(
-                  ClientCommands.SET_GAME_STATE, DBHandler.getBoardAsString(), ip);
-              sendCommandToSpecificClient(ClientCommands.SET_BOARD_SCREEN, "", ip);
-              JSONObject obj1 = new JSONObject();
-              String rightSide =
-                  isEmpty() ? "game is now full!" : notYetAssigned.size() + " players left to join";
-              obj1.put("title", "A new player joined the game");
-              obj1.put("message", "The player: " + message + " joined the game, " + rightSide);
-              sendToClientsInGame(ClientCommands.SHOW_MESSAGE_ON_SCREEN, obj1.toJSONString());
+          synchronized (Server.class) {
+            if (gameLoaded) {
+              if (assignFireFighterToClient(ip)) {
+                sendCommandToSpecificClient(
+                    ClientCommands.SET_GAME_STATE, DBHandler.getBoardAsString(), ip);
+                sendCommandToSpecificClient(ClientCommands.SET_BOARD_SCREEN, "", ip);
+                JSONObject obj1 = new JSONObject();
+                String rightSide =
+                    isEmpty()
+                        ? "game is now full!"
+                        : notYetAssigned.size() + " players left to join";
+                obj1.put("title", "A new player joined the game");
+                obj1.put("message", "The player: " + message + " joined the game, " + rightSide);
+                sendToClientsInGame(ClientCommands.SHOW_MESSAGE_ON_SCREEN, obj1.toJSONString());
 
+              } else {
+                JSONObject obj1 = new JSONObject();
+                obj1.put("title", "Game currently full");
+                obj1.put("message", "The game is full try latter");
+                sendCommandToSpecificClient(
+                    ClientCommands.SHOW_MESSAGE_ON_SCREEN, obj1.toJSONString(), ip);
+              }
             } else {
               JSONObject obj1 = new JSONObject();
-              obj1.put("title", "Game currently full");
-              obj1.put("message", "The game is full try latter");
+              obj1.put("title", "No game Loaded");
+              obj1.put("message", "There are no game loaded feel free to create or load one");
               sendCommandToSpecificClient(
                   ClientCommands.SHOW_MESSAGE_ON_SCREEN, obj1.toJSONString(), ip);
             }
-          } else {
-            JSONObject obj1 = new JSONObject();
-            obj1.put("title", "No game Loaded");
-            obj1.put("message", "There are no game loaded feel free to create or load one");
-            sendCommandToSpecificClient(
-                ClientCommands.SHOW_MESSAGE_ON_SCREEN, obj1.toJSONString(), ip);
           }
           break;
 
         case CREATE_GAME:
-          if (!gameLoaded) {
-            gameLoaded = true;
-            jsonObject = (JSONObject) parser.parse(message);
-            int numPlayers = Integer.parseInt(jsonObject.get("numPlayers").toString());
-            MapKind mapKind = MapKind.fromString(jsonObject.get("mapKind").toString());
-            String name = jsonObject.get("name").toString();
-            Difficulty difficulty = Difficulty.fromString(jsonObject.get("Difficulty").toString());
-            CreateNewGameManager.createNewGame(name, numPlayers, mapKind, difficulty);
-            Server.setFireFighterAssignArray();
-            assignFireFighterToClient(ip);
-            sendCommandToSpecificClient(
-                ClientCommands.SET_GAME_STATE, DBHandler.getBoardAsString(), ip);
-            sendCommandToSpecificClient(ClientCommands.SET_BOARD_SCREEN, "", ip);
-          } else {
-            JSONObject obj1 = new JSONObject();
-            obj1.put("title", "Game already Loaded");
-            obj1.put("message", "There is a game already loaded");
-            sendCommandToSpecificClient(
-                ClientCommands.SHOW_MESSAGE_ON_SCREEN, obj1.toJSONString(), ip);
+          synchronized (Server.class) {
+            if (!gameLoaded) {
+              gameLoaded = true;
+              jsonObject = (JSONObject) parser.parse(message);
+              int numPlayers = Integer.parseInt(jsonObject.get("numPlayers").toString());
+              MapKind mapKind = MapKind.fromString(jsonObject.get("mapKind").toString());
+              String name = jsonObject.get("name").toString();
+              Difficulty difficulty =
+                  Difficulty.fromString(jsonObject.get("Difficulty").toString());
+              CreateNewGameManager.createNewGame(name, numPlayers, mapKind, difficulty);
+              Server.setFireFighterAssignArray();
+              assignFireFighterToClient(ip);
+              sendCommandToSpecificClient(
+                  ClientCommands.SET_GAME_STATE, DBHandler.getBoardAsString(), ip);
+              sendCommandToSpecificClient(ClientCommands.SET_BOARD_SCREEN, "", ip);
+            } else {
+              JSONObject obj1 = new JSONObject();
+              obj1.put("title", "Game already Loaded");
+              obj1.put("message", "There is a game already loaded");
+              sendCommandToSpecificClient(
+                  ClientCommands.SHOW_MESSAGE_ON_SCREEN, obj1.toJSONString(), ip);
+            }
           }
           break;
 
