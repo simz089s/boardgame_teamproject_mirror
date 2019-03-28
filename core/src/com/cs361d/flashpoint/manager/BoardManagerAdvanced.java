@@ -3,13 +3,21 @@ package com.cs361d.flashpoint.manager;
 import com.cs361d.flashpoint.model.BoardElements.*;
 import com.cs361d.flashpoint.model.FireFighterSpecialities.FireFighterAdvanceSpecialities;
 import com.cs361d.flashpoint.model.FireFighterSpecialities.FireFighterAdvanced;
+import com.cs361d.flashpoint.model.FireFighterSpecialities.Veteran;
 import com.cs361d.flashpoint.networking.ClientCommands;
 import com.cs361d.flashpoint.networking.Server;
+import org.json.simple.JSONArray;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class BoardManagerAdvanced extends BoardManager {
+
+  private AtomicBoolean wait = new AtomicBoolean(true);
+
+  private boolean letKnockedDown = true;
 
   protected BoardManagerAdvanced() {
     super();
@@ -49,17 +57,48 @@ public class BoardManagerAdvanced extends BoardManager {
         explosion(i, j);
       }
       updateSmoke();
-      hazMatExplosion();
       List<Tile> tiles = getTilesWithFire();
-      // we clear the edge tiles with fire as knocked down player must be able to respawn
-      removeEdgeFire();
-      updateVictimAndFireFighter(tiles);
+      updateFireFighters(tiles);
+
     } while (hitLocation.hasHotSpot());
+    hazMatExplosion();
+    List<Tile> tiles = getTilesWithFire();
+    updateFireFighters(tiles);
+    removeEdgeFire();
+    updateVictims(tiles);
     if (numExec > 1 && numHotSpotLeft > 0) {
       hitLocation.addHotSpot();
       numHotSpotLeft--;
     }
     checkVictimsAndAdd();
+  }
+
+  public void setLetKnockedDown(boolean value) {
+    this.letKnockedDown = value;
+  }
+
+  private void updateFireFighters(List<Tile> tiles) {
+    for (Tile t : tiles) {
+      if (t.hasFireFighters()) {
+        knockedDown(t.getI(), t.getJ());
+      }
+    }
+  }
+
+  private void updateVictims(List<Tile> tiles) {
+    for (Tile t : tiles) {
+      if (t.hasPointOfInterest()) {
+        if (t.hasRealVictim()) {
+          this.numVictimDead++;
+          if (numVictimDead > 3) {
+            endGameMessage("GAME OVER", "You lost the game more than 3 victims died");
+          }
+        } else {
+          numFalseAlarmRemoved++;
+        }
+        t.setNullVictim();
+      }
+    }
   }
 
   private List<Tile> getHazMatTile() {
@@ -119,7 +158,8 @@ public class BoardManagerAdvanced extends BoardManager {
       int specialApPoints,
       boolean veteranBonus,
       FireFighterAdvanceSpecialities role,
-      boolean firstTurn, boolean firstMove) {
+      boolean firstTurn,
+      boolean firstMove) {
     FireFighterAdvanced f = FireFighterAdvanced.createFireFighter(color, role);
     FireFighterTurnManagerAdvance fta =
         (FireFighterTurnManagerAdvance) (FireFighterTurnManager.getInstance());
@@ -543,5 +583,78 @@ public class BoardManagerAdvanced extends BoardManager {
 
   public void incrementNumberOfWallsLeft() {
     this.totalWallDamageLeft++;
+  }
+
+  @Override
+  protected void knockedDown(int i, int j) {
+    if (!TILE_MAP[i][j].hasFire()) {
+      return;
+    }
+    FireFighterAdvanced f = (FireFighterAdvanced) TILE_MAP[i][j].getFirefighters().get(0);
+    if (f instanceof Veteran && f.getActionPointsLeft() > 0) {
+      askForTheKnockedDownProcedure(f);
+    } else if (FireFighterTurnManagerAdvance.getInstance().verifyVeteranVacinity(f)
+        && f.getActionPointsLeft() > 1) {
+      askForTheKnockedDownProcedure(f);
+    }
+    if (letKnockedDown) {
+      ArrayList<Tile> tiles = getClosestAmbulanceTile(i, j);
+      if (tiles.size() == 1) {
+        if (tiles.get(0).hasFire()) {
+          throw new IllegalArgumentException(
+              "Issue with tile at location " + i + " " + j + "It should not have fire");
+        }
+        f.setTile(tiles.get(0));
+      } else {
+        throw new IllegalStateException();
+      }
+    }
+    letKnockedDown = true;
+    if (!TILE_MAP[i][j].getFirefighters().isEmpty()) {
+      knockedDown(i, j);
+    }
+  }
+
+  private void askForTheKnockedDownProcedure(FireFighter f) {
+    List<Direction> directions = Direction.outwardDirections();
+    JSONArray array = new JSONArray();
+    for (Direction d : directions) {
+      Tile adjacentTile = f.getTile().getAdjacentTile(d);
+        if (adjacentTile != null && !adjacentTile.hasFire()) {
+          array.add(d.toString());
+        }
+    }
+    if (array.isEmpty()) {
+      return;
+    }
+    String ip = Server.getClientIP(f.getColor());
+    if (ip == null) {
+      // TODO should not happen in the future
+      return;
+    }
+    Server.sendCommandToSpecificClient(ClientCommands.ASK_WISH_ABOUT_KNOWCK_DOWN, array.toJSONString(),ip);
+    while (wait.get());
+    wait.set(true);
+  }
+
+  public void stopWaiting() {
+    this.wait.set(false);
+  }
+
+  public void moveForKnowckDown(FireFighterAdvanced f, Direction d) {
+    Tile adjacentTile = f.getTile().getAdjacentTile(d);
+    if (adjacentTile == null || adjacentTile.hasFire()) {
+      this.letKnockedDown = true;
+      throw new IllegalArgumentException("There is a fire to the " + d + " for fireFighter " + f.getColor());
+    }
+    if (adjacentTile.hasPointOfInterest()) {
+      if (adjacentTile.hasRealVictim()) {
+        adjacentTile.getVictim().reveal();
+      }
+      else {
+        adjacentTile.setNullVictim();
+      }
+    }
+    f.setTile(adjacentTile);
   }
 }
