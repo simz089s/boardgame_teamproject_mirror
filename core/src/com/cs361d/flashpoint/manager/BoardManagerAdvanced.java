@@ -1,10 +1,14 @@
 package com.cs361d.flashpoint.manager;
 
 import com.cs361d.flashpoint.model.BoardElements.*;
+import com.cs361d.flashpoint.model.FireFighterSpecialities.FireCaptain;
 import com.cs361d.flashpoint.model.FireFighterSpecialities.FireFighterAdvanceSpecialities;
 import com.cs361d.flashpoint.model.FireFighterSpecialities.FireFighterAdvanced;
+import com.cs361d.flashpoint.networking.ClientCommands;
+import com.cs361d.flashpoint.networking.Server;
 import com.cs361d.flashpoint.screen.BoardDialog;
 import com.cs361d.flashpoint.screen.BoardScreen;
+import org.json.simple.JSONObject;
 import sun.invoke.empty.Empty;
 
 import javax.swing.*;
@@ -13,7 +17,6 @@ import java.util.Iterator;
 import java.util.List;
 
 public class BoardManagerAdvanced extends BoardManager {
-  private int numHotSpotLeft;
 
   protected BoardManagerAdvanced() {
     super();
@@ -172,10 +175,12 @@ public class BoardManagerAdvanced extends BoardManager {
     int j = t.getJ();
     if (i == 0 || i == ROWS - 1 || j == 0 || j == COLUMNS - 1) {
       if (t.hasRealVictim() && t.hasAmbulance()) {
-        BoardScreen.getDialog()
-            .drawDialog("Victim Saved", "Congratulations, you saved one victim!");
         numVictimSaved++;
         t.setNullVictim();
+        Server.sendCommandToAllClients(ClientCommands.SET_GAME_STATE, DBHandler.getBoardAsString());
+        Server.sendCommandToAllClients(ClientCommands.REFRESH_BOARD_SCREEN,"");
+        sendMessageToGUI("Victim Saved", "Congratulations, you saved one victim!");
+        return true;
       }
     }
     if (numVictimSaved >= NUM_VICTIM_SAVED_TO_WIN) {
@@ -537,4 +542,13 @@ public class BoardManagerAdvanced extends BoardManager {
     }
     return tiles;
   }
+
+  public void incrementHotSpots() {
+    this.numHotSpotLeft++;
+  }
+
+  public void incrementNumberOfWallsLeft() {
+    this.totalWallDamageLeft++;
+  }
+
 }

@@ -50,10 +50,7 @@ public class BoardMovesPanel {
 
     boolean actionDone = false; //TODO
 
-    FireFighterTurnManager fireFighterTurnManager = FireFighterTurnManager.getInstance();
-    JSONObject obj = new JSONObject();
-    obj.put("direction",direction.toString());
-    Client.getInstance().sendCommand(move,obj.toJSONString());
+    Client.getInstance().sendCommand(move,direction.toString());
   }
 
   public void drawMovesAndDirectionsPanel() {
@@ -94,25 +91,16 @@ public class BoardMovesPanel {
 
               Actions move = Actions.fromString(lstMoveOptions.getSelected());
 
-              FireFighterTurnManager fireFighterTurnManager = FireFighterTurnManager.getInstance();
-
               // family
               switch(move) {
                 case MOVE:
-                  drawDirectionsPanelTable(move);
-                  break;
                 case EXTINGUISH:
-                  drawDirectionsPanelTable(move);
-                  break;
                 case CHOP:
-                  drawDirectionsPanelTable(move);
-                  break;
                 case MOVE_WITH_VICTIM:
-                  drawDirectionsPanelTable(move);
-                  break;
                 case INTERACT_WITH_DOOR:
                   drawDirectionsPanelTable(move);
                   break;
+
                 case END_TURN:
                   Client.getInstance().sendCommand(Actions.END_TURN,"");
                   break;
@@ -124,38 +112,36 @@ public class BoardMovesPanel {
 
               // advanced
               if (BoardManager.getInstance().isAdvanced()) {
-                FireFighterTurnManagerAdvance fireFighterTurnManagerAdvance = (FireFighterTurnManagerAdvance) fireFighterTurnManager;
                 switch(move) {
                   case FIRE_DECK_GUN:
-                    Client.getInstance().sendCommand(Actions.FIRE_DECK_GUN,"");
-                    break;
-                  case MOVE_WITH_HAZMAT:
-                    drawDirectionsPanelTable(move);
-                    break;
-                  case DRIVE_AMBULANCE:
-                    drawDirectionsPanelTable(move);
-                    break;
-                  case DRIVE_FIRETRUCK:
-                    drawDirectionsPanelTable(move);
-                    break;
                   case REMOVE_HAZMAT:
-                    Client.getInstance().sendCommand(Actions.REMOVE_HAZMAT,"");
+                  case CURE_VICTIM:
+                  case CLEAR_HOTSPOT:
+                    Client.getInstance().sendCommand(move,"");
                     break;
+
+                  case MOVE_WITH_HAZMAT:
+                  case DRIVE_AMBULANCE:
+                  case DRIVE_FIRETRUCK:
+                  case REPAIR_WALL:
+                    drawDirectionsPanelTable(move);
+                    break;
+
                   case FLIP_POI:
                     addFilterOnChoosePOIChoosePos();
                     break;
-                  case CURE_VICTIM:
-                    Client.getInstance().sendCommand(Actions.CURE_VICTIM,"");
-                    break;
+
                   case CREW_CHANGE:
                     removeMovesAndDirectionsPanel();
                     boardChooseRolePanel.drawChooseSpecialtyPanel();
                     break;
+
                   case COMMAND_OTHER_FIREFIGHTER:
                     removeMovesAndDirectionsPanel();
                     BoardCaptainCommandPanel boardCaptainCommand = new BoardCaptainCommandPanel(stage);
                     boardCaptainCommand.drawColorsPanel();
                     break;
+
                   default:
                 }
               }

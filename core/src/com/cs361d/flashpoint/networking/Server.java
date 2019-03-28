@@ -6,6 +6,7 @@ import com.cs361d.flashpoint.model.BoardElements.FireFighter;
 import com.cs361d.flashpoint.model.BoardElements.FireFighterColor;
 import com.cs361d.flashpoint.model.BoardElements.Tile;
 import com.cs361d.flashpoint.model.FireFighterSpecialities.FireFighterAdvanceSpecialities;
+import com.cs361d.flashpoint.model.FireFighterSpecialities.FireFighterAdvanced;
 import com.cs361d.flashpoint.screen.Actions;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -403,31 +404,26 @@ public class Server implements Runnable {
       boolean refreshCrewChangePanel = false;
       switch (action) {
         case MOVE:
-          JSONObject jsonObject = (JSONObject) parser.parse(message);
-          direction = Direction.fromString(jsonObject.get("direction").toString());
+          direction = Direction.fromString(message);
           mustSendAndRefresh = FireFighterTurnManager.getInstance().move(direction);
           break;
 
         case MOVE_WITH_VICTIM:
-          jsonObject = (JSONObject) parser.parse(message);
-          direction = Direction.fromString(jsonObject.get("direction").toString());
+          direction = Direction.fromString(message);
           mustSendAndRefresh = FireFighterTurnManager.getInstance().moveWithVictim(direction);
 
           break;
 
         case CHOP:
-          jsonObject = (JSONObject) parser.parse(message);
-          direction = Direction.fromString(jsonObject.get("direction").toString());
+          direction = Direction.fromString(message);
           mustSendAndRefresh = FireFighterTurnManager.getInstance().chopWall(direction);
           break;
         case EXTINGUISH:
-          jsonObject = (JSONObject) parser.parse(message);
-          direction = Direction.fromString(jsonObject.get("direction").toString());
+          direction = Direction.fromString(message);
           mustSendAndRefresh = FireFighterTurnManager.getInstance().extinguishFire(direction);
           break;
         case INTERACT_WITH_DOOR:
-          jsonObject = (JSONObject) parser.parse(message);
-          direction = Direction.fromString(jsonObject.get("direction").toString());
+          direction = Direction.fromString(message);
           mustSendAndRefresh = FireFighterTurnManager.getInstance().interactWithDoor(direction);
           break;
 
@@ -445,20 +441,18 @@ public class Server implements Runnable {
           break;
 
         case MOVE_WITH_HAZMAT:
-          jsonObject = (JSONObject) parser.parse(message);
-          direction = Direction.fromString(jsonObject.get("direction").toString());
+          direction = Direction.fromString(message);
           mustSendAndRefresh =
               FireFighterTurnManagerAdvance.getInstance().moveWithHazmat(direction);
           break;
+
         case DRIVE_AMBULANCE:
-          jsonObject = (JSONObject) parser.parse(message);
-          direction = Direction.fromString(jsonObject.get("direction").toString());
+          direction = Direction.fromString(message);
           mustSendAndRefresh =
               FireFighterTurnManagerAdvance.getInstance().driveAmbulance(direction);
           break;
         case DRIVE_FIRETRUCK:
-          jsonObject = (JSONObject) parser.parse(message);
-          direction = Direction.fromString(jsonObject.get("direction").toString());
+          direction = Direction.fromString(message);
           mustSendAndRefresh =
               FireFighterTurnManagerAdvance.getInstance().driveFireTruck(direction);
           break;
@@ -467,7 +461,7 @@ public class Server implements Runnable {
           break;
 
         case FLIP_POI:
-          jsonObject = (JSONObject) parser.parse(message);
+          JSONObject jsonObject = (JSONObject) parser.parse(message);
           int i = Integer.parseInt(jsonObject.get("i").toString());
           int j = Integer.parseInt(jsonObject.get("j").toString());
           Tile t = BoardManager.getInstance().getTileAt(i, j);
@@ -476,6 +470,7 @@ public class Server implements Runnable {
         case CURE_VICTIM:
           mustSendAndRefresh = FireFighterTurnManagerAdvance.getInstance().treatVictim();
           break;
+
         case CREW_CHANGE:
           if (FireFighterTurnManagerAdvance.getInstance()
               .crewChange(FireFighterAdvanceSpecialities.fromString(message))) {
@@ -491,6 +486,15 @@ public class Server implements Runnable {
           mustSendAndRefresh =
               FireFighterTurnManagerAdvance.getInstance()
                   .fireCaptainCommand(color, action, direction);
+          break;
+
+        case REPAIR_WALL:
+          direction = Direction.fromString(message);
+          mustSendAndRefresh = FireFighterTurnManagerAdvance.getInstance().repairWall(direction);
+          break;
+
+        case CLEAR_HOTSPOT:
+          mustSendAndRefresh = FireFighterTurnManagerAdvance.getInstance().clearHotSpot();
           break;
 
         default:

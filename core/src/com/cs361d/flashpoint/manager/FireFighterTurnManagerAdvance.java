@@ -2,6 +2,7 @@ package com.cs361d.flashpoint.manager;
 
 import com.cs361d.flashpoint.model.BoardElements.*;
 import com.cs361d.flashpoint.model.FireFighterSpecialities.*;
+import com.cs361d.flashpoint.networking.Client;
 import com.cs361d.flashpoint.networking.ClientCommands;
 import com.cs361d.flashpoint.networking.DriverResponse;
 import com.cs361d.flashpoint.networking.Server;
@@ -684,5 +685,80 @@ public class FireFighterTurnManagerAdvance extends FireFighterTurnManager {
         ClientCommands.ASK_TO_ACCEPT_MOVE, object.toJSONString(), ip);
     while (wait.get()) ;
     wait.set(true);
+  }
+
+  public boolean clearHotSpot() {
+    StructuralEngineer eng = (StructuralEngineer) getCurrentFireFighter();
+    if (eng == null) {
+      sendMessageToGui("You are not the engineer you cannot perform this action");
+      return false;
+    }
+    if (canClear()) {
+      if (eng.clearAp()) {
+        eng.getTile().removeHotSpot();
+        return true;
+      }
+      sendMessageToGui("You need at least one AP to clear a tile of its hotspot");
+      return false;
+    }
+    return false;
+  }
+
+  public boolean repairWall(Direction d) {
+    StructuralEngineer eng = (StructuralEngineer) getCurrentFireFighter();
+    if (eng == null) {
+      sendMessageToGui("You are not the engineer you cannot perform this action");
+      return false;
+    }
+    if (canRepair(d)) {
+      if (eng.repairAp()) {
+        eng.getTile().repairObstacle(d);
+        return true;
+      }
+      sendMessageToGui("You need at least two AP to clear a tile of its hotspot");
+      return false;
+    }
+    return false;
+  }
+
+  private boolean canClear() {
+    for (Tile t : getCurrentFireFighter().getTile().getAllAdjacentTile()) {
+      if (t.hasFire()) {
+        sendMessageToGui("You cannot clean here as one of the adjacent tile has fire");
+        return false;
+      }
+    }
+    if (!getCurrentFireFighter().getTile().hasHotSpot()) {
+      sendMessageToGui("The tile you are on does not have a hotSpot");
+      return false;
+    }
+    else {
+      return true;
+    }
+  }
+
+  private boolean canRepair(Direction d) {
+    for (Tile t : getCurrentFireFighter().getTile().getAllAdjacentTile()) {
+      if (t.hasFire()) {
+        sendMessageToGui("You cannot clean here as one of the adjacent tile has fire");
+        return false;
+      }
+    }
+    Obstacle o = getCurrentFireFighter().getTile().getObstacle(d);
+    if (o.isNull()) {
+      sendMessageToGui("You cannot repair the air");
+      return false;
+    }
+    else if (o.isDoor()) {
+      sendMessageToGui("You cannot repair a door");
+      return false;
+    }
+    else if (o.getHealth() > 1) {
+      sendMessageToGui("You cannot fix a perfectly healthy wall");
+      return false;
+    }
+    else {
+      return true;
+    }
   }
 }

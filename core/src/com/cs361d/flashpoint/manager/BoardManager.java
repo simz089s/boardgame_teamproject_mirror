@@ -1,10 +1,9 @@
 package com.cs361d.flashpoint.manager;
 
 import com.cs361d.flashpoint.model.BoardElements.*;
-import com.cs361d.flashpoint.model.FireFighterSpecialities.FireFighterAdvanced;
-import com.cs361d.flashpoint.networking.NetworkManager;
+import com.cs361d.flashpoint.model.FireFighterSpecialities.FireCaptain;
+import com.cs361d.flashpoint.networking.ClientCommands;
 import com.cs361d.flashpoint.networking.Server;
-import com.cs361d.flashpoint.screen.BoardDialog;
 import com.cs361d.flashpoint.screen.BoardScreen;
 import org.jetbrains.annotations.NotNull;
 import org.json.simple.JSONObject;
@@ -13,7 +12,6 @@ import java.util.*;
 import java.util.List;
 
 public class BoardManager implements Iterable<Tile> {
-  protected Difficulty difficulty;
   protected final LinkedList<FireFighterColor> colorList = new LinkedList<FireFighterColor>();
   public static final int NUM_VICTIM_SAVED_TO_WIN = 7;
   public static final int MAX_WALL_DAMAGE_POSSIBLE = 24;
@@ -531,10 +529,12 @@ public class BoardManager implements Iterable<Tile> {
     int j = t.getJ();
     if (i == 0 || i == ROWS - 1 || j == 0 || j == COLUMNS - 1) {
       if (t.hasRealVictim()) {
-        BoardScreen.getDialog()
-            .drawDialog("Victim Saved", "Congratulations, you saved one victim!");
-        numVictimSaved++;
         t.setNullVictim();
+        numVictimSaved++;
+        Server.sendCommandToAllClients(ClientCommands.SET_GAME_STATE, DBHandler.getBoardAsString());
+        Server.sendCommandToAllClients(ClientCommands.REFRESH_BOARD_SCREEN,"");
+        sendMessageToGUI("Victim Saved", "Congratulations, you saved one victim!");
+        return true;
       }
     }
     if (numVictimSaved >= NUM_VICTIM_SAVED_TO_WIN) {
@@ -598,6 +598,19 @@ public class BoardManager implements Iterable<Tile> {
     // TODO End game
   }
 
+  public List<Tile> getAllAdjacentTile(Tile t) {
+    List<Tile> list = new ArrayList<Tile>();
+    for (Direction direction : Direction.values()) {
+      if (direction != Direction.NULLDIRECTION && direction != Direction.NODIRECTION) {
+        Tile adjacentTile = t.getAdjacentTile(direction);
+        if (adjacentTile != null) {
+          list.add(adjacentTile);
+        }
+      }
+    }
+    return list;
+  }
+
   public Tile getTileAt(int i, int j) {
     return TILE_MAP[i][j];
   }
@@ -608,5 +621,19 @@ public class BoardManager implements Iterable<Tile> {
 
   public static boolean isAdvanced() {
     return instance instanceof BoardManagerAdvanced;
+  }
+
+  protected void sendMessageToGUI(String title, String message) {
+    JSONObject obj = new JSONObject();
+    obj.put("title",title);
+    obj.put("message",message);
+    String ip = null;
+    // Here if the command comes from the captain we send the result to its screen
+      ip = Server.getClientIP(FireFighterTurnManager.getInstance().getCurrentFireFighter().getColor());
+    if (ip == null) {
+      throw new IllegalArgumentException("The color " + FireFighterTurnManager.getInstance().getCurrentFireFighter().getColor() +" is not assigned to a client");
+    }
+    Server.sendCommandToSpecificClient(ClientCommands.SHOW_MESSAGE_ON_SCREEN,obj.toJSONString(),ip);
+
   }
 }

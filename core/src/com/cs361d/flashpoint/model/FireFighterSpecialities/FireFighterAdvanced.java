@@ -143,6 +143,9 @@ public abstract class FireFighterAdvanced extends FireFighter {
         case IMAGING_TECHNICIAN:
           f = new ImagingTechnician(color);
           break;
+        case STRUCTURAL_ENGINEER:
+          f = new StructuralEngineer(color);
+          break;
         default:
           throw new IllegalArgumentException("the enum is not yet supported");
       }
