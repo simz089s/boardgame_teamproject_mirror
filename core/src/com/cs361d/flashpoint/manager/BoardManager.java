@@ -531,7 +531,7 @@ public class BoardManager implements Iterable<Tile> {
         numVictimSaved++;
         Server.sendToClientsInGame(ClientCommands.SET_GAME_STATE, DBHandler.getBoardAsString());
         Server.sendToClientsInGame(ClientCommands.REFRESH_BOARD_SCREEN,"");
-        sendMessageToGUI("Victim Saved", "Congratulations, a victim was saved!");
+        sendMessageToAllPlayers("Victim Saved", "Congratulations, a victim was saved!");
         return true;
       }
     }
@@ -600,6 +600,9 @@ public class BoardManager implements Iterable<Tile> {
     List<Tile> list = new ArrayList<Tile>();
     for (Direction direction : Direction.values()) {
       if (direction != Direction.NULLDIRECTION && direction != Direction.NODIRECTION) {
+          if (t.hasObstacle(direction)) {
+              continue;
+          }
         Tile adjacentTile = t.getAdjacentTile(direction);
         if (adjacentTile != null) {
           list.add(adjacentTile);
@@ -621,7 +624,7 @@ public class BoardManager implements Iterable<Tile> {
     return instance instanceof BoardManagerAdvanced;
   }
 
-  protected void sendMessageToGUI(String title, String message) {
+  protected void sendMessageToAllPlayers(String title, String message) {
     JSONObject obj = new JSONObject();
     obj.put("title",title);
     obj.put("message",message);

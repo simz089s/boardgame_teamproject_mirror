@@ -167,7 +167,10 @@ public abstract class FireFighterAdvanced extends FireFighter {
 
   public void setActionPoint(int points) {
     if (points > maxActionPoint) {
-      actionPoints = maxActionPoint;
+        actionPoints = maxActionPoint;
+      if (hadVeteranBonus) {
+        actionPoints++;
+      }
     } else {
       actionPoints = points;
     }
@@ -229,13 +232,13 @@ public abstract class FireFighterAdvanced extends FireFighter {
     }
   }
 
-  public void veteranBonus() {
+  public boolean veteranBonus() {
     if (!hadVeteranBonus) {
       actionPoints++;
       hadVeteranBonus = true;
-      BoardScreen.getDialog()
-          .drawDialog("Extra AP", "Congratulation you just gained one extra AP from the veteran!");
-    }
+      return true;
+      }
+    return false;
   }
 
   public void setHadVeteranBonus(boolean value) {

@@ -20,7 +20,7 @@ public class Veteran extends FireFighterAdvanced {
 
     // The veteran is not affected by the bonus actions.
     @Override
-    public void veteranBonus() {
-
+    public boolean veteranBonus() {
+        return false;
     }
 }

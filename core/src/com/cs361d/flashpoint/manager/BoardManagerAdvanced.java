@@ -124,9 +124,9 @@ public class BoardManagerAdvanced extends BoardManager {
     FireFighterTurnManagerAdvance fta =
         (FireFighterTurnManagerAdvance) (FireFighterTurnManager.getInstance());
     fta.removeSpecilty(role);
+    f.setHadVeteranBonus(veteranBonus);
     f.setActionPoint(actionPoints);
     f.setSpecialActionPoints(specialApPoints);
-    f.setHadVeteranBonus(veteranBonus);
     f.setFirstTurn(firstTurn);
     if (f.getTile() != null) {
       throw new IllegalArgumentException();
@@ -171,8 +171,8 @@ public class BoardManagerAdvanced extends BoardManager {
         numVictimSaved++;
         t.setNullVictim();
         Server.sendToClientsInGame(ClientCommands.SET_GAME_STATE, DBHandler.getBoardAsString());
-        Server.sendToClientsInGame(ClientCommands.REFRESH_BOARD_SCREEN,"");
-        sendMessageToGUI("Victim Saved", "Congratulations, you saved one victim!");
+        Server.sendToClientsInGame(ClientCommands.REFRESH_BOARD_SCREEN, "");
+        sendMessageToAllPlayers("Victim Saved", "Congratulations, a victim was saved!");
         return true;
       }
     }
@@ -483,8 +483,8 @@ public class BoardManagerAdvanced extends BoardManager {
           for (int j = 1; j < 5; j++) {
             tiles[i - 1][j - 1] = TILE_MAP[i][j];
           }
-          break;
         }
+        break;
       case TOP_RIGHT:
         for (int i = 1; i < 4; i++) {
           for (int j = 5; j < 9; j++) {
@@ -543,5 +543,4 @@ public class BoardManagerAdvanced extends BoardManager {
   public void incrementNumberOfWallsLeft() {
     this.totalWallDamageLeft++;
   }
-
 }
