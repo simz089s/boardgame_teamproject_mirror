@@ -50,7 +50,7 @@ public class BoardRideVehicleFragment {
         }
 
         label = new Label("Do you want to ride to the new " + vehicleOfInterest + "'s location?", skinUI);
-        label.setFontScale(1.5f);
+        label.setFontScale(1.0f);
         label.setColor(Color.BLACK);
 
         btnAcceptRide = new TextButton("Yes", skinUI, "default");
