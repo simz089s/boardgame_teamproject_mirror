@@ -631,7 +631,7 @@ public class BoardScreen extends FlashPointScreen {
         new ClickListener() {
           @Override
           public void clicked(InputEvent event, float x, float y) {
-            setSideFragment(Fragment.CHEATSHEET);
+            boardCheatSFragment.drawCheatSFragment();
           }
         });
 
@@ -657,7 +657,7 @@ public class BoardScreen extends FlashPointScreen {
         new ClickListener() {
           @Override
           public void clicked(InputEvent event, float x, float y) {
-            setSideFragment(Fragment.STATS);
+            boardStatsFragment.drawStatsFragment();
           }
         });
 
@@ -984,14 +984,6 @@ public class BoardScreen extends FlashPointScreen {
 
   public static boolean isChatFragment() {
     return currentFragment == Fragment.CHAT;
-  }
-
-  public static boolean isCheatSheetFragment() {
-    return currentFragment == Fragment.CHEATSHEET;
-  }
-
-  public static boolean isStatsFragment() {
-    return currentFragment == Fragment.STATS;
   }
 
   public static boolean isCallForActionFragment() {
