@@ -19,11 +19,7 @@ import static com.cs361d.flashpoint.screen.FlashPointScreen.skinUI;
 public class BoardFireDeckGunPanel {
 
     static Table fireDeckGunTable;
-
-    static TextButton btnAccept;
-    static TextButton btnFireRow;
-    static TextButton btnFireCol;
-
+    static TextButton btnAccept, btnFireRow, btnFireCol;
     static ArrayList<Table> fireDeckGunTablesList = new ArrayList<Table>();
 
     public static void drawFireDeckGunPanel() {
@@ -41,7 +37,7 @@ public class BoardFireDeckGunPanel {
         // confirm button creation
 
         btnAccept = new TextButton(DriverResponse.ACCEPT.toString(), skinUI, "default");
-        btnAccept.setWidth(200);
+        btnAccept.setWidth(label.getWidth());
         btnAccept.setHeight(25);
         btnAccept.setColor(Color.GREEN);
         btnAccept.addListener(
@@ -54,7 +50,7 @@ public class BoardFireDeckGunPanel {
                 });
 
         btnFireRow = new TextButton(DriverResponse.THROW_ROW_DIE.toString(), skinUI, "default");
-        btnFireRow.setWidth(200);
+        btnFireRow.setWidth(label.getWidth());
         btnFireRow.setHeight(25);
         btnFireRow.setColor(Color.SKY);
         btnFireRow.addListener(
@@ -67,7 +63,7 @@ public class BoardFireDeckGunPanel {
                 });
 
         btnFireCol = new TextButton(DriverResponse.THROW_COLUMN_DIE.toString(), skinUI, "default");
-        btnFireCol.setWidth(200);
+        btnFireCol.setWidth(label.getWidth());
         btnFireCol.setHeight(25);
         btnFireCol.setColor(Color.SKY);
         btnFireCol.addListener(
@@ -85,15 +81,15 @@ public class BoardFireDeckGunPanel {
         fireDeckGunTable.row();
         fireDeckGunTable.add().size(btnAccept.getWidth(), btnAccept.getHeight()); // just a space
         fireDeckGunTable.row();
-        fireDeckGunTable.add(btnAccept).size(btnAccept.getWidth(), btnAccept.getHeight());
+        fireDeckGunTable.add(btnAccept).size(label.getWidth(), btnAccept.getHeight());
         fireDeckGunTable.row();
         fireDeckGunTable.add().size(btnAccept.getWidth(), btnAccept.getHeight()); // just a space
         fireDeckGunTable.row();
-        fireDeckGunTable.add(btnFireRow).size(btnFireRow.getWidth(), btnFireRow.getHeight());
+        fireDeckGunTable.add(btnFireRow).size(label.getWidth(), btnFireRow.getHeight());
         fireDeckGunTable.row();
         fireDeckGunTable.add().size(btnAccept.getWidth(), btnAccept.getHeight()); // just a space
         fireDeckGunTable.row();
-        fireDeckGunTable.add(btnFireCol).size(btnFireRow.getWidth(), btnFireRow.getHeight());
+        fireDeckGunTable.add(btnFireCol).size(label.getWidth(), btnFireRow.getHeight());
 
         fireDeckGunTable.setPosition(
                 1000,

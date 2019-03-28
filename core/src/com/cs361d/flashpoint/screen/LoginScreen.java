@@ -35,9 +35,7 @@ public class LoginScreen extends FlashPointScreen {
     BitmapFont fontCaptureIt;
     GlyphLayout gl;
 
-    TextField fdUname;
-    TextField fdPwd;
-    TextField fdSrvIP;
+    TextField fdUname, fdPwd, fdSrvIP;
     CheckBox signUpCheck;
     TextButton btnLogin;
     Label errorMsgLabel;
@@ -76,7 +74,7 @@ public class LoginScreen extends FlashPointScreen {
 
         createPasswordTextField();
 
-        createServerIPTextField();
+        // createServerIPTextField();
 
         createSignUpCheckbox();
 
