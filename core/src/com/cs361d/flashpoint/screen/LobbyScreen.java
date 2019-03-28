@@ -8,13 +8,13 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.List;
-import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.cs361d.flashpoint.manager.User;
 import com.cs361d.flashpoint.networking.Client;
 import com.cs361d.flashpoint.networking.ServerCommands;
@@ -29,17 +29,10 @@ public class LobbyScreen extends FlashPointScreen {
     Texture txtrBG;
     Sprite spriteBG;
 
-    // available games label
-    Label availableGamesLabel;
-
     // load games label
     Label loadGamesLabel;
 
-    // join available games list
-    ScrollPane scrollPaneJoinGameList;
-    ScrollPane.ScrollPaneStyle scrollStyle;
-    List<String> lstJoinGames;
-    List.ListStyle listStyle;
+    Label btnIndicationLabel;
 
     // load saved game list
     ScrollPane scrollPaneLoadGameList;
@@ -47,10 +40,8 @@ public class LobbyScreen extends FlashPointScreen {
     List<String> lstLoadGames;
     List.ListStyle listStyle2;
     String[] availableGames = {""};
-    TextButton btnLogout;
-    TextButton btnJoin;
-    TextButton btnLoad;
-    TextButton btnCreateGame;
+
+    ImageButton btnLogout, btnJoin, btnLoad, btnCreateGame;
 
     Stage stage;
 
@@ -75,12 +66,7 @@ public class LobbyScreen extends FlashPointScreen {
         spriteBG.setPosition(
                 0, 0);
 
-        // create labels
-        createAvailGameLabel();
-        createLoadGameLabel();
-
-        //create available games list (TO JOIN)
-//        createAvailableGamesList(availableGames);
+        createSavedGamesLabel();
 
         //create saved games list (TO LOAD)
         ArrayList<String> savedGames = listFilesOfSavedGames();
@@ -140,47 +126,37 @@ public class LobbyScreen extends FlashPointScreen {
     }
 
 
-
-    // labels
-
-
-
-
-    private void createAvailGameLabel() {
-
-        availableGamesLabel = new Label("Available games:", skinUI);
-        availableGamesLabel.setPosition(
-                5,
-                (Gdx.graphics.getHeight() - debugLbl.getHeight() - 40));
-        availableGamesLabel.setColor(Color.BLACK);
-
-        stage.addActor(availableGamesLabel);
-    }
-
-    private void createLoadGameLabel() {
-        loadGamesLabel = new Label("Saved games:", skinUI);
-        loadGamesLabel.setPosition(
-                Gdx.graphics.getWidth() / 2,
-                (Gdx.graphics.getHeight() - debugLbl.getHeight() - 40));
-        loadGamesLabel.setColor(Color.BLACK);
-
-        stage.addActor(loadGamesLabel);
-    }
-
-
-
     // buttons
 
+    // label
 
+    private void createLogoutLabel() {
+        btnIndicationLabel = new Label("LOGOUT", skinUI);
+        btnIndicationLabel.setColor(Color.BLACK);
 
+        btnIndicationLabel.setPosition(
+                1010,
+                (Gdx.graphics.getHeight() - 90));
+
+        stage.addActor(btnIndicationLabel);
+    }
 
     private void createLogoutButton() {
-        btnLogout = new TextButton("Logout", skinUI, "default");
-        btnLogout.setWidth(100);
-        btnLogout.setHeight(25);
+        Texture myTexture = new Texture(Gdx.files.internal("icons/logoutBtn.png"));
+        TextureRegion myTextureRegion = new TextureRegion(myTexture);
+        TextureRegionDrawable myTexRegionDrawable = new TextureRegionDrawable(myTextureRegion);
+
+        btnLogout = new ImageButton(myTexRegionDrawable);
+
+        btnLogout.setWidth(50);
+        btnLogout.setHeight(50);
+
+        final float x = Gdx.graphics.getWidth() - btnLogout.getWidth() - 95;
+        final float y = Gdx.graphics.getHeight() - btnLogout.getHeight() * 2;
+
         btnLogout.setPosition(
-                (Gdx.graphics.getWidth() - btnLogout.getWidth() - 8),
-                (Gdx.graphics.getHeight() - btnLogout.getHeight() - 8));
+                x,
+                y);
 
         btnLogout.addListener(
                 new ClickListener() {
@@ -192,19 +168,46 @@ public class LobbyScreen extends FlashPointScreen {
                     }
                 });
 
+        btnLogout.addListener(new ClickListener() {
+            public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+                createLogoutLabel();
+            }
+            public void exit(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+                btnIndicationLabel.remove();
+            }
+        });
+
         stage.addActor(btnLogout);
     }
 
-    private void createJoinGameButton() {
-        btnJoin = new TextButton("Join game", skinUI, "default");
-        btnJoin.setWidth(150);
-        btnJoin.setHeight(50);
-        btnJoin.setColor(Color.ROYAL);
-        btnJoin.setPosition(
-                Gdx.graphics.getWidth() / 4 - btnJoin.getWidth() / 2,
-                Gdx.graphics.getHeight() / 5f - (btnJoin.getHeight() / 2));
+    private void createJoinLabel() {
+        btnIndicationLabel = new Label("JOIN GAME", skinUI);
+        btnIndicationLabel.setColor(Color.BLACK);
 
-    btnJoin.addListener(
+        btnIndicationLabel.setPosition(
+                1020,
+                (Gdx.graphics.getHeight() - 130));
+
+        stage.addActor(btnIndicationLabel);
+    }
+
+    private void createJoinGameButton() {
+        Texture myTexture = new Texture(Gdx.files.internal("icons/joinGameBtn.png"));
+        TextureRegion myTextureRegion = new TextureRegion(myTexture);
+        TextureRegionDrawable myTexRegionDrawable = new TextureRegionDrawable(myTextureRegion);
+
+
+        btnJoin = new ImageButton(myTexRegionDrawable);
+        btnJoin.setWidth(50);
+        btnJoin.setHeight(50);
+
+        final float x = Gdx.graphics.getWidth() - btnJoin.getWidth() - 65;
+        final float y = Gdx.graphics.getHeight() - btnJoin.getHeight() * 2 - 43;
+
+        btnJoin.setPosition(
+                x, y);
+
+        btnJoin.addListener(
         new ClickListener() {
           @Override
           public void clicked(InputEvent event, float x, float y) {
@@ -213,17 +216,44 @@ public class LobbyScreen extends FlashPointScreen {
           }
         });
 
+        btnJoin.addListener(new ClickListener() {
+            public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+                createJoinLabel();
+            }
+            public void exit(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+                btnIndicationLabel.remove();
+            }
+        });
+
         stage.addActor(btnJoin);
     }
 
+    private void createLoadLabel() {
+        btnIndicationLabel = new Label("LOAD GAME", skinUI);
+        btnIndicationLabel.setColor(Color.BLACK);
+
+        btnIndicationLabel.setPosition(
+                1120,
+                (Gdx.graphics.getHeight() - 180));
+
+        stage.addActor(btnIndicationLabel);
+    }
+
     private void createLoadGameButton() {
-        btnLoad = new TextButton("Load game", skinUI, "default");
-        btnLoad.setWidth(150);
+        Texture myTexture = new Texture(Gdx.files.internal("icons/loadGameBtn.png"));
+        TextureRegion myTextureRegion = new TextureRegion(myTexture);
+        TextureRegionDrawable myTexRegionDrawable = new TextureRegionDrawable(myTextureRegion);
+
+        btnLoad = new ImageButton(myTexRegionDrawable);
+
+        btnLoad.setWidth(50);
         btnLoad.setHeight(50);
-        btnLoad.setColor(Color.GOLDENROD);
+
+        final float x = Gdx.graphics.getWidth() - btnLoad.getWidth() - 8;
+        final float y = Gdx.graphics.getHeight() - btnLoad.getHeight() * 2 - 50;
+
         btnLoad.setPosition(
-                Gdx.graphics.getWidth() / 2 + Gdx.graphics.getWidth() / 4 - btnJoin.getWidth() / 2,
-                Gdx.graphics.getHeight() / 5f - (btnLoad.getHeight() / 2));
+                x, y);
 
         btnLoad.addListener(
                 new ClickListener() {
@@ -235,17 +265,44 @@ public class LobbyScreen extends FlashPointScreen {
                     }
                 });
 
+        btnLoad.addListener(new ClickListener() {
+            public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+                createLoadLabel();
+            }
+            public void exit(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+                btnIndicationLabel.remove();
+            }
+        });
+
         stage.addActor(btnLoad);
     }
 
+    private void createCreationLabel() {
+        btnIndicationLabel = new Label("CREATE GAME", skinUI);
+        btnIndicationLabel.setColor(Color.BLACK);
+
+        btnIndicationLabel.setPosition(
+                1020,
+                (Gdx.graphics.getHeight() - 40));
+
+        stage.addActor(btnIndicationLabel);
+    }
+
     private void createCreateGameButton() {
-        btnCreateGame = new TextButton("Create game", skinUI, "default");
-        btnCreateGame.setWidth(200);
-        btnCreateGame.setHeight(50);
-        btnCreateGame.setColor(Color.FIREBRICK);
+        Texture myTexture = new Texture(Gdx.files.internal("icons/createGameBtn.png"));
+        TextureRegion myTextureRegion = new TextureRegion(myTexture);
+        TextureRegionDrawable myTexRegionDrawable = new TextureRegionDrawable(myTextureRegion);
+
+        btnCreateGame = new ImageButton(myTexRegionDrawable);
+
+        btnCreateGame.setWidth(100);
+        btnCreateGame.setHeight(100);
+
+        final float x = Gdx.graphics.getWidth() - btnCreateGame.getWidth();
+        final float y = Gdx.graphics.getHeight() - btnCreateGame.getHeight();
+
         btnCreateGame.setPosition(
-                (Gdx.graphics.getWidth() - btnCreateGame.getWidth()) / 2,
-                75);
+                x, y);
 
         btnCreateGame.addListener(
                 new ClickListener() {
@@ -256,47 +313,33 @@ public class LobbyScreen extends FlashPointScreen {
                     }
                 });
 
+        btnCreateGame.addListener(new ClickListener() {
+            public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+                createCreationLabel();
+            }
+            public void exit(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+                btnIndicationLabel.remove();
+            }
+        });
+
         stage.addActor(btnCreateGame);
     }
 
+    // label
 
+    private void createSavedGamesLabel() {
+        loadGamesLabel = new Label("Saved games:", skinUI);
+        loadGamesLabel.setFontScale(1.5f);
+        loadGamesLabel.setColor(Color.BLACK);
 
-    // lists
+        loadGamesLabel.setPosition(
+                50,
+                (Gdx.graphics.getHeight() - debugLbl.getHeight() - 50));
 
-
-
-
-    private void createAvailableGamesList(String[] messages) {
-        // list style
-        listStyle = new List.ListStyle();
-        listStyle.font = Font.get(25); // font size
-        listStyle.fontColorUnselected = Color.BLACK;
-        listStyle.fontColorSelected = Color.BLACK;
-        listStyle.selection = TextureLoader.getDrawable(50, 100, Color.SKY );
-
-        lstJoinGames = new List<String>(listStyle);
-        lstJoinGames.setItems(messages);
-
-        // scrollPane style
-        scrollStyle = new ScrollPane.ScrollPaneStyle();
-        scrollStyle.vScrollKnob = TextureLoader.getDrawable(15, 15, Color.DARK_GRAY);
-        scrollStyle.vScroll = TextureLoader.getDrawable(15, 15, Color.LIGHT_GRAY);
-
-        scrollPaneJoinGameList = new ScrollPane(lstJoinGames, scrollStyle);
-        scrollPaneJoinGameList.setOverscroll(false, false);
-        scrollPaneJoinGameList.setFadeScrollBars(false);
-        scrollPaneJoinGameList.setScrollingDisabled(true, false);
-        scrollPaneJoinGameList.setTransform(true);
-        scrollPaneJoinGameList.setScale(1.0f);
-        scrollPaneJoinGameList.setWidth(Gdx.graphics.getWidth() / 2 - 15);
-        scrollPaneJoinGameList.setHeight(Gdx.graphics.getHeight() - 100);
-        //scrollMessage.setBounds(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight() + 100);
-        scrollPaneJoinGameList.setPosition(
-                10,
-                Gdx.graphics.getHeight() - scrollPaneJoinGameList.getHeight() - 45);
-
-        stage.addActor(scrollPaneJoinGameList);
+        stage.addActor(loadGamesLabel);
     }
+
+    // saved games list
 
     private void createSavedGamesList(String[] messages) {
         // list style
@@ -324,8 +367,8 @@ public class LobbyScreen extends FlashPointScreen {
         scrollPaneLoadGameList.setHeight(Gdx.graphics.getHeight() - 100);
         //scrollMessage.setBounds(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight() + 100);
         scrollPaneLoadGameList.setPosition(
-                Gdx.graphics.getWidth() / 2,
-                Gdx.graphics.getHeight() - scrollPaneLoadGameList.getHeight() - 45);
+                50,
+                Gdx.graphics.getHeight() - scrollPaneLoadGameList.getHeight() - 80);
 
         stage.addActor(scrollPaneLoadGameList);
     }
@@ -333,8 +376,6 @@ public class LobbyScreen extends FlashPointScreen {
 
 
     // helper
-
-
 
     // get saved games from file system
     public ArrayList<String> listFilesOfSavedGames() {

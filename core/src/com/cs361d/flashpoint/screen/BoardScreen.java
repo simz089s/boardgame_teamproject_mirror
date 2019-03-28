@@ -950,7 +950,7 @@ public class BoardScreen extends FlashPointScreen {
     currentFragment = fragment;
   }
 
-  // REDRAW FOR NETWORK
+  // Redraw for Network
   public static void redrawBoard() {
     if (game.getScreen() == game.boardScreen) {
       removeAllPrevFragments();
@@ -959,31 +959,29 @@ public class BoardScreen extends FlashPointScreen {
 
       drawEngineTilesColor();
 
-      if (BoardManager.getInstance().isAdvanced()) {
+      GameSetupActions gameSetupActions = GameSetupActions.NO_SETUP_ACTION;
+
+      if (BoardManager.getInstance().isAdvanced()) { // experienced version
         if (!(BoardManagerAdvanced.getInstance()).hasAmbulancePlaced()) {
 
         } else if (!(BoardManagerAdvanced.getInstance()).hasFireTruckPlaced()) {
-          boardDialog.drawDialog(
-                  "Engine position",
-                  "Choose the fire engine's initial position (green tiles).");
+          gameSetupActions = GameSetupActions.PLACE_FIRETRUCK;
           addFilterOnTileForEngine();
         } else if(!FireFighterTurnManager.getInstance().currentHasTile()){
             if (User.getInstance().isMyTurn() || true) {
-              boardDialog.drawDialog(
-                      "Initial position", "Choose your initial position on the board.");
+              gameSetupActions = GameSetupActions.CHOOSE_INIT_POS;
               addFilterOnTileForChooseInitPos();
             }
         } else if (FireFighterTurnManagerAdvance.getInstance().getCurrentFireFighter().getSpeciality() == FireFighterAdvanceSpecialities.NO_SPECIALITY) {
-          boardDialog.drawDialog(
-                  "Specialty", "Choose your initial specialty on the right panel.");
+          gameSetupActions = GameSetupActions.CHOOSE_INIT_SPECIALTY;
           boardChooseRolePanel.drawChooseSpecialtyPanel();
         } else {
           boardMovesPanel.drawMovesAndDirectionsPanel();
         }
 
-      } else {
+      } else { // family version
 
-        if (!FireFighterTurnManager.getInstance().currentHasTile()) {
+        if (!FireFighterTurnManager.getInstance().currentHasTile()) { // choose init pos
           if (User.getInstance().isMyTurn() || true) {
             addFilterOnTileForChooseInitPos();
             boardChooseRolePanel.drawChooseSpecialtyPanel();
@@ -995,6 +993,29 @@ public class BoardScreen extends FlashPointScreen {
 
       drawGameUnitsOnTile();
       boardGameInfoLabel.drawGameInfoLabel();
+
+      if(gameSetupActions != GameSetupActions.NO_SETUP_ACTION){
+        showDialogForGameSetupAction(gameSetupActions);
+      }
+    }
+  }
+
+  private static void showDialogForGameSetupAction(GameSetupActions gameSetupActions){
+    switch (gameSetupActions) {
+      case PLACE_FIRETRUCK:
+        boardDialog.drawDialog(
+                "Engine position",
+                "Choose the fire engine's initial position (green tiles).");
+        break;
+      case CHOOSE_INIT_POS:
+        boardDialog.drawDialog(
+                "Initial position", "Choose your initial position on the board.");
+        break;
+      case CHOOSE_INIT_SPECIALTY:
+        boardDialog.drawDialog(
+                "Specialty", "Choose your initial specialty on the right panel.");
+        break;
+      default:
     }
   }
 
