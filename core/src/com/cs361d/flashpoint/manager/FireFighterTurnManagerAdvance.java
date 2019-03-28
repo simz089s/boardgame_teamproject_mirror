@@ -464,9 +464,9 @@ public class FireFighterTurnManagerAdvance extends FireFighterTurnManager {
       wait.set(true);
       if (response == UserResponse.ACCEPT) {
         repositionFireFighterAfterAmbulanceMove(f, newLocation, d);
+        Server.sendToClientsInGame(ClientCommands.SET_GAME_STATE, DBHandler.getBoardAsString());
+        Server.sendToClientsInGame(ClientCommands.REFRESH_BOARD_SCREEN, "");
       }
-      Server.sendToClientsInGame(ClientCommands.SET_GAME_STATE, DBHandler.getBoardAsString());
-      Server.sendToClientsInGame(ClientCommands.REFRESH_BOARD_SCREEN, "");
     }
   }
 
