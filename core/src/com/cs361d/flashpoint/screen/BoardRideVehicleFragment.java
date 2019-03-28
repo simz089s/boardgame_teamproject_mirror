@@ -60,16 +60,6 @@ public class BoardRideVehicleFragment {
                     @Override
                     public void clicked(InputEvent event, float x, float y) {
 
-                        switch (carrierStatus) {
-                            case HASAMBULANCE:
-
-                                break;
-                            case HASFIRETRUCK:
-
-                                break;
-                            default:
-                        }
-
                         removeRideVehiclePanel();
                     }
                 });
@@ -83,16 +73,6 @@ public class BoardRideVehicleFragment {
                 new ClickListener() {
                     @Override
                     public void clicked(InputEvent event, float x, float y) {
-
-                        switch (carrierStatus) {
-                            case HASAMBULANCE:
-
-                                break;
-                            case HASFIRETRUCK:
-
-                                break;
-                            default:
-                        }
 
                         removeRideVehiclePanel();
                     }
