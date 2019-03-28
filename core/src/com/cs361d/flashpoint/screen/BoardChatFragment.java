@@ -12,6 +12,7 @@ import com.cs361d.flashpoint.networking.ServerCommands;
 
 import java.util.ArrayList;
 
+import static com.cs361d.flashpoint.screen.BoardScreen.removeAllPrevFragments;
 import static com.cs361d.flashpoint.screen.FlashPointScreen.skinUI;
 
 public class BoardChatFragment {
@@ -54,6 +55,8 @@ public class BoardChatFragment {
         if(BoardScreen.isCallForActionFragment()){
             return;
         }
+
+        removeAllPrevFragments();
 
         // list style
         listStyle = new List.ListStyle();

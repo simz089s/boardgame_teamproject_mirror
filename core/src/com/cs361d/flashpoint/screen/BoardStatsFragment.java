@@ -15,6 +15,8 @@ import com.cs361d.flashpoint.model.FireFighterSpecialities.FireFighterAdvanced;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import static com.cs361d.flashpoint.screen.BoardScreen.removeAllPrevFragments;
+
 public class BoardStatsFragment {
 
     Stage stage;
@@ -37,6 +39,8 @@ public class BoardStatsFragment {
         if(BoardScreen.isCallForActionFragment()){
             return;
         }
+
+        removeAllPrevFragments();
 
         String[] gamesStatsArr = createStats();
 

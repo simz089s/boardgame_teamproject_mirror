@@ -8,6 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 
 import java.util.ArrayList;
 
+import static com.cs361d.flashpoint.screen.BoardScreen.removeAllPrevFragments;
 import static com.cs361d.flashpoint.screen.FlashPointScreen.skinUI;
 
 public class BoardCheatSFragment {
@@ -39,6 +40,8 @@ public class BoardCheatSFragment {
         if(BoardScreen.isCallForActionFragment()){
             return;
         }
+
+        removeAllPrevFragments();
 
         // scrollPane style
         scrollStyle = new ScrollPane.ScrollPaneStyle();
