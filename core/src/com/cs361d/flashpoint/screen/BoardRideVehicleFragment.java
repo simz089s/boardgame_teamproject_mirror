@@ -20,12 +20,10 @@ import static com.cs361d.flashpoint.screen.FlashPointScreen.skinUI;
 
 public class BoardRideVehicleFragment {
 
-    static final int DIRECTION_BUTTON_SIZE = 50;
-
     static Label label;
     static TextButton btnAcceptRide, btnRefuseRide;
 
-    public static void drawRideVehicleFragment(ArrayList<Direction> directions) {
+    public static void drawRideVehicleFragment() {
 
         removeAllPrevFragments();
 
@@ -36,8 +34,11 @@ public class BoardRideVehicleFragment {
         label = new Label("Do you want to ride to the new vehicle's location?", skinUI);
         label.setFontScale(1.5f);
         label.setColor(Color.BLACK);
+        btnAcceptRide.setPosition(
+                1000,
+                Gdx.graphics.getHeight() - 300);
 
-        btnAcceptRide = new TextButton("Get knocked down!", skinUI, "default");
+        btnAcceptRide = new TextButton("Yes", skinUI, "default");
         btnAcceptRide.setWidth(label.getWidth());
         btnAcceptRide.setHeight(25);
         btnAcceptRide.setColor(Color.GREEN);

@@ -42,8 +42,9 @@ public class BoardOnKnockDownPanel {
         label = new Label("What do you want to do?", skinUI);
         label.setFontScale(1.5f);
         label.setColor(Color.BLACK);
-
-        // confirm button creation
+        label.setPosition(
+                1000,
+                Gdx.graphics.getHeight() - 300);
 
         btnStayKnockDown = new TextButton("Get knocked down!", skinUI, "default");
         btnStayKnockDown.setWidth(label.getWidth());
