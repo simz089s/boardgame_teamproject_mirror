@@ -201,8 +201,8 @@ public class BoardManager implements Iterable<Tile> {
     List<Tile> tiles = getTilesWithFire();
     // we clear the edge tiles with fire as knocked down player must be able to respawn
     removeEdgeFire();
-    updateVictimAndFireFighter(tiles);
     checkVictimsAndAdd();
+    updateVictimAndFireFighter(tiles);
   }
 
   protected void checkVictimsAndAdd() {
@@ -366,7 +366,7 @@ public class BoardManager implements Iterable<Tile> {
         if (t.hasRealVictim()) {
           this.numVictimDead++;
           if (numVictimDead > 3) {
-            endGameMessage("GAME OVER", "You lost the game more than 3 victims died");
+            endGameMessage("You lost the game more than 3 victims died");
           }
         } else {
           numFalseAlarmRemoved++;
@@ -533,15 +533,15 @@ public class BoardManager implements Iterable<Tile> {
       if (t.hasRealVictim()) {
         t.setNullVictim();
         numVictimSaved++;
+        if (numVictimSaved >= NUM_VICTIM_SAVED_TO_WIN) {
+          endGameMessage("Congratulations, you won the game saving 7 victims!");
+          return false;
+        }
         Server.sendToClientsInGame(ClientCommands.SET_GAME_STATE, DBHandler.getBoardAsString());
-        Server.sendToClientsInGame(ClientCommands.REFRESH_BOARD_SCREEN,"");
+        Server.sendToClientsInGame(ClientCommands.REFRESH_BOARD_SCREEN, "");
         sendMessageToAllPlayers("Victim Saved", "Congratulations, a victim was saved!");
         return true;
       }
-    }
-    if (numVictimSaved >= NUM_VICTIM_SAVED_TO_WIN) {
-      endGameMessage("GAME OVER", "Congratulations, you won the game saving 7 victims!");
-      return true;
     }
     return false;
   }
@@ -550,7 +550,7 @@ public class BoardManager implements Iterable<Tile> {
     this.totalWallDamageLeft--;
     if (this.totalWallDamageLeft <= 0) {
       BoardManager.getInstance().setGameEnded();
-      endGameMessage("GAME OVER", "You lost the game. The building collapsed.");
+      endGameMessage("You lost the game. The building collapsed.");
       return false;
     }
     return true;
@@ -593,20 +593,18 @@ public class BoardManager implements Iterable<Tile> {
     return tiles.iterator();
   }
 
-  public void endGameMessage(String title, String msg) {
-    JSONObject msCarrier = new JSONObject();
-    msCarrier.put("title", title);
-    msCarrier.put("endmessage", msg);
-    // TODO End game
+  public void endGameMessage(String msg) {
+    Server.gameHasEnded = true;
+    Server.messageToEnd = msg;
   }
 
   public List<Tile> getAllAdjacentTile(Tile t) {
     List<Tile> list = new ArrayList<Tile>();
     for (Direction direction : Direction.values()) {
       if (direction != Direction.NULLDIRECTION && direction != Direction.NODIRECTION) {
-          if (t.hasObstacle(direction)) {
-              continue;
-          }
+        if (t.hasObstacle(direction)) {
+          continue;
+        }
         Tile adjacentTile = t.getAdjacentTile(direction);
         if (adjacentTile != null) {
           list.add(adjacentTile);
@@ -630,8 +628,8 @@ public class BoardManager implements Iterable<Tile> {
 
   protected void sendMessageToAllPlayers(String title, String message) {
     JSONObject obj = new JSONObject();
-    obj.put("title",title);
-    obj.put("message",message);
-    Server.sendToClientsInGame(ClientCommands.SHOW_MESSAGE_ON_SCREEN,obj.toJSONString());
+    obj.put("title", title);
+    obj.put("message", message);
+    Server.sendToClientsInGame(ClientCommands.SHOW_MESSAGE_ON_SCREEN, obj.toJSONString());
   }
 }

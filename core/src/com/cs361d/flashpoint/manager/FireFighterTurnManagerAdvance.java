@@ -485,12 +485,38 @@ public class FireFighterTurnManagerAdvance extends FireFighterTurnManager {
           t.setCarrierStatus(CarrierStatus.HASFIRETRUCK);
         }
         repositionFireFighterAfterFireTruckMove(getCurrentFireFighter(), newLocation, d);
+        Server.sendToClientsInGame(ClientCommands.SET_GAME_STATE, DBHandler.getBoardAsString());
+        Server.sendToClientsInGame(ClientCommands.REFRESH_BOARD_SCREEN, "");
+        moveWithFireTruck(list,newLocation,d);
         return verifyVeteranVacinityToAddAp();
       }
     }
     sendActionRejectedMessageToCurrentPlayer(
         "You must be standing on the fire truck and have at least 2 AP.");
     return false;
+  }
+
+  private void moveWithFireTruck(List<Tile> oldLocation, List<Tile> newLocation, Direction d) {
+    List<FireFighterAdvanced> fireFighterList = new ArrayList<FireFighterAdvanced>();
+    for (Tile t : oldLocation) {
+      for (FireFighter f : t.getFirefighters()) {
+        fireFighterList.add((FireFighterAdvanced) f);
+      }
+    }
+
+    for (FireFighterAdvanced f : fireFighterList) {
+      Server.sendCommandToSpecificClient(
+          ClientCommands.ASK_DRIVE_WITH_ENGINE,
+          CarrierStatus.HASFIRETRUCK.toString(),
+          Server.getClientIP(f.getColor()));
+      while (wait.get());
+      wait.set(true);
+      if (response == UserResponse.ACCEPT) {
+        repositionFireFighterAfterFireTruckMove(f, newLocation, d);
+        Server.sendToClientsInGame(ClientCommands.SET_GAME_STATE, DBHandler.getBoardAsString());
+        Server.sendToClientsInGame(ClientCommands.REFRESH_BOARD_SCREEN, "");
+      }
+    }
   }
 
   public void repositionFireFighterAfterFireTruckMove(

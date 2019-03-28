@@ -287,6 +287,15 @@ public class Client {
               });
           break;
 
+          case GAME_HAS_ENDED:
+              Gdx.app.postRunnable(
+                      new Runnable() {
+                          @Override
+                          public void run() {
+                             BoardScreen.getDialog().drawEndGameDialog("GAME OVER",message);
+                          }
+                      });
+              break;
         default:
       }
 

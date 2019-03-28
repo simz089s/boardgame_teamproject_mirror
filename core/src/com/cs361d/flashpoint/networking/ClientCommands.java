@@ -13,6 +13,7 @@ public enum ClientCommands //Commands sent to client
     ASK_TO_ACCEPT_MOVE("ASK_TO_ACCEPT_MOVE"),
     ASK_WISH_ABOUT_KNOWCK_DOWN("ASK_WISH_ABOUT_KNOWCK_DOWN"),
     ASK_DRIVE_WITH_ENGINE("ASK_DRIVE_WITH_ENGINE"),
+    GAME_HAS_ENDED("GAME_HAS_ENDED"),
     ASK_DRIVER_MSG("ASK_DRIVER_MSG");
 
     private String text;

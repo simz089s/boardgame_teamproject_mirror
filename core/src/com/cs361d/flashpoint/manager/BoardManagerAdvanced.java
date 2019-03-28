@@ -91,7 +91,7 @@ public class BoardManagerAdvanced extends BoardManager {
         if (t.hasRealVictim()) {
           this.numVictimDead++;
           if (numVictimDead > 3) {
-            endGameMessage("GAME OVER", "You lost the game more than 3 victims died");
+            endGameMessage("You lost the game more than 3 victims died");
           }
         } else {
           numFalseAlarmRemoved++;
@@ -209,17 +209,17 @@ public class BoardManagerAdvanced extends BoardManager {
     int j = t.getJ();
     if (i == 0 || i == ROWS - 1 || j == 0 || j == COLUMNS - 1) {
       if (t.hasRealVictim() && t.hasAmbulance()) {
-        numVictimSaved++;
         t.setNullVictim();
+        numVictimSaved++;
+        if (numVictimSaved >= NUM_VICTIM_SAVED_TO_WIN) {
+          endGameMessage("Congratulations, you won the game saving 7 victims!");
+          return false;
+        }
         Server.sendToClientsInGame(ClientCommands.SET_GAME_STATE, DBHandler.getBoardAsString());
         Server.sendToClientsInGame(ClientCommands.REFRESH_BOARD_SCREEN, "");
         sendMessageToAllPlayers("Victim Saved", "Congratulations, a victim was saved!");
         return true;
       }
-    }
-    if (numVictimSaved >= NUM_VICTIM_SAVED_TO_WIN) {
-      endGameMessage("GAME OVER", "Congratulations, you won the game saving 7 victims!");
-      return true;
     }
     return false;
   }
@@ -622,9 +622,9 @@ public class BoardManagerAdvanced extends BoardManager {
     JSONArray array = new JSONArray();
     for (Direction d : directions) {
       Tile adjacentTile = f.getTile().getAdjacentTile(d);
-        if (adjacentTile != null && !adjacentTile.hasFire() && !f.getTile().hasObstacle(d)) {
-          array.add(d.toString());
-        }
+      if (adjacentTile != null && !adjacentTile.hasFire() && !f.getTile().hasObstacle(d)) {
+        array.add(d.toString());
+      }
     }
     if (array.isEmpty()) {
       return;
@@ -634,8 +634,9 @@ public class BoardManagerAdvanced extends BoardManager {
       // TODO should not happen in the future
       return;
     }
-    Server.sendCommandToSpecificClient(ClientCommands.ASK_WISH_ABOUT_KNOWCK_DOWN, array.toJSONString(),ip);
-    while (wait.get());
+    Server.sendCommandToSpecificClient(
+        ClientCommands.ASK_WISH_ABOUT_KNOWCK_DOWN, array.toJSONString(), ip);
+    while (wait.get()) ;
     wait.set(true);
   }
 
@@ -647,13 +648,13 @@ public class BoardManagerAdvanced extends BoardManager {
     Tile adjacentTile = f.getTile().getAdjacentTile(d);
     if (adjacentTile == null || adjacentTile.hasFire() || !f.dodgeAp()) {
       this.letKnockedDown = true;
-      throw new IllegalArgumentException("There is a fire to the " + d + " for fireFighter " + f.getColor());
+      throw new IllegalArgumentException(
+          "There is a fire to the " + d + " for fireFighter " + f.getColor());
     }
     if (adjacentTile.hasPointOfInterest()) {
       if (adjacentTile.hasRealVictim()) {
         adjacentTile.getVictim().reveal();
-      }
-      else {
+      } else {
         adjacentTile.setNullVictim();
       }
     }

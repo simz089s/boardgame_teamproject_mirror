@@ -37,6 +37,8 @@ public class Server implements Runnable {
   private static Server instance;
   private static boolean gameLoaded = false;
   private static List<String> chatMessages = new ArrayList<String>();
+  public static boolean gameHasEnded = false;
+  public static String messageToEnd = "";
 
   // counter for clientObservers
   static int i = 0;
@@ -397,7 +399,6 @@ public class Server implements Runnable {
         case REPLY_MOVE_WITH_VEHICULE:
           FireFighterTurnManagerAdvance.getInstance().setUserResponse(UserResponse.fromString(message));
           FireFighterTurnManagerAdvance.getInstance().stopWaiting();
-          mustSendAndRefresh = true;
           break;
 
         default:
@@ -537,6 +538,11 @@ public class Server implements Runnable {
       if (mustSendAndRefresh) {
         Server.sendToClientsInGame(ClientCommands.SET_GAME_STATE, DBHandler.getBoardAsString());
         Server.sendToClientsInGame(ClientCommands.REFRESH_BOARD_SCREEN, "");
+        if (gameHasEnded) {
+          gameHasEnded = false;
+          gameLoaded = false;
+          Server.sendToClientsInGame(ClientCommands.GAME_HAS_ENDED, messageToEnd);
+        }
       }
     } catch (ParseException e) {
       e.printStackTrace();
