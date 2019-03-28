@@ -49,7 +49,7 @@ public class BoardRideVehicleFragment {
             default:
         }
 
-        label = new Label("Do you want to ride to the new " + vehicleOfInterest + "'s location?", skinUI);
+        label = new Label("Wanna ride to the new " + vehicleOfInterest + "'s location?", skinUI);
         label.setFontScale(1.0f);
         label.setColor(Color.BLACK);
 
@@ -70,7 +70,7 @@ public class BoardRideVehicleFragment {
         btnRefuseRide = new TextButton("No", skinUI, "default");
         btnRefuseRide.setWidth(label.getWidth());
         btnRefuseRide.setHeight(35);
-        btnRefuseRide.setColor(Color.PINK);
+        btnRefuseRide.setColor(Color.FIREBRICK);
 
         btnRefuseRide.addListener(
                 new ClickListener() {
@@ -95,7 +95,7 @@ public class BoardRideVehicleFragment {
         rideVehicleTable.add(btnRefuseRide).size(label.getWidth(), btnRefuseRide.getHeight());
 
         rideVehicleTable.setPosition(
-                1000,
+                1020,
                 Gdx.graphics.getHeight() - 350);
 
         rideVehicleTablesList.add(rideVehicleTable);
