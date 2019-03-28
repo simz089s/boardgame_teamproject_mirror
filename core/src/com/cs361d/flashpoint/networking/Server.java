@@ -116,7 +116,7 @@ public class Server implements Runnable {
 
   // public static ArrayList<Thread> getClientThreads() { return clientThreads; }
 
-  public boolean isEmpty() {
+  public static boolean isEmpty() {
     return notYetAssigned.isEmpty();
   }
 
@@ -222,7 +222,6 @@ public class Server implements Runnable {
       String ip = jsonObject.get("IP").toString();
       System.out.println(message);
       boolean mustSendAndRefresh = false;
-      boolean refreshCrewChangePanel = false;
 
       switch (c) {
         case ADD_CHAT_MESSAGE:
@@ -281,6 +280,13 @@ public class Server implements Runnable {
               sendCommandToSpecificClient(
                   ClientCommands.SET_GAME_STATE, DBHandler.getBoardAsString(), ip);
               sendCommandToSpecificClient(ClientCommands.SET_BOARD_SCREEN, "", ip);
+              JSONObject obj1 = new JSONObject();
+              String rightSide =
+                  isEmpty() ? "game is now full!" : notYetAssigned.size() + " players left to join";
+              obj1.put("title", "A new player joined the game");
+              obj1.put("message", "The player: " + message + " joined the game, " + rightSide);
+              sendCommandToAllClients(ClientCommands.SHOW_MESSAGE_ON_SCREEN, obj1.toJSONString());
+
             } else {
               JSONObject obj1 = new JSONObject();
               obj1.put("title", "Game currently full");

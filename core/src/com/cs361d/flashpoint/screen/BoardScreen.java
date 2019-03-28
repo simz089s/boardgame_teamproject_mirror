@@ -1017,7 +1017,7 @@ public class BoardScreen extends FlashPointScreen {
   public static void displayMessage(String title, String message) {
     if (game.getScreen() == game.boardScreen) {
       boardDialog.drawDialog(title, message);
-    } else {
+    } else if (game.getScreen() == game.lobbyScreen){
       LobbyScreen.getDialog().drawDialog(title, message);
     }
   }

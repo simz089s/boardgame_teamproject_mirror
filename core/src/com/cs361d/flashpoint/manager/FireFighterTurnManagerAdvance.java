@@ -79,12 +79,14 @@ public class FireFighterTurnManagerAdvance extends FireFighterTurnManager {
     }
   }
 
-  // Covers the veteran bonusRemovove
+  // Covers the veteran bonusRemoval
   @Override
-  public void endTurn() {
+  public boolean endTurn() {
     // TODO do not end turn if all users are not yet present
-    FireFighter fireFighter = getCurrentFireFighter();
-    if (!fireFighter.getTile().hasFire()) {
+//    if (!Server.isEmpty()) {
+//      sendMessageToGui("You cannot end your turn as the game is not full yet please wait");
+//      return false;
+//    }
       FireFighterAdvanced last = (FireFighterAdvanced) FIREFIGHTERS.removeFirst();
       last.removeVeteranBonus();
       FIREFIGHTERS.addLast(last);
@@ -94,9 +96,7 @@ public class FireFighterTurnManagerAdvance extends FireFighterTurnManager {
         getCurrentFireFighter().resetActionPoints();
         verifyVeteranVacinityToAddAp();
       }
-    } else {
-      sendMessageToGui("You cannot end turn as you are currently on a tile with fire");
-    }
+    return true;
   }
 
   public boolean crewChange(FireFighterAdvanceSpecialities speciality) {

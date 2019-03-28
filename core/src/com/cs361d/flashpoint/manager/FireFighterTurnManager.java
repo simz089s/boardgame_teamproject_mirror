@@ -15,8 +15,6 @@ public class FireFighterTurnManager implements Iterable<FireFighter> {
 
   protected final int MAX_NUMBER_OF_PLAYERS = 6;
   protected LinkedList<FireFighter> FIREFIGHTERS = new LinkedList<FireFighter>();
-  protected boolean allAssigned = false;
-  boolean firstCall = true;
   protected boolean sendToCaptain = false;
   protected static FireFighterTurnManager instance = new FireFighterTurnManager();
 
@@ -53,7 +51,7 @@ public class FireFighterTurnManager implements Iterable<FireFighter> {
     f.removeFromBoard();
   }
 
-  public void endTurn() {
+  public boolean endTurn() {
 
     FireFighter fireFighter = getCurrentFireFighter();
     if (!fireFighter.getTile().hasFire()) {
@@ -61,8 +59,10 @@ public class FireFighterTurnManager implements Iterable<FireFighter> {
       FIREFIGHTERS.addLast(last);
       BoardManager.getInstance().endTurnFireSpread();
       last.resetActionPoints();
+      return true;
     } else {
       sendMessageToGui("You cannot end turn as you are currently on a tile with fire");
+      return false;
     }
   }
 
