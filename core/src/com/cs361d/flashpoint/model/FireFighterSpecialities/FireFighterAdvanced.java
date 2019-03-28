@@ -48,7 +48,7 @@ public abstract class FireFighterAdvanced extends FireFighter {
   @Override
   public List<Actions> getActions() {
     List<Actions> actions = Actions.advancedActions();
-    if (!firstTurn) {
+    if (!firstMove) {
       actions.remove(Actions.CREW_CHANGE);
     }
     return actions;
