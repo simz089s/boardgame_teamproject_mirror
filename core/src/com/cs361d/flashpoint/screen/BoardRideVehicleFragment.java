@@ -8,6 +8,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.cs361d.flashpoint.manager.BoardManager;
+import com.cs361d.flashpoint.manager.BoardManagerAdvanced;
+import com.cs361d.flashpoint.model.BoardElements.CarrierStatus;
 
 import java.util.ArrayList;
 
@@ -24,7 +26,7 @@ public class BoardRideVehicleFragment {
 
     static ArrayList<Table> rideVehicleTablesList = new ArrayList<Table>();
 
-    public static void drawRideVehicleFragment() {
+    public static void drawRideVehicleFragment(final CarrierStatus carrierStatus) {
 
         removeAllPrevFragments();
 
@@ -32,34 +34,66 @@ public class BoardRideVehicleFragment {
             return;
         }
 
-        label = new Label("Do you want to ride to the new vehicle's location?", skinUI);
+        String vehicleOfInterest = "";
+
+        switch (carrierStatus) {
+            case HASAMBULANCE:
+                vehicleOfInterest = "ambulance";
+                break;
+            case HASFIRETRUCK:
+                vehicleOfInterest = "firetruck";
+                break;
+            default:
+        }
+
+        label = new Label("Do you want to ride to the new " + vehicleOfInterest + "'s location?", skinUI);
         label.setFontScale(1.5f);
         label.setColor(Color.BLACK);
 
         btnAcceptRide = new TextButton("Yes", skinUI, "default");
         btnAcceptRide.setWidth(label.getWidth());
-        btnAcceptRide.setHeight(25);
+        btnAcceptRide.setHeight(35);
         btnAcceptRide.setColor(Color.CHARTREUSE);
 
         btnAcceptRide.addListener(
                 new ClickListener() {
                     @Override
                     public void clicked(InputEvent event, float x, float y) {
-                        label.remove();
-                        btnAcceptRide.remove();
-                        btnRefuseRide.remove();
+
+                        switch (carrierStatus) {
+                            case HASAMBULANCE:
+
+                                break;
+                            case HASFIRETRUCK:
+
+                                break;
+                            default:
+                        }
+
+                        removeRideVehiclePanel();
                     }
                 });
 
         btnRefuseRide = new TextButton("No", skinUI, "default");
         btnRefuseRide.setWidth(label.getWidth());
-        btnRefuseRide.setHeight(25);
+        btnRefuseRide.setHeight(35);
         btnRefuseRide.setColor(Color.PINK);
 
         btnRefuseRide.addListener(
                 new ClickListener() {
                     @Override
                     public void clicked(InputEvent event, float x, float y) {
+
+                        switch (carrierStatus) {
+                            case HASAMBULANCE:
+
+                                break;
+                            case HASFIRETRUCK:
+
+                                break;
+                            default:
+                        }
+
                         removeRideVehiclePanel();
                     }
                 });
