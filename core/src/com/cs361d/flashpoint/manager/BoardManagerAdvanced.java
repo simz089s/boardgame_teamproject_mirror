@@ -610,6 +610,8 @@ public class BoardManagerAdvanced extends BoardManager {
       }
     }
     letKnockedDown = true;
+    Server.sendToClientsInGame(ClientCommands.SET_GAME_STATE, DBHandler.getBoardAsString());
+    Server.sendToClientsInGame(ClientCommands.REFRESH_BOARD_SCREEN, "");
     if (!TILE_MAP[i][j].getFirefighters().isEmpty()) {
       knockedDown(i, j);
     }
@@ -620,7 +622,7 @@ public class BoardManagerAdvanced extends BoardManager {
     JSONArray array = new JSONArray();
     for (Direction d : directions) {
       Tile adjacentTile = f.getTile().getAdjacentTile(d);
-        if (adjacentTile != null && !adjacentTile.hasFire()) {
+        if (adjacentTile != null && !adjacentTile.hasFire() && !f.getTile().hasObstacle(d)) {
           array.add(d.toString());
         }
     }
@@ -643,7 +645,7 @@ public class BoardManagerAdvanced extends BoardManager {
 
   public void moveForKnowckDown(FireFighterAdvanced f, Direction d) {
     Tile adjacentTile = f.getTile().getAdjacentTile(d);
-    if (adjacentTile == null || adjacentTile.hasFire()) {
+    if (adjacentTile == null || adjacentTile.hasFire() || !f.dodgeAp()) {
       this.letKnockedDown = true;
       throw new IllegalArgumentException("There is a fire to the " + d + " for fireFighter " + f.getColor());
     }

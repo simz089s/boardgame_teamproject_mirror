@@ -2,9 +2,7 @@ package com.cs361d.flashpoint.manager;
 
 import com.cs361d.flashpoint.model.BoardElements.*;
 import com.cs361d.flashpoint.model.FireFighterSpecialities.*;
-import com.cs361d.flashpoint.networking.ClientCommands;
-import com.cs361d.flashpoint.networking.DriverResponse;
-import com.cs361d.flashpoint.networking.Server;
+import com.cs361d.flashpoint.networking.*;
 import com.cs361d.flashpoint.screen.Actions;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -20,13 +18,13 @@ public class FireFighterTurnManagerAdvance extends FireFighterTurnManager {
 
   private final AtomicBoolean wait = new AtomicBoolean(true);
   private boolean accept = false;
-  private DriverResponse response = DriverResponse.ACCEPT;
+  private UserResponse response = UserResponse.ACCEPT;
 
   public void setAccept(boolean val) {
     this.accept = val;
   }
 
-  public void setDriverResponse(DriverResponse response) {
+  public void setUserResponse(UserResponse response) {
     this.response = response;
   }
 
@@ -201,6 +199,9 @@ public class FireFighterTurnManagerAdvance extends FireFighterTurnManager {
               continue;
             }
             validTiles.add(adjacentTile);
+            if (!adjacentTile.hasNoFireAndNoSmoke()) {
+              continue;
+            }
             while (dist < 4 && !adjacentTile.hasObstacle(d)) {
               adjacentTile = adjacentTile.getAdjacentTile(d);
               if (adjacentTile != null && adjacentTile.hasNoFireAndNoSmoke()) {
@@ -417,14 +418,18 @@ public class FireFighterTurnManagerAdvance extends FireFighterTurnManager {
   }
 
   public boolean driveAmbulance(Direction d) {
+    //    if (!Server.isEmpty()) {
+    //      TODO do not drice if all palyers are not here
+    //    }
     if (getCurrentFireFighter().driveAp()) {
       if (d == Direction.NODIRECTION || d == Direction.NULLDIRECTION) {
         throw new IllegalArgumentException("The direction cannot be " + d.toString());
       } else {
         List<Tile> newLocation =
             BoardManagerAdvanced.getInstance().getTilesThatCanContainAmbulance(d);
-        List<Tile> list = BoardManagerAdvanced.getInstance().getTilesThatContainAmbulance();
-        for (Tile t : list) {
+        List<Tile> currenLocation =
+            BoardManagerAdvanced.getInstance().getTilesThatContainAmbulance();
+        for (Tile t : currenLocation) {
           t.setCarrierStatus(CarrierStatus.CANHAVEAMBULANCE);
         }
         for (Tile t : newLocation) {
@@ -432,11 +437,37 @@ public class FireFighterTurnManagerAdvance extends FireFighterTurnManager {
         }
         BoardManagerAdvanced.getInstance().verifyVictimRescueStatus(newLocation.get(0));
         BoardManagerAdvanced.getInstance().verifyVictimRescueStatus(newLocation.get(1));
+        Server.sendToClientsInGame(ClientCommands.SET_GAME_STATE, DBHandler.getBoardAsString());
+        Server.sendToClientsInGame(ClientCommands.REFRESH_BOARD_SCREEN, "");
+        moveWithAmbulance(currenLocation, newLocation, d);
         return verifyVeteranVacinityToAddAp();
       }
     }
     sendActionRejectedMessageToCurrentPlayer("You need at least 2 AP to move the ambulance.");
     return false;
+  }
+
+  private void moveWithAmbulance(List<Tile> oldLocation, List<Tile> newLocation, Direction d) {
+    List<FireFighterAdvanced> fireFighterList = new ArrayList<FireFighterAdvanced>();
+    for (Tile t : oldLocation) {
+      for (FireFighter f : t.getFirefighters()) {
+        fireFighterList.add((FireFighterAdvanced) f);
+      }
+    }
+
+    for (FireFighterAdvanced f : fireFighterList) {
+      Server.sendCommandToSpecificClient(
+          ClientCommands.ASK_DRIVE_WITH_ENGINE,
+          CarrierStatus.HASAMBULANCE.toString(),
+          Server.getClientIP(f.getColor()));
+      while (wait.get()) ;
+      wait.set(true);
+      if (response == UserResponse.ACCEPT) {
+        repositionFireFighterAfterAmbulanceMove(f, newLocation, d);
+      }
+      Server.sendToClientsInGame(ClientCommands.SET_GAME_STATE, DBHandler.getBoardAsString());
+      Server.sendToClientsInGame(ClientCommands.REFRESH_BOARD_SCREEN, "");
+    }
   }
 
   public boolean driveFireTruck(Direction d) {
@@ -522,6 +553,75 @@ public class FireFighterTurnManagerAdvance extends FireFighterTurnManager {
           }
         } else {
           if (currentTile.getAdjacentTile(Direction.LEFT).canContainFireTruck()) {
+            f.setTile(newVehTile.get(1));
+          } else {
+            f.setTile(newVehTile.get(0));
+          }
+        }
+        break;
+    }
+  }
+
+  public void repositionFireFighterAfterAmbulanceMove(
+      FireFighterAdvanced f, List<Tile> newVehTile, Direction d) {
+    Tile currentTile = f.getTile();
+    int i = currentTile.getI();
+    int j = currentTile.getJ();
+    switch (d) {
+      case TOP:
+        if (j == 0) {
+          if (currentTile.getAdjacentTile(Direction.BOTTOM).canContainAmbulance()) {
+            f.setTile(newVehTile.get(1));
+          } else {
+            f.setTile(newVehTile.get(0));
+          }
+        } else {
+          if (currentTile.getAdjacentTile(Direction.BOTTOM).canContainAmbulance()) {
+            f.setTile(newVehTile.get(0));
+          } else {
+            f.setTile(newVehTile.get(1));
+          }
+        }
+        break;
+      case BOTTOM:
+        if (j == 0) {
+          if (currentTile.getAdjacentTile(Direction.BOTTOM).canContainAmbulance()) {
+            f.setTile(newVehTile.get(0));
+          } else {
+            f.setTile(newVehTile.get(1));
+          }
+        } else {
+          if (currentTile.getAdjacentTile(Direction.BOTTOM).canContainAmbulance()) {
+            f.setTile(newVehTile.get(1));
+          } else {
+            f.setTile(newVehTile.get(0));
+          }
+        }
+        break;
+      case RIGHT:
+        if (i == 0) {
+          if (currentTile.getAdjacentTile(Direction.LEFT).canContainAmbulance()) {
+            f.setTile(newVehTile.get(1));
+          } else {
+            f.setTile(newVehTile.get(0));
+          }
+        } else {
+          if (currentTile.getAdjacentTile(Direction.LEFT).canContainAmbulance()) {
+            f.setTile(newVehTile.get(0));
+          } else {
+            f.setTile(newVehTile.get(1));
+          }
+        }
+        break;
+      case LEFT:
+        if (i == 0) {
+          if (currentTile.getAdjacentTile(Direction.LEFT).canContainAmbulance()) {
+            f.setTile(newVehTile.get(0));
+          } else {
+            f.setTile(newVehTile.get(1));
+          }
+        } else {
+          if (currentTile.getAdjacentTile(Direction.LEFT).canContainAmbulance()) {
             f.setTile(newVehTile.get(1));
           } else {
             f.setTile(newVehTile.get(0));

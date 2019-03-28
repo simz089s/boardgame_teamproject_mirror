@@ -7,7 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.cs361d.flashpoint.manager.BoardManager;
 import com.cs361d.flashpoint.networking.Client;
-import com.cs361d.flashpoint.networking.DriverResponse;
+import com.cs361d.flashpoint.networking.UserResponse;
 import com.cs361d.flashpoint.networking.ServerCommands;
 
 import java.util.ArrayList;
@@ -19,7 +19,7 @@ import static com.cs361d.flashpoint.screen.FlashPointScreen.skinUI;
 public class BoardFireDeckGunPanel {
 
     static Table fireDeckGunTable;
-    static TextButton btnAccept, btnFireRow, btnFireCol;
+    static TextButton button;
     static ArrayList<Table> fireDeckGunTablesList = new ArrayList<Table>();
 
     public static void drawFireDeckGunPanel() {
@@ -35,62 +35,28 @@ public class BoardFireDeckGunPanel {
         label.setColor(Color.BLACK);
 
         // confirm button creation
-
-        btnAccept = new TextButton(DriverResponse.ACCEPT.toString(), skinUI, "default");
-        btnAccept.setWidth(label.getWidth());
-        btnAccept.setHeight(25);
-        btnAccept.setColor(Color.GREEN);
-        btnAccept.addListener(
-                new ClickListener() {
-                    @Override
-                    public void clicked(InputEvent event, float x, float y) {
-                        Client.getInstance().sendCommand(ServerCommands.ASK_DRIVER_MSG, DriverResponse.ACCEPT.toString());
-                        removeFireDeckGunPanel();
-                    }
-                });
-
-        btnFireRow = new TextButton(DriverResponse.THROW_ROW_DIE.toString(), skinUI, "default");
-        btnFireRow.setWidth(label.getWidth());
-        btnFireRow.setHeight(25);
-        btnFireRow.setColor(Color.SKY);
-        btnFireRow.addListener(
-                new ClickListener() {
-                    @Override
-                    public void clicked(InputEvent event, float x, float y) {
-                        Client.getInstance().sendCommand(ServerCommands.ASK_DRIVER_MSG, DriverResponse.THROW_ROW_DIE.toString());
-                        removeFireDeckGunPanel();
-                    }
-                });
-
-        btnFireCol = new TextButton(DriverResponse.THROW_COLUMN_DIE.toString(), skinUI, "default");
-        btnFireCol.setWidth(label.getWidth());
-        btnFireCol.setHeight(25);
-        btnFireCol.setColor(Color.SKY);
-        btnFireCol.addListener(
-                new ClickListener() {
-                    @Override
-                    public void clicked(InputEvent event, float x, float y) {
-                        Client.getInstance().sendCommand(ServerCommands.ASK_DRIVER_MSG, DriverResponse.THROW_COLUMN_DIE.toString());
-                        removeFireDeckGunPanel();
-                    }
-                });
-
         fireDeckGunTable = new Table();
-
         fireDeckGunTable.add(label).size(label.getWidth(), label.getHeight());
-        fireDeckGunTable.row();
-        fireDeckGunTable.add().size(btnAccept.getWidth(), btnAccept.getHeight()); // just a space
-        fireDeckGunTable.row();
-        fireDeckGunTable.add(btnAccept).size(label.getWidth(), btnAccept.getHeight());
-        fireDeckGunTable.row();
-        fireDeckGunTable.add().size(btnAccept.getWidth(), btnAccept.getHeight()); // just a space
-        fireDeckGunTable.row();
-        fireDeckGunTable.add(btnFireRow).size(label.getWidth(), btnFireRow.getHeight());
-        fireDeckGunTable.row();
-        fireDeckGunTable.add().size(btnAccept.getWidth(), btnAccept.getHeight()); // just a space
-        fireDeckGunTable.row();
-        fireDeckGunTable.add(btnFireCol).size(label.getWidth(), btnFireRow.getHeight());
+        for (final UserResponse response : UserResponse.driverResponse()) {
 
+        button = new TextButton(response.toString(), skinUI, "default");
+        button.setWidth(label.getWidth());
+        button.setHeight(25);
+        button.setColor(Color.GRAY);
+        button.addListener(
+                new ClickListener() {
+                    @Override
+                    public void clicked(InputEvent event, float x, float y) {
+                        Client.getInstance().sendCommand(ServerCommands.ASK_DRIVER_MSG, response.toString());
+                        removeFireDeckGunPanel();
+                    }
+                });
+        fireDeckGunTable.row();
+        fireDeckGunTable.add().size(button.getWidth(), button.getHeight()); // just a space
+        fireDeckGunTable.row();
+        fireDeckGunTable.add(button).size(label.getWidth(), button.getHeight());
+        }
+        fireDeckGunTable.row();
         fireDeckGunTable.setPosition(
                 1000,
                 Gdx.graphics.getHeight() - 350);

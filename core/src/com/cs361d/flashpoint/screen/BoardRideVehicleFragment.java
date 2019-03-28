@@ -9,6 +9,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.cs361d.flashpoint.manager.BoardManager;
 import com.cs361d.flashpoint.model.BoardElements.CarrierStatus;
+import com.cs361d.flashpoint.networking.Client;
+import com.cs361d.flashpoint.networking.ServerCommands;
+import com.cs361d.flashpoint.networking.UserResponse;
+import org.json.simple.JSONObject;
 
 import java.util.ArrayList;
 
@@ -58,7 +62,7 @@ public class BoardRideVehicleFragment {
                 new ClickListener() {
                     @Override
                     public void clicked(InputEvent event, float x, float y) {
-
+                        Client.getInstance().sendCommand(ServerCommands.REPLY_MOVE_WITH_VEHICULE,UserResponse.ACCEPT.toString());
                         removeRideVehiclePanel();
                     }
                 });
@@ -72,7 +76,7 @@ public class BoardRideVehicleFragment {
                 new ClickListener() {
                     @Override
                     public void clicked(InputEvent event, float x, float y) {
-
+                        Client.getInstance().sendCommand(ServerCommands.REPLY_MOVE_WITH_VEHICULE,UserResponse.REJECT.toString());
                         removeRideVehiclePanel();
                     }
                 });

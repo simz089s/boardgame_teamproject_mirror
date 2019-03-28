@@ -3,6 +3,7 @@ package com.cs361d.flashpoint.networking;
 import com.badlogic.gdx.Gdx;
 import com.cs361d.flashpoint.manager.CreateNewGameManager;
 import com.cs361d.flashpoint.manager.User;
+import com.cs361d.flashpoint.model.BoardElements.CarrierStatus;
 import com.cs361d.flashpoint.model.BoardElements.Direction;
 import com.cs361d.flashpoint.model.BoardElements.FireFighterColor;
 import com.cs361d.flashpoint.screen.*;
@@ -274,6 +275,18 @@ public class Client {
                 }
               });
           break;
+
+        case ASK_DRIVE_WITH_ENGINE:
+          final CarrierStatus status = CarrierStatus.fromString(message);
+          Gdx.app.postRunnable(
+              new Runnable() {
+                @Override
+                public void run() {
+                  BoardRideVehicleFragment.drawRideVehicleFragment(status);
+                }
+              });
+          break;
+
         default:
       }
 

@@ -204,11 +204,6 @@ public class FireFighterTurnManager implements Iterable<FireFighter> {
 
     // Don't allow a move if ap < 3 and moving into fire
     Tile t = getCurrentFireFighter().getTile().getAdjacentTile(d);
-    if (t != null && t.hasFire() && (getCurrentFireFighter().getActionPointsLeft() < 3)) {
-      sendActionRejectedMessageToCurrentPlayer("You cannot move on a tile with fire if you have less than 3 AP points");
-      return false;
-    }
-
     Tile currentTile = getCurrentFireFighter().getTile();
     // verifies that there is a tile in the direction
     if (currentTile.hasObstacle(d) || currentTile.getAdjacentTile(d) == null) {
