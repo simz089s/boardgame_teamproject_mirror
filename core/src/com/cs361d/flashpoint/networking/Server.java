@@ -5,6 +5,7 @@ import com.cs361d.flashpoint.model.BoardElements.*;
 import com.cs361d.flashpoint.model.FireFighterSpecialities.FireFighterAdvanceSpecialities;
 import com.cs361d.flashpoint.model.FireFighterSpecialities.FireFighterAdvanced;
 import com.cs361d.flashpoint.screen.Actions;
+import com.cs361d.flashpoint.screen.LobbyScreen;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -244,6 +245,7 @@ public class Server implements Runnable {
           obj.put("message", "Game successfully saved!");
           Server.sendCommandToSpecificClient(
               ClientCommands.SHOW_MESSAGE_ON_SCREEN, obj.toJSONString(), ip);
+          Server.sendCommandToAllClients(ClientCommands.REFRESH_LOBBY_SCREEN,"");
           break;
 
         case EXIT_GAME:
@@ -401,6 +403,13 @@ public class Server implements Runnable {
           FireFighterTurnManagerAdvance.getInstance().stopWaiting();
           break;
 
+        case GET_SAVED_GAMES:
+          JSONArray array = new JSONArray();
+          for (String game : DBHandler.listFilesOfSavedGames()) {
+            array.add(game);
+          }
+          Server.sendCommandToSpecificClient(ClientCommands.LOAD_SAVED_GAMES, array.toJSONString(), ip);
+          break;
         default:
           // the command must be an action command
           serverExecuteGameCommand(jsonObject.get("command").toString(), message, ip);

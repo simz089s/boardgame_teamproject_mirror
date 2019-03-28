@@ -17,7 +17,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.cs361d.flashpoint.manager.User;
+import com.cs361d.flashpoint.networking.Client;
 import com.cs361d.flashpoint.networking.NetworkManager;
+import com.cs361d.flashpoint.networking.ServerCommands;
 
 public class LoginScreen extends FlashPointScreen {
 
@@ -226,7 +228,7 @@ public class LoginScreen extends FlashPointScreen {
                         String pwd = fdPwd.getText();
 
                         User.getInstance().setName(usr);
-                        game.setScreen(game.lobbyScreen);
+                        Client.getInstance().sendCommand(ServerCommands.GET_SAVED_GAMES,"");
 
 //                        if (searchDB(usr, pwd)) {
 //                            User.getInstance().setName(usr);

@@ -37,19 +37,22 @@ public class LobbyScreen extends FlashPointScreen {
     Label btnIndicationLabel;
 
     // load saved game list
-    ScrollPane scrollPaneLoadGameList, scrollPaneGameInfoList;
-    ScrollPane.ScrollPaneStyle scrollStyle;
-    List<String> lstLoadGames, lstGameInfoPanel;
-    List.ListStyle listStyle;
+    static ScrollPane scrollPaneLoadGameList;
+    static ScrollPane scrollPaneGameInfoList;
+    static ScrollPane.ScrollPaneStyle scrollStyle;
+    static List<String> lstLoadGames;
+    static List<String> lstGameInfoPanel;
+    static List.ListStyle listStyle;
 
-    ArrayList<ScrollPane> gameInfoPanelList = new ArrayList<ScrollPane>();
-    ArrayList<Image> gameDiffImgList = new ArrayList<Image>();
+    static String[] array = null;
+    static ArrayList<ScrollPane> gameInfoPanelList = new ArrayList<ScrollPane>();
+    static ArrayList<Image> gameDiffImgList = new ArrayList<Image>();
 
     ImageButton btnLogout, btnJoin, btnLoad, btnCreateGame;
 
-    Image gameDifficultyImg;
+    static Image gameDifficultyImg;
 
-    Stage stage;
+    static Stage stage;
 
     private Music BGM = Gdx.audio.newMusic(Gdx.files.internal("playlist/void.mp3"));
 
@@ -74,10 +77,7 @@ public class LobbyScreen extends FlashPointScreen {
 
         createSavedGamesLabel();
 
-        //create saved games list (TO LOAD)
-        ArrayList<String> savedGames = listFilesOfSavedGames();
-        String[] savedGamesArr = savedGames.toArray(new String[savedGames.size()]);
-        createSavedGamesList(savedGamesArr);
+        createSavedGamesList();
 
         // exit button
         createLogoutButton();
@@ -347,7 +347,11 @@ public class LobbyScreen extends FlashPointScreen {
 
     // saved games list
 
-    private void createSavedGamesList(String[] messages) {
+    public static void setSavedGames(ArrayList<String> games) {
+        array = games.toArray(new String[games.size()]);
+    }
+
+    public static void createSavedGamesList() {
         // list style
         listStyle = new List.ListStyle();
         listStyle.font = Font.get(25); // font size
@@ -355,8 +359,9 @@ public class LobbyScreen extends FlashPointScreen {
         listStyle.fontColorSelected = Color.BLACK;
         listStyle.selection = TextureLoader.getDrawable(50, 100, Color.YELLOW );
 
+
         lstLoadGames = new List<String>(listStyle);
-        lstLoadGames.setItems(messages);
+        lstLoadGames.setItems(array);
 
         // scrollPane style
         scrollStyle = new ScrollPane.ScrollPaneStyle();
@@ -380,9 +385,9 @@ public class LobbyScreen extends FlashPointScreen {
                 new InputListener() {
                     @Override
                     public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                        removeGameInfoElements();
-                        createGameInfoPanel(lstLoadGames.getSelected());
-                        createGameDifficultyImg(lstLoadGames.getSelected());
+                        //removeGameInfoElements();
+                        //createGameInfoPanel(lstLoadGames.getSelected());
+                        //createGameDifficultyImg(lstLoadGames.getSelected());
                         return true;
                     }
                 });
@@ -390,7 +395,7 @@ public class LobbyScreen extends FlashPointScreen {
         stage.addActor(scrollPaneLoadGameList);
     }
 
-    private void createGameInfoPanel(String gameName) {
+    private static void createGameInfoPanel(String gameName) {
         // list style
         listStyle = new List.ListStyle();
         listStyle.font = Font.get(25); // font size
@@ -423,7 +428,7 @@ public class LobbyScreen extends FlashPointScreen {
         stage.addActor(scrollPaneGameInfoList);
     }
 
-    private void createGameDifficultyImg(String filename) {
+    private static void createGameDifficultyImg(String filename) {
 
         boolean isGameAdv = DBHandler.isGameAdvForLobbyImg(filename);
 
@@ -445,26 +450,6 @@ public class LobbyScreen extends FlashPointScreen {
 
 
 
-    // get saved games from file system
-    public ArrayList<String> listFilesOfSavedGames() {
-
-        ArrayList<String> filesArr = new ArrayList<String>();
-        File folder = new File("db");
-
-        for (final File fileEntry : folder.listFiles()) {
-            String filename = fileEntry.getName();
-            if (fileEntry.isFile() && !filename.equals("map1.json") && !filename.equals("map2.json")) {
-                int pos = filename.lastIndexOf(".");
-                if (pos > 0) {
-                    filename = filename.substring(0, pos);
-                }
-                filesArr.add(filename);
-            }
-        }
-
-        return filesArr;
-    }
-
     public static void resetLobbyScreen() {
         if (game.getScreen() == game.lobbyScreen) {
             game.setScreen(game.lobbyScreen);
@@ -475,7 +460,7 @@ public class LobbyScreen extends FlashPointScreen {
         return boardDialog;
     }
 
-    private void removeGameInfoElements(){
+    private static void removeGameInfoElements(){
         for (int i = 0; i < gameInfoPanelList.size(); i++) {
             gameInfoPanelList.get(i).remove();
         }

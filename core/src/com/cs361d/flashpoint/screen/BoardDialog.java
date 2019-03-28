@@ -6,6 +6,8 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.cs361d.flashpoint.manager.BoardManager;
+import com.cs361d.flashpoint.networking.Client;
+import com.cs361d.flashpoint.networking.ServerCommands;
 
 import java.util.Random;
 
@@ -50,7 +52,7 @@ public class BoardDialog {
                     public void result(Object obj) {
                         if ((Boolean) obj) {
                             //audioMusic.stop();
-                            game.setScreen(game.lobbyScreen);
+                            Client.getInstance().sendCommand(ServerCommands.GET_SAVED_GAMES,"");
                         }
                     }
                 };

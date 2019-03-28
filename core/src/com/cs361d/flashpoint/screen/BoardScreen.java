@@ -883,7 +883,7 @@ public class BoardScreen extends FlashPointScreen {
   public static void setLobbyPage() {
     audioMusic.stop();
     if (game.getScreen() == game.boardScreen) {
-      game.setScreen(game.lobbyScreen);
+      Client.getInstance().sendCommand(ServerCommands.GET_SAVED_GAMES,"");
     }
   }
 
@@ -978,6 +978,15 @@ public class BoardScreen extends FlashPointScreen {
     }
   }
 
+  public static void setLobbyString() {
+    game.setScreen(game.lobbyScreen);
+  }
+  public static void refreshLobbyScreen() {
+    if (game.getScreen() == game.lobbyScreen)
+    {
+      Client.getInstance().sendCommand(ServerCommands.GET_SAVED_GAMES,"");
+    }
+  }
   public static void setCurrentFragment(Fragment currFrag){
     currentFragment = currFrag;
   }

@@ -16,6 +16,7 @@ import java.io.*;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class Client {
@@ -293,6 +294,21 @@ public class Client {
                           @Override
                           public void run() {
                              BoardScreen.getDialog().drawEndGameDialog("GAME OVER",message);
+                          }
+                      });
+              break;
+          case LOAD_SAVED_GAMES:
+             final ArrayList<String> games = new ArrayList<String>();
+              for (Object o: (JSONArray) parser.parse(message)
+                   ) {
+                  games.add(o.toString());
+              }
+              Gdx.app.postRunnable(
+                      new Runnable() {
+                          @Override
+                          public void run() {
+                              LobbyScreen.setSavedGames(games);
+                              BoardScreen.setLobbyPage();
                           }
                       });
               break;

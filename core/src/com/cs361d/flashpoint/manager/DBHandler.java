@@ -1031,6 +1031,27 @@ public class DBHandler {
     return false;
   }
 
+  // get saved games from file system
+  public static ArrayList<String> listFilesOfSavedGames() {
+
+    ArrayList<String> filesArr = new ArrayList<String>();
+    File folder = new File("db");
+
+    for (final File fileEntry : folder.listFiles()) {
+      String filename = fileEntry.getName();
+      if (fileEntry.isFile() && !filename.equals("map1.json") && !filename.equals("map2.json")) {
+        int pos = filename.lastIndexOf(".");
+        if (pos > 0) {
+          filename = filename.substring(0, pos);
+        }
+        filesArr.add(filename);
+      }
+    }
+
+    return filesArr;
+  }
+
+
   // helper
 
   public static boolean isPresentInArr(String[] arr, String str) {
