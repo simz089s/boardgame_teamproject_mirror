@@ -525,7 +525,6 @@ public class FireFighterTurnManagerAdvance extends FireFighterTurnManager {
   }
 
   public boolean fireDeckGun() {
-    // TODO Driver Speciality
     if (!getCurrentFireFighter().getTile().hasFireTruck()) {
       sendMessageToGui("You cannot use the deck gun as you are not on the FireTruck");
       return false;

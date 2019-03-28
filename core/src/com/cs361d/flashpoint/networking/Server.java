@@ -358,7 +358,7 @@ public class Server implements Runnable {
           FireFighterTurnManagerAdvance.getInstance().stopWaiting();
           break;
 
-        case SEND_DRIVER_MSG:
+        case ASK_DRIVER_MSG:
           DriverResponse response = DriverResponse.fromString(message);
           FireFighterTurnManagerAdvance.getInstance().setDriverResponse(response);
           FireFighterTurnManagerAdvance.getInstance().stopWaiting();
