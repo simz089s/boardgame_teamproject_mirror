@@ -498,14 +498,14 @@ public class BoardScreen extends FlashPointScreen {
       stage.addActor(gameUnit);
 
       if (tiles[i][j].getVictim().isCured()) {
-        Image healMarker = new Image(new Texture("game_units/Heal_Marker.png"));
-        healMarker.setHeight(15);
-        healMarker.setWidth(15);
-        healMarker.setPosition(
+        gameUnit = new Image(new Texture("game_units/Heal_Marker.png"));
+        gameUnit.setHeight(15);
+        gameUnit.setWidth(15);
+        gameUnit.setPosition(
             myTile.getX() + myTile.getHeight() / 2 + 10,
             myTile.getY() + myTile.getHeight() / 2 + 10);
-        gameUnits.add(healMarker);
-        stage.addActor(healMarker);
+        gameUnits.add(gameUnit);
+        stage.addActor(gameUnit);
       }
     }
 
