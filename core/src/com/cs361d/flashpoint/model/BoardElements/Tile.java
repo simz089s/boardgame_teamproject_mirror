@@ -1,6 +1,7 @@
 package com.cs361d.flashpoint.model.BoardElements;
 
 import com.cs361d.flashpoint.manager.BoardManager;
+import com.cs361d.flashpoint.manager.BoardManagerAdvanced;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -194,5 +195,20 @@ public class Tile {
 
     public String getFireStatusString() {
         return this.fireStatus.toString();
+    }
+
+    public List<Tile> getAllAdjacentTile() {
+        return BoardManager.getInstance().getAllAdjacentTile(this);
+    }
+
+    public void removeHotSpot() {
+        hasHotSpot = false;
+        BoardManagerAdvanced.getInstance().incrementHotSpots();
+
+    }
+
+    public void repairObstacle(Direction d) {
+        getObstacle(d).repairObstacle();
+        BoardManagerAdvanced.getInstance().incrementNumberOfWallsLeft();
     }
 }

@@ -15,6 +15,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.cs361d.flashpoint.manager.User;
 import com.cs361d.flashpoint.networking.Client;
 import com.cs361d.flashpoint.networking.ServerCommands;
 
@@ -211,7 +212,7 @@ public class LobbyScreen extends FlashPointScreen {
           @Override
           public void clicked(InputEvent event, float x, float y) {
             BGM.stop();
-            Client.getInstance().sendCommand(ServerCommands.JOIN, "");
+            Client.getInstance().sendCommand(ServerCommands.JOIN, User.getInstance().getName());
           }
         });
 

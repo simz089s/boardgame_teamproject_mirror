@@ -18,6 +18,8 @@ public enum Actions {
   COMMAND_OTHER_FIREFIGHTER("COMMAND OTHER FIREFIGHTER"),
   CURE_VICTIM("CURE VICTIM"),
   FLIP_POI("FLIP POI"),
+  CLEAR_HOTSPOT("CLEAR HOTSPOT"),
+  REPAIR_WALL("REPAIR WALL"),
   END_TURN("END TURN"),
   SAVE("SAVE");
 
@@ -116,6 +118,14 @@ public enum Actions {
   public static List<Actions> fireCaptainActions() {
     List<Actions> list = advancedActions();
     list.add(list.size()-2,COMMAND_OTHER_FIREFIGHTER);
+    return list;
+  }
+
+  public static List<Actions> structuralEngineerActions() {
+    List<Actions> list = advancedActions();
+    list.add(list.size()-2,REPAIR_WALL);
+    list.add(list.size()-2,CLEAR_HOTSPOT);
+    list.remove(EXTINGUISH);
     return list;
   }
 

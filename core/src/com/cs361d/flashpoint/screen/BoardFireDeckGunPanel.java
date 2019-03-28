@@ -6,7 +6,6 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.cs361d.flashpoint.manager.BoardManager;
-import com.cs361d.flashpoint.model.BoardElements.Direction;
 import com.cs361d.flashpoint.networking.Client;
 import com.cs361d.flashpoint.networking.DriverResponse;
 import com.cs361d.flashpoint.networking.ServerCommands;
@@ -49,7 +48,7 @@ public class BoardFireDeckGunPanel {
                 new ClickListener() {
                     @Override
                     public void clicked(InputEvent event, float x, float y) {
-                        Client.getInstance().sendCommand(ServerCommands.SEND_DRIVER_MSG, DriverResponse.ACCEPT.toString());
+                        Client.getInstance().sendCommand(ServerCommands.ASK_DRIVER_MSG, DriverResponse.ACCEPT.toString());
                         removeFireDeckGunPanel();
                     }
                 });
@@ -62,7 +61,7 @@ public class BoardFireDeckGunPanel {
                 new ClickListener() {
                     @Override
                     public void clicked(InputEvent event, float x, float y) {
-                        Client.getInstance().sendCommand(ServerCommands.SEND_DRIVER_MSG, DriverResponse.THROW_ROW_DIE.toString());
+                        Client.getInstance().sendCommand(ServerCommands.ASK_DRIVER_MSG, DriverResponse.THROW_ROW_DIE.toString());
                         removeFireDeckGunPanel();
                     }
                 });
@@ -75,7 +74,7 @@ public class BoardFireDeckGunPanel {
                 new ClickListener() {
                     @Override
                     public void clicked(InputEvent event, float x, float y) {
-                        Client.getInstance().sendCommand(ServerCommands.SEND_DRIVER_MSG, DriverResponse.THROW_COLUMN_DIE.toString());
+                        Client.getInstance().sendCommand(ServerCommands.ASK_DRIVER_MSG, DriverResponse.THROW_COLUMN_DIE.toString());
                         removeFireDeckGunPanel();
                     }
                 });

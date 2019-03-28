@@ -35,13 +35,18 @@ class ServerToClientRunnable implements Runnable {
     // Constantly ready to read a new msg
     public void run() {
 
-        String messageToSend;
         while (notStopped) {
             try {
-                messageToSend = din.readUTF();
+                final String messageToSend = din.readUTF();
                 System.out.println(messageToSend);
+                Thread runThread = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Server.serverExecuteCommand(messageToSend);
+                    }
+                });
+                runThread.start();
 
-                Server.serverExecuteCommand(messageToSend);
             } catch (Exception clientKilled) {
                 try {
                     // Closing resources

@@ -91,4 +91,8 @@ public class Obstacle {
     public boolean isDoor() {
       return isDoor;
     }
+
+    public void repairObstacle() {
+      this.health++;
+    }
 }
