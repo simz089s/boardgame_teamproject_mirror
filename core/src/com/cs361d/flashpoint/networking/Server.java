@@ -408,11 +408,14 @@ public class Server implements Runnable {
           break;
 
         case GET_SAVED_GAMES:
-           array = new JSONArray();
-          for (String game : DBHandler.listFilesOfSavedGames()) {
-            array.add(game);
+          synchronized (Server.class) {
+            array = new JSONArray();
+            for (String game : DBHandler.listFilesOfSavedGames()) {
+              array.add(game);
+            }
+            Server.sendCommandToSpecificClient(
+                ClientCommands.LOAD_SAVED_GAMES, array.toJSONString(), ip);
           }
-          Server.sendCommandToSpecificClient(ClientCommands.LOAD_SAVED_GAMES, array.toJSONString(), ip);
           break;
         default:
           // the command must be an action command
