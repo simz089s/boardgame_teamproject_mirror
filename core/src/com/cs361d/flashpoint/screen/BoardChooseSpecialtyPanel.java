@@ -2,11 +2,14 @@ package com.cs361d.flashpoint.screen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.cs361d.flashpoint.manager.BoardManager;
+import com.cs361d.flashpoint.manager.BoardManagerAdvanced;
 import com.cs361d.flashpoint.manager.FireFighterTurnManagerAdvance;
 import com.cs361d.flashpoint.networking.Client;
 import com.cs361d.flashpoint.networking.ServerCommands;
@@ -68,6 +71,17 @@ public class BoardChooseSpecialtyPanel {
         scrollPaneSpecialties.setScale(1.0f);
         scrollPaneSpecialties.setWidth(300);
         scrollPaneSpecialties.setHeight(300);
+
+        //TODO : add image of specialty card on hover
+//        lstSpecialties.addListener(new ClickListener() {
+//            public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+//                String selected = lstSpecialties.getSelected();
+//            }
+//            public void exit(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+//                String selected = lstSpecialties.getSelected();
+//            }
+//        });
+
 
         // confirm button creation
 
