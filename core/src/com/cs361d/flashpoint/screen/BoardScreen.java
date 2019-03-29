@@ -935,8 +935,10 @@ public class BoardScreen extends FlashPointScreen {
           }
 
         } else if (!(BoardManagerAdvanced.getInstance()).hasFireTruckPlaced()) {
-          gameSetupActions = GameSetupActions.PLACE_FIRETRUCK;
-          addFilterOnTileForEngine();
+          if (User.getInstance().isMyTurn()) { // TODO : || true (if play with single computer multi-player)
+            gameSetupActions = GameSetupActions.PLACE_FIRETRUCK;
+            addFilterOnTileForEngine();
+          }
         } else if(!FireFighterTurnManager.getInstance().currentHasTile()){
             if (User.getInstance().isMyTurn()) { // TODO : || true (if play with single computer multi-player)
               gameSetupActions = GameSetupActions.CHOOSE_INIT_POS;
