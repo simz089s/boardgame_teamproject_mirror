@@ -256,7 +256,11 @@ public class Server implements Runnable {
           notYetAssigned.clear();
           colorsToClient.clear();
           chatMessages.clear();
-          Server.sendCommandToAllClients(ClientCommands.EXIT_GAME, "");
+          JSONArray array = new JSONArray();
+          for (String game : DBHandler.listFilesOfSavedGames()) {
+            array.add(game);
+          }
+          Server.sendCommandToAllClients(ClientCommands.EXIT_GAME, array.toJSONString());
           Server.sendCommandToAllClients(
               ClientCommands.SHOW_MESSAGE_ON_SCREEN, object.toJSONString());
           break;
@@ -404,7 +408,7 @@ public class Server implements Runnable {
           break;
 
         case GET_SAVED_GAMES:
-          JSONArray array = new JSONArray();
+           array = new JSONArray();
           for (String game : DBHandler.listFilesOfSavedGames()) {
             array.add(game);
           }

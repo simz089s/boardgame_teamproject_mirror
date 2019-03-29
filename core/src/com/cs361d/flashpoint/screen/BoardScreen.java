@@ -880,16 +880,17 @@ public class BoardScreen extends FlashPointScreen {
     return game.getScreen() == game.boardScreen;
   }
 
-  public static void setLobbyPageOutOfGame() {
+  public static void setLobbyPageOutOfGame(ArrayList<String> games) {
     audioMusic.stop();
     if (game.getScreen() == game.boardScreen) {
-      Client.getInstance().sendCommand(ServerCommands.GET_SAVED_GAMES,"");
+      LobbyScreen.setSavedGames(games);
+      game.setScreen(game.lobbyScreen);
     }
   }
 
   public static void setLobbyPage() {
     audioMusic.stop();
-      Client.getInstance().sendCommand(ServerCommands.GET_SAVED_GAMES,"");
+      game.setScreen(game.lobbyScreen);
   }
 
   public static void setBoardScreen() {

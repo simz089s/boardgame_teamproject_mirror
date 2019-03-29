@@ -151,11 +151,16 @@ public class Client {
       System.out.println(message);
       switch (c) {
         case EXIT_GAME:
+            JSONArray array = (JSONArray) parser.parse(message);
+            final ArrayList<String> g = new ArrayList<String>();
+            for (Object a : array) {
+                g.add(a.toString());
+            }
           Gdx.app.postRunnable(
               new Runnable() {
                 @Override
                 public void run() {
-                  BoardScreen.setLobbyPageOutOfGame();
+                  BoardScreen.setLobbyPageOutOfGame(g);
                 }
               });
           break;
@@ -261,7 +266,7 @@ public class Client {
           break;
 
         case ASK_WISH_ABOUT_KNOWCK_DOWN:
-          JSONArray array = (JSONArray) parser.parse(message);
+          array = (JSONArray) parser.parse(message);
           final List<Direction> directions = new ArrayList<Direction>();
           for (Object o : array) {
             directions.add(Direction.fromString(o.toString()));
