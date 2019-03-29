@@ -145,7 +145,7 @@ public class BoardScreen extends FlashPointScreen {
                 // set init vehicles position
                 if (isAmbulanceNotSet
                     && DBHandler.isPresentInArr(
-                        getAmbulanceClickableTiles(), i_pos + "-" + j_pos)) {
+                        getAmbulanceClickableTiles(), i_pos + "-" + j_pos) && User.getInstance().isMyTurn()) { // TODO && User.getInstance().isMyTurn()
 
                   JSONObject obj = new JSONObject();
                   obj.put("i", i_pos);
@@ -154,7 +154,7 @@ public class BoardScreen extends FlashPointScreen {
                           .sendCommand(ServerCommands.SET_AMBULANCE, obj.toJSONString());
 
                 } else if (isEngineNotSet
-                    && DBHandler.isPresentInArr(getEngineClickableTiles(), i_pos + "-" + j_pos)) {
+                    && DBHandler.isPresentInArr(getEngineClickableTiles(), i_pos + "-" + j_pos) && User.getInstance().isMyTurn()) { // TODO && User.getInstance().isMyTurn()
 
                   if (isAmbulanceNotSet) {
                     return;
