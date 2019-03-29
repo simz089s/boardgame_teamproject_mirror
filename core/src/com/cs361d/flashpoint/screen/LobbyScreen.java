@@ -224,6 +224,7 @@ public class LobbyScreen extends FlashPointScreen {
 
         btnJoin.addListener(new ClickListener() {
             public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+                if (btnIndicationLabel != null) btnIndicationLabel.remove();
                 createJoinLabel();
             }
             public void exit(InputEvent event, float x, float y, int pointer, Actor fromActor) {
@@ -265,7 +266,8 @@ public class LobbyScreen extends FlashPointScreen {
                 new ClickListener() {
                     @Override
                     public void clicked(InputEvent event, float x, float y) {
-                        if (lstLoadGames.getSelected() != null ){
+                        if (lstLoadGames.getSelected() != null ) {
+                            BGM.stop();
                             Client.getInstance().sendCommand(ServerCommands.LOAD_GAME,lstLoadGames.getSelected());
                         }
                     }
@@ -273,6 +275,7 @@ public class LobbyScreen extends FlashPointScreen {
 
         btnLoad.addListener(new ClickListener() {
             public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+                if (btnIndicationLabel != null) btnIndicationLabel.remove();
                 createLoadLabel();
             }
             public void exit(InputEvent event, float x, float y, int pointer, Actor fromActor) {
@@ -460,7 +463,7 @@ public class LobbyScreen extends FlashPointScreen {
         return boardDialog;
     }
 
-    private static void removeGameInfoElements(){
+    private static void removeGameInfoElements() {
         for (int i = 0; i < gameInfoPanelList.size(); i++) {
             gameInfoPanelList.get(i).remove();
         }

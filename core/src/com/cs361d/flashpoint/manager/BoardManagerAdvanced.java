@@ -634,7 +634,7 @@ public class BoardManagerAdvanced extends BoardManager {
       return;
     }
     Server.sendCommandToSpecificClient(
-        ClientCommands.ASK_WISH_ABOUT_KNOWCK_DOWN, array.toJSONString(), ip);
+        ClientCommands.ASK_WISH_ABOUT_KNOCK_DOWN, array.toJSONString(), ip);
     while (wait.get()) ;
     wait.set(true);
   }
@@ -643,7 +643,7 @@ public class BoardManagerAdvanced extends BoardManager {
     this.wait.set(false);
   }
 
-  public void moveForKnowckDown(FireFighterAdvanced f, Direction d) {
+  public void moveForKnockDown(FireFighterAdvanced f, Direction d) {
     Tile adjacentTile = f.getTile().getAdjacentTile(d);
     if (adjacentTile == null || adjacentTile.hasFire() || !f.dodgeAp()) {
       this.letKnockedDown = true;

@@ -71,7 +71,7 @@ public class BoardOnKnockDownPanel {
                         JSONObject obj = new JSONObject();
                         obj.put("value", true);
                         obj.put("direction", Direction.NODIRECTION.toString());
-                        Client.getInstance().sendCommand(ServerCommands.REPLY_KNOWCKED_DOWN_CHOICE, obj.toJSONString());
+                        Client.getInstance().sendCommand(ServerCommands.REPLY_KNOCKED_DOWN_CHOICE, obj.toJSONString());
 
                         label.remove();
                         btnStayKnockDown.remove();
@@ -147,7 +147,7 @@ public class BoardOnKnockDownPanel {
             JSONObject obj = new JSONObject();
             obj.put("value", false);
             obj.put("direction", Direction.TOP.toString());
-            Client.getInstance().sendCommand(ServerCommands.REPLY_KNOWCKED_DOWN_CHOICE, obj.toJSONString());
+            Client.getInstance().sendCommand(ServerCommands.REPLY_KNOCKED_DOWN_CHOICE, obj.toJSONString());
               label.remove();
               btnStayKnockDown.remove();
             removeTableDirectionsPanel();
@@ -164,7 +164,7 @@ public class BoardOnKnockDownPanel {
                         JSONObject obj = new JSONObject();
                         obj.put("value", false);
                         obj.put("direction", Direction.BOTTOM.toString());
-                        Client.getInstance().sendCommand(ServerCommands.REPLY_KNOWCKED_DOWN_CHOICE, obj.toJSONString());
+                        Client.getInstance().sendCommand(ServerCommands.REPLY_KNOCKED_DOWN_CHOICE, obj.toJSONString());
                         label.remove();
                         btnStayKnockDown.remove();
                         removeTableDirectionsPanel();
@@ -180,7 +180,7 @@ public class BoardOnKnockDownPanel {
                         JSONObject obj = new JSONObject();
                         obj.put("value", false);
                         obj.put("direction", Direction.LEFT.toString());
-                        Client.getInstance().sendCommand(ServerCommands.REPLY_KNOWCKED_DOWN_CHOICE, obj.toJSONString());
+                        Client.getInstance().sendCommand(ServerCommands.REPLY_KNOCKED_DOWN_CHOICE, obj.toJSONString());
                         label.remove();
                         btnStayKnockDown.remove();
                         removeTableDirectionsPanel();
@@ -195,7 +195,7 @@ public class BoardOnKnockDownPanel {
                         JSONObject obj = new JSONObject();
                         obj.put("value", false);
                         obj.put("direction", Direction.RIGHT.toString());
-                        Client.getInstance().sendCommand(ServerCommands.REPLY_KNOWCKED_DOWN_CHOICE, obj.toJSONString());
+                        Client.getInstance().sendCommand(ServerCommands.REPLY_KNOCKED_DOWN_CHOICE, obj.toJSONString());
                         label.remove();
                         btnStayKnockDown.remove();
                         removeTableDirectionsPanel();
