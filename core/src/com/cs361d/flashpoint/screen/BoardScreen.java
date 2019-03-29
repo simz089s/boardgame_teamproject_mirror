@@ -169,7 +169,7 @@ public class BoardScreen extends FlashPointScreen {
 
                 // choose init position
                 if (!FireFighterTurnManager.getInstance().currentHasTile()
-                    && DBHandler.isPresentInArr(CHOOSE_INIT_POS_TILES, i_pos + "-" + j_pos)) { // && User.getInstance().isMyTurn()
+                    && DBHandler.isPresentInArr(CHOOSE_INIT_POS_TILES, i_pos + "-" + j_pos) && User.getInstance().isMyTurn()) { // TODO && User.getInstance().isMyTurn()
 
                   if (isAmbulanceNotSet || isEngineNotSet) {
                     return;
@@ -228,7 +228,7 @@ public class BoardScreen extends FlashPointScreen {
       boardDialog.drawDialog(
           "Ambulance position", "Choose the ambulance's initial position (green tiles).");
       addFilterOnTileForAmbulance();
-    } else if (!FireFighterTurnManager.getInstance().currentHasTile() && User.getInstance().isMyTurn()) { // choose init pos (family)
+    } else if (!FireFighterTurnManager.getInstance().currentHasTile() && User.getInstance().isMyTurn()) { // TODO && User.getInstance().isMyTurn()
       boardDialog.drawDialog(
           "Initial position", "Choose your initial position on the board (green tiles).");
       addFilterOnTileForChooseInitPos();
@@ -720,9 +720,7 @@ public class BoardScreen extends FlashPointScreen {
           }
         });
 
-    // if (User.getInstance().isMyTurn()) {
     stage.addActor(btnResume);
-    // }
   }
 
   // add filters
@@ -936,7 +934,7 @@ public class BoardScreen extends FlashPointScreen {
           gameSetupActions = GameSetupActions.PLACE_FIRETRUCK;
           addFilterOnTileForEngine();
         } else if(!FireFighterTurnManager.getInstance().currentHasTile()){
-            if (User.getInstance().isMyTurn() || true) {
+            if (User.getInstance().isMyTurn()) { // TODO : || true (if play with single computer multi-player)
               gameSetupActions = GameSetupActions.CHOOSE_INIT_POS;
               addFilterOnTileForChooseInitPos();
             }
@@ -950,7 +948,7 @@ public class BoardScreen extends FlashPointScreen {
       } else { // family version
 
         if (!FireFighterTurnManager.getInstance().currentHasTile()) { // choose init pos
-          if (User.getInstance().isMyTurn() || true) {
+          if (User.getInstance().isMyTurn()) { // TODO : || true (if play with single computer multi-player)
             addFilterOnTileForChooseInitPos();
             boardChooseRolePanel.drawChooseSpecialtyPanel();
           }

@@ -54,7 +54,7 @@ public class BoardMovesPanel {
 
   public void drawMovesAndDirectionsPanel() {
 
-    if (User.getInstance().isMyTurn() || true) {
+    if (User.getInstance().isMyTurn()) { // TODO : || true (if play with single computer multi-player)
 
       // list style
       listStyleMoveOptions = new List.ListStyle();
