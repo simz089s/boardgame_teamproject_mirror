@@ -224,7 +224,7 @@ public class BoardScreen extends FlashPointScreen {
         BoardManager.getInstance().isAdvanced()
             && !((BoardManagerAdvanced) BoardManagerAdvanced.getInstance()).hasFireTruckPlaced();
 
-    if (isAmbulanceNotSet || isEngineNotSet) {
+    if ((isAmbulanceNotSet || isEngineNotSet) && User.getInstance().isMyTurn()) { // TODO && User.getInstance().isMyTurn()
       boardDialog.drawDialog(
           "Ambulance position", "Choose the ambulance's initial position (green tiles).");
       addFilterOnTileForAmbulance();
@@ -925,7 +925,7 @@ public class BoardScreen extends FlashPointScreen {
       GameSetupActions gameSetupActions = GameSetupActions.NO_SETUP_ACTION;
 
       if (BoardManager.getInstance().isAdvanced()) { // experienced version
-        if (!(BoardManagerAdvanced.getInstance()).hasAmbulancePlaced()) {
+        if (!(BoardManagerAdvanced.getInstance()).hasAmbulancePlaced() && User.getInstance().isMyTurn()) { // TODO && User.getInstance().isMyTurn()
           boardDialog.drawDialog(
                   "Ambulance position", "Choose the ambulance's initial position (green tiles).");
           addFilterOnTileForAmbulance();
@@ -938,7 +938,7 @@ public class BoardScreen extends FlashPointScreen {
               gameSetupActions = GameSetupActions.CHOOSE_INIT_POS;
               addFilterOnTileForChooseInitPos();
             }
-        } else if (FireFighterTurnManagerAdvance.getInstance().getCurrentFireFighter().getSpeciality() == FireFighterAdvanceSpecialities.NO_SPECIALITY) {
+        } else if (FireFighterTurnManagerAdvance.getInstance().getCurrentFireFighter().getSpeciality() == FireFighterAdvanceSpecialities.NO_SPECIALITY && User.getInstance().isMyTurn()) { // TODO && User.getInstance().isMyTurn()
           gameSetupActions = GameSetupActions.CHOOSE_INIT_SPECIALTY;
           boardChooseRolePanel.drawChooseSpecialtyPanel();
         } else {
