@@ -345,9 +345,11 @@ public class Server implements Runnable {
           break;
 
         case SET_INITIAL_SPECIALITY:
-          if (FireFighterTurnManagerAdvance.getInstance()
-              .setInitialSpeciality(FireFighterAdvanceSpecialities.fromString(message))) {
-            mustSendAndRefresh = true;
+          synchronized (Server.class) {
+            if (FireFighterTurnManagerAdvance.getInstance()
+                .setInitialSpeciality(FireFighterAdvanceSpecialities.fromString(message))) {
+              mustSendAndRefresh = true;
+            }
           }
           break;
 

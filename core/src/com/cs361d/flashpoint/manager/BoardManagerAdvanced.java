@@ -631,7 +631,6 @@ public class BoardManagerAdvanced extends BoardManager {
     }
     String ip = Server.getClientIP(f.getColor());
     if (ip == null) {
-      // TODO should not happen in the future
       return;
     }
     Server.sendCommandToSpecificClient(

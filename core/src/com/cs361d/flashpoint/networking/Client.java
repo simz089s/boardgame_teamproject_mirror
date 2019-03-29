@@ -316,12 +316,13 @@ public class Client {
                           }
                       });
               break;
+
           case REFRESH_LOBBY_SCREEN:
               Gdx.app.postRunnable(
                       new Runnable() {
                           @Override
                           public void run() {
-                              BoardScreen.removeAllPrevFragments();
+                              BoardScreen.refreshLobbyScreen();
                           }
                       });
 

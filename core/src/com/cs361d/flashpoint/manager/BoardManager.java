@@ -486,9 +486,6 @@ public class BoardManager implements Iterable<Tile> {
       }
       f.setTile(tiles.get(0));
     } else if (tiles.size() > 1) {
-      // BoardScreen.addFilterOnKnockDownChoosePos(f, tiles);
-      // f.removeFromBoard();
-      // TODO modify in the future
       f.setTile(tiles.get(0));
     } else {
       throw new IllegalStateException();

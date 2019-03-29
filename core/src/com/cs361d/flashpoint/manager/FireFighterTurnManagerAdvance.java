@@ -79,12 +79,10 @@ public class FireFighterTurnManagerAdvance extends FireFighterTurnManager {
   // Covers the veteran bonusRemoval
   @Override
   public boolean endTurn() {
-    // TODO do not end turn if all users are not yet present
-    //    if (!Server.isEmpty()) {
-    //      sendActionRejectedMessageToCurrentPlayer("You cannot end your turn as the game is not
-    // full yet please wait");
-    //      return false;
-    //    }
+    if (!Server.isEmpty()) {
+      sendActionRejectedMessageToCurrentPlayer("You cannot end your turn as the game is not");
+      return false;
+    }
     FireFighterAdvanced last = (FireFighterAdvanced) FIREFIGHTERS.removeFirst();
     last.removeVeteranBonus();
     FIREFIGHTERS.addLast(last);
@@ -418,9 +416,12 @@ public class FireFighterTurnManagerAdvance extends FireFighterTurnManager {
   }
 
   public boolean driveAmbulance(Direction d) {
-    //    if (!Server.isEmpty()) {
-    //      TODO do not drice if all palyers are not here
-    //    }
+    if (!Server.isEmpty()) {
+      sendActionRejectedMessageToCurrentPlayer(
+          "You cannot drive the ambulance as all players are not yet here");
+      return false;
+    }
+
     if (getCurrentFireFighter().driveAp()) {
       if (d == Direction.NODIRECTION || d == Direction.NULLDIRECTION) {
         throw new IllegalArgumentException("The direction cannot be " + d.toString());
@@ -471,6 +472,11 @@ public class FireFighterTurnManagerAdvance extends FireFighterTurnManager {
   }
 
   public boolean driveFireTruck(Direction d) {
+    if (!Server.isEmpty()) {
+      sendActionRejectedMessageToCurrentPlayer(
+          "You cannot drive the truck as all players are not yet here");
+      return false;
+    }
     if (getCurrentFireFighter().getTile().hasFireTruck() && getCurrentFireFighter().driveAp()) {
       if (d == Direction.NODIRECTION || d == Direction.NULLDIRECTION) {
         throw new IllegalArgumentException("The direction cannot be " + d.toString());
@@ -487,7 +493,7 @@ public class FireFighterTurnManagerAdvance extends FireFighterTurnManager {
         repositionFireFighterAfterFireTruckMove(getCurrentFireFighter(), newLocation, d);
         Server.sendToClientsInGame(ClientCommands.SET_GAME_STATE, DBHandler.getBoardAsString());
         Server.sendToClientsInGame(ClientCommands.REFRESH_BOARD_SCREEN, "");
-        moveWithFireTruck(list,newLocation,d);
+        moveWithFireTruck(list, newLocation, d);
         return verifyVeteranVacinityToAddAp();
       }
     }
@@ -509,7 +515,7 @@ public class FireFighterTurnManagerAdvance extends FireFighterTurnManager {
           ClientCommands.ASK_DRIVE_WITH_ENGINE,
           CarrierStatus.HASFIRETRUCK.toString(),
           Server.getClientIP(f.getColor()));
-      while (wait.get());
+      while (wait.get()) ;
       wait.set(true);
       if (response == UserResponse.ACCEPT) {
         repositionFireFighterAfterFireTruckMove(f, newLocation, d);
