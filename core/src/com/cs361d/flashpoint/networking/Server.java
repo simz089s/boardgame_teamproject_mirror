@@ -204,7 +204,11 @@ public class Server implements Runnable {
       notYetAssigned.clear();
       chatMessages.clear();
       gameLoaded = false;
-      Server.sendCommandToAllClients(ClientCommands.EXIT_GAME, "");
+      JSONArray array = new JSONArray();
+      for (String game : DBHandler.listFilesOfSavedGames()) {
+        array.add(game);
+      }
+      Server.sendCommandToAllClients(ClientCommands.EXIT_GAME, array.toJSONString());
       Server.sendCommandToAllClients(ClientCommands.SHOW_MESSAGE_ON_SCREEN, object.toJSONString());
     }
     System.out.println("Client with IP: " + clientIP + " is removed from the Network successfully");
@@ -245,7 +249,7 @@ public class Server implements Runnable {
           obj.put("message", "Game successfully saved!");
           Server.sendCommandToSpecificClient(
               ClientCommands.SHOW_MESSAGE_ON_SCREEN, obj.toJSONString(), ip);
-          Server.sendCommandToAllClients(ClientCommands.REFRESH_LOBBY_SCREEN,"");
+          Server.sendCommandToAllClients(ClientCommands.REFRESH_LOBBY_SCREEN, "");
           break;
 
         case EXIT_GAME:
@@ -405,7 +409,8 @@ public class Server implements Runnable {
           break;
 
         case REPLY_MOVE_WITH_VEHICULE:
-          FireFighterTurnManagerAdvance.getInstance().setUserResponse(UserResponse.fromString(message));
+          FireFighterTurnManagerAdvance.getInstance()
+              .setUserResponse(UserResponse.fromString(message));
           FireFighterTurnManagerAdvance.getInstance().stopWaiting();
           break;
 
@@ -501,7 +506,8 @@ public class Server implements Runnable {
 
         case DRIVE_AMBULANCE:
           direction = Direction.fromString(message);
-          mustSendAndRefresh = FireFighterTurnManagerAdvance.getInstance().driveAmbulance(direction);
+          mustSendAndRefresh =
+              FireFighterTurnManagerAdvance.getInstance().driveAmbulance(direction);
           break;
         case DRIVE_FIRETRUCK:
           direction = Direction.fromString(message);
