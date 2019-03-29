@@ -90,9 +90,8 @@ public class FireFighterTurnManagerAdvance extends FireFighterTurnManager {
     BoardManagerAdvanced.getInstance().endTurnFireSpread();
     if (!getCurrentFireFighter().isFirstTurn()) {
       getCurrentFireFighter().resetActionPoints();
-      return verifyVeteranVacinityToAddAp();
     }
-    return true;
+    return verifyVeteranVacinityToAddAp();
   }
 
   public boolean crewChange(FireFighterAdvanceSpecialities speciality) {
@@ -785,7 +784,7 @@ public class FireFighterTurnManagerAdvance extends FireFighterTurnManager {
       }
     } else {
       sendActionRejectedMessageToCurrentPlayer(
-          "The user of the " + color + "fireFighter rejected the move");
+          "The user of the " + color + " fireFighter rejected the move");
     }
     this.sendToCaptain = false;
     return worked;
