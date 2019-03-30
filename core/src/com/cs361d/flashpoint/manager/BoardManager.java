@@ -9,6 +9,10 @@ import org.json.simple.JSONObject;
 import java.util.*;
 import java.util.List;
 
+/**
+ * Created By Elvric Trombert
+ * Class used to manage boardStates
+ */
 public class BoardManager implements Iterable<Tile> {
   protected final LinkedList<FireFighterColor> colorList = new LinkedList<FireFighterColor>();
   public static final int NUM_VICTIM_SAVED_TO_WIN = 7;
