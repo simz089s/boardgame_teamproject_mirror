@@ -16,6 +16,7 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 public class Client {
 
@@ -30,10 +31,13 @@ public class Client {
 
   private static Client instance;
 
+  private static final Logger LOGGER = NetworkLogger.getLogger();
+
   public static Client createClient() {
     try {
       instance = new Client(NetworkManager.DEFAULT_SERVER_IP, NetworkManager.DEFAULT_SERVER_PORT);
-      System.out.println("Client is starting...");
+//      System.out.println("Client is starting...");
+      LOGGER.info("Client is starting...");
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -78,21 +82,28 @@ public class Client {
                       newThread.start();
                     } catch (Exception connectionLost) {
                       try {
-                        System.out.println("Server disconnected: closing client...");
+//                        System.out.println("Server disconnected: closing client...");
+                          LOGGER.info("Server disconnected: closing client...");
                         // Closing resources
                         din.close();
                         dout.close();
                         s.close();
-                        System.out.println(
+//                        System.out.println(
+//                            "Streams and Socket closed for Client with IP: " + clientIP);
+                          LOGGER.info(
                             "Streams and Socket closed for Client with IP: " + clientIP);
 
                         // Close Reader Thread
                         stopClientReadFromClientHandlerThread();
-                        System.out.println(
+//                        System.out.println(
+//                            "Reader Thread terminated or Client with IP: " + clientIP);
+                          LOGGER.info(
                             "Reader Thread terminated or Client with IP: " + clientIP);
 
                       } catch (IOException e) {
-                        System.out.println(
+//                        System.out.println(
+//                            "Unable to close Streams for Client with IP: " + clientIP);
+                          LOGGER.info(
                             "Unable to close Streams for Client with IP: " + clientIP);
                         e.printStackTrace();
                       }
@@ -103,7 +114,8 @@ public class Client {
       readMessage.start();
 
     } catch (UnknownHostException e) {
-      System.out.println("Server Not Found");
+//      System.out.println("Server Not Found");
+        LOGGER.info("Server Not Found");
       e.printStackTrace();
     }
   }
@@ -148,7 +160,8 @@ public class Client {
       JSONObject jsonObject = (JSONObject) parser.parse(msg);
       ClientCommands c = ClientCommands.fromString(jsonObject.get("command").toString());
       final String message = jsonObject.get("message").toString();
-      System.out.println(message);
+//      System.out.println(message);
+        LOGGER.info(message);
       switch (c) {
         case EXIT_GAME:
             JSONArray array = (JSONArray) parser.parse(message);

@@ -19,6 +19,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.*;
+import java.util.logging.Logger;
 
 public class Server implements Runnable {
 
@@ -48,6 +49,8 @@ public class Server implements Runnable {
   Socket s; // Client socket
   Thread startServer; // DON'T SEND TO SRC CLIENT TWICE
 
+  private static final Logger LOGGER = NetworkLogger.getLogger();
+
   @Override
   public void run() {
     // running infinite loop for getting client request
@@ -55,13 +58,15 @@ public class Server implements Runnable {
       // Accept the incoming request
       try {
         s = ss.accept(); // s is the client socket
-        System.out.println("New client request received : " + s);
+//        System.out.println("New client request received : " + s);
+          LOGGER.info("New client request received : " + s);
 
         // obtain input and output streams or the client
         DataInputStream din = new DataInputStream(s.getInputStream());
         DataOutputStream dout = new DataOutputStream(s.getOutputStream());
 
-        System.out.println("Creating a new handler for this client...");
+//        System.out.println("Creating a new handler for this client...");
+          LOGGER.info("Creating a new handler for this client...");
 
         String ip = s.getInetAddress().toString().replace("/", "");
 
@@ -71,13 +76,15 @@ public class Server implements Runnable {
 
         // Create a new Thread with this client.
         Thread t = new Thread(clientObserver);
-        System.out.println("Adding this client to active client list");
+//        System.out.println("Adding this client to active client list");
+          LOGGER.info("Adding this client to active client list");
 
         // add this client to active clientObservers list
         clientObservers.put(ip, clientObserver);
 
-        System.out.println("Client Ip is: " + ip);
-        System.out.println();
+//        System.out.println("Client Ip is: " + ip);
+//        System.out.println();
+          LOGGER.info("Client Ip is: " + ip + "\n");
 
         t.start(); // start the thread for the client
 
@@ -103,7 +110,8 @@ public class Server implements Runnable {
 
   public static Server createServer() {
     instance = new Server(NetworkManager.DEFAULT_SERVER_PORT);
-    System.out.println("Server is starting...");
+//    System.out.println("Server is starting...");
+    LOGGER.info("Server is starting...");
     return instance;
   }
 
@@ -173,7 +181,8 @@ public class Server implements Runnable {
     try {
       InetAddress addr = InetAddress.getLocalHost();
       hostname = addr.getHostName();
-      System.out.println("Host Name = " + hostname);
+//      System.out.println("Host Name = " + hostname);
+        LOGGER.info("Host Name = " + hostname);
 
     } catch (UnknownHostException e) {
       e.printStackTrace();
@@ -211,8 +220,10 @@ public class Server implements Runnable {
       Server.sendCommandToAllClients(ClientCommands.EXIT_GAME, array.toJSONString());
       Server.sendCommandToAllClients(ClientCommands.SHOW_MESSAGE_ON_SCREEN, object.toJSONString());
     }
-    System.out.println("Client with IP: " + clientIP + " is removed from the Network successfully");
-    System.out.println("Number of Clients Remaining on Network: " + clientList.size());
+//    System.out.println("Client with IP: " + clientIP + " is removed from the Network successfully");
+//    System.out.println("Number of Clients Remaining on Network: " + clientList.size());
+      LOGGER.info("Client with IP: " + clientIP + " is removed from the Network successfully");
+      LOGGER.info("Number of Clients Remaining on Network: " + clientList.size());
   }
 
   // Now all server commands handled in the server
@@ -224,7 +235,8 @@ public class Server implements Runnable {
       ServerCommands c = ServerCommands.fromString(jsonObject.get("command").toString());
       String message = jsonObject.get("message").toString();
       String ip = jsonObject.get("IP").toString();
-      System.out.println(message);
+//      System.out.println(message);
+        LOGGER.info(message);
       boolean mustSendAndRefresh = false;
 
       switch (c) {
