@@ -46,15 +46,12 @@ public class BoardMovesPanel {
   }
 
   private void performDirectionMove(Actions move, Direction direction) {
-
-    boolean actionDone = false; //TODO
-
     Client.getInstance().sendCommand(move,direction.toString());
   }
 
   public void drawMovesAndDirectionsPanel() {
 
-    if (User.getInstance().isMyTurn()) { // TODO : || true (if play with single computer multi-player)
+    if (User.getInstance().isMyTurn() || !IS_MY_TURN_ACTIVATED) {
 
       // list style
       listStyleMoveOptions = new List.ListStyle();

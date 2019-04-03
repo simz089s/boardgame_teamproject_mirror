@@ -25,6 +25,8 @@ import java.util.List;
 
 public class BoardScreen extends FlashPointScreen {
 
+  static final boolean IS_MY_TURN_ACTIVATED = false; // TODO: set to false if playing single computer
+
   String BOARD_TO_DISPLAY_FILE = "boards/tile_1.png";
 
   static final int NUMBER_OF_ROWS = BoardManager.ROWS;
@@ -145,7 +147,7 @@ public class BoardScreen extends FlashPointScreen {
                 // set init vehicles position
                 if (isAmbulanceNotSet
                     && DBHandler.isPresentInArr(
-                        getAmbulanceClickableTiles(), i_pos + "-" + j_pos) && User.getInstance().isMyTurn()) { // TODO && User.getInstance().isMyTurn()
+                        getAmbulanceClickableTiles(), i_pos + "-" + j_pos) && (User.getInstance().isMyTurn() || !IS_MY_TURN_ACTIVATED)) {
 
                   JSONObject obj = new JSONObject();
                   obj.put("i", i_pos);
@@ -154,7 +156,7 @@ public class BoardScreen extends FlashPointScreen {
                           .sendCommand(ServerCommands.SET_AMBULANCE, obj.toJSONString());
 
                 } else if (isEngineNotSet
-                    && DBHandler.isPresentInArr(getEngineClickableTiles(), i_pos + "-" + j_pos) && User.getInstance().isMyTurn()) { // TODO && User.getInstance().isMyTurn()
+                    && DBHandler.isPresentInArr(getEngineClickableTiles(), i_pos + "-" + j_pos) && (User.getInstance().isMyTurn() || !IS_MY_TURN_ACTIVATED)) {
 
                   if (isAmbulanceNotSet) {
                     return;
@@ -169,7 +171,7 @@ public class BoardScreen extends FlashPointScreen {
 
                 // choose init position
                 if (!FireFighterTurnManager.getInstance().currentHasTile()
-                    && DBHandler.isPresentInArr(CHOOSE_INIT_POS_TILES, i_pos + "-" + j_pos) && User.getInstance().isMyTurn()) { // TODO && User.getInstance().isMyTurn()
+                    && DBHandler.isPresentInArr(CHOOSE_INIT_POS_TILES, i_pos + "-" + j_pos) && (User.getInstance().isMyTurn() || !IS_MY_TURN_ACTIVATED)) {
 
                   if (isAmbulanceNotSet || isEngineNotSet) {
                     return;
@@ -225,12 +227,12 @@ public class BoardScreen extends FlashPointScreen {
             && !((BoardManagerAdvanced) BoardManagerAdvanced.getInstance()).hasFireTruckPlaced();
 
     if ((isAmbulanceNotSet || isEngineNotSet) && User.getInstance().isMyTurn()) {
-      if (User.getInstance().isMyTurn()) { // TODO && User.getInstance().isMyTurn()
+      if (User.getInstance().isMyTurn() || !IS_MY_TURN_ACTIVATED) {
         boardDialog.drawDialog(
                 "Ambulance position", "Choose the ambulance's initial position (green tiles).");
         addFilterOnTileForAmbulance();
       }
-    } else if (!FireFighterTurnManager.getInstance().currentHasTile() && User.getInstance().isMyTurn()) { // TODO && User.getInstance().isMyTurn()
+    } else if (!FireFighterTurnManager.getInstance().currentHasTile() && (User.getInstance().isMyTurn() || !IS_MY_TURN_ACTIVATED)) {
       boardDialog.drawDialog(
           "Initial position", "Choose your initial position on the board (green tiles).");
       addFilterOnTileForChooseInitPos();
@@ -928,24 +930,24 @@ public class BoardScreen extends FlashPointScreen {
 
       if (BoardManager.getInstance().isAdvanced()) { // experienced version
         if (!(BoardManagerAdvanced.getInstance()).hasAmbulancePlaced()) {
-          if (User.getInstance().isMyTurn()) { // TODO && User.getInstance().isMyTurn()
+          if (User.getInstance().isMyTurn() || !IS_MY_TURN_ACTIVATED) {
             boardDialog.drawDialog(
                     "Ambulance position", "Choose the ambulance's initial position (green tiles).");
             addFilterOnTileForAmbulance();
           }
 
         } else if (!(BoardManagerAdvanced.getInstance()).hasFireTruckPlaced()) {
-          if (User.getInstance().isMyTurn()) { // TODO : || true (if play with single computer multi-player)
+          if (User.getInstance().isMyTurn() || !IS_MY_TURN_ACTIVATED) {
             gameSetupActions = GameSetupActions.PLACE_FIRETRUCK;
             addFilterOnTileForEngine();
           }
         } else if(!FireFighterTurnManager.getInstance().currentHasTile()){
-            if (User.getInstance().isMyTurn()) { // TODO : || true (if play with single computer multi-player)
+            if (User.getInstance().isMyTurn() || !IS_MY_TURN_ACTIVATED) {
               gameSetupActions = GameSetupActions.CHOOSE_INIT_POS;
               addFilterOnTileForChooseInitPos();
             }
         } else if (FireFighterTurnManagerAdvance.getInstance().getCurrentFireFighter().getSpeciality() == FireFighterAdvanceSpecialities.NO_SPECIALITY) {
-          if (User.getInstance().isMyTurn()) { // TODO && User.getInstance().isMyTurn()
+          if (User.getInstance().isMyTurn() || !IS_MY_TURN_ACTIVATED) {
             gameSetupActions = GameSetupActions.CHOOSE_INIT_SPECIALTY;
             boardChooseRolePanel.drawChooseSpecialtyPanel();
           }
@@ -956,7 +958,7 @@ public class BoardScreen extends FlashPointScreen {
       } else { // family version
 
         if (!FireFighterTurnManager.getInstance().currentHasTile()) { // choose init pos
-          if (User.getInstance().isMyTurn()) { // TODO : || true (if play with single computer multi-player)
+          if (User.getInstance().isMyTurn() || !IS_MY_TURN_ACTIVATED) {
             addFilterOnTileForChooseInitPos();
             boardChooseRolePanel.drawChooseSpecialtyPanel();
           }
