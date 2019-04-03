@@ -4,6 +4,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.util.logging.Logger;
 
 class ServerToClientRunnable implements Runnable {
     private String name;
@@ -14,6 +15,8 @@ class ServerToClientRunnable implements Runnable {
     private Socket s;
     boolean isloggedin;
     private boolean notStopped = true;
+
+    private static final Logger LOGGER = NetworkLogger.getLogger();
 
     // constructor
     public ServerToClientRunnable(Socket s, String name, DataInputStream din, DataOutputStream dout, String ip) {
@@ -52,18 +55,22 @@ class ServerToClientRunnable implements Runnable {
                     this.din.close();
                     this.dout.close();
                     this.s.close();
-                    System.out.println("Streams and Socket closed for Client with IP: " + ip);
+//                    System.out.println("Streams and Socket closed for Client with IP: " + ip);
+                    LOGGER.info("Streams and Socket closed for Client with IP: " + ip);
 
                     // Close Reader Thread
                     stopClientReadFromServerThread();
-                    System.out.println("Reader Thread terminated or Client with IP: " + ip);
+//                    System.out.println("Reader Thread terminated or Client with IP: " + ip);
+                    LOGGER.info("Reader Thread terminated or Client with IP: " + ip);
 
                     // Remove Client from Server's and Network's List
                     Server.closeClient(ip);
-                    System.out.println();
+//                    System.out.println();
+                    LOGGER.info("\n");
 
                 } catch (IOException e) {
-                    System.out.println("Unable to close Streams for Client with IP: " + ip);
+//                    System.out.println("Unable to close Streams for Client with IP: " + ip);
+                    LOGGER.info("Unable to close Streams for Client with IP: " + ip);
                     e.printStackTrace();
                 }
             }
