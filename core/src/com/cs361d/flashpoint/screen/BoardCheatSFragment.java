@@ -13,8 +13,8 @@ import static com.cs361d.flashpoint.screen.FlashPointScreen.skinUI;
 
 public class BoardCheatSFragment {
 
-    String imagesFileName[] = {"1.png", "2.png", "Cafs_Firefighter.png", "Driver_Operator.png", "Fire_Captain.png", "Generalist.png",
-            "Hazmat_Technician.png", "Imaging_Technician.png", "Parademic.png", "Rescue_Specialist.png", "Structural_Engineer.png"};
+    String imagesFileName[] = {"1.png", "2.png", "cafs firefighter.png", "driver.png", "fire captain.png", "generalist.png",
+            "hazmat technician.png", "imaging technician.png", "paramedic.png", "rescue specialist.png", "veteran.png", "rescue dog.png", "structural engineer.png"};
 
     Image[] cardImages = new Image[imagesFileName.length];
 

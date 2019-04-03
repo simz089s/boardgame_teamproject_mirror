@@ -11,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.cs361d.flashpoint.manager.BoardManager;
 import com.cs361d.flashpoint.manager.BoardManagerAdvanced;
 import com.cs361d.flashpoint.manager.FireFighterTurnManagerAdvance;
+import com.cs361d.flashpoint.model.FireFighterSpecialities.FireFighterAdvanceSpecialities;
 import com.cs361d.flashpoint.networking.Client;
 import com.cs361d.flashpoint.networking.ServerCommands;
 
@@ -104,6 +105,16 @@ public class BoardChooseSpecialtyPanel {
                         }
 
                         removeChooseSpecialtyPanel();
+                    }
+                });
+
+        lstSpecialties.addListener(
+                new InputListener() {
+                    @Override
+                    public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                        BoardDialog bd = new BoardDialog(stage);
+                        bd.drawOnSpecialtyClickDialog(FireFighterAdvanceSpecialities.fromString(lstSpecialties.getSelected()));
+                        return true;
                     }
                 });
 

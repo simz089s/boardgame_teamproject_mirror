@@ -342,7 +342,7 @@ public class LobbyScreen extends FlashPointScreen {
         loadGamesLabel.setColor(Color.BLACK);
 
         loadGamesLabel.setPosition(
-                Gdx.graphics.getWidth() / 2,
+                60,
                 (Gdx.graphics.getHeight() - debugLbl.getHeight() - 50));
 
         stage.addActor(loadGamesLabel);
@@ -373,16 +373,17 @@ public class LobbyScreen extends FlashPointScreen {
 
         scrollPaneLoadGameList = new ScrollPane(lstLoadGames, scrollStyle);
         scrollPaneLoadGameList.setOverscroll(false, false);
-        //scrollPaneLoadGameList.setFadeScrollBars(false);
         scrollPaneLoadGameList.setScrollingDisabled(true, false);
         scrollPaneLoadGameList.setTransform(true);
         scrollPaneLoadGameList.setScale(1.0f);
         scrollPaneLoadGameList.setWidth(380);
         scrollPaneLoadGameList.setHeight(Gdx.graphics.getHeight() - 250);
-        //scrollMessage.setBounds(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight() + 100);
+
+        float x = 60;
+        float y = Gdx.graphics.getHeight() - scrollPaneLoadGameList.getHeight() - 80;
+
         scrollPaneLoadGameList.setPosition(
-                Gdx.graphics.getWidth() / 2,
-                Gdx.graphics.getHeight() - scrollPaneLoadGameList.getHeight() - 80);
+                x, y);
 
         lstLoadGames.addListener(
                 new InputListener() {
@@ -422,10 +423,12 @@ public class LobbyScreen extends FlashPointScreen {
         scrollPaneGameInfoList.setScale(1.0f);
         scrollPaneGameInfoList.setWidth(Gdx.graphics.getWidth() / 2 - 10);
         scrollPaneGameInfoList.setHeight(Gdx.graphics.getHeight() - 100);
-        //scrollMessage.setBounds(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight() + 100);
+
+        float x = Gdx.graphics.getWidth() / 2;
+        float y = Gdx.graphics.getHeight() - scrollPaneLoadGameList.getHeight() - 20;
+
         scrollPaneGameInfoList.setPosition(
-                60,
-                Gdx.graphics.getHeight() - scrollPaneGameInfoList.getHeight() - 20);
+                x, y);
 
         gameInfoPanelList.add(scrollPaneGameInfoList);
         stage.addActor(scrollPaneGameInfoList);
