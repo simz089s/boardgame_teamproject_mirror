@@ -39,6 +39,17 @@ public class BoardManagerAdvanced extends BoardManager {
     return this.numHotSpotLeft;
   }
 
+  /**
+   * @see BoardManager#endTurnFireSpread()
+   * This method does the same thing than its parent but,
+   * we also verify hasmat explosions and if there is a hotspot at the current explosion location
+   * then we carry on the fireSpread until we reach a tile with no hostspot.
+   * The method update victims and fireFighters after the fireSpread  where split as compare to parent as we must verify
+   * knock downs during the fire spread to apply the veteran special ability
+   * @see #hazMatExplosion()
+   * @see #updateFireFighters(List)
+   * @see #updateVictims(List)
+   */
   @Override
   public void endTurnFireSpread() {
     verifyRemoveHazmatOutside();
@@ -70,12 +81,13 @@ public class BoardManagerAdvanced extends BoardManager {
       hitLocation.addHotSpot();
       numHotSpotLeft--;
     }
-    checkVictimsAndAdd();
+    replenishPOI();
   }
 
   public void setLetKnockedDown(boolean value) {
     this.letKnockedDown = value;
   }
+
 
   private void updateFireFighters(List<Tile> tiles) {
     for (Tile t : tiles) {
@@ -590,30 +602,29 @@ public class BoardManagerAdvanced extends BoardManager {
     if (!TILE_MAP[i][j].hasFire()) {
       return;
     }
-    FireFighterAdvanced f = (FireFighterAdvanced) TILE_MAP[i][j].getFirefighters().get(0);
-    if (f instanceof Veteran && f.getActionPointsLeft() > 0) {
-      askForTheKnockedDownProcedure(f);
-    } else if (FireFighterTurnManagerAdvance.getInstance().verifyVeteranVacinity(f)
-        && f.getActionPointsLeft() > 1) {
-      askForTheKnockedDownProcedure(f);
-    }
-    if (letKnockedDown) {
-      ArrayList<Tile> tiles = getClosestAmbulanceTile(i, j);
-      if (tiles.size() == 1) {
-        if (tiles.get(0).hasFire()) {
-          throw new IllegalArgumentException(
-              "Issue with tile at location " + i + " " + j + "It should not have fire");
-        }
-        f.setTile(tiles.get(0));
-      } else {
-        throw new IllegalStateException();
+    while (TILE_MAP[i][j].hasFireFighters()) {
+      FireFighterAdvanced f = (FireFighterAdvanced) TILE_MAP[i][j].getFirefighters().get(0);
+      if (f instanceof Veteran && f.getActionPointsLeft() > 0) {
+        askForTheKnockedDownProcedure(f);
+      } else if (FireFighterTurnManagerAdvance.getInstance().verifyVeteranVacinity(f)
+          && f.getActionPointsLeft() > 1) {
+        askForTheKnockedDownProcedure(f);
       }
-    }
-    letKnockedDown = true;
-    Server.sendToClientsInGame(ClientCommands.SET_GAME_STATE, DBHandler.getBoardAsString());
-    Server.sendToClientsInGame(ClientCommands.REFRESH_BOARD_SCREEN, "");
-    if (!TILE_MAP[i][j].getFirefighters().isEmpty()) {
-      knockedDown(i, j);
+      if (letKnockedDown) {
+        ArrayList<Tile> tiles = getClosestAmbulanceTile(i, j);
+        if (tiles.size() == 1) {
+          if (tiles.get(0).hasFire()) {
+            throw new IllegalArgumentException(
+                "Issue with tile at location " + i + " " + j + "It should not have fire");
+          }
+          f.setTile(tiles.get(0));
+        } else {
+          throw new IllegalStateException();
+        }
+      }
+      letKnockedDown = true;
+      Server.sendToClientsInGame(ClientCommands.SET_GAME_STATE, DBHandler.getBoardAsString());
+      Server.sendToClientsInGame(ClientCommands.REFRESH_BOARD_SCREEN, "");
     }
   }
 
@@ -634,7 +645,7 @@ public class BoardManagerAdvanced extends BoardManager {
       return;
     }
     Server.sendCommandToSpecificClient(
-        ClientCommands.ASK_WISH_ABOUT_KNOWCK_DOWN, array.toJSONString(), ip);
+        ClientCommands.ASK_WISH_ABOUT_KNOCK_DOWN, array.toJSONString(), ip);
     while (wait.get()) ;
     wait.set(true);
   }
@@ -643,7 +654,7 @@ public class BoardManagerAdvanced extends BoardManager {
     this.wait.set(false);
   }
 
-  public void moveForKnowckDown(FireFighterAdvanced f, Direction d) {
+  public void moveForKnockDown(FireFighterAdvanced f, Direction d) {
     Tile adjacentTile = f.getTile().getAdjacentTile(d);
     if (adjacentTile == null || adjacentTile.hasFire() || !f.dodgeAp()) {
       this.letKnockedDown = true;

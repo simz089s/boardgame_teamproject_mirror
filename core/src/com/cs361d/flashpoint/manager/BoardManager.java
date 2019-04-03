@@ -9,6 +9,10 @@ import org.json.simple.JSONObject;
 import java.util.*;
 import java.util.List;
 
+/**
+ * Created By Elvric Trombert
+ * Class used to manage boardStates
+ */
 public class BoardManager implements Iterable<Tile> {
   protected final LinkedList<FireFighterColor> colorList = new LinkedList<FireFighterColor>();
   public static final int NUM_VICTIM_SAVED_TO_WIN = 7;
@@ -144,6 +148,15 @@ public class BoardManager implements Iterable<Tile> {
     TILE_MAP[i][j].setFireStatus(f);
   }
 
+  /**
+   * Used to set the game parameters when loading or creating the game that are only held by the
+   * BoardManager
+   *
+   * @param numFalseAlarmRemoved
+   * @param numVictimsDead
+   * @param numVictimSaved
+   * @param totalWallDamageLeft
+   */
   public void setGameAtStart(
       int numFalseAlarmRemoved, int numVictimsDead, int numVictimSaved, int totalWallDamageLeft) {
     this.numFalseAlarmRemoved = numFalseAlarmRemoved;
@@ -185,11 +198,23 @@ public class BoardManager implements Iterable<Tile> {
     return TILE_MAP;
   }
 
-  // Spread the fire at the end of the turn
+  /**
+   * Spreads the fire at the end of a turn
+   *
+   * @see #explosion(int, int)
+   * @see #updateSmoke()
+   * @see #getTilesWithFire()
+   * @see #updateVictimAndFireFighter(List)
+   * @see #replenishPOI()
+   */
   public void endTurnFireSpread() {
+    /* Generate the coordinate of the explosion excluding
+     * the edges of the map
+     */
     int i = 1 + (int) (Math.random() * (ROWS - 2));
     int j = 1 + (int) (Math.random() * (COLUMNS - 2));
     Tile hitLocation = TILE_MAP[i][j];
+
     if (hitLocation.hasNoFireAndNoSmoke()) {
       hitLocation.setFireStatus(FireStatus.SMOKE);
     } else if (hitLocation.hasSmoke()) {
@@ -201,11 +226,17 @@ public class BoardManager implements Iterable<Tile> {
     List<Tile> tiles = getTilesWithFire();
     // we clear the edge tiles with fire as knocked down player must be able to respawn
     removeEdgeFire();
-    checkVictimsAndAdd();
     updateVictimAndFireFighter(tiles);
+    replenishPOI();
   }
 
-  protected void checkVictimsAndAdd() {
+  /**
+   * Iterate through the board tile counting the number of point of interests left in the game if
+   * less than 3 then it spawns new POI if there are some left
+   *
+   * @see #addNewPointInterest()
+   */
+  protected void replenishPOI() {
     int numVictimToAdd = 3;
     for (int i = 0; i < ROWS; i++) {
       for (int j = 0; j < COLUMNS; j++) {
@@ -225,7 +256,15 @@ public class BoardManager implements Iterable<Tile> {
     FireFighterTurnManager.reset();
     FireFighter.reset();
   }
-  // Spread the fire in a specific direction after an explosion
+
+  /**
+   * Called when there is no obstacle between the explostion location and the adjecent tile in the
+   * direction d responsible for spreading the fire in one direction.
+   *
+   * @param i adjacent tile i location
+   * @param j adjacent tile j location
+   * @param d direction of the spread
+   */
   protected void explosionFireSpread(int i, int j, Direction d) {
     Tile hitLocation = TILE_MAP[i][j];
     if (!hitLocation.hasFire()) {
@@ -269,7 +308,15 @@ public class BoardManager implements Iterable<Tile> {
     }
   }
 
-  // Create an explosion at the specified location and propagates fire
+  /**
+   * Called when a fire spawns on top of a fire we resolve an explosion at the location passed
+   * Explosing spreads fire in all adjacent tiles if there is an obstacle in that direction the
+   * obstacle gets 1 damage else the fire spread to the adgecent tile if that tile already had fire
+   * then we carry on the spread of the fire in the same direction.
+   *
+   * @param i
+   * @param j
+   */
   protected void explosion(int i, int j) {
     Tile hitLocation = TILE_MAP[i][j];
     hitLocation.setFireStatus(FireStatus.FIRE);
@@ -307,7 +354,7 @@ public class BoardManager implements Iterable<Tile> {
     }
   }
 
-  // Ensure that all the tiles with smoke catch fire at the end of turn
+  /** Ensure that all the tiles with smoke catch fire at the end of turn */
   protected void updateSmoke() {
     boolean repeat = false;
     for (int i = 0; i < ROWS; i++) {
@@ -356,7 +403,13 @@ public class BoardManager implements Iterable<Tile> {
     return false;
   }
 
-  // removes victims that are in a place with fire at the end of turn as well as knockdown player
+  /**
+   * This method is responsible for knocking down players in fire and removing victims standing on a
+   * space with fire
+   *
+   * @param tiles these are the tile that had fire at the end of the firespread before clearing the
+   *     map edge
+   */
   protected void updateVictimAndFireFighter(List<Tile> tiles) {
     for (Tile t : tiles) {
       if (t.hasFireFighters()) {
@@ -376,6 +429,13 @@ public class BoardManager implements Iterable<Tile> {
     }
   }
 
+  /**
+   * Responsible for adding new POI onto the board, it generates a random numbe for the i and j
+   * location until it finds a location with no POI. Then it gets the next victim from the victim
+   * array stored by BoardManager. If there is a fireFighter at that location then it reveals the
+   * victim if it is a false alarm it then calls the method again else it reveals it. and add that
+   * POI at the location wanted.
+   */
   protected void addNewPointInterest() {
     if (victims.isEmpty()) {
       //      throw new IllegalStateException("we cannot add a new point of interest if the list is
@@ -403,12 +463,18 @@ public class BoardManager implements Iterable<Tile> {
     }
   }
 
+  /**
+   * Adds a point of interest at the desired location
+   *
+   * @param i
+   * @param j
+   */
   protected void addNewPointInterest(int i, int j) {
     AbstractVictim v = victims.get(0);
     TILE_MAP[i][j].setVictim(v);
   }
 
-  // removes the fire outside the building
+  /** removes the fire outside the building */
   protected void removeEdgeFire() {
     for (int i = 0; i < ROWS; i++) {
       TILE_MAP[i][0].setFireStatus(FireStatus.EMPTY);
@@ -420,6 +486,14 @@ public class BoardManager implements Iterable<Tile> {
     }
   }
 
+  /**
+   * Get the tile adjacent to t in direction d if there is not tile at that location it returns
+   * null.
+   *
+   * @param t the tile where we will get the adjacent tile from
+   * @param d the direction we want to get the adjacent tile at
+   * @return
+   */
   public Tile getAdjacentTile(Tile t, Direction d) {
     int i = t.getI();
     int j = t.getJ();
@@ -453,6 +527,15 @@ public class BoardManager implements Iterable<Tile> {
     return null;
   }
 
+  /**
+   * Used basic distance algorithm to retrieve the tiles that canContanAmbulance that are closest to
+   * fireFighters located at the i and j param.
+   *
+   * @param i the i location of the fireFighter
+   * @param j the j location of the fireFighter
+   * @return List of tile that are closest to the fireFighter and canContainAnAmbulance
+   * @see Tile#canContainAmbulance()
+   */
   public ArrayList<Tile> getClosestAmbulanceTile(int i, int j) {
     ArrayList<Tile> tiles = new ArrayList<Tile>();
     double currentSmallestDistance = Double.MAX_VALUE;
@@ -473,28 +556,40 @@ public class BoardManager implements Iterable<Tile> {
     return tiles;
   }
 
+  /**
+   * If the tile has no fire or has no fireFighters there is no knock down so it returns else it
+   * retrieves the closest ambulance tile and while the tile still contains fireFighters it sets
+   * them to the new safe ambulance tile
+   * @param i i location of the tile we want to verify if there is a knockdown
+   * @param j j location of the tile we want to verify if there is a knockdown
+   */
   protected void knockedDown(int i, int j) {
     if (!TILE_MAP[i][j].hasFire()) {
       return;
     }
     ArrayList<Tile> tiles = getClosestAmbulanceTile(i, j);
-    FireFighter f = TILE_MAP[i][j].getFirefighters().get(0);
-    if (tiles.size() == 1) {
-      if (tiles.get(0).hasFire()) {
-        throw new IllegalArgumentException(
-            "Issue with tile at location " + i + " " + j + "It should not have fire");
+    while (TILE_MAP[i][j].hasFireFighters()) {
+      FireFighter f = TILE_MAP[i][j].getFirefighters().get(0);
+      if (tiles.size() == 1) {
+        if (tiles.get(0).hasFire()) {
+          throw new IllegalArgumentException(
+              "Issue with tile at location " + i + " " + j + "It should not have fire");
+        }
+        f.setTile(tiles.get(0));
+      } else if (tiles.size() > 1) {
+        f.setTile(tiles.get(0));
+      } else {
+        throw new IllegalStateException();
       }
-      f.setTile(tiles.get(0));
-    } else if (tiles.size() > 1) {
-      f.setTile(tiles.get(0));
-    } else {
-      throw new IllegalStateException();
-    }
-    if (!TILE_MAP[i][j].getFirefighters().isEmpty()) {
-      knockedDown(i, j);
     }
   }
 
+  /**
+   * Method not used was created for familly game where fireFighter is at equidistance of two tiles that CAN_CONTAIN_AMBULANCE
+   * but was not finished
+   * @param t
+   * @param f
+   */
   public void chooseForKnockedDown(Tile t, FireFighter f) {
     if (!t.canContainAmbulance()) {
       throw new IllegalArgumentException(
@@ -503,6 +598,15 @@ public class BoardManager implements Iterable<Tile> {
     f.setTile(t);
   }
 
+  /**
+   * Used to retrived the tile that have fire on them as we clear the edges of fire before looking
+   * at possible knocked down fireFighters or dead victim to avoid infinit knock downs if the
+   * ambulance tile is on fire (Elvric: I made a modification to the method look at tiles that makes
+   * that code not that useful but I kept the current logic just in case feel free to change that)
+   *
+   * @return the list of tile that have fire on them
+   * @see Tile
+   */
   public List<Tile> getTilesWithFire() {
     List<Tile> tiles = new ArrayList<Tile>();
     for (Tile[] rows : TILE_MAP) {
@@ -519,10 +623,12 @@ public class BoardManager implements Iterable<Tile> {
     return tiles;
   }
 
-  public void setTotalWallDamageLeft(int w) {
-    this.totalWallDamageLeft = w;
-  }
-
+  /**
+   * If the tile is an edge tile we verify if the tile contains a real victim
+   * if it does we set the tile to have no victim and increment the victim save count by 1
+   * @param t the tile where the victim is on
+   * @return true if the game has ended because enough victim have been rescued false otherwise
+   */
   public boolean verifyVictimRescueStatus(Tile t) {
     int i = t.getI();
     int j = t.getJ();
@@ -543,6 +649,12 @@ public class BoardManager implements Iterable<Tile> {
     return false;
   }
 
+  /**
+   * Responsible to decrement the damage markers of the game.
+   *
+   * @return true if there still exits some damage marker false otherwise as the building collapses
+   *     if no more damage markers are left
+   */
   public boolean useDamageMarker() {
     this.totalWallDamageLeft--;
     if (this.totalWallDamageLeft <= 0) {
@@ -590,11 +702,23 @@ public class BoardManager implements Iterable<Tile> {
     return tiles.iterator();
   }
 
+  /**
+   *  Set the gameHasEnded boolean to true of the server so after refreshing the game and only after that it sends
+   *  the end game command to all clients for the proper display of the end game message.
+   * @param msg message to be displayed to clients when the game ends
+   * @see Server#serverExecuteGameCommand(String, String, String)
+   */
   public void endGameMessage(String msg) {
     Server.gameHasEnded = true;
     Server.messageToEnd = msg;
   }
 
+  /**
+   * Used to retrieve all adgecent tiles that it adjacent tile that are not null and can be accessed with no obstacle
+   * blocking the way
+   * @param t the tile we want to get all adjacent tiles of
+   * @return Tile list of all the adjacent tiles.
+   */
   public List<Tile> getAllAdjacentTile(Tile t) {
     List<Tile> list = new ArrayList<Tile>();
     for (Direction direction : Direction.values()) {
@@ -615,13 +739,10 @@ public class BoardManager implements Iterable<Tile> {
     return TILE_MAP[i][j];
   }
 
-  public boolean gameHasEnded() {
-    return gameEnded;
-  }
-
   public static boolean isAdvanced() {
     return instance instanceof BoardManagerAdvanced;
   }
+
 
   protected void sendMessageToAllPlayers(String title, String message) {
     JSONObject obj = new JSONObject();

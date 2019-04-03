@@ -185,28 +185,23 @@ public class FireFighterTurnManagerAdvance extends FireFighterTurnManager {
       if (f instanceof Veteran) {
         Tile currentTile = f.getTile();
         validTiles.add(currentTile);
-        for (Direction d : Direction.values()) {
-          int dist = 2;
-          if (d != Direction.NODIRECTION && d != Direction.NULLDIRECTION) {
-            if (currentTile.hasObstacle(d)) {
-              continue;
-            }
-            Tile adjacentTile = currentTile.getAdjacentTile(d);
-            if (adjacentTile == null) {
-              continue;
-            }
-            validTiles.add(adjacentTile);
-            if (!adjacentTile.hasNoFireAndNoSmoke()) {
-              continue;
-            }
-            while (dist < 4 && !adjacentTile.hasObstacle(d)) {
-              adjacentTile = adjacentTile.getAdjacentTile(d);
-              if (adjacentTile != null && adjacentTile.hasNoFireAndNoSmoke()) {
-                validTiles.add(adjacentTile);
-                dist++;
-              } else {
-                break;
-              }
+        for (Direction d : Direction.outwardDirections()) {
+          int dist = 1;
+          if (currentTile.hasObstacle(d)) {
+            continue;
+          }
+          Tile adjacentTile = currentTile.getAdjacentTile(d);
+          if (adjacentTile == null) {
+            continue;
+          }
+          validTiles.add(adjacentTile);
+          while (dist < 3 && !adjacentTile.hasObstacle(d) && !adjacentTile.hasNoFireAndNoSmoke()) {
+            adjacentTile = adjacentTile.getAdjacentTile(d);
+            if (adjacentTile != null) {
+              validTiles.add(adjacentTile);
+              dist++;
+            } else {
+              break;
             }
           }
         }
