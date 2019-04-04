@@ -317,10 +317,9 @@ public class CreateGameScreen extends FlashPointScreen {
                             if (mapSelected.equals("MAP 2")) {
                                 mk = MapKind.MAP2;
                             }
-                            // TODO
-                            //                            else if (mapSelected.equals("RANDOM")){
-                            //                                mk = MapKind.RANDOM;
-                            //                            }
+                            else if (mapSelected.equals("RANDOM")){
+                                mk = MapKind.RANDOM;
+                            }
 
                             JSONObject obj = new JSONObject();
                             obj.put("name",name);

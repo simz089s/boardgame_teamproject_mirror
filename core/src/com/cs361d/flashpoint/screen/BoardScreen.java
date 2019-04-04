@@ -84,7 +84,7 @@ public class BoardScreen extends FlashPointScreen {
   @Override
   public void show() {
 
-    // DBHandler.createBoard(MapKind.MAP2); // generate initial map
+    //DBHandler.createMapBoard(MapKind.RANDOM); // generate initial map
 
     audioMusic.play();
 

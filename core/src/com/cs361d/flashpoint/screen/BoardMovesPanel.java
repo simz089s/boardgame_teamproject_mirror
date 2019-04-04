@@ -96,7 +96,6 @@ public class BoardMovesPanel {
                 case INTERACT_WITH_DOOR:
                   drawDirectionsPanelTable(move);
                   break;
-
                 case END_TURN:
                   Client.getInstance().sendCommand(Actions.END_TURN,"");
                   break;
