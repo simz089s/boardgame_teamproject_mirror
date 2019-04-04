@@ -70,17 +70,17 @@ public class DBHandler {
 
   // MAP RANDOM
 
-  private static final String[] TOP_DOOR_TILE_DESTROYED_MAP_RANDOM = exteriorTopDoorTileMapRand();
-  private static final String[] LEFT_DOOR_TILE_DESTROYED_MAP_RANDOM = exteriorLeftDoorTileMapRand();
+  private static String[] TOP_DOOR_TILE_DESTROYED_MAP_RANDOM;
+  private static String[] LEFT_DOOR_TILE_DESTROYED_MAP_RANDOM;
 
-  private static final String[] TOP_BORDER_MAP_RANDOM = exteriorTopWallTileMapRand();
-  private static final String[] LEFT_BORDER_MAP_RANDOM = exteriorLeftWallTileMapRand();
+  private static String[] TOP_BORDER_MAP_RANDOM;
+  private static String[] LEFT_BORDER_MAP_RANDOM;
 
-  private static final String[] TOP_DOOR_TILE_MAP_RANDOM = topDoorTileMapRand();
-  private static final String[] LEFT_DOOR_TILE_MAP_RANDOM = leftDoorTileMapRand();
+  private static String[] TOP_DOOR_TILE_MAP_RANDOM;
+  private static String[] LEFT_DOOR_TILE_MAP_RANDOM;
 
-  private static final String[] TOP_WALL_TILE_MAP_RANDOM = topWallTileMapRand();
-  private static final String[] LEFT_WALL_TILE_MAP_RANDOM = leftWallTileMapRand();
+  private static String[] TOP_WALL_TILE_MAP_RANDOM;
+  private static String[] LEFT_WALL_TILE_MAP_RANDOM;
 
   // load the board from DB
 
@@ -132,6 +132,18 @@ public class DBHandler {
   // POI status: [no POI = -1; false alarm = 0; victim = 1]
   // fire status: "none", "smoke", "fire"
   public static void createMapBoard(MapKind mapKind) {
+
+    TOP_DOOR_TILE_DESTROYED_MAP_RANDOM = exteriorTopDoorTileMapRand();
+    LEFT_DOOR_TILE_DESTROYED_MAP_RANDOM = exteriorLeftDoorTileMapRand();
+
+    TOP_BORDER_MAP_RANDOM = exteriorTopWallTileMapRand();
+    LEFT_BORDER_MAP_RANDOM = exteriorLeftWallTileMapRand();
+
+    TOP_DOOR_TILE_MAP_RANDOM = topDoorTileMapRand();
+    LEFT_DOOR_TILE_MAP_RANDOM = leftDoorTileMapRand();
+
+    TOP_WALL_TILE_MAP_RANDOM = topWallTileMapRand();
+    LEFT_WALL_TILE_MAP_RANDOM = leftWallTileMapRand();
 
     JSONObject newObj = new JSONObject();
     JSONArray newTilesList = new JSONArray();
