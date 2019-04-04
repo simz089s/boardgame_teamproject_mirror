@@ -968,21 +968,24 @@ public class DBHandler {
       JSONObject gameParams = (JSONObject) jsonObject.get("gameParams");
       retArr.add(("Game: " + gameParams.get("gameName")).toUpperCase());
       retArr.add("");
-      retArr.add("Number of victims lost: " + gameParams.get("numVictimsLost"));
-      retArr.add("Number of victims saved: " + gameParams.get("numVictimsSaved"));
-      retArr.add("Number of false alarm removed: " + gameParams.get("numFalseAlarmRemoved"));
-      retArr.add("Number of walls left: " + gameParams.get("numDamageLeft"));
+      retArr.add("Victims lost: " + gameParams.get("numVictimsLost"));
+      retArr.add("Victims saved: " + gameParams.get("numVictimsSaved"));
+      retArr.add("False alarm removed: " + gameParams.get("numFalseAlarmRemoved"));
+      retArr.add("Walls left: " + gameParams.get("numDamageLeft"));
 
       if (gameParams.get("numHotSpotLeft") != null) {
         retArr.add("");
-        retArr.add("Number of hot spots left: " + gameParams.get("numHotSpotLeft"));
+        retArr.add("Hot spots left: " + gameParams.get("numHotSpotLeft"));
       }
 
     } catch (ParseException e) {
       e.printStackTrace();
     }
 
-    return retArr;
+    ArrayList<String> noInfoForChosenGame = new ArrayList<String>();
+    noInfoForChosenGame.add("No info yet.\n\nStoring data in your file system...");
+
+    return retArr.size() == 0 ? noInfoForChosenGame: retArr;
   }
 
   public static boolean isGameAdvForLobbyImg(String fileName) {

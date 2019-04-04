@@ -191,8 +191,8 @@ public class LobbyScreen extends FlashPointScreen {
         btnIndicationLabel.setColor(Color.BLACK);
 
         btnIndicationLabel.setPosition(
-                1020,
-                (Gdx.graphics.getHeight() - 130));
+                1030,
+                (Gdx.graphics.getHeight() - 150));
 
         stage.addActor(btnIndicationLabel);
     }
@@ -342,7 +342,7 @@ public class LobbyScreen extends FlashPointScreen {
         loadGamesLabel.setColor(Color.BLACK);
 
         loadGamesLabel.setPosition(
-                60,
+                230,
                 (Gdx.graphics.getHeight() - debugLbl.getHeight() - 50));
 
         stage.addActor(loadGamesLabel);
@@ -373,13 +373,14 @@ public class LobbyScreen extends FlashPointScreen {
 
         scrollPaneLoadGameList = new ScrollPane(lstLoadGames, scrollStyle);
         scrollPaneLoadGameList.setOverscroll(false, false);
+        scrollPaneLoadGameList.setFadeScrollBars(false);
         scrollPaneLoadGameList.setScrollingDisabled(true, false);
         scrollPaneLoadGameList.setTransform(true);
         scrollPaneLoadGameList.setScale(1.0f);
-        scrollPaneLoadGameList.setWidth(380);
-        scrollPaneLoadGameList.setHeight(Gdx.graphics.getHeight() - 250);
+        scrollPaneLoadGameList.setWidth(250);
+        scrollPaneLoadGameList.setHeight(333);
 
-        float x = 60;
+        float x = 230;
         float y = Gdx.graphics.getHeight() - scrollPaneLoadGameList.getHeight() - 80;
 
         scrollPaneLoadGameList.setPosition(
@@ -389,8 +390,8 @@ public class LobbyScreen extends FlashPointScreen {
                 new InputListener() {
                     @Override
                     public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                        //removeGameInfoElements();
-                        //createGameInfoPanel(lstLoadGames.getSelected());
+                        removeGameInfoElements();
+                        createGameInfoPanel(lstLoadGames.getSelected());
                         //createGameDifficultyImg(lstLoadGames.getSelected());
                         return true;
                     }
@@ -402,7 +403,7 @@ public class LobbyScreen extends FlashPointScreen {
     private static void createGameInfoPanel(String gameName) {
         // list style
         listStyle = new List.ListStyle();
-        listStyle.font = Font.get(25); // font size
+        listStyle.font = Font.get(22); // font size
         listStyle.fontColorUnselected = Color.BLACK;
         listStyle.fontColorSelected = Color.BLACK;
         listStyle.selection = TextureLoader.getDrawable(50, 100, Color.CLEAR );
@@ -417,15 +418,14 @@ public class LobbyScreen extends FlashPointScreen {
 
         scrollPaneGameInfoList = new ScrollPane(lstGameInfoPanel, scrollStyle);
         scrollPaneGameInfoList.setOverscroll(false, false);
-        //scrollPaneLoadGameList.setFadeScrollBars(false);
         scrollPaneGameInfoList.setScrollingDisabled(true, false);
         scrollPaneGameInfoList.setTransform(true);
         scrollPaneGameInfoList.setScale(1.0f);
         scrollPaneGameInfoList.setWidth(Gdx.graphics.getWidth() / 2 - 10);
-        scrollPaneGameInfoList.setHeight(Gdx.graphics.getHeight() - 100);
+        scrollPaneGameInfoList.setHeight(300);
 
-        float x = Gdx.graphics.getWidth() / 2;
-        float y = Gdx.graphics.getHeight() - scrollPaneLoadGameList.getHeight() - 20;
+        float x = Gdx.graphics.getWidth() / 2 + 60;
+        float y = 100;
 
         scrollPaneGameInfoList.setPosition(
                 x, y);
@@ -434,21 +434,21 @@ public class LobbyScreen extends FlashPointScreen {
         stage.addActor(scrollPaneGameInfoList);
     }
 
-    private static void createGameDifficultyImg(String filename) {
-
-        boolean isGameAdv = DBHandler.isGameAdvForLobbyImg(filename);
-
-        String imagefileName = isGameAdv ? "advLobby.png" : "famLobby.png";
-        gameDifficultyImg = new Image(new Texture(imagefileName));
-        gameDifficultyImg.setHeight(232);
-        gameDifficultyImg.setWidth(407);
-        gameDifficultyImg.setPosition(
-                50,
-                150);
-
-        gameDiffImgList.add(gameDifficultyImg);
-        stage.addActor(gameDifficultyImg);
-    }
+//    private static void createGameDifficultyImg(String filename) {
+//
+//        boolean isGameAdv = DBHandler.isGameAdvForLobbyImg(filename);
+//
+//        String imagefileName = isGameAdv ? "advLobby.png" : "famLobby.png";
+//        gameDifficultyImg = new Image(new Texture(imagefileName));
+//        gameDifficultyImg.setHeight(232);
+//        gameDifficultyImg.setWidth(407);
+//        gameDifficultyImg.setPosition(
+//                50,
+//                150);
+//
+//        gameDiffImgList.add(gameDifficultyImg);
+//        stage.addActor(gameDifficultyImg);
+//    }
 
 
 

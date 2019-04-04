@@ -80,7 +80,7 @@ public class FireFighterTurnManagerAdvance extends FireFighterTurnManager {
   @Override
   public boolean endTurn() {
     if (!Server.isEmpty()) {
-      sendActionRejectedMessageToCurrentPlayer("You cannot end your turn as the game is not");
+      sendActionRejectedMessageToCurrentPlayer("You cannot end your turn as the game is not full. More players need to join!");
       return false;
     }
     FireFighterAdvanced last = (FireFighterAdvanced) FIREFIGHTERS.removeFirst();
