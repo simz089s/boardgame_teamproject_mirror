@@ -70,14 +70,17 @@ public class DBHandler {
 
   // MAP RANDOM
 
+  private static final String[] TOP_DOOR_TILE_DESTROYED_MAP_RANDOM = exteriorTopDoorTileMapRand();
+  private static final String[] LEFT_DOOR_TILE_DESTROYED_MAP_RANDOM = exteriorLeftDoorTileMapRand();
+
+  private static final String[] TOP_BORDER_MAP_RANDOM = exteriorTopWallTileMapRand();
+  private static final String[] LEFT_BORDER_MAP_RANDOM = exteriorLeftWallTileMapRand();
+
   private static final String[] TOP_DOOR_TILE_MAP_RANDOM = topDoorTileMapRand();
   private static final String[] LEFT_DOOR_TILE_MAP_RANDOM = leftDoorTileMapRand();
 
   private static final String[] TOP_WALL_TILE_MAP_RANDOM = topWallTileMapRand();
   private static final String[] LEFT_WALL_TILE_MAP_RANDOM = leftWallTileMapRand();
-
-  private static final String[] TOP_DOOR_TILE_DESTROYED_MAP_RANDOM = {"7-3"};
-  private static final String[] LEFT_DOOR_TILE_DESTROYED_MAP_RANDOM = {"3-1"};
 
   // load the board from DB
 
@@ -1106,7 +1109,7 @@ public class DBHandler {
 
     for (final File fileEntry : folder.listFiles()) {
       String filename = fileEntry.getName();
-      if (fileEntry.isFile() && !filename.equals("map1.json") && !filename.equals("map2.json")) {
+      if (fileEntry.isFile() && !filename.equals("map1.json") && !filename.equals("map2.json") && !filename.equals("random.json")) {
         int pos = filename.lastIndexOf(".");
         if (pos > 0) {
           filename = filename.substring(0, pos);
@@ -1139,7 +1142,93 @@ public class DBHandler {
     file.delete();
   }
 
+
+
   // RANDOMIZER (for random map)
+
+
+  private static String[] exteriorTopDoorTileMapRand(){
+
+    String[] borderWalls = {
+            "1-1", "1-2", "1-3", "1-4", "1-5", "1-6", "1-7", "1-8",
+            "7-1", "7-2", "7-3", "7-4", "7-5", "7-6", "7-7", "7-8"
+    };
+
+    ArrayList<String> tiles = new ArrayList<String>();
+    String[] exteriorTopDoors = new String[2];
+
+    for (String str: borderWalls){
+      tiles.add(str);
+    }
+
+    for (int i = 0; i < 2; i++){
+      Random rand = new Random();
+      int randIndex = (rand.nextInt(tiles.size()));
+      exteriorTopDoors[i] = tiles.get(randIndex);
+      tiles.remove(randIndex);
+    }
+
+    return exteriorTopDoors;
+  }
+
+  private static String[] exteriorLeftDoorTileMapRand(){
+
+    String[] borderWalls = {
+            "1-1", "2-1", "3-1", "4-1", "5-1", "6-1",
+            "1-9", "2-9", "3-9", "4-9", "5-9", "6-9",
+    };
+
+    ArrayList<String> tiles = new ArrayList<String>();
+    String[] exteriorLeftDoors = new String[2];
+
+    for (String str: borderWalls){
+      tiles.add(str);
+    }
+
+    for (int i = 0; i < 2; i++){
+      Random rand = new Random();
+      int randIndex = (rand.nextInt(tiles.size()));
+      exteriorLeftDoors[i] = tiles.get(randIndex);
+      tiles.remove(randIndex);
+    }
+
+    return exteriorLeftDoors;
+  }
+
+  private static String[] exteriorTopWallTileMapRand(){
+    String[] borderWalls = {
+            "1-1", "1-2", "1-3", "1-4", "1-5", "1-6", "1-7", "1-8",
+            "7-1", "7-2", "7-3", "7-4", "7-5", "7-6", "7-7", "7-8"
+    };
+
+    ArrayList<String> exteriorTopWalls = new ArrayList<String>();
+
+    for (String str: borderWalls){
+      if(!isPresentInArr(TOP_DOOR_TILE_DESTROYED_MAP_RANDOM, str)){
+        exteriorTopWalls.add(str);
+      }
+    }
+
+    return exteriorTopWalls.toArray(new String[0]);
+  }
+
+  private static String[] exteriorLeftWallTileMapRand(){
+
+    String[] borderWalls = {
+            "1-1", "2-1", "3-1", "4-1", "5-1", "6-1",
+            "1-9", "2-9", "3-9", "4-9", "5-9", "6-9",
+    };
+
+    ArrayList<String> exteriorLeftWalls = new ArrayList<String>();
+
+    for (String str: borderWalls){
+      if(!isPresentInArr(LEFT_DOOR_TILE_DESTROYED_MAP_RANDOM, str)){
+        exteriorLeftWalls.add(str);
+      }
+    }
+
+    return exteriorLeftWalls.toArray(new String[0]);
+  }
 
   private static String[] topDoorTileMapRand(){
 
@@ -1149,8 +1238,8 @@ public class DBHandler {
 
     while (count < 4){
       Random rand = new Random();
-      int row = (rand.nextInt(6)) + 2; // [2 - 6]
-      int col = (rand.nextInt(8)) + 1; // [1 - 8]
+      int row = rand.nextInt(5) + 2; // [2 - 6]
+      int col = rand.nextInt(8) + 1; // [1 - 8]
       if(!tiles.contains(row + "-" + col)){
         tiles.add(row + "-" + col);
         count ++;
@@ -1167,8 +1256,8 @@ public class DBHandler {
 
     while (count < 4){
       Random rand = new Random();
-      int row = (rand.nextInt(6)) + 1; // [1 - 6]
-      int col = (rand.nextInt(8)) + 2; // [2 - 8]
+      int row = rand.nextInt(6) + 1; // [1 - 6]
+      int col = rand.nextInt(7) + 2; // [2 - 8]
       if(!tiles.contains(row + "-" + col)){
         tiles.add(row + "-" + col);
         count ++;
@@ -1180,14 +1269,9 @@ public class DBHandler {
 
   private static String[] topWallTileMapRand(){
 
-    String[] borderWalls = {
-            "1-1", "1-2", "1-3", "1-4", "1-5", "1-6", "1-7", "1-8",
-            "7-1", "7-2", "1-3", "7-4", "7-5", "7-6", "7-7", "7-8"
-    };
-
     ArrayList<String> tiles = new ArrayList<String>();
 
-    for (String str: borderWalls){
+    for (String str: TOP_BORDER_MAP_RANDOM){
       tiles.add(str);
     }
 
@@ -1199,8 +1283,8 @@ public class DBHandler {
 
     while (count < 11){
       Random rand = new Random();
-      int row = (rand.nextInt(6)) + 2; // [2 - 6]
-      int col = (rand.nextInt(8)) + 1; // [1 - 8]
+      int row = rand.nextInt(5) + 2; // [2 - 6]
+      int col = rand.nextInt(8) + 1; // [1 - 8]
       if(!tiles.contains(row + "-" + col)){
         tiles.add(row + "-" + col);
         count ++;
@@ -1212,14 +1296,9 @@ public class DBHandler {
 
   private static String[] leftWallTileMapRand(){
 
-    String[] borderWalls = {
-            "1-1", "2-1", "3-1", "4-1", "5-1", "6-1",
-            "1-9", "2-9", "3-9", "4-9", "5-9", "6-9",
-    };
-
     ArrayList<String> tiles = new ArrayList<String>();
 
-    for (String str: borderWalls){
+    for (String str: LEFT_BORDER_MAP_RANDOM){
       tiles.add(str);
     }
 
@@ -1231,8 +1310,8 @@ public class DBHandler {
 
     while (count < 7){
       Random rand = new Random();
-      int row = (rand.nextInt(6)) + 1; // [1 - 6]
-      int col = (rand.nextInt(8)) + 2; // [2 - 8]
+      int row = rand.nextInt(6) + 1; // [1 - 6]
+      int col = rand.nextInt(7) + 2; // [2 - 8]
       if(!tiles.contains(row + "-" + col)){
         tiles.add(row + "-" + col);
         count ++;
