@@ -160,8 +160,8 @@ public class Client {
       JSONObject jsonObject = (JSONObject) parser.parse(msg);
       ClientCommands c = ClientCommands.fromString(jsonObject.get("command").toString());
       final String message = jsonObject.get("message").toString();
-//      System.out.println(message);
-        LOGGER.info(message);
+      System.out.println(message); // Do not log
+      LOGGER.info("A client sent the command : " + c.toString());
       switch (c) {
         case EXIT_GAME:
             JSONArray array = (JSONArray) parser.parse(message);
