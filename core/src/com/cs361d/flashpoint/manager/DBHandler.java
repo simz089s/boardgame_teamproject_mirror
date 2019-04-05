@@ -3,6 +3,8 @@ package com.cs361d.flashpoint.manager;
 import com.cs361d.flashpoint.model.BoardElements.*;
 import com.cs361d.flashpoint.model.FireFighterSpecialities.FireFighterAdvanceSpecialities;
 import com.cs361d.flashpoint.model.FireFighterSpecialities.FireFighterAdvanced;
+import com.cs361d.flashpoint.networking.Client;
+import com.cs361d.flashpoint.screen.Actions;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -11,6 +13,7 @@ import org.json.simple.parser.ParseException;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Random;
 
 public class DBHandler {
 
@@ -41,7 +44,6 @@ public class DBHandler {
   // ----------------------------------------------------------------------------------------------------- //
 
   // MAP 2
-  // TODO
   private static final String[] TOP_WALL_TILE_MAP2 = {
     "1-1", "1-2", "1-3", "1-4", "1-5", "1-6", "1-7", "1-8", "2-4", "2-5", "3-1", "3-2", "4-4",
     "4-5", "4-6", "4-7", "4-8", "5-1", "5-2", "5-3", "5-4", "5-5", "5-6", "7-1", "7-2", "7-4",
@@ -63,6 +65,22 @@ public class DBHandler {
   private static final String[] FIRETRUCK_POS_MAP2 = {
     "4-0", "5-0", "0-3", "0-4", "2-9", "3-9", "7-5", "7-6"
   };
+
+  // ----------------------------------------------------------------------------------------------------- //
+
+  // MAP RANDOM
+
+  private static String[] TOP_DOOR_TILE_DESTROYED_MAP_RANDOM;
+  private static String[] LEFT_DOOR_TILE_DESTROYED_MAP_RANDOM;
+
+  private static String[] TOP_BORDER_MAP_RANDOM;
+  private static String[] LEFT_BORDER_MAP_RANDOM;
+
+  private static String[] TOP_DOOR_TILE_MAP_RANDOM;
+  private static String[] LEFT_DOOR_TILE_MAP_RANDOM;
+
+  private static String[] TOP_WALL_TILE_MAP_RANDOM;
+  private static String[] LEFT_WALL_TILE_MAP_RANDOM;
 
   // load the board from DB
 
@@ -113,7 +131,19 @@ public class DBHandler {
   // doors status: [no door = -1; close = 0; open = 1]
   // POI status: [no POI = -1; false alarm = 0; victim = 1]
   // fire status: "none", "smoke", "fire"
-  protected static void createMapBoard(MapKind mapKind) {
+  public static void createMapBoard(MapKind mapKind) {
+
+    TOP_DOOR_TILE_DESTROYED_MAP_RANDOM = exteriorTopDoorTileMapRand();
+    LEFT_DOOR_TILE_DESTROYED_MAP_RANDOM = exteriorLeftDoorTileMapRand();
+
+    TOP_BORDER_MAP_RANDOM = exteriorTopWallTileMapRand();
+    LEFT_BORDER_MAP_RANDOM = exteriorLeftWallTileMapRand();
+
+    TOP_DOOR_TILE_MAP_RANDOM = topDoorTileMapRand();
+    LEFT_DOOR_TILE_MAP_RANDOM = leftDoorTileMapRand();
+
+    TOP_WALL_TILE_MAP_RANDOM = topWallTileMapRand();
+    LEFT_WALL_TILE_MAP_RANDOM = leftWallTileMapRand();
 
     JSONObject newObj = new JSONObject();
     JSONArray newTilesList = new JSONArray();
@@ -121,9 +151,7 @@ public class DBHandler {
     JSONObject gameParams = new JSONObject();
     JSONArray playersOrdering = new JSONArray();
 
-    String gameName = mapKind == MapKind.MAP1 ? MapKind.MAP1.getText() : MapKind.MAP2.getText();
-
-    gameParams.put("gameName", gameName);
+    gameParams.put("gameName", mapKind.getText());
     gameParams.put("numVictimsLost", 0);
     gameParams.put("numVictimsSaved", 0);
     gameParams.put("numFalseAlarmRemoved", 0);
@@ -145,9 +173,24 @@ public class DBHandler {
 
         currentTile.put("position_id", i + "-" + j);
 
+        String[] topWallTileMap = null;
+        String[] topDoorTileMap = null;
         // walls
-        String[] topWallTileMap = mapKind == MapKind.MAP1 ? TOP_WALL_TILE_MAP1 : TOP_WALL_TILE_MAP2;
-        String[] topDoorTileMap = mapKind == MapKind.MAP1 ? TOP_DOOR_TILE_MAP1 : TOP_DOOR_TILE_MAP2;
+        switch(mapKind) {
+          case MAP1:
+            topWallTileMap = TOP_WALL_TILE_MAP1;
+            topDoorTileMap = TOP_DOOR_TILE_MAP1;
+            break;
+          case MAP2:
+            topWallTileMap = TOP_WALL_TILE_MAP2;
+            topDoorTileMap = TOP_DOOR_TILE_MAP2;
+            break;
+          case RANDOM:
+            topWallTileMap = TOP_WALL_TILE_MAP_RANDOM;
+            topDoorTileMap = TOP_DOOR_TILE_MAP_RANDOM;
+            break;
+          default:
+        }
 
         if (isPresentInArr(topWallTileMap, i + "-" + j)
             && !isPresentInArr(topDoorTileMap, i + "-" + j)) {
@@ -156,10 +199,24 @@ public class DBHandler {
           currentTile.put("top_wall", -1);
         }
 
-        String[] leftWallTileMap =
-            mapKind == MapKind.MAP1 ? LEFT_WALL_TILE_MAP1 : LEFT_WALL_TILE_MAP2;
-        String[] leftDoorTileMap =
-            mapKind == MapKind.MAP1 ? LEFT_DOOR_TILE_MAP1 : LEFT_DOOR_TILE_MAP2;
+        String[] leftWallTileMap = null;
+        String[] leftDoorTileMap = null;
+
+        switch(mapKind) {
+          case MAP1:
+            leftWallTileMap = LEFT_WALL_TILE_MAP1;
+            leftDoorTileMap = LEFT_DOOR_TILE_MAP1;
+            break;
+          case MAP2:
+            leftWallTileMap = LEFT_WALL_TILE_MAP2;
+            leftDoorTileMap = LEFT_DOOR_TILE_MAP2;
+            break;
+          case RANDOM:
+            leftWallTileMap = LEFT_WALL_TILE_MAP_RANDOM;
+            leftDoorTileMap = LEFT_DOOR_TILE_MAP_RANDOM;
+            break;
+          default:
+        }
 
         if (isPresentInArr(leftWallTileMap, i + "-" + j)
             && !isPresentInArr(leftDoorTileMap, i + "-" + j)) {
@@ -176,8 +233,20 @@ public class DBHandler {
         doorProperties.put("health", 1);
         doorProperties.put("status", -1);
 
-        String[] topDoorTileDestroyedMap =
-            mapKind == MapKind.MAP1 ? TOP_DOOR_TILE_DESTROYED_MAP1 : TOP_DOOR_TILE_DESTROYED_MAP2;
+        String[] topDoorTileDestroyedMap = null;
+
+        switch(mapKind) {
+          case MAP1:
+            topDoorTileDestroyedMap = TOP_DOOR_TILE_DESTROYED_MAP1;
+            break;
+          case MAP2:
+            topDoorTileDestroyedMap = TOP_DOOR_TILE_DESTROYED_MAP2;
+            break;
+          case RANDOM:
+            topDoorTileDestroyedMap = TOP_DOOR_TILE_DESTROYED_MAP_RANDOM;
+            break;
+          default:
+        }
 
         if (isPresentInArr(topDoorTileMap, i + "-" + j)) {
           JSONObject openedDoorObject = new JSONObject();
@@ -193,8 +262,20 @@ public class DBHandler {
           currentTile.put("top_wall_door", doorProperties);
         }
 
-        String[] leftDoorTileDestroyedMap =
-            mapKind == MapKind.MAP1 ? LEFT_DOOR_TILE_DESTROYED_MAP1 : LEFT_DOOR_TILE_DESTROYED_MAP2;
+        String[] leftDoorTileDestroyedMap = null;
+
+        switch(mapKind) {
+          case MAP1:
+            leftDoorTileDestroyedMap = LEFT_DOOR_TILE_DESTROYED_MAP1;
+            break;
+          case MAP2:
+            leftDoorTileDestroyedMap = LEFT_DOOR_TILE_DESTROYED_MAP2;
+            break;
+          case RANDOM:
+            leftDoorTileDestroyedMap = LEFT_DOOR_TILE_DESTROYED_MAP_RANDOM;
+            break;
+          default:
+        }
 
         if (isPresentInArr(leftDoorTileMap, i + "-" + j)) {
           JSONObject openedDoorObject = new JSONObject();
@@ -215,13 +296,13 @@ public class DBHandler {
 
         // engines
         String[] ambulancePosMap =
-            mapKind == MapKind.MAP1 ? AMBULANCE_POS_MAP1 : AMBULANCE_POS_MAP2;
+                (mapKind == MapKind.MAP1 ||mapKind == MapKind.RANDOM) ? AMBULANCE_POS_MAP1 : AMBULANCE_POS_MAP2;
         if (isPresentInArr(ambulancePosMap, i + "-" + j)) {
           currentTile.put("engine", "canhaveambulance");
         }
 
         String[] firetruckPosMap =
-            mapKind == MapKind.MAP1 ? FIRETRUCK_POS_MAP1 : FIRETRUCK_POS_MAP2;
+                (mapKind == MapKind.MAP1 ||mapKind == MapKind.RANDOM) ? FIRETRUCK_POS_MAP1 : FIRETRUCK_POS_MAP2;
         if (isPresentInArr(firetruckPosMap, i + "-" + j)) {
           currentTile.put("engine", "canhavefiretruck");
         }
@@ -255,13 +336,11 @@ public class DBHandler {
       newObj.put("tiles", newTilesList);
 
       // create empty board json file
-
-      String filename = mapKind == MapKind.MAP1 ? MapKind.MAP1.getText() : MapKind.MAP2.getText();
-      FileWriter file = new FileWriter("db/" + filename + ".json");
+      FileWriter file = new FileWriter("db/" + mapKind.getText() + ".json");
       file.write(newObj.toJSONString());
       file.flush();
 
-      loadBoardFromDB(filename);
+      loadBoardFromDB(mapKind.getText());
 
     } catch (FileNotFoundException e) {
       e.printStackTrace();
@@ -968,21 +1047,24 @@ public class DBHandler {
       JSONObject gameParams = (JSONObject) jsonObject.get("gameParams");
       retArr.add(("Game: " + gameParams.get("gameName")).toUpperCase());
       retArr.add("");
-      retArr.add("Number of victims lost: " + gameParams.get("numVictimsLost"));
-      retArr.add("Number of victims saved: " + gameParams.get("numVictimsSaved"));
-      retArr.add("Number of false alarm removed: " + gameParams.get("numFalseAlarmRemoved"));
-      retArr.add("Number of walls left: " + gameParams.get("numDamageLeft"));
+      retArr.add("Victims lost: " + gameParams.get("numVictimsLost"));
+      retArr.add("Victims saved: " + gameParams.get("numVictimsSaved"));
+      retArr.add("False alarm removed: " + gameParams.get("numFalseAlarmRemoved"));
+      retArr.add("Walls left: " + gameParams.get("numDamageLeft"));
 
       if (gameParams.get("numHotSpotLeft") != null) {
         retArr.add("");
-        retArr.add("Number of hot spots left: " + gameParams.get("numHotSpotLeft"));
+        retArr.add("Hot spots left: " + gameParams.get("numHotSpotLeft"));
       }
 
     } catch (ParseException e) {
       e.printStackTrace();
     }
 
-    return retArr;
+    ArrayList<String> noInfoForChosenGame = new ArrayList<String>();
+    noInfoForChosenGame.add("No info yet.\n\nStoring data in your file system...");
+
+    return retArr.size() == 0 ? noInfoForChosenGame: retArr;
   }
 
   public static boolean isGameAdvForLobbyImg(String fileName) {
@@ -1039,7 +1121,7 @@ public class DBHandler {
 
     for (final File fileEntry : folder.listFiles()) {
       String filename = fileEntry.getName();
-      if (fileEntry.isFile() && !filename.equals("map1.json") && !filename.equals("map2.json")) {
+      if (fileEntry.isFile() && !filename.equals("map1.json") && !filename.equals("map2.json") && !filename.equals("random.json")) {
         int pos = filename.lastIndexOf(".");
         if (pos > 0) {
           filename = filename.substring(0, pos);
@@ -1070,5 +1152,184 @@ public class DBHandler {
     }
     File file = new File("db/" + filename + ".json");
     file.delete();
+  }
+
+
+
+  // RANDOMIZER (for random map)
+
+
+  private static String[] exteriorTopDoorTileMapRand(){
+
+    String[] borderWalls = {
+            "1-1", "1-2", "1-3", "1-4", "1-5", "1-6", "1-7", "1-8",
+            "7-1", "7-2", "7-3", "7-4", "7-5", "7-6", "7-7", "7-8"
+    };
+
+    ArrayList<String> tiles = new ArrayList<String>();
+    String[] exteriorTopDoors = new String[2];
+
+    for (String str: borderWalls){
+      tiles.add(str);
+    }
+
+    for (int i = 0; i < 2; i++){
+      Random rand = new Random();
+      int randIndex = (rand.nextInt(tiles.size()));
+      exteriorTopDoors[i] = tiles.get(randIndex);
+      tiles.remove(randIndex);
+    }
+
+    return exteriorTopDoors;
+  }
+
+  private static String[] exteriorLeftDoorTileMapRand(){
+
+    String[] borderWalls = {
+            "1-1", "2-1", "3-1", "4-1", "5-1", "6-1",
+            "1-9", "2-9", "3-9", "4-9", "5-9", "6-9",
+    };
+
+    ArrayList<String> tiles = new ArrayList<String>();
+    String[] exteriorLeftDoors = new String[2];
+
+    for (String str: borderWalls){
+      tiles.add(str);
+    }
+
+    for (int i = 0; i < 2; i++){
+      Random rand = new Random();
+      int randIndex = (rand.nextInt(tiles.size()));
+      exteriorLeftDoors[i] = tiles.get(randIndex);
+      tiles.remove(randIndex);
+    }
+
+    return exteriorLeftDoors;
+  }
+
+  private static String[] exteriorTopWallTileMapRand(){
+    String[] borderWalls = {
+            "1-1", "1-2", "1-3", "1-4", "1-5", "1-6", "1-7", "1-8",
+            "7-1", "7-2", "7-3", "7-4", "7-5", "7-6", "7-7", "7-8"
+    };
+
+    ArrayList<String> exteriorTopWalls = new ArrayList<String>();
+
+    for (String str: borderWalls){
+      if(!isPresentInArr(TOP_DOOR_TILE_DESTROYED_MAP_RANDOM, str)){
+        exteriorTopWalls.add(str);
+      }
+    }
+
+    return exteriorTopWalls.toArray(new String[0]);
+  }
+
+  private static String[] exteriorLeftWallTileMapRand(){
+
+    String[] borderWalls = {
+            "1-1", "2-1", "3-1", "4-1", "5-1", "6-1",
+            "1-9", "2-9", "3-9", "4-9", "5-9", "6-9",
+    };
+
+    ArrayList<String> exteriorLeftWalls = new ArrayList<String>();
+
+    for (String str: borderWalls){
+      if(!isPresentInArr(LEFT_DOOR_TILE_DESTROYED_MAP_RANDOM, str)){
+        exteriorLeftWalls.add(str);
+      }
+    }
+
+    return exteriorLeftWalls.toArray(new String[0]);
+  }
+
+  private static String[] topDoorTileMapRand(){
+
+    int count = 0;
+
+    ArrayList<String> tiles = new ArrayList<String>();
+
+    while (count < 4){
+      Random rand = new Random();
+      int row = rand.nextInt(5) + 2; // [2 - 6]
+      int col = rand.nextInt(8) + 1; // [1 - 8]
+      if(!tiles.contains(row + "-" + col)){
+        tiles.add(row + "-" + col);
+        count ++;
+      }
+    }
+
+    return tiles.toArray(new String[0]);
+  }
+
+  private static String[] leftDoorTileMapRand(){
+    int count = 0;
+
+    ArrayList<String> tiles = new ArrayList<String>();
+
+    while (count < 4){
+      Random rand = new Random();
+      int row = rand.nextInt(6) + 1; // [1 - 6]
+      int col = rand.nextInt(7) + 2; // [2 - 8]
+      if(!tiles.contains(row + "-" + col)){
+        tiles.add(row + "-" + col);
+        count ++;
+      }
+    }
+
+    return tiles.toArray(new String[0]);
+  }
+
+  private static String[] topWallTileMapRand(){
+
+    ArrayList<String> tiles = new ArrayList<String>();
+
+    for (String str: TOP_BORDER_MAP_RANDOM){
+      tiles.add(str);
+    }
+
+    for (String str: TOP_DOOR_TILE_MAP_RANDOM){
+      tiles.add(str);
+    }
+
+    int count = 0;
+
+    while (count < 11){
+      Random rand = new Random();
+      int row = rand.nextInt(5) + 2; // [2 - 6]
+      int col = rand.nextInt(8) + 1; // [1 - 8]
+      if(!tiles.contains(row + "-" + col)){
+        tiles.add(row + "-" + col);
+        count ++;
+      }
+    }
+
+    return tiles.toArray(new String[0]);
+  }
+
+  private static String[] leftWallTileMapRand(){
+
+    ArrayList<String> tiles = new ArrayList<String>();
+
+    for (String str: LEFT_BORDER_MAP_RANDOM){
+      tiles.add(str);
+    }
+
+    for (String str: LEFT_DOOR_TILE_MAP_RANDOM){
+      tiles.add(str);
+    }
+
+    int count = 0;
+
+    while (count < 7){
+      Random rand = new Random();
+      int row = rand.nextInt(6) + 1; // [1 - 6]
+      int col = rand.nextInt(7) + 2; // [2 - 8]
+      if(!tiles.contains(row + "-" + col)){
+        tiles.add(row + "-" + col);
+        count ++;
+      }
+    }
+
+    return tiles.toArray(new String[0]);
   }
 }

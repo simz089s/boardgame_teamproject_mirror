@@ -168,7 +168,7 @@ public class CreateGameScreen extends FlashPointScreen {
         gameNameField.setMessageText("Enter it here");
         gameNameField.setWidth(200);
         gameNameField.setHeight(25);
-        gameNameField.setMaxLength(20);
+        gameNameField.setMaxLength(15);
         gameNameField.setPosition(
                 80 + label.getWidth() + PADDING_LEFT,
                 Gdx.graphics.getHeight() - 70);
@@ -317,10 +317,9 @@ public class CreateGameScreen extends FlashPointScreen {
                             if (mapSelected.equals("MAP 2")) {
                                 mk = MapKind.MAP2;
                             }
-                            // TODO
-                            //                            else if (mapSelected.equals("RANDOM")){
-                            //                                mk = MapKind.RANDOM;
-                            //                            }
+                            else if (mapSelected.equals("RANDOM")){
+                                mk = MapKind.RANDOM;
+                            }
 
                             JSONObject obj = new JSONObject();
                             obj.put("name",name);

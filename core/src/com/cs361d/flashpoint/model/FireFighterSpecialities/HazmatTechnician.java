@@ -17,6 +17,7 @@ public class HazmatTechnician extends FireFighterAdvanced {
     if (!isFirstMove()) {
       actions.remove(Actions.CREW_CHANGE);
     }
+    actionsFilter(actions);
     return actions;
   }
 
@@ -28,6 +29,14 @@ public class HazmatTechnician extends FireFighterAdvanced {
       actionPoints -= 2;
       firstMoveDone();
       return true;
+    }
+  }
+
+  @Override
+  protected void actionsFilter(List<Actions> actions) {
+    super.actionsFilter(actions);
+    if (!this.currentTile.hasHazmat()) {
+      actions.remove(Actions.REMOVE_HAZMAT);
     }
   }
 }

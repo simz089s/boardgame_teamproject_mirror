@@ -36,6 +36,10 @@ public class Obstacle {
       return health;
     }
 
+    /**
+     *
+     * @return true if the game is not over false other wise as the building collapsed
+     */
   public boolean applyDamage() {
     if (isDestroyed()) {
       return false;

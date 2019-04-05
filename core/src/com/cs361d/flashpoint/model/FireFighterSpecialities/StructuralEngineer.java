@@ -36,6 +36,15 @@ public class StructuralEngineer extends FireFighterAdvanced {
     if (!isFirstMove()) {
       actions.remove(crewChangeAP());
     }
+    actionsFilter(actions);
     return actions;
+  }
+
+  @Override
+  protected void actionsFilter(List<Actions> actions) {
+    super.actionsFilter(actions);
+    if (!this.currentTile.hasHotSpot()) {
+      actions.remove(Actions.CLEAR_HOTSPOT);
+    }
   }
 }

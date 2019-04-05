@@ -278,7 +278,7 @@ public class Client {
               });
           break;
 
-        case ASK_WISH_ABOUT_KNOWCK_DOWN:
+        case ASK_WISH_ABOUT_KNOCK_DOWN:
           array = (JSONArray) parser.parse(message);
           final List<Direction> directions = new ArrayList<Direction>();
           for (Object o : array) {

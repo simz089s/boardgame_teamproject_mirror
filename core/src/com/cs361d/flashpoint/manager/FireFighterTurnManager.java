@@ -54,16 +54,11 @@ public class FireFighterTurnManager implements Iterable<FireFighter> {
   public boolean endTurn() {
 
     FireFighter fireFighter = getCurrentFireFighter();
-    if (!fireFighter.getTile().hasFire()) {
       FireFighter last = FIREFIGHTERS.removeFirst();
       FIREFIGHTERS.addLast(last);
       BoardManager.getInstance().endTurnFireSpread();
       last.resetActionPoints();
       return true;
-    } else {
-      sendActionRejectedMessageToCurrentPlayer("You cannot end turn as you are currently on a tile with fire");
-      return false;
-    }
   }
 
   public boolean move(Direction d) {
@@ -202,8 +197,6 @@ public class FireFighterTurnManager implements Iterable<FireFighter> {
 
   protected boolean canMove(Direction d) {
 
-    // Don't allow a move if ap < 3 and moving into fire
-    Tile t = getCurrentFireFighter().getTile().getAdjacentTile(d);
     Tile currentTile = getCurrentFireFighter().getTile();
     // verifies that there is a tile in the direction
     if (currentTile.hasObstacle(d) || currentTile.getAdjacentTile(d) == null) {

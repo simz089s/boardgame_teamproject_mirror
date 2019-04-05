@@ -32,6 +32,9 @@ public class CreateNewGameManager {
       case MAP2:
         DBHandler.loadBoardFromDB("map2");
         break;
+      case RANDOM:
+        DBHandler.createMapBoard(MapKind.RANDOM);
+        break;
       default:
     }
   }

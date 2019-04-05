@@ -15,8 +15,8 @@ public class NetworkManager {
   // MCGILL WORLD
   // public static final String DEFAULT_SERVER_IP = "142.157.74.18"; // Simon public ip address
 //  public static final String DEFAULT_SERVER_IP = "142.157.67.193"; // Elvric public ip address
-   //public static final String DEFAULT_SERVER_IP = "142.157.149.154"; // DC public ip
-  public static final String DEFAULT_SERVER_IP = "69.157.190.152"; // JZ public ip
+   //final public static String DEFAULT_SERVER_IP = "142.157.149.154"; // DC public ip
+  final public static String DEFAULT_SERVER_IP = "142.157.66.229"; // JZ public ip
   //final public static String DEFAULT_SERVER_IP = "142.157.66.15"; // Matty V IP
   public static final int DEFAULT_SERVER_PORT = 54590;
 
@@ -33,7 +33,7 @@ public class NetworkManager {
   }
 
   public static String getMyPublicIP() {
-    String systemipaddress = "";
+    String systemIPAddress = "";
     try {
       URL url_name = new URL("http://bot.whatismyipaddress.com");
 
@@ -41,13 +41,13 @@ public class NetworkManager {
       sc = new BufferedReader(new InputStreamReader(url_name.openStream()));
 
       // reads system IPAddress
-      systemipaddress = sc.readLine().trim();
+      systemIPAddress = sc.readLine().trim();
     } catch (Exception e) {
       e.printStackTrace();
     }
 
-    System.out.println("Public IP Address: " + systemipaddress + "\n");
-    return systemipaddress;
+    System.out.println("Public IP Address: " + systemIPAddress + "\n");
+    return systemIPAddress;
   }
 
   public static String getMyIPAddress() {

@@ -46,15 +46,12 @@ public class BoardMovesPanel {
   }
 
   private void performDirectionMove(Actions move, Direction direction) {
-
-    boolean actionDone = false; //TODO
-
     Client.getInstance().sendCommand(move,direction.toString());
   }
 
   public void drawMovesAndDirectionsPanel() {
 
-    if (User.getInstance().isMyTurn()) { // TODO : || true (if play with single computer multi-player)
+    if (User.getInstance().isMyTurn() || !IS_MY_TURN_ACTIVATED) {
 
       // list style
       listStyleMoveOptions = new List.ListStyle();
@@ -99,7 +96,6 @@ public class BoardMovesPanel {
                 case INTERACT_WITH_DOOR:
                   drawDirectionsPanelTable(move);
                   break;
-
                 case END_TURN:
                   Client.getInstance().sendCommand(Actions.END_TURN,"");
                   break;
@@ -272,7 +268,7 @@ public class BoardMovesPanel {
       return Actions.convertToStringArray(
           FireFighterTurnManagerAdvance.getInstance().getCurrentFireFighter().getActions());
     }
-    return Actions.convertToStringArray(Actions.basicActions());
+    return Actions.convertToStringArray(FireFighterTurnManager.getInstance().getCurrentFireFighter().getActions());
   }
 
   public static TextureRegionDrawable getTextureForDirectionsTable(Direction d) {
