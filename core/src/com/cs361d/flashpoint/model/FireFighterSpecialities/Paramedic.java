@@ -35,6 +35,15 @@ public class Paramedic extends FireFighterAdvanced{
     if (!isFirstMove()) {
       actions.remove(Actions.CREW_CHANGE);
     }
+    actionsFilter(actions);
     return actions;
+  }
+
+  @Override
+  protected void actionsFilter(List<Actions> actions) {
+    super.actionsFilter(actions);
+    if (!this.currentTile.hasPointOfInterest()) {
+      actions.remove(Actions.CURE_VICTIM);
+    }
   }
 }
