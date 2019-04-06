@@ -219,7 +219,7 @@ public class Client {
         case SET_CURRENT_GAME_STATS:
             jsonObject = (JSONObject) parser.parse(message);
             final String name = jsonObject.get("name").toString();
-            final int numPlayer = (Integer) jsonObject.get("numPlayer");
+            final int numPlayer = Integer.parseInt(jsonObject.get("numPlayer").toString());
           Gdx.app.postRunnable(
               new Runnable() {
                 @Override
