@@ -27,8 +27,8 @@ public class BoardScreen extends FlashPointScreen {
 
   static final boolean IS_MY_TURN_ACTIVATED = false; // TODO: set to false if playing single computer
 
+  String OUTDOOR_TILE_TO_DISPLAY_FILE = "boards/tile_0.png";
   String INDOOR_TILE_TO_DISPLAY_FILE = "boards/tile_1.png";
-  String OUTDOOR_TILE_TO_DISPLAY_FILE = "boards/tile_02.png";
 
   static final int NUMBER_OF_ROWS = BoardManager.ROWS;
   static final int NUMBER_OF_COLS = BoardManager.COLUMNS;
