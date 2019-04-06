@@ -287,7 +287,7 @@ public class BoardScreen extends FlashPointScreen {
   }
 
   // draw walls and doors
-  private static void drawObstacles(Image myTile, Obstacle obs, Direction obsDirection) { 
+  private static void drawObstacles(Image myTile, Obstacle obs, Direction obsDirection) {
     Image gameUnit;
     if (obs.isNull()) {
       return;
@@ -743,7 +743,7 @@ public class BoardScreen extends FlashPointScreen {
         new ClickListener() {
           @Override
           public void clicked(InputEvent event, float x, float y) {
-            if (User.getInstance().isMyTurn()) {
+            if (User.getInstance().isMyTurn() || !IS_MY_TURN_ACTIVATED) {
               redrawBoard();
             }
           }
