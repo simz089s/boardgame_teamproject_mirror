@@ -335,13 +335,13 @@ public class LobbyScreen extends FlashPointScreen {
     }
 
     private void createLoadedGameLabel() {
-        loadedGameLabel = new Label("Loaded game:\n" + loadedGameName, skinUI);
+        loadedGameLabel = new Label("Loaded game:" + loadedGameName, skinUI);
         loadedGameLabel.setFontScale(1.5f);
-        loadedGameLabel.setColor(Color.BLACK);
+        loadedGameLabel.setColor(Color.FIREBRICK);
 
         loadedGameLabel.setPosition(
-                80,
-                (Gdx.graphics.getHeight() - debugLbl.getHeight() - 50));
+                650,
+                (Gdx.graphics.getHeight() - 40));
 
         stage.addActor(loadedGameLabel);
     }
