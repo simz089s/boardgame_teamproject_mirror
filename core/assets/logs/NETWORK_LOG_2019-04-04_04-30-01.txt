@@ -1,0 +1,22 @@
+Apr 04, 2019 4:30:02 PM com.cs361d.flashpoint.networking.Server createServer
+INFO: Server is starting...
+Apr 04, 2019 4:30:14 PM com.cs361d.flashpoint.networking.Server run
+INFO: New client request received : Socket[addr=/142.157.129.173,port=57431,localport=54590]
+Apr 04, 2019 4:30:14 PM com.cs361d.flashpoint.networking.Server run
+INFO: Creating a new handler for this client...
+Apr 04, 2019 4:30:14 PM com.cs361d.flashpoint.networking.Server run
+INFO: Adding this client to active client list
+Apr 04, 2019 4:30:14 PM com.cs361d.flashpoint.networking.Server run
+INFO: Client Ip is: 142.157.129.173
+
+Apr 04, 2019 4:30:28 PM com.cs361d.flashpoint.networking.ServerToClientRunnable run
+INFO: Streams and Socket closed for Client with IP: 142.157.129.173
+Apr 04, 2019 4:30:28 PM com.cs361d.flashpoint.networking.ServerToClientRunnable run
+INFO: Reader Thread terminated or Client with IP: 142.157.129.173
+Apr 04, 2019 4:30:28 PM com.cs361d.flashpoint.networking.Server closeClient
+INFO: Client with IP: 142.157.129.173 is removed from the Network successfully
+Apr 04, 2019 4:30:28 PM com.cs361d.flashpoint.networking.Server closeClient
+INFO: Number of Clients Remaining on Network: 0
+Apr 04, 2019 4:30:28 PM com.cs361d.flashpoint.networking.ServerToClientRunnable run
+INFO: 
+

@@ -20,8 +20,6 @@ import com.cs361d.flashpoint.manager.DBHandler;
 import com.cs361d.flashpoint.manager.User;
 import com.cs361d.flashpoint.networking.Client;
 import com.cs361d.flashpoint.networking.ServerCommands;
-
-import java.io.File;
 import java.util.ArrayList;
 
 public class LobbyScreen extends FlashPointScreen {
@@ -32,25 +30,18 @@ public class LobbyScreen extends FlashPointScreen {
     Sprite spriteBG;
 
     // load games label
-    Label loadGamesLabel;
-
-    Label btnIndicationLabel;
+    Label savedGamesLabel, btnHintsLabel;
 
     // load saved game list
-    static ScrollPane scrollPaneLoadGameList;
-    static ScrollPane scrollPaneGameInfoList;
+    static ScrollPane scrollPaneLoadGameList, scrollPaneGameInfoList;
     static ScrollPane.ScrollPaneStyle scrollStyle;
-    static List<String> lstLoadGames;
-    static List<String> lstGameInfoPanel;
+    static List<String> lstLoadGames, lstGameInfoPanel;
     static List.ListStyle listStyle;
 
-    static String[] array = null;
+    static String[] gameNamesArr = null;
     static ArrayList<ScrollPane> gameInfoPanelList = new ArrayList<ScrollPane>();
-    static ArrayList<Image> gameDiffImgList = new ArrayList<Image>();
 
     ImageButton btnLogout, btnJoin, btnLoad, btnCreateGame;
-
-    static Image gameDifficultyImg;
 
     static Stage stage;
 
@@ -137,14 +128,14 @@ public class LobbyScreen extends FlashPointScreen {
     // label
 
     private void createLogoutLabel() {
-        btnIndicationLabel = new Label("LOGOUT", skinUI);
-        btnIndicationLabel.setColor(Color.BLACK);
+        btnHintsLabel = new Label("LOGOUT", skinUI);
+        btnHintsLabel.setColor(Color.BLACK);
 
-        btnIndicationLabel.setPosition(
+        btnHintsLabel.setPosition(
                 1010,
                 (Gdx.graphics.getHeight() - 90));
 
-        stage.addActor(btnIndicationLabel);
+        stage.addActor(btnHintsLabel);
     }
 
     private void createLogoutButton() {
@@ -179,7 +170,7 @@ public class LobbyScreen extends FlashPointScreen {
                 createLogoutLabel();
             }
             public void exit(InputEvent event, float x, float y, int pointer, Actor fromActor) {
-                btnIndicationLabel.remove();
+                btnHintsLabel.remove();
             }
         });
 
@@ -187,14 +178,14 @@ public class LobbyScreen extends FlashPointScreen {
     }
 
     private void createJoinLabel() {
-        btnIndicationLabel = new Label("JOIN GAME", skinUI);
-        btnIndicationLabel.setColor(Color.BLACK);
+        btnHintsLabel = new Label("JOIN GAME", skinUI);
+        btnHintsLabel.setColor(Color.BLACK);
 
-        btnIndicationLabel.setPosition(
+        btnHintsLabel.setPosition(
                 1030,
                 (Gdx.graphics.getHeight() - 150));
 
-        stage.addActor(btnIndicationLabel);
+        stage.addActor(btnHintsLabel);
     }
 
     private void createJoinGameButton() {
@@ -224,11 +215,11 @@ public class LobbyScreen extends FlashPointScreen {
 
         btnJoin.addListener(new ClickListener() {
             public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
-                if (btnIndicationLabel != null) btnIndicationLabel.remove();
+                if (btnHintsLabel != null) btnHintsLabel.remove();
                 createJoinLabel();
             }
             public void exit(InputEvent event, float x, float y, int pointer, Actor fromActor) {
-                btnIndicationLabel.remove();
+                btnHintsLabel.remove();
             }
         });
 
@@ -236,14 +227,14 @@ public class LobbyScreen extends FlashPointScreen {
     }
 
     private void createLoadLabel() {
-        btnIndicationLabel = new Label("LOAD GAME", skinUI);
-        btnIndicationLabel.setColor(Color.BLACK);
+        btnHintsLabel = new Label("LOAD GAME", skinUI);
+        btnHintsLabel.setColor(Color.BLACK);
 
-        btnIndicationLabel.setPosition(
+        btnHintsLabel.setPosition(
                 1120,
                 (Gdx.graphics.getHeight() - 180));
 
-        stage.addActor(btnIndicationLabel);
+        stage.addActor(btnHintsLabel);
     }
 
     private void createLoadGameButton() {
@@ -275,11 +266,11 @@ public class LobbyScreen extends FlashPointScreen {
 
         btnLoad.addListener(new ClickListener() {
             public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
-                if (btnIndicationLabel != null) btnIndicationLabel.remove();
+                if (btnHintsLabel != null) btnHintsLabel.remove();
                 createLoadLabel();
             }
             public void exit(InputEvent event, float x, float y, int pointer, Actor fromActor) {
-                btnIndicationLabel.remove();
+                btnHintsLabel.remove();
             }
         });
 
@@ -287,14 +278,14 @@ public class LobbyScreen extends FlashPointScreen {
     }
 
     private void createCreationLabel() {
-        btnIndicationLabel = new Label("CREATE GAME", skinUI);
-        btnIndicationLabel.setColor(Color.BLACK);
+        btnHintsLabel = new Label("CREATE GAME", skinUI);
+        btnHintsLabel.setColor(Color.BLACK);
 
-        btnIndicationLabel.setPosition(
+        btnHintsLabel.setPosition(
                 1020,
                 (Gdx.graphics.getHeight() - 40));
 
-        stage.addActor(btnIndicationLabel);
+        stage.addActor(btnHintsLabel);
     }
 
     private void createCreateGameButton() {
@@ -327,7 +318,7 @@ public class LobbyScreen extends FlashPointScreen {
                 createCreationLabel();
             }
             public void exit(InputEvent event, float x, float y, int pointer, Actor fromActor) {
-                btnIndicationLabel.remove();
+                btnHintsLabel.remove();
             }
         });
 
@@ -337,21 +328,21 @@ public class LobbyScreen extends FlashPointScreen {
     // label
 
     private void createSavedGamesLabel() {
-        loadGamesLabel = new Label("Saved games:", skinUI);
-        loadGamesLabel.setFontScale(1.5f);
-        loadGamesLabel.setColor(Color.BLACK);
+        savedGamesLabel = new Label("Saved games:", skinUI);
+        savedGamesLabel.setFontScale(1.5f);
+        savedGamesLabel.setColor(Color.BLACK);
 
-        loadGamesLabel.setPosition(
+        savedGamesLabel.setPosition(
                 230,
                 (Gdx.graphics.getHeight() - debugLbl.getHeight() - 50));
 
-        stage.addActor(loadGamesLabel);
+        stage.addActor(savedGamesLabel);
     }
 
     // saved games list
 
     public static void setSavedGames(ArrayList<String> games) {
-        array = games.toArray(new String[games.size()]);
+        gameNamesArr = games.toArray(new String[games.size()]);
     }
 
     public static void createSavedGamesList() {
@@ -364,7 +355,7 @@ public class LobbyScreen extends FlashPointScreen {
 
 
         lstLoadGames = new List<String>(listStyle);
-        lstLoadGames.setItems(array);
+        lstLoadGames.setItems(gameNamesArr);
 
         // scrollPane style
         scrollStyle = new ScrollPane.ScrollPaneStyle();
@@ -392,7 +383,6 @@ public class LobbyScreen extends FlashPointScreen {
                     public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                         removeGameInfoElements();
                         createGameInfoPanel(lstLoadGames.getSelected());
-                        //createGameDifficultyImg(lstLoadGames.getSelected());
                         return true;
                     }
                 });
@@ -434,22 +424,6 @@ public class LobbyScreen extends FlashPointScreen {
         stage.addActor(scrollPaneGameInfoList);
     }
 
-//    private static void createGameDifficultyImg(String filename) {
-//
-//        boolean isGameAdv = DBHandler.isGameAdvForLobbyImg(filename);
-//
-//        String imagefileName = isGameAdv ? "advLobby.png" : "famLobby.png";
-//        gameDifficultyImg = new Image(new Texture(imagefileName));
-//        gameDifficultyImg.setHeight(232);
-//        gameDifficultyImg.setWidth(407);
-//        gameDifficultyImg.setPosition(
-//                50,
-//                150);
-//
-//        gameDiffImgList.add(gameDifficultyImg);
-//        stage.addActor(gameDifficultyImg);
-//    }
-
 
 
     // helper
@@ -472,12 +446,6 @@ public class LobbyScreen extends FlashPointScreen {
         }
 
         gameInfoPanelList.clear();
-
-        for (int i = 0; i < gameDiffImgList.size(); i++) {
-            gameDiffImgList.get(i).remove();
-        }
-
-        gameDiffImgList.clear();
     }
 
 }

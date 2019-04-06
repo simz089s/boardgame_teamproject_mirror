@@ -16,7 +16,7 @@ public class NetworkManager {
   // public static final String DEFAULT_SERVER_IP = "142.157.74.18"; // Simon public ip address
 //  public static final String DEFAULT_SERVER_IP = "142.157.67.193"; // Elvric public ip address
    //final public static String DEFAULT_SERVER_IP = "142.157.149.154"; // DC public ip
-  final public static String DEFAULT_SERVER_IP = "142.157.129.173"; // JZ public ip
+  final public static String DEFAULT_SERVER_IP = "132.216.235.11"; // JZ public ip
   //final public static String DEFAULT_SERVER_IP = "142.157.66.15"; // Matty V IP
   public static final int DEFAULT_SERVER_PORT = 54590;
 

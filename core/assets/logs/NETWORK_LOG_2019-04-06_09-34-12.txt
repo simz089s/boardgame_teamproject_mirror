@@ -1,0 +1,4 @@
+Apr 06, 2019 9:34:13 AM com.cs361d.flashpoint.networking.Client createClient
+INFO: Client is starting...
+Apr 06, 2019 9:34:23 AM com.cs361d.flashpoint.networking.Client clientExecuteCommand
+INFO: A client sent the command : LOAD_SAVED_GAMES

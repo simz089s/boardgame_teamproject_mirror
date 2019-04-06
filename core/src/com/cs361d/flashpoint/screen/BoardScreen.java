@@ -27,7 +27,8 @@ public class BoardScreen extends FlashPointScreen {
 
   static final boolean IS_MY_TURN_ACTIVATED = false; // TODO: set to false if playing single computer
 
-  String BOARD_TO_DISPLAY_FILE = "boards/tile_1.png";
+  String INDOOR_TILE_TO_DISPLAY_FILE = "boards/tile_1.png";
+  String OUTDOOR_TILE_TO_DISPLAY_FILE = "boards/tile_02.png";
 
   static final int NUMBER_OF_ROWS = BoardManager.ROWS;
   static final int NUMBER_OF_COLS = BoardManager.COLUMNS;
@@ -91,7 +92,7 @@ public class BoardScreen extends FlashPointScreen {
     stage = new Stage();
     batch = new SpriteBatch();
 
-    txtrBG = new Texture("empty.png");
+    txtrBG = new Texture("board.png");
     spriteBG = new Sprite(txtrBG);
     spriteBG.setPosition(0, 0);
 
@@ -119,7 +120,10 @@ public class BoardScreen extends FlashPointScreen {
         // BOARD_TO_DISPLAY_FILE = "boards/board1_tiles/row-" + (i + 1) + "-col-" + (j + 1) +
         // ".jpg"; // tiles with furniture image
 
-        tilesImg[i][j] = new Image(new Texture(BOARD_TO_DISPLAY_FILE));
+        tilesImg[i][j] = DBHandler.isPresentInArr(CHOOSE_INIT_POS_TILES, i + "-" + j) ?
+                tilesImg[i][j] = new Image(new Texture(OUTDOOR_TILE_TO_DISPLAY_FILE)):
+                new Image(new Texture(INDOOR_TILE_TO_DISPLAY_FILE));
+
         tilesImg[i][j].setHeight(TILE_SIZE);
         tilesImg[i][j].setWidth(TILE_SIZE);
         tilesImg[i][j].setPosition(
