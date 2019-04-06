@@ -351,7 +351,7 @@ public class LobbyScreen extends FlashPointScreen {
     }
 
     private void createNumPlayersLeftToJoinLabel() {
-        numPlayersLeftToJoinLabel = new Label("Number of players left to join:  " + loadedGameName, skinUI);
+        numPlayersLeftToJoinLabel = new Label("Number of players left to join:  " + numPlayersLeftToJoin, skinUI);
         numPlayersLeftToJoinLabel.setFontScale(1.5f);
         numPlayersLeftToJoinLabel.setColor(Color.FIREBRICK);
 
