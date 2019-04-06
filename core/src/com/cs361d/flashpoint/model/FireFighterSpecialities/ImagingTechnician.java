@@ -16,6 +16,7 @@ public class ImagingTechnician extends FireFighterAdvanced {
     if (!isFirstMove()) {
       actions.remove(Actions.CREW_CHANGE);
     }
+    actionsFilter(actions);
     return actions;
   }
 

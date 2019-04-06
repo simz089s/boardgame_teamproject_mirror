@@ -24,7 +24,9 @@ public class FireFighter {
   }
 
   public List<Actions> getActions() {
-    return Actions.basicActions();
+    List<Actions> actions = Actions.basicActions();
+    actionsFilter(actions);
+    return actions;
   }
 
   public static FireFighter createFireFighter(
@@ -155,6 +157,14 @@ public class FireFighter {
         return false;
       }
       return this.getColor() == ((FireFighter) o).getColor();
+    }
+  }
+
+  protected void actionsFilter(List<Actions> actions) {
+    if (this.currentTile != null) {
+      if (!this.currentTile.hasPointOfInterest()) {
+        actions.remove(Actions.MOVE_WITH_VICTIM);
+      }
     }
   }
 }

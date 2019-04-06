@@ -51,6 +51,7 @@ public abstract class FireFighterAdvanced extends FireFighter {
     if (!firstMove) {
       actions.remove(Actions.CREW_CHANGE);
     }
+    actionsFilter(actions);
     return actions;
   }
 
@@ -349,5 +350,18 @@ public abstract class FireFighterAdvanced extends FireFighter {
 
   protected void firstMoveDone() {
     this.firstMove = false;
+  }
+
+  @Override
+  protected void actionsFilter(List<Actions> actions) {
+    super.actionsFilter(actions);
+    if (!this.currentTile.hasHazmat()) {
+      actions.remove(Actions.MOVE_WITH_HAZMAT);
+    }
+    if (!this.currentTile.hasFireTruck()) {
+      actions.remove(Actions.DRIVE_FIRETRUCK);
+      actions.remove(Actions.CREW_CHANGE);
+      actions.remove(Actions.FIRE_DECK_GUN);
+    }
   }
 }

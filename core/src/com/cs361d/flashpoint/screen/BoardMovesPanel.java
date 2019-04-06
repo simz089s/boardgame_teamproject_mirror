@@ -268,7 +268,7 @@ public class BoardMovesPanel {
       return Actions.convertToStringArray(
           FireFighterTurnManagerAdvance.getInstance().getCurrentFireFighter().getActions());
     }
-    return Actions.convertToStringArray(Actions.basicActions());
+    return Actions.convertToStringArray(FireFighterTurnManager.getInstance().getCurrentFireFighter().getActions());
   }
 
   public static TextureRegionDrawable getTextureForDirectionsTable(Direction d) {
