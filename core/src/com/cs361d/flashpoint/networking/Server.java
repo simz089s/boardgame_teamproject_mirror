@@ -216,6 +216,7 @@ public class Server implements Runnable {
       for (String game : DBHandler.listFilesOfSavedGames()) {
         array.add(game);
       }
+      Server.sendCommandToAllClients(ClientCommands.SET_CURRENT_GAME_NAME,"");
       Server.sendCommandToAllClients(ClientCommands.EXIT_GAME, array.toJSONString());
       Server.sendCommandToAllClients(ClientCommands.SHOW_MESSAGE_ON_SCREEN, object.toJSONString());
     }
@@ -275,6 +276,7 @@ public class Server implements Runnable {
           for (String game : DBHandler.listFilesOfSavedGames()) {
             array.add(game);
           }
+          Server.sendCommandToAllClients(ClientCommands.SET_CURRENT_GAME_NAME,"");
           Server.sendCommandToAllClients(ClientCommands.EXIT_GAME, array.toJSONString());
           Server.sendCommandToAllClients(
               ClientCommands.SHOW_MESSAGE_ON_SCREEN, object.toJSONString());
@@ -290,6 +292,8 @@ public class Server implements Runnable {
               sendCommandToSpecificClient(
                   ClientCommands.SET_GAME_STATE, DBHandler.getBoardAsString(), ip);
               sendCommandToSpecificClient(ClientCommands.SET_BOARD_SCREEN, "", ip);
+              Server.sendCommandToAllClients(ClientCommands.SET_CURRENT_GAME_NAME,message);
+              Server.sendCommandToAllClients(ClientCommands.REFRESH_LOBBY_SCREEN,"");
             } else {
               JSONObject obj1 = new JSONObject();
               obj1.put("title", "A game is already Loaded");
@@ -349,6 +353,8 @@ public class Server implements Runnable {
               sendCommandToSpecificClient(
                   ClientCommands.SET_GAME_STATE, DBHandler.getBoardAsString(), ip);
               sendCommandToSpecificClient(ClientCommands.SET_BOARD_SCREEN, "", ip);
+              Server.sendCommandToAllClients(ClientCommands.SET_CURRENT_GAME_NAME,name);
+              Server.sendCommandToAllClients(ClientCommands.REFRESH_LOBBY_SCREEN,"");
             } else {
               JSONObject obj1 = new JSONObject();
               obj1.put("title", "Game already Loaded");

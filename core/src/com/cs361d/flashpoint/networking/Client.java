@@ -36,7 +36,7 @@ public class Client {
   public static Client createClient() {
     try {
       instance = new Client(NetworkManager.DEFAULT_SERVER_IP, NetworkManager.DEFAULT_SERVER_PORT);
-//      System.out.println("Client is starting...");
+      //      System.out.println("Client is starting...");
       LOGGER.info("Client is starting...");
     } catch (IOException e) {
       e.printStackTrace();
@@ -82,29 +82,30 @@ public class Client {
                       newThread.start();
                     } catch (Exception connectionLost) {
                       try {
-//                        System.out.println("Server disconnected: closing client...");
-                          LOGGER.info("Server disconnected: closing client...");
+                        //                        System.out.println("Server disconnected: closing
+                        // client...");
+                        LOGGER.info("Server disconnected: closing client...");
                         // Closing resources
                         din.close();
                         dout.close();
                         s.close();
-//                        System.out.println(
-//                            "Streams and Socket closed for Client with IP: " + clientIP);
-                          LOGGER.info(
-                            "Streams and Socket closed for Client with IP: " + clientIP);
+                        //                        System.out.println(
+                        //                            "Streams and Socket closed for Client with IP:
+                        // " + clientIP);
+                        LOGGER.info("Streams and Socket closed for Client with IP: " + clientIP);
 
                         // Close Reader Thread
                         stopClientReadFromClientHandlerThread();
-//                        System.out.println(
-//                            "Reader Thread terminated or Client with IP: " + clientIP);
-                          LOGGER.info(
-                            "Reader Thread terminated or Client with IP: " + clientIP);
+                        //                        System.out.println(
+                        //                            "Reader Thread terminated or Client with IP: "
+                        // + clientIP);
+                        LOGGER.info("Reader Thread terminated or Client with IP: " + clientIP);
 
                       } catch (IOException e) {
-//                        System.out.println(
-//                            "Unable to close Streams for Client with IP: " + clientIP);
-                          LOGGER.info(
-                            "Unable to close Streams for Client with IP: " + clientIP);
+                        //                        System.out.println(
+                        //                            "Unable to close Streams for Client with IP: "
+                        // + clientIP);
+                        LOGGER.info("Unable to close Streams for Client with IP: " + clientIP);
                         e.printStackTrace();
                       }
                     }
@@ -114,8 +115,8 @@ public class Client {
       readMessage.start();
 
     } catch (UnknownHostException e) {
-//      System.out.println("Server Not Found");
-        LOGGER.info("Server Not Found");
+      //      System.out.println("Server Not Found");
+      LOGGER.info("Server Not Found");
       e.printStackTrace();
     }
   }
@@ -164,11 +165,11 @@ public class Client {
       LOGGER.info("A client sent the command : " + c.toString());
       switch (c) {
         case EXIT_GAME:
-            JSONArray array = (JSONArray) parser.parse(message);
-            final ArrayList<String> g = new ArrayList<String>();
-            for (Object a : array) {
-                g.add(a.toString());
-            }
+          JSONArray array = (JSONArray) parser.parse(message);
+          final ArrayList<String> g = new ArrayList<String>();
+          for (Object a : array) {
+            g.add(a.toString());
+          }
           Gdx.app.postRunnable(
               new Runnable() {
                 @Override
@@ -215,7 +216,15 @@ public class Client {
                 });
           }
           break;
-
+        case SET_CURRENT_GAME_NAME:
+          Gdx.app.postRunnable(
+              new Runnable() {
+                @Override
+                public void run() {
+                  LobbyScreen.setLoadedGameName(message);
+                }
+              });
+          break;
         case SET_GAME_STATE:
           CreateNewGameManager.loadGameFromString(message);
           break;
@@ -304,42 +313,41 @@ public class Client {
               });
           break;
 
-          case GAME_HAS_ENDED:
-              Gdx.app.postRunnable(
-                      new Runnable() {
-                          @Override
-                          public void run() {
-                             BoardScreen.getDialog().drawEndGameDialog("GAME OVER",message);
-                          }
-                      });
-              break;
+        case GAME_HAS_ENDED:
+          Gdx.app.postRunnable(
+              new Runnable() {
+                @Override
+                public void run() {
+                  BoardScreen.getDialog().drawEndGameDialog("GAME OVER", message);
+                }
+              });
+          break;
 
-          case LOAD_SAVED_GAMES:
-             final ArrayList<String> games = new ArrayList<String>();
-              for (Object o: (JSONArray) parser.parse(message)
-                   ) {
-                  games.add(o.toString());
-              }
-              Gdx.app.postRunnable(
-                      new Runnable() {
-                          @Override
-                          public void run() {
-                              LobbyScreen.setSavedGames(games);
-                              BoardScreen.setLobbyPage();
-                          }
-                      });
-              break;
+        case LOAD_SAVED_GAMES:
+          final ArrayList<String> games = new ArrayList<String>();
+          for (Object o : (JSONArray) parser.parse(message)) {
+            games.add(o.toString());
+          }
+          Gdx.app.postRunnable(
+              new Runnable() {
+                @Override
+                public void run() {
+                  LobbyScreen.setSavedGames(games);
+                  BoardScreen.setLobbyPage();
+                }
+              });
+          break;
 
-          case REFRESH_LOBBY_SCREEN:
-              Gdx.app.postRunnable(
-                      new Runnable() {
-                          @Override
-                          public void run() {
-                              BoardScreen.refreshLobbyScreen();
-                          }
-                      });
+        case REFRESH_LOBBY_SCREEN:
+          Gdx.app.postRunnable(
+              new Runnable() {
+                @Override
+                public void run() {
+                  BoardScreen.refreshLobbyScreen();
+                }
+              });
 
-              break;
+          break;
         default:
       }
 

@@ -16,6 +16,7 @@ public enum ClientCommands //Commands sent to client
     GAME_HAS_ENDED("GAME_HAS_ENDED"),
     ASK_DRIVER_MSG("ASK_DRIVER_MSG"),
     REFRESH_LOBBY_SCREEN("REFRESH_LOBBY_SCREEN"),
+    SET_CURRENT_GAME_NAME("SET_CURRENT_GAME_NAME"),
     LOAD_SAVED_GAMES("LOAD_SAVED_GAMES");
 
     private String text;
