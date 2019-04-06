@@ -216,7 +216,6 @@ public class Server implements Runnable {
       for (String game : DBHandler.listFilesOfSavedGames()) {
         array.add(game);
       }
-      Server.sendCommandToAllClients(ClientCommands.SET_CURRENT_GAME_NAME,"");
       Server.sendCommandToAllClients(ClientCommands.EXIT_GAME, array.toJSONString());
       Server.sendCommandToAllClients(ClientCommands.SHOW_MESSAGE_ON_SCREEN, object.toJSONString());
     }
@@ -276,7 +275,6 @@ public class Server implements Runnable {
           for (String game : DBHandler.listFilesOfSavedGames()) {
             array.add(game);
           }
-          Server.sendCommandToAllClients(ClientCommands.SET_CURRENT_GAME_NAME,"");
           Server.sendCommandToAllClients(ClientCommands.EXIT_GAME, array.toJSONString());
           Server.sendCommandToAllClients(
               ClientCommands.SHOW_MESSAGE_ON_SCREEN, object.toJSONString());
