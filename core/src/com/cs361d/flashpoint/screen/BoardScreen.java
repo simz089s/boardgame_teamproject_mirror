@@ -27,7 +27,8 @@ public class BoardScreen extends FlashPointScreen {
 
   static final boolean IS_MY_TURN_ACTIVATED = false; // TODO: set to false if playing single computer
 
-  String BOARD_TO_DISPLAY_FILE = "boards/tile_1.png";
+  String OUTDOOR_TILE_TO_DISPLAY_FILE = "boards/tile_0.png";
+  String INDOOR_TILE_TO_DISPLAY_FILE = "boards/tile_1.png";
 
   static final int NUMBER_OF_ROWS = BoardManager.ROWS;
   static final int NUMBER_OF_COLS = BoardManager.COLUMNS;
@@ -91,7 +92,7 @@ public class BoardScreen extends FlashPointScreen {
     stage = new Stage();
     batch = new SpriteBatch();
 
-    txtrBG = new Texture("empty.png");
+    txtrBG = new Texture("board.png");
     spriteBG = new Sprite(txtrBG);
     spriteBG.setPosition(0, 0);
 
@@ -119,7 +120,10 @@ public class BoardScreen extends FlashPointScreen {
         // BOARD_TO_DISPLAY_FILE = "boards/board1_tiles/row-" + (i + 1) + "-col-" + (j + 1) +
         // ".jpg"; // tiles with furniture image
 
-        tilesImg[i][j] = new Image(new Texture(BOARD_TO_DISPLAY_FILE));
+        tilesImg[i][j] = DBHandler.isPresentInArr(CHOOSE_INIT_POS_TILES, i + "-" + j) ?
+                tilesImg[i][j] = new Image(new Texture(OUTDOOR_TILE_TO_DISPLAY_FILE)):
+                new Image(new Texture(INDOOR_TILE_TO_DISPLAY_FILE));
+
         tilesImg[i][j].setHeight(TILE_SIZE);
         tilesImg[i][j].setWidth(TILE_SIZE);
         tilesImg[i][j].setPosition(
@@ -283,7 +287,7 @@ public class BoardScreen extends FlashPointScreen {
   }
 
   // draw walls and doors
-  private static void drawObstacles(Image myTile, Obstacle obs, Direction d) {
+  private static void drawObstacles(Image myTile, Obstacle obs, Direction obsDirection) {
     Image gameUnit;
     if (obs.isNull()) {
       return;
@@ -301,36 +305,57 @@ public class BoardScreen extends FlashPointScreen {
       gameUnit.setHeight(20);
       gameUnit.setWidth(20);
 
-      switch (d) {
+      switch (obsDirection) {
         case TOP:
+          Image wallSubLayer = new Image(new Texture("game_units/walls/h2.png"));
+          wallSubLayer.setHeight(WALL_THICKNESS);
+          wallSubLayer.setWidth(TILE_SIZE);
+          wallSubLayer.setPosition(myTile.getX(), myTile.getY() + myTile.getHeight());
           gameUnit.setPosition(
               myTile.getX() + myTile.getWidth() / 2 - gameUnit.getHeight() / 2,
               myTile.getY() + myTile.getHeight() - gameUnit.getHeight() / 2);
+          gameUnits.add(wallSubLayer);
+          stage.addActor(wallSubLayer);
           break;
-
         case BOTTOM:
+          wallSubLayer = new Image(new Texture("game_units/walls/h2.png"));
+          wallSubLayer.setHeight(WALL_THICKNESS);
+          wallSubLayer.setWidth(TILE_SIZE);
+          wallSubLayer.setPosition(myTile.getX(), myTile.getY());
           gameUnit.setPosition(
               myTile.getX() + myTile.getWidth() / 2 - gameUnit.getHeight() / 2,
               myTile.getY() - gameUnit.getHeight() / 2);
+          gameUnits.add(wallSubLayer);
+          stage.addActor(wallSubLayer);
           break;
-
         case LEFT:
+          wallSubLayer = new Image(new Texture("game_units/walls/v2.png"));
+          wallSubLayer.setHeight(TILE_SIZE);
+          wallSubLayer.setWidth(WALL_THICKNESS);
+          wallSubLayer.setPosition(myTile.getX() - WALL_THICKNESS, myTile.getY());
           gameUnit.setPosition(
               myTile.getX() - gameUnit.getWidth() / 2,
               myTile.getY() + myTile.getHeight() / 2 - gameUnit.getHeight() / 2);
+          gameUnits.add(wallSubLayer);
+          stage.addActor(wallSubLayer);
           break;
-
         case RIGHT:
+          wallSubLayer = new Image(new Texture("game_units/walls/v2.png"));
+          wallSubLayer.setHeight(TILE_SIZE);
+          wallSubLayer.setWidth(WALL_THICKNESS);
+          wallSubLayer.setPosition(myTile.getX() + myTile.getWidth(), myTile.getY());
           gameUnit.setPosition(
               myTile.getX() + myTile.getWidth() - gameUnit.getWidth() / 2,
               myTile.getY() + myTile.getHeight() / 2 - gameUnit.getHeight() / 2);
+          gameUnits.add(wallSubLayer);
+          stage.addActor(wallSubLayer);
           break;
         default:
           throw new IllegalArgumentException("That argument does not exist");
       }
 
     } else { // wall
-      switch (d) {
+      switch (obsDirection) {
         case TOP:
           if (obs.getHealth() == 2) {
             gameUnit = new Image(new Texture("game_units/walls/h2.png"));
@@ -718,7 +743,7 @@ public class BoardScreen extends FlashPointScreen {
         new ClickListener() {
           @Override
           public void clicked(InputEvent event, float x, float y) {
-            if (User.getInstance().isMyTurn()) {
+            if (User.getInstance().isMyTurn() || !IS_MY_TURN_ACTIVATED) {
               redrawBoard();
             }
           }

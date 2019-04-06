@@ -1010,29 +1010,34 @@ public class DBHandler {
 
     String path = "db/" + fileName + ".json";
 
-    BufferedReader reader = null;
-    try {
-      reader = new BufferedReader(new FileReader(path));
-      StringBuilder stringBuilder = new StringBuilder();
-      String line = null;
-      while ((line = reader.readLine()) != null) {
-        stringBuilder.append(line);
-      }
-      reader.close();
+    File tempFile = new File("db/" + fileName + ".json");
 
-      String content = stringBuilder.toString();
+    if (tempFile.exists()) {
+        BufferedReader reader = null;
+        try {
+            reader = new BufferedReader(new FileReader(path));
+            StringBuilder stringBuilder = new StringBuilder();
+            String line = null;
+            while ((line = reader.readLine()) != null) {
+                stringBuilder.append(line);
+            }
+            reader.close();
 
-      retArr = getInfoForLobbyGame(content);
+            String content = stringBuilder.toString();
 
-    } catch (FileNotFoundException e) {
-      e.printStackTrace();
-    } catch (IOException e) {
-      e.printStackTrace();
+            retArr = getInfoForLobbyGame(content);
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     String[] stringArray = retArr.toArray(new String[0]);
+    String[] noInfoForChosenGame = {"No info yet.\n\nStoring data in your system..."};
 
-    return stringArray;
+    return stringArray.length == 0 ? noInfoForChosenGame : stringArray;
   }
 
   private static ArrayList<String> getInfoForLobbyGame(String jsonString) {
@@ -1061,10 +1066,7 @@ public class DBHandler {
       e.printStackTrace();
     }
 
-    ArrayList<String> noInfoForChosenGame = new ArrayList<String>();
-    noInfoForChosenGame.add("No info yet.\n\nStoring data in your file system...");
-
-    return retArr.size() == 0 ? noInfoForChosenGame: retArr;
+    return retArr;
   }
 
   public static boolean isGameAdvForLobbyImg(String fileName) {
