@@ -30,7 +30,7 @@ public class LobbyScreen extends FlashPointScreen {
     Sprite spriteBG;
 
     // load games label
-    Label savedGamesLabel, btnHintsLabel;
+    Label savedGamesLabel, btnHintsLabel, loadedGameLabel ;
 
     // load saved game list
     static ScrollPane scrollPaneLoadGameList, scrollPaneGameInfoList;
@@ -39,6 +39,7 @@ public class LobbyScreen extends FlashPointScreen {
     static List.ListStyle listStyle;
 
     static String[] gameNamesArr = null;
+    static String loadedGameName = "";
     static ArrayList<ScrollPane> gameInfoPanelList = new ArrayList<ScrollPane>();
 
     ImageButton btnLogout, btnJoin, btnLoad, btnCreateGame;
@@ -65,6 +66,8 @@ public class LobbyScreen extends FlashPointScreen {
         //spriteBG.setScale(0.6f);
         spriteBG.setPosition(
                 0, 0);
+
+        createLoadedGameLabel();
 
         createSavedGamesLabel();
 
@@ -325,7 +328,23 @@ public class LobbyScreen extends FlashPointScreen {
         stage.addActor(btnCreateGame);
     }
 
-    // label
+    // loaded game
+
+    public static void setLoadedGameName(String game) {
+        loadedGameName = game;
+    }
+
+    private void createLoadedGameLabel() {
+        loadedGameLabel = new Label("Loaded game:\n" + loadedGameName, skinUI);
+        loadedGameLabel.setFontScale(1.5f);
+        loadedGameLabel.setColor(Color.BLACK);
+
+        loadedGameLabel.setPosition(
+                80,
+                (Gdx.graphics.getHeight() - debugLbl.getHeight() - 50));
+
+        stage.addActor(loadedGameLabel);
+    }
 
     private void createSavedGamesLabel() {
         savedGamesLabel = new Label("Saved games:", skinUI);
