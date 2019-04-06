@@ -30,7 +30,7 @@ public class LobbyScreen extends FlashPointScreen {
     Sprite spriteBG;
 
     // load games label
-    Label savedGamesLabel, btnHintsLabel, loadedGameLabel ;
+    Label savedGamesLabel, btnHintsLabel, loadedGameLabel, numPlayersLeftToJoinLabel ;
 
     // load saved game list
     static ScrollPane scrollPaneLoadGameList, scrollPaneGameInfoList;
@@ -38,8 +38,9 @@ public class LobbyScreen extends FlashPointScreen {
     static List<String> lstLoadGames, lstGameInfoPanel;
     static List.ListStyle listStyle;
 
-    static String[] gameNamesArr = null;
     static String loadedGameName = "";
+    static String numPlayersLeftToJoin = "";
+    static String[] gameNamesArr = null;
     static ArrayList<ScrollPane> gameInfoPanelList = new ArrayList<ScrollPane>();
 
     ImageButton btnLogout, btnJoin, btnLoad, btnCreateGame;
@@ -68,9 +69,9 @@ public class LobbyScreen extends FlashPointScreen {
                 0, 0);
 
         createLoadedGameLabel();
+        createNumPlayersLeftToJoinLabel();
 
         createSavedGamesLabel();
-
         createSavedGamesList();
 
         // exit button
@@ -335,15 +336,29 @@ public class LobbyScreen extends FlashPointScreen {
     }
 
     private void createLoadedGameLabel() {
-        loadedGameLabel = new Label("Loaded game:" + loadedGameName, skinUI);
+        loadedGameLabel = new Label("Current active game:  " + loadedGameName, skinUI);
         loadedGameLabel.setFontScale(1.5f);
         loadedGameLabel.setColor(Color.FIREBRICK);
 
         loadedGameLabel.setPosition(
-                650,
-                (Gdx.graphics.getHeight() - 40));
+                20, 280);
 
         stage.addActor(loadedGameLabel);
+    }
+
+    public static void setNumPlayersLeftToJoin(int numPlayers) {
+        numPlayersLeftToJoin = numPlayers == -1 ? "" : "" + numPlayers;
+    }
+
+    private void createNumPlayersLeftToJoinLabel() {
+        numPlayersLeftToJoinLabel = new Label("Number of players left to join:  " + loadedGameName, skinUI);
+        numPlayersLeftToJoinLabel.setFontScale(1.5f);
+        numPlayersLeftToJoinLabel.setColor(Color.FIREBRICK);
+
+        numPlayersLeftToJoinLabel.setPosition(
+                20, 230);
+
+        stage.addActor(numPlayersLeftToJoinLabel);
     }
 
     private void createSavedGamesLabel() {
@@ -352,7 +367,7 @@ public class LobbyScreen extends FlashPointScreen {
         savedGamesLabel.setColor(Color.BLACK);
 
         savedGamesLabel.setPosition(
-                230,
+                20,
                 (Gdx.graphics.getHeight() - debugLbl.getHeight() - 50));
 
         stage.addActor(savedGamesLabel);
@@ -387,11 +402,11 @@ public class LobbyScreen extends FlashPointScreen {
         scrollPaneLoadGameList.setScrollingDisabled(true, false);
         scrollPaneLoadGameList.setTransform(true);
         scrollPaneLoadGameList.setScale(1.0f);
-        scrollPaneLoadGameList.setWidth(250);
+        scrollPaneLoadGameList.setWidth(300);
         scrollPaneLoadGameList.setHeight(333);
 
-        float x = 230;
-        float y = Gdx.graphics.getHeight() - scrollPaneLoadGameList.getHeight() - 80;
+        float x = 200;
+        float y = Gdx.graphics.getHeight() - scrollPaneLoadGameList.getHeight() - 20;
 
         scrollPaneLoadGameList.setPosition(
                 x, y);
