@@ -216,12 +216,16 @@ public class Client {
                 });
           }
           break;
-        case SET_CURRENT_GAME_NAME:
+        case SET_CURRENT_GAME_STATS:
+            jsonObject = (JSONObject) parser.parse(message);
+            final String name = jsonObject.get("name").toString();
+            final int numPlayer = (Integer) jsonObject.get("numPlayer");
           Gdx.app.postRunnable(
               new Runnable() {
                 @Override
                 public void run() {
-                  LobbyScreen.setLoadedGameName(message);
+                  LobbyScreen.setLoadedGameName(name);
+                  LobbyScreen.setNumPlayersLeftToJoin(numPlayer);
                 }
               });
           break;

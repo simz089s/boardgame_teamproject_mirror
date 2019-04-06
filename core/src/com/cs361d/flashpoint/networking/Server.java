@@ -57,15 +57,15 @@ public class Server implements Runnable {
       // Accept the incoming request
       try {
         s = ss.accept(); // s is the client socket
-//        System.out.println("New client request received : " + s);
-          LOGGER.info("New client request received : " + s);
+        //        System.out.println("New client request received : " + s);
+        LOGGER.info("New client request received : " + s);
 
         // obtain input and output streams or the client
         DataInputStream din = new DataInputStream(s.getInputStream());
         DataOutputStream dout = new DataOutputStream(s.getOutputStream());
 
-//        System.out.println("Creating a new handler for this client...");
-          LOGGER.info("Creating a new handler for this client...");
+        //        System.out.println("Creating a new handler for this client...");
+        LOGGER.info("Creating a new handler for this client...");
 
         String ip = s.getInetAddress().toString().replace("/", "");
 
@@ -75,15 +75,15 @@ public class Server implements Runnable {
 
         // Create a new Thread with this client.
         Thread t = new Thread(clientObserver);
-//        System.out.println("Adding this client to active client list");
-          LOGGER.info("Adding this client to active client list");
+        //        System.out.println("Adding this client to active client list");
+        LOGGER.info("Adding this client to active client list");
 
         // add this client to active clientObservers list
         clientObservers.put(ip, clientObserver);
 
-//        System.out.println("Client Ip is: " + ip);
-//        System.out.println();
-          LOGGER.info("Client Ip is: " + ip + "\n");
+        //        System.out.println("Client Ip is: " + ip);
+        //        System.out.println();
+        LOGGER.info("Client Ip is: " + ip + "\n");
 
         t.start(); // start the thread for the client
 
@@ -109,7 +109,7 @@ public class Server implements Runnable {
 
   public static Server createServer() {
     instance = new Server(NetworkManager.DEFAULT_SERVER_PORT);
-//    System.out.println("Server is starting...");
+    //    System.out.println("Server is starting...");
     LOGGER.info("Server is starting...");
     return instance;
   }
@@ -180,8 +180,8 @@ public class Server implements Runnable {
     try {
       InetAddress addr = InetAddress.getLocalHost();
       hostname = addr.getHostName();
-//      System.out.println("Host Name = " + hostname);
-        LOGGER.info("Host Name = " + hostname);
+      //      System.out.println("Host Name = " + hostname);
+      LOGGER.info("Host Name = " + hostname);
 
     } catch (UnknownHostException e) {
       e.printStackTrace();
@@ -219,10 +219,11 @@ public class Server implements Runnable {
       Server.sendCommandToAllClients(ClientCommands.EXIT_GAME, array.toJSONString());
       Server.sendCommandToAllClients(ClientCommands.SHOW_MESSAGE_ON_SCREEN, object.toJSONString());
     }
-//    System.out.println("Client with IP: " + clientIP + " is removed from the Network successfully");
-//    System.out.println("Number of Clients Remaining on Network: " + clientList.size());
-      LOGGER.info("Client with IP: " + clientIP + " is removed from the Network successfully");
-      LOGGER.info("Number of Clients Remaining on Network: " + clientList.size());
+    //    System.out.println("Client with IP: " + clientIP + " is removed from the Network
+    // successfully");
+    //    System.out.println("Number of Clients Remaining on Network: " + clientList.size());
+    LOGGER.info("Client with IP: " + clientIP + " is removed from the Network successfully");
+    LOGGER.info("Number of Clients Remaining on Network: " + clientList.size());
   }
 
   // Now all server commands handled in the server
@@ -234,8 +235,8 @@ public class Server implements Runnable {
       ServerCommands c = ServerCommands.fromString(jsonObject.get("command").toString());
       String message = jsonObject.get("message").toString();
       String ip = jsonObject.get("IP").toString();
-//      System.out.println(message);
-        LOGGER.info(message);
+      //      System.out.println(message);
+      LOGGER.info(message);
       boolean mustSendAndRefresh = false;
 
       switch (c) {
@@ -285,13 +286,17 @@ public class Server implements Runnable {
             if (!gameLoaded) {
               CreateNewGameManager.loadSavedGame(message);
               Server.setFireFighterAssignArray();
+              obj = new JSONObject();
               gameLoaded = true;
               assignFireFighterToClient(ip);
+              obj.put("name", message);
+              obj.put("numPlayer", notYetAssigned.size());
               sendCommandToSpecificClient(
                   ClientCommands.SET_GAME_STATE, DBHandler.getBoardAsString(), ip);
               sendCommandToSpecificClient(ClientCommands.SET_BOARD_SCREEN, "", ip);
-              Server.sendCommandToAllClients(ClientCommands.SET_CURRENT_GAME_NAME,message);
-              Server.sendCommandToAllClients(ClientCommands.REFRESH_LOBBY_SCREEN,"");
+              Server.sendCommandToAllClients(
+                  ClientCommands.SET_CURRENT_GAME_STATS, obj.toJSONString());
+              Server.sendCommandToAllClients(ClientCommands.REFRESH_LOBBY_SCREEN, "");
             } else {
               JSONObject obj1 = new JSONObject();
               obj1.put("title", "A game is already Loaded");
@@ -309,6 +314,12 @@ public class Server implements Runnable {
                 sendCommandToSpecificClient(
                     ClientCommands.SET_GAME_STATE, DBHandler.getBoardAsString(), ip);
                 sendCommandToSpecificClient(ClientCommands.SET_BOARD_SCREEN, "", ip);
+                obj = new JSONObject();
+                obj.put("name", message);
+                obj.put("numPlayer", notYetAssigned.size());
+                Server.sendCommandToAllClients(
+                    ClientCommands.SET_CURRENT_GAME_STATS, obj.toJSONString());
+                Server.sendCommandToAllClients(ClientCommands.REFRESH_LOBBY_SCREEN, "");
                 JSONObject obj1 = new JSONObject();
                 String rightSide =
                     isEmpty()
@@ -348,11 +359,15 @@ public class Server implements Runnable {
               CreateNewGameManager.createNewGame(name, numPlayers, mapKind, difficulty);
               Server.setFireFighterAssignArray();
               assignFireFighterToClient(ip);
+              obj = new JSONObject();
+              obj.put("name", message);
+              obj.put("numPlayer", notYetAssigned.size());
               sendCommandToSpecificClient(
                   ClientCommands.SET_GAME_STATE, DBHandler.getBoardAsString(), ip);
               sendCommandToSpecificClient(ClientCommands.SET_BOARD_SCREEN, "", ip);
-              Server.sendCommandToAllClients(ClientCommands.SET_CURRENT_GAME_NAME,name);
-              Server.sendCommandToAllClients(ClientCommands.REFRESH_LOBBY_SCREEN,"");
+              Server.sendCommandToAllClients(
+                  ClientCommands.SET_CURRENT_GAME_STATS, obj.toJSONString());
+              Server.sendCommandToAllClients(ClientCommands.REFRESH_LOBBY_SCREEN, "");
             } else {
               JSONObject obj1 = new JSONObject();
               obj1.put("title", "Game already Loaded");

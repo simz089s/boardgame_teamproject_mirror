@@ -909,8 +909,9 @@ public class BoardScreen extends FlashPointScreen {
 
   public static void setLobbyPageOutOfGame(ArrayList<String> games) {
     audioMusic.stop();
-    if (game.getScreen() == game.boardScreen) {
+    if (game.getScreen() == game.boardScreen || game.getScreen() == game.lobbyScreen) {
       LobbyScreen.setLoadedGameName("");
+      LobbyScreen.setNumPlayersLeftToJoin(-1);
       LobbyScreen.setSavedGames(games);
       game.setScreen(game.lobbyScreen);
     }
