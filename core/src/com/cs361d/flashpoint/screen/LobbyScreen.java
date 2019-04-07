@@ -364,7 +364,7 @@ public class LobbyScreen extends FlashPointScreen {
     private void createSavedGamesLabel() {
         savedGamesLabel = new Label("Saved games:", skinUI);
         savedGamesLabel.setFontScale(1.5f);
-        savedGamesLabel.setColor(Color.BLACK);
+        savedGamesLabel.setColor(Color.WHITE);
 
         savedGamesLabel.setPosition(
                 20,
@@ -428,8 +428,8 @@ public class LobbyScreen extends FlashPointScreen {
         // list style
         listStyle = new List.ListStyle();
         listStyle.font = Font.get(22); // font size
-        listStyle.fontColorUnselected = Color.BLACK;
-        listStyle.fontColorSelected = Color.BLACK;
+        listStyle.fontColorUnselected = Color.WHITE;
+        listStyle.fontColorSelected = Color.WHITE;
         listStyle.selection = TextureLoader.getDrawable(50, 100, Color.CLEAR );
 
         lstGameInfoPanel = new List<String>(listStyle);
