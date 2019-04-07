@@ -13,6 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.Align;
 import com.cs361d.flashpoint.manager.*;
 import com.cs361d.flashpoint.networking.Client;
 import com.cs361d.flashpoint.networking.ServerCommands;
@@ -166,6 +167,7 @@ public class CreateGameScreen extends FlashPointScreen {
     private void createGameNameTextField() {
         gameNameField = new TextField("", skinUI, "default");
         gameNameField.setMessageText("Enter it here");
+        gameNameField.setAlignment(Align.center);
         gameNameField.setWidth(200);
         gameNameField.setHeight(25);
         gameNameField.setMaxLength(15);

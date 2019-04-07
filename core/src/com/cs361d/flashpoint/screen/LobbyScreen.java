@@ -47,7 +47,7 @@ public class LobbyScreen extends FlashPointScreen {
 
     static Stage stage;
 
-    private Music BGM = Gdx.audio.newMusic(Gdx.files.internal("playlist/void.mp3"));
+    private Music BGM = Gdx.audio.newMusic(Gdx.files.internal("playlist/matrix.mp3"));
 
     LobbyScreen(Game pGame) {
         super(pGame);
@@ -336,12 +336,12 @@ public class LobbyScreen extends FlashPointScreen {
     }
 
     private void createLoadedGameLabel() {
-        loadedGameLabel = new Label("Current active game:  " + loadedGameName, skinUI);
+        loadedGameLabel = new Label("Current active game:\n" + loadedGameName, skinUI);
         loadedGameLabel.setFontScale(1.5f);
         loadedGameLabel.setColor(Color.FIREBRICK);
 
         loadedGameLabel.setPosition(
-                20, 280);
+                40, 140);
 
         stage.addActor(loadedGameLabel);
     }
@@ -351,12 +351,12 @@ public class LobbyScreen extends FlashPointScreen {
     }
 
     private void createNumPlayersLeftToJoinLabel() {
-        numPlayersLeftToJoinLabel = new Label("Number of players left to join:  " + numPlayersLeftToJoin, skinUI);
+        numPlayersLeftToJoinLabel = new Label("# players left to join:  " + numPlayersLeftToJoin, skinUI);
         numPlayersLeftToJoinLabel.setFontScale(1.5f);
         numPlayersLeftToJoinLabel.setColor(Color.FIREBRICK);
 
         numPlayersLeftToJoinLabel.setPosition(
-                20, 230);
+                40, 95);
 
         stage.addActor(numPlayersLeftToJoinLabel);
     }
@@ -364,11 +364,11 @@ public class LobbyScreen extends FlashPointScreen {
     private void createSavedGamesLabel() {
         savedGamesLabel = new Label("Saved games:", skinUI);
         savedGamesLabel.setFontScale(1.5f);
-        savedGamesLabel.setColor(Color.WHITE);
+        savedGamesLabel.setColor(Color.LIGHT_GRAY);
 
         savedGamesLabel.setPosition(
-                20,
-                (Gdx.graphics.getHeight() - debugLbl.getHeight() - 50));
+                1000,
+                (Gdx.graphics.getHeight() - debugLbl.getHeight() - 230));
 
         stage.addActor(savedGamesLabel);
     }
@@ -384,7 +384,7 @@ public class LobbyScreen extends FlashPointScreen {
         listStyle = new List.ListStyle();
         listStyle.font = Font.get(25); // font size
         listStyle.fontColorUnselected = Color.WHITE;
-        listStyle.fontColorSelected = Color.WHITE;
+        listStyle.fontColorSelected = Color.NAVY;
         listStyle.selection = TextureLoader.getDrawable(50, 100, Color.LIGHT_GRAY );
 
 
@@ -402,11 +402,11 @@ public class LobbyScreen extends FlashPointScreen {
         scrollPaneLoadGameList.setScrollingDisabled(true, false);
         scrollPaneLoadGameList.setTransform(true);
         scrollPaneLoadGameList.setScale(1.0f);
-        scrollPaneLoadGameList.setWidth(300);
-        scrollPaneLoadGameList.setHeight(333);
+        scrollPaneLoadGameList.setWidth(250);
+        scrollPaneLoadGameList.setHeight(334);
 
-        float x = 200;
-        float y = Gdx.graphics.getHeight() - scrollPaneLoadGameList.getHeight() - 20;
+        float x = Gdx.graphics.getWidth() - scrollPaneLoadGameList.getWidth() - 10;
+        float y = 100;
 
         scrollPaneLoadGameList.setPosition(
                 x, y);
@@ -428,8 +428,8 @@ public class LobbyScreen extends FlashPointScreen {
         // list style
         listStyle = new List.ListStyle();
         listStyle.font = Font.get(22); // font size
-        listStyle.fontColorUnselected = Color.WHITE;
-        listStyle.fontColorSelected = Color.WHITE;
+        listStyle.fontColorUnselected = Color.BLACK;
+        listStyle.fontColorSelected = Color.BLACK;
         listStyle.selection = TextureLoader.getDrawable(50, 100, Color.CLEAR );
 
         lstGameInfoPanel = new List<String>(listStyle);
@@ -445,11 +445,11 @@ public class LobbyScreen extends FlashPointScreen {
         scrollPaneGameInfoList.setScrollingDisabled(true, false);
         scrollPaneGameInfoList.setTransform(true);
         scrollPaneGameInfoList.setScale(1.0f);
-        scrollPaneGameInfoList.setWidth(Gdx.graphics.getWidth() / 2 - 10);
+        scrollPaneGameInfoList.setWidth(400);
         scrollPaneGameInfoList.setHeight(300);
 
-        float x = Gdx.graphics.getWidth() / 2 + 60;
-        float y = 100;
+        float x = 40;
+        float y = 120;
 
         scrollPaneGameInfoList.setPosition(
                 x, y);

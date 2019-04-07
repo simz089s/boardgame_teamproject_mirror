@@ -1035,7 +1035,7 @@ public class DBHandler {
     }
 
     String[] stringArray = retArr.toArray(new String[0]);
-    String[] noInfoForChosenGame = {"No info yet.\n\nStoring data in your system..."};
+    String[] noInfoForChosenGame = {"No info yet.\n\nStoring data in the system."};
 
     return stringArray.length == 0 ? noInfoForChosenGame : stringArray;
   }

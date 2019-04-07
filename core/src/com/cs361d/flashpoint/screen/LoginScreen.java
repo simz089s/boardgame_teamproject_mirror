@@ -16,6 +16,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.Align;
 import com.cs361d.flashpoint.manager.User;
 import com.cs361d.flashpoint.networking.Client;
 import com.cs361d.flashpoint.networking.NetworkManager;
@@ -37,12 +38,10 @@ public class LoginScreen extends FlashPointScreen {
     BitmapFont fontCaptureIt;
     GlyphLayout gl;
 
-    TextField fdUname, fdPwd, fdSrvIP;
-    CheckBox signUpCheck;
-    TextButton btnLogin;
+    TextField fdUname, fdSrvIP;
     Label errorMsgLabel;
 
-    private Music BGM = Gdx.audio.newMusic(Gdx.files.internal("playlist/matrix.mp3"));
+    private Music BGM = Gdx.audio.newMusic(Gdx.files.internal("playlist/void.mp3"));
 
     LoginScreen(Game pGame) {
         super(pGame);
@@ -71,16 +70,8 @@ public class LoginScreen extends FlashPointScreen {
         fontCaptureIt.setColor(Color.CORAL);
         gl = new GlyphLayout(fontCaptureIt, FLASHPOINT);
 
-
-        createUsernameTextField();
-
-        // createServerIPTextField();
-        //createSignUpCheckbox();
-
-        createLoginBtn();
-
         createErrorMsgLabel();
-
+        createUsernameTextField();
 
         Gdx.input.setInputProcessor(stage);
     }
@@ -140,104 +131,55 @@ public class LoginScreen extends FlashPointScreen {
 
     public void createUsernameTextField(){
         fdUname = new TextField("", skinUI, "default");
-        fdUname.setMessageText("Enter firefighter name");
-        fdUname.setWidth(200);
-        fdUname.setHeight(25);
+        fdUname.setMessageText("Type firefighter name + [Enter]");
+        fdUname.setAlignment(Align.center);
+        fdUname.setWidth(300);
+        fdUname.setHeight(30);
+        fdUname.setMaxLength(15);
         fdUname.setPosition(
-                (Gdx.graphics.getWidth() - fdUname.getWidth()) / 2,
-                Gdx.graphics.getHeight() / 2f - (fdUname.getHeight() / 2) - 20);
-
-        stage.addActor(fdUname);
-    }
-
-//    public void createPasswordTextField(){
-//        fdPwd = new TextField("", skinUI, "default");
-//        fdPwd.setPasswordMode(true);
-//        fdPwd.setPasswordCharacter('*');
-//        fdPwd.setMessageText("Password");
-//        fdPwd.setWidth(200);
-//        fdPwd.setHeight(25);
-//        fdPwd.setPosition(
-//                (Gdx.graphics.getWidth() - fdUname.getWidth()) / 2,
-//                Gdx.graphics.getHeight() / 2f - (fdUname.getHeight() / 2) + 10);
-//
-//        stage.addActor(fdPwd);
-//    }
-
-    private void createServerIPTextField() {
-        fdSrvIP = new TextField("", skinUI, "default");
-        fdSrvIP.setMessageText(NetworkManager.DEFAULT_SERVER_IP);
-        fdSrvIP.setWidth(200);
-        fdSrvIP.setHeight(25);
-        fdSrvIP.setPosition(
-                (Gdx.graphics.getWidth() - fdSrvIP.getWidth()) / 2,
-                Gdx.graphics.getHeight() * 1 / 5f - (fdSrvIP.getHeight() / 2));
-//        NetworkManager.getInstance().setServerIP(fdSrvIP.getText());
-        stage.addActor(fdSrvIP);
-    }
+                900,
+                20);
 
 
+        fdUname.setTextFieldListener(new TextField.TextFieldListener(){
+            @Override
+            public void keyTyped(TextField textField, char c){
 
-    // sign up check box
+                if((int)c == 13 || (int)c == 10) {
 
-
-
-
-//    public void createSignUpCheckbox(){
-//        signUpCheck = new CheckBox(" Sign up", skinUI);
-//        signUpCheck.setPosition(
-//                Gdx.graphics.getWidth() / 2 - signUpCheck.getWidth() / 2,
-//                Gdx.graphics.getHeight() / 2f - (fdUname.getHeight() / 2) - 20);
-//
-//        signUpCheck.addListener(new ClickListener() {
-//            @Override
-//            public void clicked(InputEvent event, float x, float y) {
-//                if (signUpCheck.isChecked()) {
-//                    btnLogin.setText("Sign up");
-//                } else {
-//                    btnLogin.setText("Login");
-//                }
-//            }
-//        });
-//
-//        stage.addActor(signUpCheck);
-//    }
-
-
-
-    // button
-
-    public void createLoginBtn(){
-        btnLogin = new TextButton("Login", skinUI, "default");
-        btnLogin.setWidth(100);
-        btnLogin.setHeight(25);
-        btnLogin.setPosition(
-                (Gdx.graphics.getWidth() - btnLogin.getWidth()) / 2,
-                Gdx.graphics.getHeight() / 3f - (btnLogin.getHeight() / 2));
-
-        btnLogin.addListener(
-                new ClickListener() {
-                    @Override
-                    public void clicked(InputEvent event, float x, float y) {
+                    if(fdUname.getText().length() < 5){
+                        errorMsgLabel.setText("Name must be at least 5 characters.");
+                    } else {
                         String usr = fdUname.getText();
                         User.getInstance().setName(usr);
                         Client.getInstance().sendCommand(ServerCommands.GET_SAVED_GAMES,"");
-
                     }
-                });
-
-        stage.addActor(btnLogin);
+                }
+            }
+        });
+        stage.addActor(fdUname);
     }
 
-    // error msg label
-
-    public void createErrorMsgLabel(){
+    private void createErrorMsgLabel() {
         errorMsgLabel = new Label("", skinUI);
-        errorMsgLabel.setPosition(
-                Gdx.graphics.getWidth() / 2 - 80,
-                Gdx.graphics.getHeight() / 2 - 60);
+        errorMsgLabel.setFontScale(1.2f);
         errorMsgLabel.setColor(Color.RED);
+
+        errorMsgLabel.setPosition(
+                900, 60);
 
         stage.addActor(errorMsgLabel);
     }
+
+
+//    private void createServerIPTextField() {
+//        fdSrvIP = new TextField("", skinUI, "default");
+//        fdSrvIP.setMessageText(NetworkManager.DEFAULT_SERVER_IP);
+//        fdSrvIP.setWidth(200);
+//        fdSrvIP.setHeight(25);
+//        fdSrvIP.setPosition(
+//                (Gdx.graphics.getWidth() - fdSrvIP.getWidth()) / 2,
+//                Gdx.graphics.getHeight() * 1 / 5f - (fdSrvIP.getHeight() / 2));
+//        stage.addActor(fdSrvIP);
+//    }
 }
