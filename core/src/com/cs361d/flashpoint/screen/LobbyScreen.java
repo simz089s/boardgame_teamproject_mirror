@@ -383,9 +383,9 @@ public class LobbyScreen extends FlashPointScreen {
         // list style
         listStyle = new List.ListStyle();
         listStyle.font = Font.get(25); // font size
-        listStyle.fontColorUnselected = Color.BLACK;
-        listStyle.fontColorSelected = Color.BLACK;
-        listStyle.selection = TextureLoader.getDrawable(50, 100, Color.YELLOW );
+        listStyle.fontColorUnselected = Color.WHITE;
+        listStyle.fontColorSelected = Color.WHITE;
+        listStyle.selection = TextureLoader.getDrawable(50, 100, Color.LIGHT_GRAY );
 
 
         lstLoadGames = new List<String>(listStyle);

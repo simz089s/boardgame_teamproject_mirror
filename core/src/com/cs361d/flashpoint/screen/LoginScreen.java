@@ -74,11 +74,8 @@ public class LoginScreen extends FlashPointScreen {
 
         createUsernameTextField();
 
-        createPasswordTextField();
-
         // createServerIPTextField();
-
-        createSignUpCheckbox();
+        //createSignUpCheckbox();
 
         createLoginBtn();
 
@@ -143,29 +140,29 @@ public class LoginScreen extends FlashPointScreen {
 
     public void createUsernameTextField(){
         fdUname = new TextField("", skinUI, "default");
-        fdUname.setMessageText("Username");
+        fdUname.setMessageText("Enter firefighter name");
         fdUname.setWidth(200);
         fdUname.setHeight(25);
         fdUname.setPosition(
                 (Gdx.graphics.getWidth() - fdUname.getWidth()) / 2,
-                Gdx.graphics.getHeight() * 3 / 5f - (fdUname.getHeight() / 2));
+                Gdx.graphics.getHeight() / 2f - (fdUname.getHeight() / 2) - 20);
 
         stage.addActor(fdUname);
     }
 
-    public void createPasswordTextField(){
-        fdPwd = new TextField("", skinUI, "default");
-        fdPwd.setPasswordMode(true);
-        fdPwd.setPasswordCharacter('*');
-        fdPwd.setMessageText("Password");
-        fdPwd.setWidth(200);
-        fdPwd.setHeight(25);
-        fdPwd.setPosition(
-                (Gdx.graphics.getWidth() - fdUname.getWidth()) / 2,
-                Gdx.graphics.getHeight() / 2f - (fdUname.getHeight() / 2) + 10);
-
-        stage.addActor(fdPwd);
-    }
+//    public void createPasswordTextField(){
+//        fdPwd = new TextField("", skinUI, "default");
+//        fdPwd.setPasswordMode(true);
+//        fdPwd.setPasswordCharacter('*');
+//        fdPwd.setMessageText("Password");
+//        fdPwd.setWidth(200);
+//        fdPwd.setHeight(25);
+//        fdPwd.setPosition(
+//                (Gdx.graphics.getWidth() - fdUname.getWidth()) / 2,
+//                Gdx.graphics.getHeight() / 2f - (fdUname.getHeight() / 2) + 10);
+//
+//        stage.addActor(fdPwd);
+//    }
 
     private void createServerIPTextField() {
         fdSrvIP = new TextField("", skinUI, "default");
@@ -186,31 +183,29 @@ public class LoginScreen extends FlashPointScreen {
 
 
 
-    public void createSignUpCheckbox(){
-        signUpCheck = new CheckBox(" Sign up", skinUI);
-        signUpCheck.setPosition(
-                Gdx.graphics.getWidth() / 2 - signUpCheck.getWidth() / 2,
-                Gdx.graphics.getHeight() / 2f - (fdUname.getHeight() / 2) - 20);
-
-        signUpCheck.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                if (signUpCheck.isChecked()) {
-                    btnLogin.setText("Sign up");
-                } else {
-                    btnLogin.setText("Login");
-                }
-            }
-        });
-
-        stage.addActor(signUpCheck);
-    }
+//    public void createSignUpCheckbox(){
+//        signUpCheck = new CheckBox(" Sign up", skinUI);
+//        signUpCheck.setPosition(
+//                Gdx.graphics.getWidth() / 2 - signUpCheck.getWidth() / 2,
+//                Gdx.graphics.getHeight() / 2f - (fdUname.getHeight() / 2) - 20);
+//
+//        signUpCheck.addListener(new ClickListener() {
+//            @Override
+//            public void clicked(InputEvent event, float x, float y) {
+//                if (signUpCheck.isChecked()) {
+//                    btnLogin.setText("Sign up");
+//                } else {
+//                    btnLogin.setText("Login");
+//                }
+//            }
+//        });
+//
+//        stage.addActor(signUpCheck);
+//    }
 
 
 
     // button
-
-
 
     public void createLoginBtn(){
         btnLogin = new TextButton("Login", skinUI, "default");
@@ -225,28 +220,16 @@ public class LoginScreen extends FlashPointScreen {
                     @Override
                     public void clicked(InputEvent event, float x, float y) {
                         String usr = fdUname.getText();
-                        String pwd = fdPwd.getText();
-
                         User.getInstance().setName(usr);
                         Client.getInstance().sendCommand(ServerCommands.GET_SAVED_GAMES,"");
 
-//                        if (searchDB(usr, pwd)) {
-//                            User.getInstance().setName(usr);
-//                            game.setScreen(game.lobbyScreen);
-//                        } else {
-//                            errorMsgLabel.setText("Invalid credentials, try again.");
-//                        }
                     }
                 });
 
         stage.addActor(btnLogin);
     }
 
-
-
     // error msg label
-
-
 
     public void createErrorMsgLabel(){
         errorMsgLabel = new Label("", skinUI);
