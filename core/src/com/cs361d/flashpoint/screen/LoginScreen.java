@@ -166,7 +166,7 @@ public class LoginScreen extends FlashPointScreen {
         errorMsgLabel.setColor(Color.RED);
 
         errorMsgLabel.setPosition(
-                900, 60);
+                900, 70);
 
         stage.addActor(errorMsgLabel);
     }

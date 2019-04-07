@@ -16,6 +16,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.Align;
 import com.cs361d.flashpoint.manager.DBHandler;
 import com.cs361d.flashpoint.manager.User;
 import com.cs361d.flashpoint.networking.Client;
@@ -386,10 +387,10 @@ public class LobbyScreen extends FlashPointScreen {
         listStyle.fontColorUnselected = Color.WHITE;
         listStyle.fontColorSelected = Color.NAVY;
         listStyle.selection = TextureLoader.getDrawable(50, 100, Color.LIGHT_GRAY );
-
-
+        
         lstLoadGames = new List<String>(listStyle);
         lstLoadGames.setItems(gameNamesArr);
+        lstLoadGames.setAlignment(Align.center);
 
         // scrollPane style
         scrollStyle = new ScrollPane.ScrollPaneStyle();

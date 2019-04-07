@@ -135,8 +135,8 @@ public class CreateGameScreen extends FlashPointScreen {
         TextureRegionDrawable myTexRegionDrawable = new TextureRegionDrawable(myTextureRegion);
 
         btnExit = new ImageButton(myTexRegionDrawable);
-        btnExit.setWidth(35);
-        btnExit.setHeight(35);
+        btnExit.setWidth(48);
+        btnExit.setHeight(48);
         btnExit.setPosition(
                 20,
                 Gdx.graphics.getHeight() - btnExit.getHeight() - 20);
@@ -159,7 +159,7 @@ public class CreateGameScreen extends FlashPointScreen {
         label = new Label("Game name:", skinUI);
         label.setPosition(
                 70 + PADDING_LEFT,
-                Gdx.graphics.getHeight() - 70);
+                400);
         label.setColor(Color.BLACK);
         stage.addActor(label);
     }
@@ -173,7 +173,7 @@ public class CreateGameScreen extends FlashPointScreen {
         gameNameField.setMaxLength(15);
         gameNameField.setPosition(
                 80 + label.getWidth() + PADDING_LEFT,
-                Gdx.graphics.getHeight() - 70);
+                400);
 
         stage.addActor(gameNameField);
     }
@@ -184,7 +184,7 @@ public class CreateGameScreen extends FlashPointScreen {
         label = new Label("Number of players:", skinUI);
         label.setPosition(
                 70 + PADDING_LEFT,
-                Gdx.graphics.getHeight() - gameNameField.getHeight() - 100);
+                350);
         label.setColor(Color.BLACK);
         stage.addActor(label);
     }
@@ -193,13 +193,13 @@ public class CreateGameScreen extends FlashPointScreen {
         lstNumPlayers = new List<String>(skinUI);
         String[] numPlayers = {"3","4","5","6"};
         lstNumPlayers.setItems(numPlayers);
+        lstNumPlayers.setAlignment(Align.center);
         numPlayersMenu = new ScrollPane(lstNumPlayers);
 
         numPlayersMenu.setWidth(100);
         numPlayersMenu.setPosition(
                 70 + PADDING_LEFT,
-                Gdx.graphics.getHeight() - gameNameField.getHeight()
-                        - label.getHeight() - numPlayersMenu.getHeight() - 80);
+                180);
 
         stage.addActor(numPlayersMenu);
     }
@@ -210,7 +210,7 @@ public class CreateGameScreen extends FlashPointScreen {
         label = new Label("Game difficulty:", skinUI);
         label.setPosition(
                 Gdx.graphics.getWidth() / 2 - 250 + PADDING_LEFT,
-                Gdx.graphics.getHeight() - gameNameField.getHeight() - 100);
+                350);
         label.setColor(Color.BLACK);
         stage.addActor(label);
     }
@@ -224,12 +224,12 @@ public class CreateGameScreen extends FlashPointScreen {
             i++;
         }
         lstDifficulty.setItems(gameDifficulty);
+        lstDifficulty.setAlignment(Align.center);
         difficultyMenu = new ScrollPane(lstDifficulty);
 
         difficultyMenu.setPosition(
                 Gdx.graphics.getWidth() / 2 - 250 + PADDING_LEFT,
-                Gdx.graphics.getHeight() - gameNameField.getHeight()
-                        - label.getHeight() - numPlayersMenu.getHeight() - 80);
+                180);
 
         stage.addActor(difficultyMenu);
     }
@@ -240,7 +240,7 @@ public class CreateGameScreen extends FlashPointScreen {
         label = new Label("Game board:", skinUI);
         label.setPosition(
                 70 + PADDING_LEFT,
-                Gdx.graphics.getHeight() - gameNameField.getHeight() - numPlayersMenu.getHeight() - 140);
+                180);
         label.setColor(Color.BLACK);
         stage.addActor(label);
     }
@@ -249,12 +249,12 @@ public class CreateGameScreen extends FlashPointScreen {
         lstGameBoard = new List<String>(skinUI);
         String[] gameBoards = {"MAP 1", "MAP 2", "RANDOM"};
         lstGameBoard.setItems(gameBoards);
+        lstGameBoard.setAlignment(Align.center);
         gameBoardMenu = new ScrollPane(lstGameBoard);
 
         gameBoardMenu.setPosition(
                 70 + PADDING_LEFT,
-                Gdx.graphics.getHeight() - gameNameField.getHeight() - numPlayersMenu.getHeight()
-                    - label.getHeight() - gameBoardMenu.getHeight() - 120);
+                15);
 
         lstGameBoard.addListener(new InputListener() {
             @Override
@@ -267,7 +267,7 @@ public class CreateGameScreen extends FlashPointScreen {
                 gameBoardImg.setWidth(480);
                 gameBoardImg.setPosition(
                         Gdx.graphics.getWidth() / 2 + PADDING_LEFT,
-                        200);
+                        50);
 
                 stage.addActor(gameBoardImg);
                 return true;
@@ -284,7 +284,7 @@ public class CreateGameScreen extends FlashPointScreen {
         gameBoardImg.setWidth(480);
         gameBoardImg.setPosition(
                 Gdx.graphics.getWidth() / 2 + PADDING_LEFT,
-                200);
+                50);
 
         stage.addActor(gameBoardImg);
     }
@@ -295,10 +295,10 @@ public class CreateGameScreen extends FlashPointScreen {
         btnStartGame = new TextButton("Start game", skinUI, "default");
         btnStartGame.setWidth(150);
         btnStartGame.setHeight(50);
-        btnStartGame.setColor(Color.FIREBRICK);
+        btnStartGame.setColor(Color.NAVY);
         btnStartGame.setPosition(
-                (Gdx.graphics.getWidth() - btnStartGame.getWidth()) / 2,
-                75);
+                Gdx.graphics.getWidth() / 2 - 250 + PADDING_LEFT,
+                110);
         btnStartGame.addListener(
                 new ClickListener() {
                     @Override
