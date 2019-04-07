@@ -286,8 +286,8 @@ public class Server implements Runnable {
             if (!gameLoaded) {
               CreateNewGameManager.loadSavedGame(message);
               Server.setFireFighterAssignArray();
-              obj = new JSONObject();
               gameLoaded = true;
+              assignFireFighterToClient(ip);
               sendCommandToSpecificClient(
                   ClientCommands.SET_GAME_STATE, DBHandler.getBoardAsString(), ip);
               sendCommandToSpecificClient(ClientCommands.SET_BOARD_SCREEN, "", ip);
