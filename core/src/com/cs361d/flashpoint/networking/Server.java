@@ -288,14 +288,9 @@ public class Server implements Runnable {
               Server.setFireFighterAssignArray();
               obj = new JSONObject();
               gameLoaded = true;
-              assignFireFighterToClient(ip);
-              obj.put("name", message);
-              obj.put("numPlayer", notYetAssigned.size());
               sendCommandToSpecificClient(
                   ClientCommands.SET_GAME_STATE, DBHandler.getBoardAsString(), ip);
               sendCommandToSpecificClient(ClientCommands.SET_BOARD_SCREEN, "", ip);
-              Server.sendCommandToAllClients(
-                  ClientCommands.SET_CURRENT_GAME_STATS, obj.toJSONString());
               Server.sendCommandToAllClients(ClientCommands.REFRESH_LOBBY_SCREEN, "");
             } else {
               JSONObject obj1 = new JSONObject();
@@ -314,11 +309,6 @@ public class Server implements Runnable {
                 sendCommandToSpecificClient(
                     ClientCommands.SET_GAME_STATE, DBHandler.getBoardAsString(), ip);
                 sendCommandToSpecificClient(ClientCommands.SET_BOARD_SCREEN, "", ip);
-                obj = new JSONObject();
-                obj.put("name", message);
-                obj.put("numPlayer", notYetAssigned.size());
-                Server.sendCommandToAllClients(
-                    ClientCommands.SET_CURRENT_GAME_STATS, obj.toJSONString());
                 Server.sendCommandToAllClients(ClientCommands.REFRESH_LOBBY_SCREEN, "");
                 JSONObject obj1 = new JSONObject();
                 String rightSide =
@@ -359,14 +349,9 @@ public class Server implements Runnable {
               CreateNewGameManager.createNewGame(name, numPlayers, mapKind, difficulty);
               Server.setFireFighterAssignArray();
               assignFireFighterToClient(ip);
-              obj = new JSONObject();
-              obj.put("name", message);
-              obj.put("numPlayer", notYetAssigned.size());
               sendCommandToSpecificClient(
                   ClientCommands.SET_GAME_STATE, DBHandler.getBoardAsString(), ip);
               sendCommandToSpecificClient(ClientCommands.SET_BOARD_SCREEN, "", ip);
-              Server.sendCommandToAllClients(
-                  ClientCommands.SET_CURRENT_GAME_STATS, obj.toJSONString());
               Server.sendCommandToAllClients(ClientCommands.REFRESH_LOBBY_SCREEN, "");
             } else {
               JSONObject obj1 = new JSONObject();
@@ -450,8 +435,19 @@ public class Server implements Runnable {
             for (String game : DBHandler.listFilesOfSavedGames()) {
               array.add(game);
             }
+            obj = new JSONObject();
+            if (gameLoaded) {
+              obj = new JSONObject();
+              obj.put("name", BoardManager.getInstance().getGameName());
+              obj.put("numPlayer", notYetAssigned.size());
+            }
+            else {
+              obj.put("name", "");
+              obj.put("numPlayer", -1);
+            }
+            obj.put("games",array);
             Server.sendCommandToSpecificClient(
-                ClientCommands.LOAD_SAVED_GAMES, array.toJSONString(), ip);
+                ClientCommands.LOAD_SAVED_GAMES, obj.toJSONString(), ip);
           }
           break;
         default:

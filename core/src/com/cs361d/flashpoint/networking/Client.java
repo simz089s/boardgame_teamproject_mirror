@@ -329,14 +329,19 @@ public class Client {
 
         case LOAD_SAVED_GAMES:
           final ArrayList<String> games = new ArrayList<String>();
-          for (Object o : (JSONArray) parser.parse(message)) {
+          JSONObject obj = (JSONObject) parser.parse(message);
+          for (Object o : (JSONArray) parser.parse(obj.get("games").toString())) {
             games.add(o.toString());
           }
+          final String nameL = jsonObject.get("name").toString();
+          final int numPlayerL = Integer.parseInt(jsonObject.get("numPlayer").toString());
           Gdx.app.postRunnable(
               new Runnable() {
                 @Override
                 public void run() {
                   LobbyScreen.setSavedGames(games);
+                  LobbyScreen.setLoadedGameName(nameL);
+                  LobbyScreen.setNumPlayersLeftToJoin(numPlayerL);
                   BoardScreen.setLobbyPage();
                 }
               });
