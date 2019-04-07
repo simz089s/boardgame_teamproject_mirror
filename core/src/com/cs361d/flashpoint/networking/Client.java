@@ -333,8 +333,8 @@ public class Client {
           for (Object o : (JSONArray) parser.parse(obj.get("games").toString())) {
             games.add(o.toString());
           }
-          final String nameL = jsonObject.get("name").toString();
-          final int numPlayerL = Integer.parseInt(jsonObject.get("numPlayer").toString());
+          final String nameL = obj.get("name").toString();
+          final int numPlayerL = Integer.parseInt(obj.get("numPlayer").toString());
           Gdx.app.postRunnable(
               new Runnable() {
                 @Override
