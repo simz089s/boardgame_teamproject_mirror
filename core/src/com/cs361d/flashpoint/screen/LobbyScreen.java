@@ -387,7 +387,7 @@ public class LobbyScreen extends FlashPointScreen {
         listStyle.fontColorUnselected = Color.WHITE;
         listStyle.fontColorSelected = Color.NAVY;
         listStyle.selection = TextureLoader.getDrawable(50, 100, Color.LIGHT_GRAY );
-        
+
         lstLoadGames = new List<String>(listStyle);
         lstLoadGames.setItems(gameNamesArr);
         lstLoadGames.setAlignment(Align.center);

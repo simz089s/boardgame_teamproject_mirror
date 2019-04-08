@@ -65,7 +65,7 @@ public class BoardGameInfoLabel {
         } else {
             gameInfoLabel.setColor(Color.BLACK);
         }
-        gameInfoLabel.setPosition(850, Gdx.graphics.getHeight() - 130);
+        gameInfoLabel.setPosition(850, Gdx.graphics.getHeight() - 135);
 
         infoLabels.add(gameInfoLabel);
         stage.addActor(gameInfoLabel);
