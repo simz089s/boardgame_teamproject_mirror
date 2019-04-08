@@ -80,11 +80,11 @@ public class BoardChatFragment {
         scrollPaneMsg.setFadeScrollBars(false);
         scrollPaneMsg.setTransform(true);
         scrollPaneMsg.setWidth(360);
-        scrollPaneMsg.setHeight(450);
+        scrollPaneMsg.setHeight(420);
         //scrollMessage.setBounds(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight() + 100);
         scrollPaneMsg.setPosition(
                 845,
-                Gdx.graphics.getHeight() - scrollPaneMsg.getHeight() - 150);
+                Gdx.graphics.getHeight() - scrollPaneMsg.getHeight() - 170);
 
         createMessageInputText();
 
@@ -98,7 +98,7 @@ public class BoardChatFragment {
     private void createMessageInputText() {
         textFieldMsg = new TextField("", skinUI, "default");
         textFieldMsg.setMessageText("Message + [Enter]");
-        textFieldMsg.setMaxLength(28); // max number of characters allowed
+        textFieldMsg.setMaxLength(25); // max number of characters allowed
         textFieldMsg.setWidth(360);
         textFieldMsg.setHeight(25);
         textFieldMsg.setPosition(

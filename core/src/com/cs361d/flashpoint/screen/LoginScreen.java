@@ -135,7 +135,7 @@ public class LoginScreen extends FlashPointScreen {
         fdUname.setAlignment(Align.center);
         fdUname.setWidth(300);
         fdUname.setHeight(30);
-        fdUname.setMaxLength(15);
+        fdUname.setMaxLength(7);
         fdUname.setPosition(
                 900,
                 20);
@@ -147,8 +147,8 @@ public class LoginScreen extends FlashPointScreen {
 
                 if((int)c == 13 || (int)c == 10) {
 
-                    if(fdUname.getText().length() < 5){
-                        errorMsgLabel.setText("Name must be at least 5 characters.");
+                    if(fdUname.getText().length() < 3){
+                        errorMsgLabel.setText("Name must be at least 3 characters.");
                     } else {
                         String usr = fdUname.getText();
                         User.getInstance().setName(usr);

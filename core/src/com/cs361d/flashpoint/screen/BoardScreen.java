@@ -25,7 +25,7 @@ import java.util.List;
 
 public class BoardScreen extends FlashPointScreen {
 
-  static final boolean IS_MY_TURN_ACTIVATED = true; // TODO: set to false if playing single computer
+  static final boolean IS_MY_TURN_ACTIVATED = false; // TODO: set to false if playing single computer
 
   String OUTDOOR_TILE_TO_DISPLAY_FILE = "boards/tile_0.png";
   String INDOOR_TILE_TO_DISPLAY_FILE = "boards/tile_1.png";
@@ -71,6 +71,7 @@ public class BoardScreen extends FlashPointScreen {
 
   static ImageButton btnExit;
   static ImageButton btnResume;
+  static Label btnHintsLabel;
   ImageButton btnChat;
   ImageButton btnCheatS;
   ImageButton btnStats;
@@ -613,6 +614,18 @@ public class BoardScreen extends FlashPointScreen {
     createResumeButton();
   }
 
+  private void createExitLabel() {
+    btnHintsLabel = new Label("EXIT", skinUI);
+    btnHintsLabel.setColor(Color.BLACK);
+    btnHintsLabel.setFontScale(0.8f);
+
+    btnHintsLabel.setPosition(
+            Gdx.graphics.getWidth() - 180,
+            (Gdx.graphics.getHeight() - 60));
+
+    stage.addActor(btnHintsLabel);
+  }
+
   private void createExitButton() {
     Texture myTexture = new Texture(Gdx.files.internal("icons/exitBtn.png"));
     TextureRegion myTextureRegion = new TextureRegion(myTexture);
@@ -638,7 +651,29 @@ public class BoardScreen extends FlashPointScreen {
           }
         });
 
+    btnExit.addListener(new ClickListener() {
+      public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+        if (btnHintsLabel != null) btnHintsLabel.remove();
+        createExitLabel();
+      }
+      public void exit(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+        btnHintsLabel.remove();
+      }
+    });
+
     stage.addActor(btnExit);
+  }
+
+  private void createCheatSLabel() {
+    btnHintsLabel = new Label("FLASH CARDS", skinUI);
+    btnHintsLabel.setColor(Color.BLACK);
+    btnHintsLabel.setFontScale(0.8f);
+
+    btnHintsLabel.setPosition(
+            Gdx.graphics.getWidth() - 245,
+            (Gdx.graphics.getHeight() - 118));
+
+    stage.addActor(btnHintsLabel);
   }
 
   private void createCheatSButton() {
@@ -664,7 +699,29 @@ public class BoardScreen extends FlashPointScreen {
           }
         });
 
+    btnCheatS.addListener(new ClickListener() {
+      public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+        if (btnHintsLabel != null) btnHintsLabel.remove();
+        createCheatSLabel();
+      }
+      public void exit(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+        btnHintsLabel.remove();
+      }
+    });
+
     stage.addActor(btnCheatS);
+  }
+
+  private void createStatsLabel() {
+    btnHintsLabel = new Label("STATS", skinUI);
+    btnHintsLabel.setColor(Color.BLACK);
+    btnHintsLabel.setFontScale(0.8f);
+
+    btnHintsLabel.setPosition(
+            Gdx.graphics.getWidth() - 107,
+            (Gdx.graphics.getHeight() - 170));
+
+    stage.addActor(btnHintsLabel);
   }
 
   private void createStatsButton() {
@@ -690,7 +747,29 @@ public class BoardScreen extends FlashPointScreen {
           }
         });
 
+    btnStats.addListener(new ClickListener() {
+      public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+        if (btnHintsLabel != null) btnHintsLabel.remove();
+        createStatsLabel();
+      }
+      public void exit(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+        btnHintsLabel.remove();
+      }
+    });
+
     stage.addActor(btnStats);
+  }
+
+  private void createChatLabel() {
+    btnHintsLabel = new Label("CHAT", skinUI);
+    btnHintsLabel.setColor(Color.BLACK);
+    btnHintsLabel.setFontScale(0.85f);
+
+    btnHintsLabel.setPosition(
+            Gdx.graphics.getWidth() - 50,
+            (Gdx.graphics.getHeight() - 175));
+
+    stage.addActor(btnHintsLabel);
   }
 
   private void createChatButton() {
@@ -717,7 +796,29 @@ public class BoardScreen extends FlashPointScreen {
           }
         });
 
+    btnChat.addListener(new ClickListener() {
+      public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+        if (btnHintsLabel != null) btnHintsLabel.remove();
+        createChatLabel();
+      }
+      public void exit(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+        btnHintsLabel.remove();
+      }
+    });
+
     stage.addActor(btnChat);
+  }
+
+  private static void createResumeLabel() {
+    btnHintsLabel = new Label("BACK TO MOVES", skinUI);
+    btnHintsLabel.setColor(Color.BLACK);
+    btnHintsLabel.setFontScale(0.8f);
+
+    btnHintsLabel.setPosition(
+            Gdx.graphics.getWidth() - 247,
+            (Gdx.graphics.getHeight() - 30));
+
+    stage.addActor(btnHintsLabel);
   }
 
   // show MovesAndDirectionsPanel on resume
@@ -748,6 +849,16 @@ public class BoardScreen extends FlashPointScreen {
             }
           }
         });
+
+    btnResume.addListener(new ClickListener() {
+      public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+        if (btnHintsLabel != null) btnHintsLabel.remove();
+        createResumeLabel();
+      }
+      public void exit(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+        btnHintsLabel.remove();
+      }
+    });
 
     stage.addActor(btnResume);
   }
