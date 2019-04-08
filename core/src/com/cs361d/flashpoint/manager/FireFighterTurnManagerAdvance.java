@@ -80,9 +80,11 @@ public class FireFighterTurnManagerAdvance extends FireFighterTurnManager {
   @Override
   public boolean endTurn() {
     if (!Server.isEmpty()) {
-      sendActionRejectedMessageToCurrentPlayer("You cannot end your turn as the game is not full. More players need to join!");
+      sendActionRejectedMessageToCurrentPlayer(
+          "You cannot end your turn as the game is not full. More players need to join!");
       return false;
     }
+    Server.saveIp = true;
     FireFighterAdvanced last = (FireFighterAdvanced) FIREFIGHTERS.removeFirst();
     last.removeVeteranBonus();
     FIREFIGHTERS.addLast(last);
@@ -195,7 +197,7 @@ public class FireFighterTurnManagerAdvance extends FireFighterTurnManager {
             continue;
           }
           validTiles.add(adjacentTile);
-          while (dist < 3 && !adjacentTile.hasObstacle(d) && !adjacentTile.hasNoFireAndNoSmoke()) {
+          while (dist < 3 && !adjacentTile.hasObstacle(d) && adjacentTile.hasNoFireAndNoSmoke()) {
             adjacentTile = adjacentTile.getAdjacentTile(d);
             if (adjacentTile != null) {
               validTiles.add(adjacentTile);

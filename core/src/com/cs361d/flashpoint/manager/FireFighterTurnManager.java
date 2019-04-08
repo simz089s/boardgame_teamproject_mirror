@@ -52,7 +52,7 @@ public class FireFighterTurnManager implements Iterable<FireFighter> {
   }
 
   public boolean endTurn() {
-
+    Server.saveIp = true;
     FireFighter fireFighter = getCurrentFireFighter();
       FireFighter last = FIREFIGHTERS.removeFirst();
       FIREFIGHTERS.addLast(last);
@@ -101,7 +101,7 @@ public class FireFighterTurnManager implements Iterable<FireFighter> {
           return true;
         }
       } else {
-        sendActionRejectedMessageToCurrentPlayer("You need 2 AP to move with a victim");
+        sendActionRejectedMessageToCurrentPlayer("You do not have enough AP to move with a victim");
         return false;
       }
     }

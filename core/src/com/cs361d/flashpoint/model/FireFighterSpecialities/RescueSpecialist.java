@@ -26,6 +26,30 @@ public class RescueSpecialist extends FireFighterAdvanced {
   }
 
   @Override
+  public boolean moveWithHazmatAp() {
+    if (specialActionPoints > 2) {
+      specialActionPoints-= 2;
+      return true;
+    }
+    return super.moveWithHazmatAp();
+  }
+
+  @Override
+  public boolean moveWithVictimAP() {
+    if (currentTile.getVictim().isCured()) {
+      if (specialActionPoints > 1) {
+        specialActionPoints--;
+        return true;
+      }
+    }
+    else if (specialActionPoints > 2) {
+      specialActionPoints -= 2;
+      return true;
+    }
+    return super.moveWithVictimAP();
+  }
+
+  @Override
   public boolean chopAP() {
     if (!(actionPoints < 1)) {
       actionPoints--;

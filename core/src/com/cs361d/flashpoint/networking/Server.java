@@ -40,6 +40,7 @@ public class Server implements Runnable {
   private static List<String> chatMessages = new ArrayList<String>();
   public static boolean gameHasEnded = false;
   public static String messageToEnd = "";
+  public static boolean saveIp = false;
 
   // counter for clientObservers
   static int i = 0;
@@ -522,9 +523,12 @@ public class Server implements Runnable {
           if (savedIp.equals(ip)) {
             return;
           }
-          savedIp = ip;
           FireFighterTurnManager.getInstance().endTurn();
-          mustSendAndRefresh = true;
+          mustSendAndRefresh = saveIp;
+          if (saveIp) {
+            savedIp = ip;
+            saveIp = false;
+          }
           break;
 
         case FIRE_DECK_GUN:

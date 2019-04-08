@@ -40,12 +40,11 @@ public class BoardManagerAdvanced extends BoardManager {
   }
 
   /**
-   * @see BoardManager#endTurnFireSpread()
-   * This method does the same thing than its parent but,
-   * we also verify hasmat explosions and if there is a hotspot at the current explosion location
-   * then we carry on the fireSpread until we reach a tile with no hostspot.
-   * The method update victims and fireFighters after the fireSpread  where split as compare to parent as we must verify
-   * knock downs during the fire spread to apply the veteran special ability
+   * @see BoardManager#endTurnFireSpread() This method does the same thing than its parent but, we
+   *     also verify hasmat explosions and if there is a hotspot at the current explosion location
+   *     then we carry on the fireSpread until we reach a tile with no hostspot. The method update
+   *     victims and fireFighters after the fireSpread where split as compare to parent as we must
+   *     verify knock downs during the fire spread to apply the veteran special ability
    * @see #hazMatExplosion()
    * @see #updateFireFighters(List)
    * @see #updateVictims(List)
@@ -69,7 +68,9 @@ public class BoardManagerAdvanced extends BoardManager {
       }
       updateSmoke();
       List<Tile> tiles = getTilesWithFire();
-      updateFireFighters(tiles);
+      if (!Server.gameHasEnded) {
+        updateFireFighters(tiles);
+      }
 
     } while (hitLocation.hasHotSpot());
     hazMatExplosion();
@@ -87,7 +88,6 @@ public class BoardManagerAdvanced extends BoardManager {
   public void setLetKnockedDown(boolean value) {
     this.letKnockedDown = value;
   }
-
 
   private void updateFireFighters(List<Tile> tiles) {
     for (Tile t : tiles) {
