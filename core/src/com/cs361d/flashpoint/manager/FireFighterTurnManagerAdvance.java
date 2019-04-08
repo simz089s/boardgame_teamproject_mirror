@@ -19,6 +19,7 @@ public class FireFighterTurnManagerAdvance extends FireFighterTurnManager {
   private final AtomicBoolean wait = new AtomicBoolean(true);
   private boolean accept = false;
   private UserResponse response = UserResponse.ACCEPT;
+  private boolean hasUsedCAF = false;
 
   public void setAccept(boolean val) {
     this.accept = val;
@@ -79,12 +80,13 @@ public class FireFighterTurnManagerAdvance extends FireFighterTurnManager {
   // Covers the veteran bonusRemoval
   @Override
   public boolean endTurn() {
-//    if (!Server.isEmpty()) {
-//      sendActionRejectedMessageToCurrentPlayer(
-//          "You cannot end your turn as the game is not full. More players need to join!");
-//      return false;
-//    }
+    if (!Server.isEmpty()) {
+      sendActionRejectedMessageToCurrentPlayer(
+          "You cannot end your turn as the game is not full. More players need to join!");
+      return false;
+    }
     Server.saveIp = true;
+    hasUsedCAF = false;
     FireFighterAdvanced last = (FireFighterAdvanced) FIREFIGHTERS.removeFirst();
     last.removeVeteranBonus();
     FIREFIGHTERS.addLast(last);
@@ -741,6 +743,11 @@ public class FireFighterTurnManagerAdvance extends FireFighterTurnManager {
         break;
       }
     }
+    if (fadv instanceof CAFSFirefighter && hasUsedCAF) {
+      sendActionRejectedMessageToCurrentPlayer(
+          "As a fireCaptain you cannot use more than 1 spececial AP on CAFS fireFighter");
+      return false;
+    }
     if (fadv == null) {
       throw new IllegalArgumentException("The color" + color + " is not in the list");
     }
@@ -784,6 +791,12 @@ public class FireFighterTurnManagerAdvance extends FireFighterTurnManager {
           "The user of the " + color + " fireFighter rejected the move");
     }
     this.sendToCaptain = false;
+    if (worked) {
+      if (fadv instanceof CAFSFirefighter) {
+        hasUsedCAF = true;
+      }
+      getCurrentFireFighter().firstMoveDone();
+    }
     return worked;
   }
 
@@ -912,20 +925,21 @@ public class FireFighterTurnManagerAdvance extends FireFighterTurnManager {
   public boolean spreadFire(Direction d) {
     Pyromancer p = (Pyromancer) getCurrentFireFighter();
     if (p == null) {
-      sendActionRejectedMessageToCurrentPlayer( "You are not the pyromancer");
+      sendActionRejectedMessageToCurrentPlayer("You are not the pyromancer");
       return false;
     }
     Tile t = getCurrentFireFighter().getTile().getAdjacentTile(d);
     if (p.getTile().hasObstacle(d)) {
       sendActionRejectedMessageToCurrentPlayer("The fire spread cannot jump over walls");
       return false;
-    }
-    else if (t == null || t.hasAmbulance()) {
-      sendActionRejectedMessageToCurrentPlayer("There are either no tile at the location or an ambulance and you cannot spread fire on an ambulance come on!!!");
+    } else if (t == null || t.hasAmbulance()) {
+      sendActionRejectedMessageToCurrentPlayer(
+          "There are either no tile at the location or an ambulance and you cannot spread fire on an ambulance come on!!!");
       return false;
-    }
-    else if (t.hasFire() || (t.hasSmoke() && (t.hasPointOfInterest() || t.hasFireFighters() || t.hasHazmat()))) {
-      sendActionRejectedMessageToCurrentPlayer("You cannot spread fire on a tile with fire or a tile containg a POI or a FireFighter or a Hazmat");
+    } else if (t.hasFire()
+        || (t.hasSmoke() && (t.hasPointOfInterest() || t.hasFireFighters() || t.hasHazmat()))) {
+      sendActionRejectedMessageToCurrentPlayer(
+          "You cannot spread fire on a tile with fire or a tile containg a POI or a FireFighter or a Hazmat");
       return false;
     }
     if (!p.spreadFireAP()) {
@@ -934,8 +948,7 @@ public class FireFighterTurnManagerAdvance extends FireFighterTurnManager {
     }
     if (t.hasNoFireAndNoSmoke()) {
       t.setFireStatus(FireStatus.SMOKE);
-    }
-    else {
+    } else {
       t.setFireStatus(FireStatus.FIRE);
     }
     return true;
