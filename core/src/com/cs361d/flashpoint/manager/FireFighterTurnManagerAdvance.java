@@ -19,7 +19,7 @@ public class FireFighterTurnManagerAdvance extends FireFighterTurnManager {
   private final AtomicBoolean wait = new AtomicBoolean(true);
   private boolean accept = false;
   private UserResponse response = UserResponse.ACCEPT;
-
+  private boolean hasUsedCAF = false;
   public void setAccept(boolean val) {
     this.accept = val;
   }
@@ -79,12 +79,13 @@ public class FireFighterTurnManagerAdvance extends FireFighterTurnManager {
   // Covers the veteran bonusRemoval
   @Override
   public boolean endTurn() {
-//    if (!Server.isEmpty()) {
-//      sendActionRejectedMessageToCurrentPlayer(
-//          "You cannot end your turn as the game is not full. More players need to join!");
-//      return false;
-//    }
+    if (!Server.isEmpty()) {
+      sendActionRejectedMessageToCurrentPlayer(
+          "You cannot end your turn as the game is not full. More players need to join!");
+      return false;
+    }
     Server.saveIp = true;
+    hasUsedCAF = false;
     FireFighterAdvanced last = (FireFighterAdvanced) FIREFIGHTERS.removeFirst();
     last.removeVeteranBonus();
     FIREFIGHTERS.addLast(last);
@@ -741,6 +742,10 @@ public class FireFighterTurnManagerAdvance extends FireFighterTurnManager {
         break;
       }
     }
+    if (fadv instanceof CAFSFirefighter && hasUsedCAF) {
+      sendActionRejectedMessageToCurrentPlayer("As a fireCaptain you cannot use more than 1 spececial AP on CAFS fireFighter");
+      return false;
+    }
     if (fadv == null) {
       throw new IllegalArgumentException("The color" + color + " is not in the list");
     }
@@ -784,6 +789,9 @@ public class FireFighterTurnManagerAdvance extends FireFighterTurnManager {
           "The user of the " + color + " fireFighter rejected the move");
     }
     this.sendToCaptain = false;
+    if (worked && fadv instanceof CAFSFirefighter) {
+      hasUsedCAF = true;
+    }
     return worked;
   }
 

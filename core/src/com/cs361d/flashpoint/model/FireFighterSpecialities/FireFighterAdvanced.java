@@ -15,9 +15,9 @@ public abstract class FireFighterAdvanced extends FireFighter {
   protected final FireFighterAdvanceSpecialities SPECIALITY;
   protected int maxSpecialAp = 0;
   protected boolean firstTurn;
-  private int actionPointToSave = 0;
-  private int specialActionPointToSave = 0;
-  private boolean firstMove = true;
+  protected int actionPointToSave = 0;
+  protected int specialActionPointToSave = 0;
+  protected boolean firstMove = true;
   protected static final Map<FireFighterColor, FireFighterAdvanced> FIREFIGHTERS =
       new HashMap<FireFighterColor, FireFighterAdvanced>();
 
