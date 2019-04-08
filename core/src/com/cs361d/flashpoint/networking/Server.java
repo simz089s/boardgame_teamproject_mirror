@@ -23,7 +23,7 @@ import java.util.logging.Logger;
 public class Server implements Runnable {
 
   private static final List<FireFighterColor> notYetAssigned = new ArrayList<FireFighterColor>();
-
+  private static String savedIp = "";
   // Vector to store server to client threads
   private static final HashMap<String, ServerToClientRunnable> clientObservers =
       new HashMap<String, ServerToClientRunnable>();
@@ -143,6 +143,7 @@ public class Server implements Runnable {
 
   public static void setFireFighterAssignArray() {
     notYetAssigned.clear();
+    savedIp = "";
     Iterator<FireFighter> it = FireFighterTurnManager.getInstance().iterator();
     if (!it.hasNext()) {
       throw new IllegalArgumentException(
@@ -209,6 +210,7 @@ public class Server implements Runnable {
       object.put("title", "The player with color " + color + " closed its window!");
       object.put("message", "Welcome back to the lobby!");
       colorsToClient.clear();
+      savedIp = "";
       notYetAssigned.clear();
       chatMessages.clear();
       gameLoaded = false;
@@ -269,6 +271,7 @@ public class Server implements Runnable {
           object.put("title", "The player: " + message + " left the game");
           object.put("message", "Welcome back to the lobby!");
           gameLoaded = false;
+          savedIp = "";
           notYetAssigned.clear();
           colorsToClient.clear();
           chatMessages.clear();
@@ -516,6 +519,10 @@ public class Server implements Runnable {
           break;
 
         case END_TURN:
+          if (savedIp.equals(ip)) {
+            return;
+          }
+          savedIp = ip;
           FireFighterTurnManager.getInstance().endTurn();
           mustSendAndRefresh = true;
           break;
