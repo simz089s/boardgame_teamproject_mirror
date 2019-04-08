@@ -351,7 +351,7 @@ public abstract class FireFighterAdvanced extends FireFighter {
     this.firstMove = firstMove;
   }
 
-  protected void firstMoveDone() {
+  public void firstMoveDone() {
     this.firstMove = false;
   }
 
