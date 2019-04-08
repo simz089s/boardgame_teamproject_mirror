@@ -3,6 +3,7 @@ package com.cs361d.flashpoint.manager;
 import com.cs361d.flashpoint.model.BoardElements.*;
 import com.cs361d.flashpoint.model.FireFighterSpecialities.FireFighterAdvanceSpecialities;
 import com.cs361d.flashpoint.model.FireFighterSpecialities.FireFighterAdvanced;
+import com.cs361d.flashpoint.model.FireFighterSpecialities.Pyromancer;
 import com.cs361d.flashpoint.model.FireFighterSpecialities.Veteran;
 import com.cs361d.flashpoint.networking.ClientCommands;
 import com.cs361d.flashpoint.networking.Server;
@@ -604,6 +605,14 @@ public class BoardManagerAdvanced extends BoardManager {
     }
     while (TILE_MAP[i][j].hasFireFighters()) {
       FireFighterAdvanced f = (FireFighterAdvanced) TILE_MAP[i][j].getFirefighters().get(0);
+      if (f instanceof Pyromancer) {
+        if (TILE_MAP[i][j].getFirefighters().size() == 1) {
+          break;
+        }
+        else {
+          f = (FireFighterAdvanced) TILE_MAP[i][j].getFirefighters().get(1);
+        }
+      }
       if (f instanceof Veteran && f.getActionPointsLeft() > 0) {
         askForTheKnockedDownProcedure(f);
       } else if (FireFighterTurnManagerAdvance.getInstance().verifyVeteranVacinity(f)

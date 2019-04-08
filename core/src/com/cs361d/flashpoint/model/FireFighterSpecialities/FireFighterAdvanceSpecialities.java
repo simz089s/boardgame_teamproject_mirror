@@ -12,6 +12,7 @@ public enum FireFighterAdvanceSpecialities {
     VETERAN("veteran"),
     DRIVER("driver"),
     STRUCTURAL_ENGINEER("structural engineer"),
+    PYROMANCER("PYROMANCER"),
     NO_SPECIALITY("NO SPECIALITY");
 
     private String text;

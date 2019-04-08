@@ -21,6 +21,7 @@ public enum Actions {
   CLEAR_HOTSPOT("CLEAR HOTSPOT"),
   REPAIR_WALL("REPAIR WALL"),
   END_TURN("END TURN"),
+  SPREAD_FIRE("SPREAD FIRE"),
   SAVE("SAVE");
 
   private String text;

@@ -594,6 +594,10 @@ public class Server implements Runnable {
           mustSendAndRefresh = FireFighterTurnManagerAdvance.getInstance().clearHotSpot();
           break;
 
+        case SPREAD_FIRE:
+          mustSendAndRefresh = FireFighterTurnManagerAdvance.getInstance().spreadFire(Direction.fromString(message));
+          break;
+
         default:
       }
       if (mustSendAndRefresh) {

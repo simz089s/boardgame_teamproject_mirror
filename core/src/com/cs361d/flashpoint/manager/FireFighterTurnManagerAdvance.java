@@ -79,11 +79,11 @@ public class FireFighterTurnManagerAdvance extends FireFighterTurnManager {
   // Covers the veteran bonusRemoval
   @Override
   public boolean endTurn() {
-    if (!Server.isEmpty()) {
-      sendActionRejectedMessageToCurrentPlayer(
-          "You cannot end your turn as the game is not full. More players need to join!");
-      return false;
-    }
+//    if (!Server.isEmpty()) {
+//      sendActionRejectedMessageToCurrentPlayer(
+//          "You cannot end your turn as the game is not full. More players need to join!");
+//      return false;
+//    }
     Server.saveIp = true;
     FireFighterAdvanced last = (FireFighterAdvanced) FIREFIGHTERS.removeFirst();
     last.removeVeteranBonus();
@@ -907,5 +907,37 @@ public class FireFighterTurnManagerAdvance extends FireFighterTurnManager {
       }
     }
     return null;
+  }
+
+  public boolean spreadFire(Direction d) {
+    Pyromancer p = (Pyromancer) getCurrentFireFighter();
+    if (p == null) {
+      sendActionRejectedMessageToCurrentPlayer( "You are not the pyromancer");
+      return false;
+    }
+    Tile t = getCurrentFireFighter().getTile().getAdjacentTile(d);
+    if (p.getTile().hasObstacle(d)) {
+      sendActionRejectedMessageToCurrentPlayer("The fire spread cannot jump over walls");
+      return false;
+    }
+    else if (t == null || t.hasAmbulance()) {
+      sendActionRejectedMessageToCurrentPlayer("There are either no tile at the location or an ambulance and you cannot spread fire on an ambulance come on!!!");
+      return false;
+    }
+    else if (t.hasFire() || (t.hasSmoke() && (t.hasPointOfInterest() || t.hasFireFighters() || t.hasHazmat()))) {
+      sendActionRejectedMessageToCurrentPlayer("You cannot spread fire on a tile with fire or a tile containg a POI or a FireFighter or a Hazmat");
+      return false;
+    }
+    if (!p.spreadFireAP()) {
+      sendActionRejectedMessageToCurrentPlayer("You need at least 1 AP to spread the fire!");
+      return false;
+    }
+    if (t.hasNoFireAndNoSmoke()) {
+      t.setFireStatus(FireStatus.SMOKE);
+    }
+    else {
+      t.setFireStatus(FireStatus.FIRE);
+    }
+    return true;
   }
 }

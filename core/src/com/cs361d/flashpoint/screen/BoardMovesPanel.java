@@ -116,6 +116,7 @@ public class BoardMovesPanel {
                     break;
 
                   case MOVE_WITH_HAZMAT:
+                  case SPREAD_FIRE:
                   case DRIVE_AMBULANCE:
                   case DRIVE_FIRETRUCK:
                   case REPAIR_WALL:
