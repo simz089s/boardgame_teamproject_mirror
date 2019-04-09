@@ -745,7 +745,7 @@ public class FireFighterTurnManagerAdvance extends FireFighterTurnManager {
     }
     if (fadv instanceof CAFSFirefighter && hasUsedCAF) {
       sendActionRejectedMessageToCurrentPlayer(
-          "As a fireCaptain you cannot use more than 1 spececial AP on CAFS fireFighter");
+          "As the fire captain you cannot use more than 1 special AP for the CAFS firefighter");
       return false;
     }
     if (fadv == null) {
