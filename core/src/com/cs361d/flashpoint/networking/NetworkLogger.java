@@ -7,6 +7,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.logging.*;
 
+import static com.cs361d.flashpoint.screen.ServerScreen.logMessage;
+
 /*
  * Put these calls where you want to log. They will be called depending on corresponding logging level
  * LOGGER.severe("...");
@@ -55,7 +57,9 @@ public class NetworkLogger {
 
         // Also log to a dated log file
         Format formatter = new SimpleDateFormat("YYYY-MM-dd_hh-mm-ss");
-        FileHandler fileHandler = new FileHandler("logs/NETWORK_LOG_" + formatter.format(new Date()) + ".txt");
+
+        FileHandler fileHandler =
+                new FileHandler("logs/NETWORK_LOG_" + formatter.format(new Date()) + ".txt");
 
         // ConsoleHandler outputs to stderr by default and cannot be changed...
         ConsoleHandler cmdHandler =
@@ -67,6 +71,28 @@ public class NetworkLogger {
                     }
                 };
 
+        Handler fpsHandler =
+                new StreamHandler() {
+                    @Override
+                    public synchronized void publish(LogRecord record) {
+                        try {
+                            if (this.isLoggable(record)) {
+                                String msg = null;
+                                try {
+                                    msg = getFormatter().format(record);
+                                } catch (Exception e) {
+                                    getErrorManager().error("Exception occurred when formatting the log record",
+                                            e, ErrorManager.FORMAT_FAILURE);
+                                }
+                                logMessage(msg);
+                            }
+                        } catch (Exception e) {
+                            getErrorManager().error("Exception occurred when logging the record", e,
+                                    ErrorManager.GENERIC_FAILURE);
+                        }
+                    }
+                };
+
         // Formats outputs
         SimpleFormatter formatterTxt = new SimpleFormatter();
 
@@ -75,6 +101,9 @@ public class NetworkLogger {
 
         cmdHandler.setFormatter(formatterTxt);
         LOGGER.addHandler(cmdHandler);
+
+        fpsHandler.setFormatter(formatterTxt);
+        LOGGER.addHandler(fpsHandler);
     }
 
     public static Logger getLogger() {

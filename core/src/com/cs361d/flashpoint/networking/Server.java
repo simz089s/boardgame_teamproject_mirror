@@ -5,6 +5,7 @@ import com.cs361d.flashpoint.model.BoardElements.*;
 import com.cs361d.flashpoint.model.FireFighterSpecialities.FireFighterAdvanceSpecialities;
 import com.cs361d.flashpoint.model.FireFighterSpecialities.FireFighterAdvanced;
 import com.cs361d.flashpoint.screen.Actions;
+import com.cs361d.flashpoint.screen.FlashPointServerGame;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -50,6 +51,9 @@ public class Server implements Runnable {
   Thread startServer; // DON'T SEND TO SRC CLIENT TWICE
 
   private static final Logger LOGGER = NetworkLogger.getLogger();
+
+  // A client has an instance of the game
+  public static FlashPointServerGame serverFPGame = new FlashPointServerGame();
 
   @Override
   public void run() {
