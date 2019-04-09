@@ -526,9 +526,6 @@ public class Server implements Runnable {
           break;
 
         case END_TURN:
-          if (savedIp.equals(ip)) {
-            return;
-          }
           FireFighterTurnManager.getInstance().endTurn();
           mustSendAndRefresh = saveIp;
           if (saveIp) {
