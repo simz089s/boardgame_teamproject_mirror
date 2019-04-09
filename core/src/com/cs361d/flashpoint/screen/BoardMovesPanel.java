@@ -78,7 +78,7 @@ public class BoardMovesPanel {
       scrollPaneMoveOptions.setHeight(275);
       // scrollMessage.setBounds(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight() + 100);
       scrollPaneMoveOptions.setPosition(
-          850, Gdx.graphics.getHeight() - scrollPaneMoveOptions.getHeight() - 165);
+          850, Gdx.graphics.getHeight() - scrollPaneMoveOptions.getHeight() - 175);
 
       lstMoveOptions.addListener(
           new InputListener() {

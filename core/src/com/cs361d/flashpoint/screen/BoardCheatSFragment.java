@@ -14,7 +14,8 @@ import static com.cs361d.flashpoint.screen.FlashPointScreen.skinUI;
 public class BoardCheatSFragment {
 
     String imagesFileName[] = {"1.png", "2.png", "cafs firefighter.png", "driver.png", "fire captain.png", "generalist.png",
-            "hazmat technician.png", "imaging technician.png", "paramedic.png", "rescue specialist.png", "veteran.png", "rescue dog.png", "structural engineer.png"};
+            "hazmat technician.png", "imaging technician.png", "paramedic.png", "rescue specialist.png",
+            "veteran.png", "rescue dog.png", "structural engineer.png", "pyromancer.png"};
 
     Image[] cardImages = new Image[imagesFileName.length];
 
@@ -59,7 +60,7 @@ public class BoardCheatSFragment {
         //scrollMessage.setBounds(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight() + 100);
         scrollPaneCard.setPosition(
                 845,
-                Gdx.graphics.getHeight() - scrollPaneCard.getHeight() - 170);
+                Gdx.graphics.getHeight() - scrollPaneCard.getHeight() - 190);
 
 
         cardsListSP.add(scrollPaneCard);

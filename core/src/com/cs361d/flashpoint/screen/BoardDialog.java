@@ -82,7 +82,7 @@ public class BoardDialog {
         specialtyCardImg.setHeight(232);
         specialtyCardImg.setWidth(407);
 
-        okBtn.setWidth(150);
+        okBtn.setWidth(specialtyCardImg.getWidth() - 30);
         okBtn.setHeight(50);
         okBtn.setColor(Color.FIREBRICK);
         okBtn.addListener(
@@ -95,7 +95,7 @@ public class BoardDialog {
 
         myTable.add(specialtyCardImg);
         myTable.row();
-        myTable.add(okBtn);
+        myTable.add(okBtn).size(specialtyCardImg.getWidth() - 30, 50);
 
         dialog.add(myTable);
         //dialog.button("OK", true);

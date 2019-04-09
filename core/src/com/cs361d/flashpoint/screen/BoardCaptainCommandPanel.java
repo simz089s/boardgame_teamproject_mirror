@@ -77,7 +77,7 @@ public class BoardCaptainCommandPanel {
             scrollPane.setHeight(275);
             // scrollMessage.setBounds(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight() + 100);
             scrollPane.setPosition(
-                    850, Gdx.graphics.getHeight() - scrollPane.getHeight() - 165);
+                    850, Gdx.graphics.getHeight() - scrollPane.getHeight() - 190);
 
             lstOptions.addListener(
                     new InputListener() {
