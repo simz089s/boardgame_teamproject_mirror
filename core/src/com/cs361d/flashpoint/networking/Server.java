@@ -488,7 +488,9 @@ public class Server implements Runnable {
 
   public static synchronized void serverExecuteGameCommand(
       String gameCommand, String message, String ip) {
-
+    if (savedIp.equals(ip)) {
+      return;
+    }
     Actions action = Actions.fromString(gameCommand);
     JSONParser parser = new JSONParser();
     try {
