@@ -25,7 +25,7 @@ import java.util.List;
 
 public class BoardScreen extends FlashPointScreen {
 
-  static final boolean IS_MY_TURN_ACTIVATED = false; // TODO: set to false if playing single computer
+  static final boolean IS_MY_TURN_ACTIVATED = true; // TODO: set to false if playing single computer
 
   String OUTDOOR_TILE_TO_DISPLAY_FILE = "boards/tile_0.png";
   String INDOOR_TILE_TO_DISPLAY_FILE = "boards/tile_1.png";
