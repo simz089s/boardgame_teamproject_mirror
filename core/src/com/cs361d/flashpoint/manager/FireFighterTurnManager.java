@@ -212,6 +212,10 @@ public class FireFighterTurnManager implements Iterable<FireFighter> {
   protected boolean canMoveWithVictim(Direction d) {
     Tile currentTile = getCurrentFireFighter().getTile();
     Tile adjacentTile = currentTile.getAdjacentTile(d);
+    if (currentTile.hasObstacle(d)) {
+      sendActionRejectedMessageToCurrentPlayer("You cannot go through an obstacle with a victim");
+      return false;
+    }
     if (!currentTile.hasRealVictim()) {
       sendActionRejectedMessageToCurrentPlayer("You must be on a tile containing a victim to move with it");
       return false;
