@@ -60,8 +60,7 @@ public class FireFighterTurnManagerAdvance extends FireFighterTurnManager {
   public boolean setInitialSpecialty(FireFighterAdvanceSpecialties specialty) {
     if (FREE_SPECIALTIES.remove(specialty)) {
       FireFighter f = FIREFIGHTERS.removeFirst();
-      if (((FireFighterAdvanced) f).getSpecialty()
-          != FireFighterAdvanceSpecialties.NO_SPECIALTY) {
+      if (((FireFighterAdvanced) f).getSpecialty() != FireFighterAdvanceSpecialties.NO_SPECIALTY) {
         throw new IllegalArgumentException("This fireFighter already has a specialty");
       }
       FireFighterAdvanced newF = FireFighterAdvanced.createFireFighter(f.getColor(), specialty);
@@ -166,12 +165,14 @@ public class FireFighterTurnManagerAdvance extends FireFighterTurnManager {
       } else if (currentTile.hasObstacle(d)) {
         Obstacle o = currentTile.getObstacle(d);
         if (o.isDoor()) {
-          sendActionRejectedMessageToCurrentPlayer("You cannot go through a door even if you are the rescue dog");
+          sendActionRejectedMessageToCurrentPlayer(
+              "You cannot go through a door even if you are the rescue dog");
           return false;
         } else if (o.getHealth() < 2) {
           return true;
         } else {
-          sendActionRejectedMessageToCurrentPlayer("You cannot squeeze through a perfectly healthy wall");
+          sendActionRejectedMessageToCurrentPlayer(
+              "You cannot squeeze through a perfectly healthy wall");
           return false;
         }
       }
@@ -226,7 +227,8 @@ public class FireFighterTurnManagerAdvance extends FireFighterTurnManager {
       Server.sendToClientsInGame(ClientCommands.SET_GAME_STATE, DBHandler.getBoardAsString());
       Server.sendToClientsInGame(ClientCommands.REFRESH_BOARD_SCREEN, "");
       sendMessageToCurrentPlayer(
-          "One ExtraAP", "Congratulations, you are in the Veteran's vicinity, you get one extra AP");
+          "One ExtraAP",
+          "Congratulations, you are in the Veteran's vicinity, you get one extra AP");
       return false;
     }
     return true;
@@ -316,7 +318,8 @@ public class FireFighterTurnManagerAdvance extends FireFighterTurnManager {
       currentTile.setHasHazmat(false);
       return true;
     } else {
-      sendActionRejectedMessageToCurrentPlayer("You do not have enough AP, it requires 2 for that task");
+      sendActionRejectedMessageToCurrentPlayer(
+          "You do not have enough AP, it requires 2 for that task");
       return false;
     }
   }
@@ -455,6 +458,9 @@ public class FireFighterTurnManagerAdvance extends FireFighterTurnManager {
     }
 
     for (FireFighterAdvanced f : fireFighterList) {
+      if (f instanceof RescueDog) {
+        continue;
+      }
       Server.sendCommandToSpecificClient(
           ClientCommands.ASK_DRIVE_WITH_ENGINE,
           CarrierStatus.HASAMBULANCE.toString(),
@@ -509,6 +515,9 @@ public class FireFighterTurnManagerAdvance extends FireFighterTurnManager {
     }
 
     for (FireFighterAdvanced f : fireFighterList) {
+      if (f instanceof RescueDog) {
+        continue;
+      }
       Server.sendCommandToSpecificClient(
           ClientCommands.ASK_DRIVE_WITH_ENGINE,
           CarrierStatus.HASFIRETRUCK.toString(),
