@@ -110,15 +110,6 @@ public class FireFighterTurnManager implements Iterable<FireFighter> {
 
   public boolean chopWall(Direction d) {
 
-    // Don't let him chop wall if ap < 3
-    if ((getCurrentFireFighter().getTile().hasFire())
-        && (getCurrentFireFighter().getActionPointsLeft() < 3)) {
-      sendActionRejectedMessageToCurrentPlayer(
-          "You cannot chop a wall if either you have less than 2 AP points"
-              + " and you stand on a tile with fire and have less than 3 ap points");
-      return false;
-    }
-
     Obstacle o = getCurrentFireFighter().getTile().getObstacle(d);
     if (o.isDoor()) {
       sendActionRejectedMessageToCurrentPlayer("Open, close or destroyed doors cannot be chopped");
@@ -139,10 +130,6 @@ public class FireFighterTurnManager implements Iterable<FireFighter> {
 
   public boolean interactWithDoor(Direction d) {
 
-    // Don't let him interact with door if ap < 2
-    if ((getCurrentFireFighter().getTile().hasFire())
-        && (getCurrentFireFighter().getActionPointsLeft() < 2)) return false;
-
     Obstacle o = getCurrentFireFighter().getTile().getObstacle(d);
     if (!o.isDoor()) {
       sendActionRejectedMessageToCurrentPlayer("You cannot open the air or a wall");
@@ -156,20 +143,12 @@ public class FireFighterTurnManager implements Iterable<FireFighter> {
       o.interactWithDoor();
       return true;
     }
+    sendActionRejectedMessageToCurrentPlayer("You need more Ap to interact with the door");
     return false;
   }
 
   public boolean extinguishFire(Direction d) {
 
-    // Don't let him extenguish another Tile's fire or smoke if ap < 2
-    if ((getCurrentFireFighter().getTile().hasFire())
-        && (getCurrentFireFighter().getActionPointsLeft() < 2)
-        && (!d.equals(Direction.NODIRECTION))) {
-      sendActionRejectedMessageToCurrentPlayer(
-          "You cannot end on a tile with fire on it so you cannot perform t"
-              + "hat move since if you did that rule would not be repsected.");
-      return false;
-    }
     Tile tileToExtinguish = getCurrentFireFighter().getTile().getAdjacentTile(d);
     if (tileToExtinguish == null
         || tileToExtinguish.hasNoFireAndNoSmoke()
