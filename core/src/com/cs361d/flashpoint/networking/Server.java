@@ -2,7 +2,7 @@ package com.cs361d.flashpoint.networking;
 
 import com.cs361d.flashpoint.manager.*;
 import com.cs361d.flashpoint.model.BoardElements.*;
-import com.cs361d.flashpoint.model.FireFighterSpecialities.FireFighterAdvanceSpecialities;
+import com.cs361d.flashpoint.model.FireFighterSpecialities.FireFighterAdvanceSpecialties;
 import com.cs361d.flashpoint.model.FireFighterSpecialities.FireFighterAdvanced;
 import com.cs361d.flashpoint.screen.Actions;
 import com.cs361d.flashpoint.screen.FlashPointServerGame;
@@ -50,7 +50,7 @@ public class Server implements Runnable {
   Socket s; // Client socket
   Thread startServer; // DON'T SEND TO SRC CLIENT TWICE
 
-  private static final Logger LOGGER = NetworkLogger.getLogger();
+  private static final Logger LOGGER = Logger.getLogger(NetworkLogger.class.getPackage().getName());
 
   // A client has an instance of the game
   public static FlashPointServerGame serverFPGame = new FlashPointServerGame();
@@ -371,10 +371,10 @@ public class Server implements Runnable {
           }
           break;
 
-        case SET_INITIAL_SPECIALITY:
+        case SET_INITIAL_SPECIALTY:
           synchronized (Server.class) {
             if (FireFighterTurnManagerAdvance.getInstance()
-                .setInitialSpeciality(FireFighterAdvanceSpecialities.fromString(message))) {
+                .setInitialSpecialty(FireFighterAdvanceSpecialties.fromString(message))) {
               mustSendAndRefresh = true;
             }
           }
@@ -573,7 +573,7 @@ public class Server implements Runnable {
 
         case CREW_CHANGE:
           if (FireFighterTurnManagerAdvance.getInstance()
-              .crewChange(FireFighterAdvanceSpecialities.fromString(message))) {
+              .crewChange(FireFighterAdvanceSpecialties.fromString(message))) {
             mustSendAndRefresh = true;
           }
           break;

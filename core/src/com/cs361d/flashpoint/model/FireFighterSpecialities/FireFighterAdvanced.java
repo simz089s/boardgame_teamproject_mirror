@@ -12,7 +12,7 @@ import java.util.Map;
 public abstract class FireFighterAdvanced extends FireFighter {
   protected int specialActionPoints = 0;
   protected boolean hadVeteranBonus = false;
-  protected final FireFighterAdvanceSpecialities SPECIALITY;
+  protected final FireFighterAdvanceSpecialties SPECIALTY;
   protected int maxSpecialAp = 0;
   protected boolean firstTurn;
   protected int actionPointToSave = 0;
@@ -22,13 +22,13 @@ public abstract class FireFighterAdvanced extends FireFighter {
       new HashMap<FireFighterColor, FireFighterAdvanced>();
 
   protected FireFighterAdvanced(
-      FireFighterColor color,
-      int actionPoints,
-      int specialActionPoints,
-      FireFighterAdvanceSpecialities role, boolean firstMove) {
+          FireFighterColor color,
+          int actionPoints,
+          int specialActionPoints,
+          FireFighterAdvanceSpecialties role, boolean firstMove) {
     super(color, actionPoints);
     this.specialActionPoints = specialActionPoints;
-    this.SPECIALITY = role;
+    this.SPECIALTY = role;
     this.firstTurn = true;
     this.firstMove = firstMove;
   }
@@ -72,16 +72,16 @@ public abstract class FireFighterAdvanced extends FireFighter {
     return false;
   }
 
-  public boolean hasSpeciality(FireFighterAdvanceSpecialities speciality) {
-    return SPECIALITY == speciality;
+  public boolean hasSpecialty(FireFighterAdvanceSpecialties specialty) {
+    return SPECIALTY == specialty;
   }
 
   public int getSpecialActionPoints() {
     return this.specialActionPoints;
   }
 
-  public FireFighterAdvanceSpecialities getSpeciality() {
-    return SPECIALITY;
+  public FireFighterAdvanceSpecialties getSpecialty() {
+    return SPECIALTY;
   }
 
   @Override
@@ -91,12 +91,12 @@ public abstract class FireFighterAdvanced extends FireFighter {
       return true;
     } else if (!(o instanceof FireFighterAdvanced)) {
       return false;
-    } else if (((FireFighterAdvanced) o).SPECIALITY
-        == FireFighterAdvanceSpecialities.NO_SPECIALITY) {
+    } else if (((FireFighterAdvanced) o).SPECIALTY
+        == FireFighterAdvanceSpecialties.NO_SPECIALTY) {
       return false;
     }
 
-    return ((FireFighterAdvanced) o).SPECIALITY == SPECIALITY;
+    return ((FireFighterAdvanced) o).SPECIALTY == SPECIALTY;
   }
 
   public boolean isDefault() {
@@ -104,15 +104,15 @@ public abstract class FireFighterAdvanced extends FireFighter {
   }
 
   public static FireFighterAdvanced createFireFighter(
-      FireFighterColor color, FireFighterAdvanceSpecialities role) {
+      FireFighterColor color, FireFighterAdvanceSpecialties role) {
     FireFighterAdvanced f;
     if (FIREFIGHTERS.containsKey(color)) {
       f = FIREFIGHTERS.get(color);
-      if (f.hasSpeciality(role)) {
+      if (f.hasSpecialty(role)) {
         return f;
       }
     }
-    if (role == FireFighterAdvanceSpecialities.NO_SPECIALITY) {
+    if (role == FireFighterAdvanceSpecialties.NO_SPECIALTY) {
       f = new Default(color);
     } else {
       switch (role) {

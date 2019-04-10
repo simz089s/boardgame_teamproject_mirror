@@ -7,7 +7,7 @@ import java.util.List;
 
 public class StructuralEngineer extends FireFighterAdvanced {
   protected StructuralEngineer(FireFighterColor color) {
-    super(color, 4, 0, FireFighterAdvanceSpecialities.STRUCTURAL_ENGINEER, true);
+    super(color, 4, 0, FireFighterAdvanceSpecialties.STRUCTURAL_ENGINEER, true);
   }
 
   public boolean clearAp() {

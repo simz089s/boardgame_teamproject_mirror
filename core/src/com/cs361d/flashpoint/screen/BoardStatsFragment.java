@@ -9,7 +9,6 @@ import com.cs361d.flashpoint.manager.BoardManager;
 import com.cs361d.flashpoint.manager.BoardManagerAdvanced;
 import com.cs361d.flashpoint.manager.FireFighterTurnManager;
 import com.cs361d.flashpoint.model.BoardElements.FireFighter;
-import com.cs361d.flashpoint.model.FireFighterSpecialities.FireFighterAdvanceSpecialities;
 import com.cs361d.flashpoint.model.FireFighterSpecialities.FireFighterAdvanced;
 
 import java.util.ArrayList;
@@ -99,9 +98,9 @@ public class BoardStatsFragment {
             gamesStatsArrList.add("Accumulated AP: " + f.getActionPointsLeft());
             if (BoardManager.isAdvanced()) {
                 int specialAp = ((FireFighterAdvanced) f).getSpecialActionPoints();
-                String speciality = ((FireFighterAdvanced) f).getSpeciality().toString();
+                String specialty = ((FireFighterAdvanced) f).getSpecialty().toString();
                 gamesStatsArrList.add("Special AP: " + specialAp);
-                gamesStatsArrList.add("Specialist: " + speciality);
+                gamesStatsArrList.add("Specialist: " + specialty);
             }
             gamesStatsArrList.add("");
         }

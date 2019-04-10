@@ -7,7 +7,7 @@ import java.util.List;
 
 public class FireCaptain extends FireFighterAdvanced{
   public FireCaptain(FireFighterColor color) {
-    super(color,4,2, FireFighterAdvanceSpecialities.FIRE_CAPTAIN, true
+    super(color,4,2, FireFighterAdvanceSpecialties.FIRE_CAPTAIN, true
     );
     this.maxSpecialAp = 2;
   }

@@ -2,16 +2,14 @@ package com.cs361d.flashpoint.screen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.cs361d.flashpoint.manager.BoardManager;
-import com.cs361d.flashpoint.manager.BoardManagerAdvanced;
 import com.cs361d.flashpoint.manager.FireFighterTurnManagerAdvance;
-import com.cs361d.flashpoint.model.FireFighterSpecialities.FireFighterAdvanceSpecialities;
+import com.cs361d.flashpoint.model.FireFighterSpecialities.FireFighterAdvanceSpecialties;
 import com.cs361d.flashpoint.networking.Client;
 import com.cs361d.flashpoint.networking.ServerCommands;
 
@@ -97,8 +95,8 @@ public class BoardChooseSpecialtyPanel {
                         String specialtySelected = lstSpecialties.getSelected();
 
                         // set init specialty
-                        if (! FireFighterTurnManagerAdvance.getInstance().currentHasSpeciality()){
-                            Client.getInstance().sendCommand(ServerCommands.SET_INITIAL_SPECIALITY,specialtySelected);
+                        if (! FireFighterTurnManagerAdvance.getInstance().currentHasSpecialty()){
+                            Client.getInstance().sendCommand(ServerCommands.SET_INITIAL_SPECIALTY,specialtySelected);
                         } else { // crew change
                             Client.getInstance().sendCommand(Actions.CREW_CHANGE,specialtySelected);
 
@@ -113,7 +111,7 @@ public class BoardChooseSpecialtyPanel {
                     @Override
                     public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                         BoardDialog bd = new BoardDialog(stage);
-                        bd.drawOnSpecialtyClickDialog(FireFighterAdvanceSpecialities.fromString(lstSpecialties.getSelected()));
+                        bd.drawOnSpecialtyClickDialog(FireFighterAdvanceSpecialties.fromString(lstSpecialties.getSelected()));
                         return true;
                     }
                 });

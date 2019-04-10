@@ -6,30 +6,44 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.List.ListStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane.ScrollPaneStyle;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.cs361d.flashpoint.networking.Client;
+import com.cs361d.flashpoint.networking.NetworkLogger;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.logging.Logger;
 
 public class ServerScreen implements Screen {
+
+    private static final Logger LOGGER = Logger.getLogger(NetworkLogger.class.getPackage().getName());
 
     FlashPointServerGame game;
 
     private Stage stage = new Stage();
     private SpriteBatch batch = new SpriteBatch();
 
-    ListStyle listStyle;
+    static Skin skinUI = new Skin(Gdx.files.internal("data/uiskin.json"));
+
+    Label infoTitle = new Label("SERVER | Public IP: " + Client.serverIP + " | Close this window to close the server", skinUI);
+    Button testBtn = new Button(skinUI);
+
     ScrollPane scrollPaneMsg;
     ScrollPaneStyle scrollStyle;
 
     // messages list
-    private static List<String> messages = new ArrayList();
+    ListStyle listStyle;
+    private static ArrayList<String> messages = new ArrayList();
     private static com.badlogic.gdx.scenes.scene2d.ui.List<String> lstMsg;
 
-    List<ScrollPane> msgListSP = new ArrayList();
+    ArrayList<ScrollPane> msgListSP = new ArrayList();
 
     ServerScreen(Game pGame) {
         game = (FlashPointServerGame) pGame;
@@ -45,11 +59,25 @@ public class ServerScreen implements Screen {
     @Override
     public void show() {
 
+        infoTitle.setPosition(0, Gdx.graphics.getHeight() - 20);
+        infoTitle.setColor(Color.SKY);
+        stage.addActor(infoTitle);
+
+        testBtn.setSize(25, 20);
+        testBtn.setPosition(1, 1);
+        testBtn.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent even, float x, float y) {
+                LOGGER.info("Logger call test");
+            }
+        });
+        stage.addActor(testBtn);
+
         // list style
-        listStyle = new com.badlogic.gdx.scenes.scene2d.ui.List.ListStyle();
-        listStyle.font = Font.get(18); // font size
-        listStyle.fontColorUnselected = Color.BLACK;
-        listStyle.fontColorSelected = Color.BLACK;
+        listStyle = new ListStyle();
+        listStyle.font = Font.get(12); // font size
+        listStyle.fontColorUnselected = Color.GREEN;
+        listStyle.fontColorSelected = Color.GREEN;
         listStyle.selection = TextureLoader.getDrawable(100, 100, Color.CLEAR);
 
         lstMsg = new com.badlogic.gdx.scenes.scene2d.ui.List<String>(listStyle);
@@ -66,20 +94,20 @@ public class ServerScreen implements Screen {
         scrollPaneMsg.setOverscroll(false, false);
         scrollPaneMsg.setFadeScrollBars(false);
         scrollPaneMsg.setTransform(true);
-        scrollPaneMsg.setWidth(360);
-        scrollPaneMsg.setHeight(450);
-        scrollPaneMsg.setPosition(845, Gdx.graphics.getHeight() - scrollPaneMsg.getHeight() - 150);
-
-        //        createMessageInputText();
+        scrollPaneMsg.setWidth(600);
+        scrollPaneMsg.setHeight(300);
+        scrollPaneMsg.setPosition(5, 20);
 
         msgListSP.add(scrollPaneMsg);
 
         stage.addActor(scrollPaneMsg);
+
+        Gdx.input.setInputProcessor(stage);
     }
 
     @Override
     public void render(float delta) {
-        Gdx.gl.glClearColor(1, 1, 1, 1);
+        Gdx.gl.glClearColor(0, 0, 0, 0);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         batch.begin();
@@ -103,5 +131,6 @@ public class ServerScreen implements Screen {
     @Override
     public void dispose() {
         stage.dispose();
+        skinUI.dispose();
     }
 }

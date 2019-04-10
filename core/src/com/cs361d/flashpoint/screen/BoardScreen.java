@@ -15,7 +15,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.cs361d.flashpoint.manager.*;
 import com.cs361d.flashpoint.model.BoardElements.*;
-import com.cs361d.flashpoint.model.FireFighterSpecialities.FireFighterAdvanceSpecialities;
+import com.cs361d.flashpoint.model.FireFighterSpecialities.FireFighterAdvanceSpecialties;
 import com.cs361d.flashpoint.networking.Client;
 import com.cs361d.flashpoint.networking.ServerCommands;
 import org.json.simple.JSONObject;
@@ -48,7 +48,7 @@ public class BoardScreen extends FlashPointScreen {
   // choose pos on knock down
   static boolean activateKnockDownChoosePos = false;
   static boolean activateFlipPOIChoosePos = false;
-  static FireFighter knockedDownFirefigher;
+  static FireFighter knockedDownFirefighter;
   static ArrayList<Tile> clickableTilesOnKnockDownArr = new ArrayList<Tile>();
 
   // GUI elements
@@ -143,7 +143,7 @@ public class BoardScreen extends FlashPointScreen {
                 boolean isAdvancedVersion = BoardManager.getInstance().isAdvanced();
                 boolean hasNoSpecialty =
                     isAdvancedVersion
-                        && !(FireFighterTurnManagerAdvance.getInstance().currentHasSpeciality());
+                        && !(FireFighterTurnManagerAdvance.getInstance().currentHasSpecialty());
                 boolean isAmbulanceNotSet =
                     isAdvancedVersion && !(BoardManagerAdvanced.getInstance()).hasAmbulancePlaced();
                 boolean isEngineNotSet =
@@ -194,7 +194,7 @@ public class BoardScreen extends FlashPointScreen {
                   BoardManager.getInstance()
                       .chooseForKnockedDown(
                           BoardManager.getInstance().getTiles()[i_pos][j_pos],
-                          knockedDownFirefigher);
+                              knockedDownFirefighter);
 
                   activateKnockDownChoosePos = false;
 
@@ -876,7 +876,7 @@ public class BoardScreen extends FlashPointScreen {
   public static void addFilterOnKnockDownChoosePos(FireFighter f, ArrayList<Tile> clickableTiles) {
 
     clickableTilesOnKnockDownArr = clickableTiles;
-    knockedDownFirefigher = f;
+    knockedDownFirefighter = f;
 
     for (int i = 0; i < clickableTiles.size(); i++) {
       tilesImg[clickableTiles.get(i).getI()][clickableTiles.get(i).getJ()].setColor(Color.GREEN);
@@ -1084,7 +1084,7 @@ public class BoardScreen extends FlashPointScreen {
               gameSetupActions = GameSetupActions.CHOOSE_INIT_POS;
               addFilterOnTileForChooseInitPos();
             }
-        } else if (FireFighterTurnManagerAdvance.getInstance().getCurrentFireFighter().getSpeciality() == FireFighterAdvanceSpecialities.NO_SPECIALITY) {
+        } else if (FireFighterTurnManagerAdvance.getInstance().getCurrentFireFighter().getSpecialty() == FireFighterAdvanceSpecialties.NO_SPECIALTY) {
           if (User.getInstance().isMyTurn() || !IS_MY_TURN_ACTIVATED) {
             gameSetupActions = GameSetupActions.CHOOSE_INIT_SPECIALTY;
             boardChooseRolePanel.drawChooseSpecialtyPanel();

@@ -2,10 +2,7 @@ package com.cs361d.flashpoint.model.FireFighterSpecialities;
 
 import com.cs361d.flashpoint.model.BoardElements.Direction;
 import com.cs361d.flashpoint.model.BoardElements.FireFighterColor;
-import com.cs361d.flashpoint.model.BoardElements.Tile;
 import com.cs361d.flashpoint.screen.Actions;
-import com.cs361d.flashpoint.screen.BoardDialog;
-import com.cs361d.flashpoint.screen.BoardGameInfoLabel;
 import com.cs361d.flashpoint.screen.BoardScreen;
 
 import java.util.List;
@@ -13,7 +10,7 @@ import java.util.List;
 public class RescueDog extends FireFighterAdvanced {
 
     public RescueDog(FireFighterColor color) {
-        super(color, 12, 0, FireFighterAdvanceSpecialities.RESCUE_DOG, true);
+        super(color, 12, 0, FireFighterAdvanceSpecialties.RESCUE_DOG, true);
         this.maxActionPoint = 18;
         this.actionsPointPerTurn = 12;
     }

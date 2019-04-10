@@ -1,5 +1,8 @@
 package com.cs361d.flashpoint.networking;
 
+import com.cs361d.flashpoint.screen.FlashPointServerHandler;
+import com.cs361d.flashpoint.screen.ServerScreen;
+
 import java.io.IOException;
 import java.io.OutputStream;
 import java.text.Format;
@@ -29,7 +32,7 @@ public class NetworkLogger {
     //    private static FileHandler fileHandler;
     //    private static SimpleFormatter formatterTxt;
 
-    NetworkLogger() {
+    public NetworkLogger() {
         try {
             setup();
         } catch (IOException e) {
@@ -49,7 +52,7 @@ public class NetworkLogger {
         //        for (Handler handler : handlers) {
         //            globalLogger.removeHandler(handler);
         //        }
-        //        LogManager.getLogManager().reset();
+        LogManager.getLogManager().reset();
         LOGGER.setUseParentHandlers(false);
 
         LOGGER.setLevel(Level.INFO);
@@ -59,7 +62,7 @@ public class NetworkLogger {
         Format formatter = new SimpleDateFormat("YYYY-MM-dd_hh-mm-ss");
 
         FileHandler fileHandler =
-                new FileHandler("logs/NETWORK_LOG_" + formatter.format(new Date()) + ".txt");
+                new FileHandler("logs/LOG_" + formatter.format(new Date()) + ".txt");
 
         // ConsoleHandler outputs to stderr by default and cannot be changed...
         ConsoleHandler cmdHandler =
@@ -71,27 +74,7 @@ public class NetworkLogger {
                     }
                 };
 
-        Handler fpsHandler =
-                new StreamHandler() {
-                    @Override
-                    public synchronized void publish(LogRecord record) {
-                        try {
-                            if (this.isLoggable(record)) {
-                                String msg = null;
-                                try {
-                                    msg = getFormatter().format(record);
-                                } catch (Exception e) {
-                                    getErrorManager().error("Exception occurred when formatting the log record",
-                                            e, ErrorManager.FORMAT_FAILURE);
-                                }
-                                logMessage(msg);
-                            }
-                        } catch (Exception e) {
-                            getErrorManager().error("Exception occurred when logging the record", e,
-                                    ErrorManager.GENERIC_FAILURE);
-                        }
-                    }
-                };
+        Handler fpsHandler = new FlashPointServerHandler();
 
         // Formats outputs
         SimpleFormatter formatterTxt = new SimpleFormatter();
@@ -106,7 +89,4 @@ public class NetworkLogger {
         LOGGER.addHandler(fpsHandler);
     }
 
-    public static Logger getLogger() {
-        return LOGGER;
-    }
 }

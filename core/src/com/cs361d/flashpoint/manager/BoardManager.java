@@ -585,7 +585,7 @@ public class BoardManager implements Iterable<Tile> {
   }
 
   /**
-   * Method not used was created for familly game where fireFighter is at equidistance of two tiles that CAN_CONTAIN_AMBULANCE
+   * Method not used was created for family game where fireFighter is at equidistance of two tiles that CAN_CONTAIN_AMBULANCE
    * but was not finished
    * @param t
    * @param f

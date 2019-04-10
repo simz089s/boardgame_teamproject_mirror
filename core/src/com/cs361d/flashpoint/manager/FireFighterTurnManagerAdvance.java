@@ -13,8 +13,8 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class FireFighterTurnManagerAdvance extends FireFighterTurnManager {
-  protected final ArrayList<FireFighterAdvanceSpecialities> FREESPECIALITIES =
-      new ArrayList<FireFighterAdvanceSpecialities>(9);
+  protected final ArrayList<FireFighterAdvanceSpecialties> FREE_SPECIALTIES =
+      new ArrayList<FireFighterAdvanceSpecialties>(9);
 
   private final AtomicBoolean wait = new AtomicBoolean(true);
   private boolean accept = false;
@@ -35,10 +35,10 @@ public class FireFighterTurnManagerAdvance extends FireFighterTurnManager {
 
   protected FireFighterTurnManagerAdvance() {
     super();
-    FREESPECIALITIES.clear();
+    FREE_SPECIALTIES.clear();
     FireFighterAdvanced.reset();
-    for (FireFighterAdvanceSpecialities s : FireFighterAdvanceSpecialities.values()) {
-      FREESPECIALITIES.add(s);
+    for (FireFighterAdvanceSpecialties s : FireFighterAdvanceSpecialties.values()) {
+      FREE_SPECIALTIES.add(s);
     }
   }
 
@@ -57,14 +57,14 @@ public class FireFighterTurnManagerAdvance extends FireFighterTurnManager {
     }
   }
 
-  public boolean setInitialSpeciality(FireFighterAdvanceSpecialities speciality) {
-    if (FREESPECIALITIES.remove(speciality)) {
+  public boolean setInitialSpecialty(FireFighterAdvanceSpecialties specialty) {
+    if (FREE_SPECIALTIES.remove(specialty)) {
       FireFighter f = FIREFIGHTERS.removeFirst();
-      if (((FireFighterAdvanced) f).getSpeciality()
-          != FireFighterAdvanceSpecialities.NO_SPECIALITY) {
-        throw new IllegalArgumentException("This fireFighter already has a speciality");
+      if (((FireFighterAdvanced) f).getSpecialty()
+          != FireFighterAdvanceSpecialties.NO_SPECIALTY) {
+        throw new IllegalArgumentException("This fireFighter already has a specialty");
       }
-      FireFighterAdvanced newF = FireFighterAdvanced.createFireFighter(f.getColor(), speciality);
+      FireFighterAdvanced newF = FireFighterAdvanced.createFireFighter(f.getColor(), specialty);
       FIREFIGHTERS.addLast(newF);
       Tile currentTile = f.getTile();
       f.removeFromBoard();
@@ -72,7 +72,7 @@ public class FireFighterTurnManagerAdvance extends FireFighterTurnManager {
 
       return true;
     } else {
-      sendActionRejectedMessageToCurrentPlayer("That speciality is not available");
+      sendActionRejectedMessageToCurrentPlayer("That specialty is not available");
       return false;
     }
   }
@@ -95,15 +95,15 @@ public class FireFighterTurnManagerAdvance extends FireFighterTurnManager {
     if (!getCurrentFireFighter().isFirstTurn()) {
       getCurrentFireFighter().resetActionPoints();
     }
-    return verifyVeteranVacinityToAddAp();
+    return verifyVeteranVicinityToAddAp();
   }
 
-  public boolean crewChange(FireFighterAdvanceSpecialities speciality) {
+  public boolean crewChange(FireFighterAdvanceSpecialties specialty) {
     FireFighterAdvanced f = getCurrentFireFighter();
-    if (FREESPECIALITIES.contains(speciality) && f.getTile().hasFireTruck() && f.crewChangeAP()) {
-      FREESPECIALITIES.remove(speciality);
-      FREESPECIALITIES.add(f.getSpeciality());
-      FireFighterAdvanced newF = FireFighterAdvanced.createFireFighter(f.getColor(), speciality);
+    if (FREE_SPECIALTIES.contains(specialty) && f.getTile().hasFireTruck() && f.crewChangeAP()) {
+      FREE_SPECIALTIES.remove(specialty);
+      FREE_SPECIALTIES.add(f.getSpecialty());
+      FireFighterAdvanced newF = FireFighterAdvanced.createFireFighter(f.getColor(), specialty);
       newF.setActionPoint(f.getActionPointsLeft());
       newF.setHadVeteranBonus(f.getHadVeteranBonus());
       Tile currentTile = f.getTile();
@@ -115,8 +115,7 @@ public class FireFighterTurnManagerAdvance extends FireFighterTurnManager {
       return true;
     } else {
       sendActionRejectedMessageToCurrentPlayer(
-          "You must be located on the fire truck"
-              + " and must have at least 2 ap in order to change the of Specialty");
+          "You must be located on the fire truck and must have at least 2 AP in order to change your specialty");
       return false;
     }
   }
@@ -129,13 +128,13 @@ public class FireFighterTurnManagerAdvance extends FireFighterTurnManager {
   public boolean treatVictim() {
     Paramedic f = (Paramedic) getCurrentFireFighter();
     if (f == null) {
-      sendActionRejectedMessageToCurrentPlayer("You are not a paramedic");
+      sendActionRejectedMessageToCurrentPlayer("You are not a Paramedic");
       return false;
     } else if (!f.getTile().hasRealVictim()) {
-      sendActionRejectedMessageToCurrentPlayer("The fireFighter is on a tile with no vicitim");
+      sendActionRejectedMessageToCurrentPlayer("The firefighter is on a tile with no victim");
       return false;
     } else if (f.getTile().getVictim().isCured()) {
-      sendActionRejectedMessageToCurrentPlayer("The victim is alreadyCured");
+      sendActionRejectedMessageToCurrentPlayer("The victim is already cured");
       return false;
     }
     if (f.treatVictimAP()) {
@@ -143,7 +142,7 @@ public class FireFighterTurnManagerAdvance extends FireFighterTurnManager {
       return true;
     } else {
       sendActionRejectedMessageToCurrentPlayer(
-          "You do not have enough AP to treat the victim need at least 1");
+          "You do not have enough AP to treat the victim, need at least 1");
       return false;
     }
   }
@@ -180,7 +179,7 @@ public class FireFighterTurnManagerAdvance extends FireFighterTurnManager {
     }
   }
 
-  public boolean verifyVeteranVacinity(FireFighterAdvanced targeted) {
+  public boolean verifyVeteranVicinity(FireFighterAdvanced targeted) {
     if (targeted instanceof Veteran) {
       return false;
     }
@@ -220,12 +219,12 @@ public class FireFighterTurnManagerAdvance extends FireFighterTurnManager {
     return false;
   }
 
-  private boolean verifyVeteranVacinityToAddAp() {
-    if (verifyVeteranVacinity(getCurrentFireFighter()) && getCurrentFireFighter().veteranBonus()) {
+  private boolean verifyVeteranVicinityToAddAp() {
+    if (verifyVeteranVicinity(getCurrentFireFighter()) && getCurrentFireFighter().veteranBonus()) {
       Server.sendToClientsInGame(ClientCommands.SET_GAME_STATE, DBHandler.getBoardAsString());
       Server.sendToClientsInGame(ClientCommands.REFRESH_BOARD_SCREEN, "");
       sendMessageToCurrentPlayer(
-          "One ExtraAP", "Congratulation you are in the vetaran vacinity you got one extra AP");
+          "One ExtraAP", "Congratulations, you are in the Veteran's vicinity, you get one extra AP");
       return false;
     }
     return true;
@@ -247,11 +246,10 @@ public class FireFighterTurnManagerAdvance extends FireFighterTurnManager {
           }
         }
         flipAdjacentPOIForRescueDog();
-        return verifyVeteranVacinityToAddAp();
+        return verifyVeteranVicinityToAddAp();
       } else {
         sendActionRejectedMessageToCurrentPlayer(
-            "You do not have enough AP to move to that spot you need 1 ap to move to a tile with smoke or nothing"
-                + " and 2 to move on a tile with fire");
+            "You do not have enough AP to move to that spot, you need 1 ap to move to a tile with smoke or nothing and 2 to move on a tile with fire");
         return false;
       }
     }
@@ -262,15 +260,15 @@ public class FireFighterTurnManagerAdvance extends FireFighterTurnManager {
   public boolean moveWithVictim(Direction d) {
     if (super.moveWithVictim(d)) {
       flipAdjacentPOIForRescueDog();
-      return verifyVeteranVacinityToAddAp();
+      return verifyVeteranVicinityToAddAp();
     }
     return false;
   }
 
   public String[] getAvailableSpecialities() {
     ArrayList<String> sList = new ArrayList<String>();
-    for (FireFighterAdvanceSpecialities spec : FREESPECIALITIES) {
-      if (spec != FireFighterAdvanceSpecialities.NO_SPECIALITY)
+    for (FireFighterAdvanceSpecialties spec : FREE_SPECIALTIES) {
+      if (spec != FireFighterAdvanceSpecialties.NO_SPECIALTY)
         sList.add(spec.toString().replace("_", " "));
     }
     String[] list = new String[sList.size()];
@@ -278,25 +276,25 @@ public class FireFighterTurnManagerAdvance extends FireFighterTurnManager {
     return list;
   }
 
-  public boolean currentHasSpeciality() {
-    return !getCurrentFireFighter().hasSpeciality(FireFighterAdvanceSpecialities.NO_SPECIALITY);
+  public boolean currentHasSpecialty() {
+    return !getCurrentFireFighter().hasSpecialty(FireFighterAdvanceSpecialties.NO_SPECIALTY);
   }
 
   private boolean canMoveWithHazmat(Direction d) {
     Tile currentTile = getCurrentFireFighter().getTile();
     if (!currentTile.hasHazmat()) {
-      sendActionRejectedMessageToCurrentPlayer("The tile does not contain a hazmat");
+      sendActionRejectedMessageToCurrentPlayer("The tile does not contain a Hazmat");
       return false;
     } else if (currentTile.hasObstacle(d)) {
       sendActionRejectedMessageToCurrentPlayer(
           "You cannot move to that direction as there is an obstacle in the way");
       return false;
     } else if (currentTile.getAdjacentTile(d).hasFire()) {
-      sendActionRejectedMessageToCurrentPlayer("You cannot move a hazmat into fire");
+      sendActionRejectedMessageToCurrentPlayer("You cannot move a Hazmat into fire");
       return false;
     } else if (currentTile.getAdjacentTile(d).hasHazmat()) {
       sendActionRejectedMessageToCurrentPlayer(
-          "The tile you want to move the hazmat to already has a hazmat");
+          "The tile you want to move the Hazmat to already has a Hazmat");
       return false;
     } else {
       return true;
@@ -307,16 +305,16 @@ public class FireFighterTurnManagerAdvance extends FireFighterTurnManager {
     Tile currentTile = getCurrentFireFighter().getTile();
     HazmatTechnician h = (HazmatTechnician) getCurrentFireFighter();
     if (h == null) {
-      sendActionRejectedMessageToCurrentPlayer("You are not the Hazmat technician");
+      sendActionRejectedMessageToCurrentPlayer("You are not the Hazmat Technician");
       return false;
     } else if (!currentTile.hasHazmat()) {
-      sendActionRejectedMessageToCurrentPlayer("The current tile does not have a hazmat");
+      sendActionRejectedMessageToCurrentPlayer("The current tile does not have a Hazmat");
       return false;
     } else if (h.removeHazmatAp()) {
       currentTile.setHasHazmat(false);
       return true;
     } else {
-      sendActionRejectedMessageToCurrentPlayer("You do not have enough AP require 2 for that task");
+      sendActionRejectedMessageToCurrentPlayer("You do not have enough AP, it requires 2 for that task");
       return false;
     }
   }
@@ -324,7 +322,7 @@ public class FireFighterTurnManagerAdvance extends FireFighterTurnManager {
   public boolean flipPOI(Tile t) {
     ImagingTechnician i = (ImagingTechnician) getCurrentFireFighter();
     if (i == null) {
-      sendActionRejectedMessageToCurrentPlayer("You are not the imaging technician");
+      sendActionRejectedMessageToCurrentPlayer("You are not the Imaging Technician");
       return false;
     } else if (!t.hasPointOfInterest() || t.getVictim().isRevealed()) {
       sendActionRejectedMessageToCurrentPlayer("The victim is already revealed");
@@ -351,10 +349,10 @@ public class FireFighterTurnManagerAdvance extends FireFighterTurnManager {
         adjacent.setHasHazmat(true);
         getCurrentFireFighter().setTile(adjacent);
         verifyHazmatRemovalStatus(adjacent);
-        return verifyVeteranVacinityToAddAp();
+        return verifyVeteranVicinityToAddAp();
       } else {
         sendActionRejectedMessageToCurrentPlayer(
-            "You do not have enough AP to move the Hazmat 2 AP required");
+            "You do not have enough AP to move the Hazmat. 2 AP required");
         return false;
       }
     }
@@ -397,20 +395,20 @@ public class FireFighterTurnManagerAdvance extends FireFighterTurnManager {
   public boolean chooseInitialPosition(Tile t) throws IllegalAccessException {
     FireFighter f = FIREFIGHTERS.getFirst();
     if (f.getTile() != null) {
-      throw new IllegalAccessException("The FireFighter has already been assigned a tile");
+      throw new IllegalAccessException("The firefighter has already been assigned a tile");
     }
     f.setTile(t);
     flipAdjacentPOIForRescueDog();
     for (FireFighter fi : FIREFIGHTERS) {
-      if (verifyVeteranVacinity(((FireFighterAdvanced) fi))) {
+      if (verifyVeteranVicinity(((FireFighterAdvanced) fi))) {
         ((FireFighterAdvanced) fi).veteranBonus();
       }
     }
     return FIREFIGHTERS.getFirst().getTile() != null;
   }
 
-  public void removeSpecilty(FireFighterAdvanceSpecialities speciality) {
-    FREESPECIALITIES.remove(speciality);
+  public void removeSpecilty(FireFighterAdvanceSpecialties specialty) {
+    FREE_SPECIALTIES.remove(specialty);
   }
 
   public boolean driveAmbulance(Direction d) {
@@ -439,7 +437,7 @@ public class FireFighterTurnManagerAdvance extends FireFighterTurnManager {
         Server.sendToClientsInGame(ClientCommands.SET_GAME_STATE, DBHandler.getBoardAsString());
         Server.sendToClientsInGame(ClientCommands.REFRESH_BOARD_SCREEN, "");
         moveWithAmbulance(currenLocation, newLocation, d);
-        return verifyVeteranVacinityToAddAp();
+        return verifyVeteranVicinityToAddAp();
       }
     }
     sendActionRejectedMessageToCurrentPlayer("You need at least 2 AP to move the ambulance.");
@@ -492,7 +490,7 @@ public class FireFighterTurnManagerAdvance extends FireFighterTurnManager {
         Server.sendToClientsInGame(ClientCommands.SET_GAME_STATE, DBHandler.getBoardAsString());
         Server.sendToClientsInGame(ClientCommands.REFRESH_BOARD_SCREEN, "");
         moveWithFireTruck(list, newLocation, d);
-        return verifyVeteranVacinityToAddAp();
+        return verifyVeteranVicinityToAddAp();
       }
     }
     sendActionRejectedMessageToCurrentPlayer(
@@ -699,7 +697,7 @@ public class FireFighterTurnManagerAdvance extends FireFighterTurnManager {
       }
     } else {
       sendActionRejectedMessageToCurrentPlayer(
-          "You need more AP to fire the deck gun 4 if you are not the Driver 2 otherwise");
+          "You need more AP to fire the deck gun. 4 if you are not the Driver, 2 otherwise");
       return false;
     }
   }
@@ -733,7 +731,7 @@ public class FireFighterTurnManagerAdvance extends FireFighterTurnManager {
 
   public boolean fireCaptainCommand(FireFighterColor color, Actions action, Direction d) {
     if (!(getCurrentFireFighter() instanceof FireCaptain)) {
-      sendActionRejectedMessageToCurrentPlayer("You are not the fire captain");
+      sendActionRejectedMessageToCurrentPlayer("You are not the Fire Captain");
       return false;
     }
     FireFighterAdvanced fadv = null;
@@ -745,17 +743,17 @@ public class FireFighterTurnManagerAdvance extends FireFighterTurnManager {
     }
     if (fadv instanceof CAFSFirefighter && hasUsedCAF) {
       sendActionRejectedMessageToCurrentPlayer(
-          "As the fire captain you cannot use more than 1 special AP for the CAFS firefighter");
+          "As the Fire Captain you cannot use more than 1 special AP for the CAFS firefighter");
       return false;
     }
     if (fadv == null) {
-      throw new IllegalArgumentException("The color" + color + " is not in the list");
+      throw new IllegalArgumentException("The color " + color + " is not in the list");
     }
     this.sendToCaptain = true;
     String ip = Server.getClientIP(fadv.getColor());
     if (ip == null) {
       sendActionRejectedMessageToCurrentPlayer(
-          "The current player you are trying to move is not yet assigned to a User please wait");
+          "The current player you are trying to move is not yet assigned to a user, please wait");
       this.sendToCaptain = false;
       return false;
     }
@@ -788,7 +786,7 @@ public class FireFighterTurnManagerAdvance extends FireFighterTurnManager {
       }
     } else {
       sendActionRejectedMessageToCurrentPlayer(
-          "The user of the " + color + " fireFighter rejected the move");
+          "The user of the " + color + " firefighter rejected the move");
     }
     this.sendToCaptain = false;
     if (worked) {
@@ -815,7 +813,7 @@ public class FireFighterTurnManagerAdvance extends FireFighterTurnManager {
       }
     }
     if (fadv == null) {
-      throw new IllegalArgumentException("The color" + color + " is not in the list");
+      throw new IllegalArgumentException("The color " + color + " is not in the list");
     }
     if (fadv instanceof RescueDog) {
       actionsList.remove(Actions.MOVE_WITH_HAZMAT);
@@ -840,7 +838,7 @@ public class FireFighterTurnManagerAdvance extends FireFighterTurnManager {
     StructuralEngineer eng = (StructuralEngineer) getCurrentFireFighter();
     if (eng == null) {
       sendActionRejectedMessageToCurrentPlayer(
-          "You are not the engineer you cannot perform this action");
+          "You are not the engineer, you cannot perform this action");
       return false;
     }
     if (canClear()) {
@@ -859,7 +857,7 @@ public class FireFighterTurnManagerAdvance extends FireFighterTurnManager {
     StructuralEngineer eng = (StructuralEngineer) getCurrentFireFighter();
     if (eng == null) {
       sendActionRejectedMessageToCurrentPlayer(
-          "You are not the engineer you cannot perform this action");
+          "You are not the engineer, you cannot perform this action");
       return false;
     }
     if (canRepair(d)) {
@@ -883,7 +881,7 @@ public class FireFighterTurnManagerAdvance extends FireFighterTurnManager {
       }
     }
     if (!getCurrentFireFighter().getTile().hasHotSpot()) {
-      sendActionRejectedMessageToCurrentPlayer("The tile you are on does not have a hotSpot");
+      sendActionRejectedMessageToCurrentPlayer("The tile you are on does not have a hotspot");
       return false;
     } else {
       return true;
@@ -934,12 +932,12 @@ public class FireFighterTurnManagerAdvance extends FireFighterTurnManager {
       return false;
     } else if (t == null || t.hasAmbulance()) {
       sendActionRejectedMessageToCurrentPlayer(
-          "There are either no tile at the location or an ambulance and you cannot spread fire on an ambulance come on!!!");
+          "There are either no tile at the location or an ambulance and you cannot spread fire on an ambulance, come on!!!");
       return false;
     } else if (t.hasFire()
         || (t.hasSmoke() && (t.hasPointOfInterest() || t.hasFireFighters() || t.hasHazmat()))) {
       sendActionRejectedMessageToCurrentPlayer(
-          "You cannot spread fire on a tile with fire or a tile containg a POI or a FireFighter or a Hazmat");
+          "You cannot spread fire on a tile with fire or a tile containing a POI, a firefighter or a Hazmat");
       return false;
     }
     if (!p.spreadFireAP()) {

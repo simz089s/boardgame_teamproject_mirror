@@ -7,7 +7,7 @@ public class CreateNewGameManager {
   public static void createNewGame(String gameName, int numPlayers, MapKind map, Difficulty diff) {
     BoardManager.reset();
     switch (diff) {
-      case FAMILLY:
+      case FAMILY:
         createFamilyGame(map);
         break;
       default:
@@ -152,7 +152,7 @@ public class CreateNewGameManager {
 
       default:
         throw new IllegalArgumentException(
-            "Cannot set an experience game with familly version selected");
+            "Cannot set an experience game with family version selected");
     }
     while (numExtraHazmat > 0) {
       do {

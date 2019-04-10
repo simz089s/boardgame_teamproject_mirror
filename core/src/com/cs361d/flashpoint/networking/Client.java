@@ -33,7 +33,7 @@ public class Client {
 
   private static Client instance;
 
-  private static final Logger LOGGER = NetworkLogger.getLogger();
+  private static final Logger LOGGER = Logger.getLogger(NetworkLogger.class.getPackage().getName());
 
   public static Client createClient() {
 //    System.out.println(

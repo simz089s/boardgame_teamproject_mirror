@@ -7,7 +7,7 @@ import com.cs361d.flashpoint.screen.Actions;
 
 import java.util.List;
 
-import static com.cs361d.flashpoint.model.FireFighterSpecialities.FireFighterAdvanceSpecialities.PYROMANCER;
+import static com.cs361d.flashpoint.model.FireFighterSpecialities.FireFighterAdvanceSpecialties.PYROMANCER;
 
 public class Pyromancer extends FireFighterAdvanced {
 

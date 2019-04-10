@@ -1,7 +1,7 @@
 package com.cs361d.flashpoint.manager;
 
 public enum Difficulty {
-  FAMILLY("familly"),
+  FAMILY("family"),
   RECRUIT("recruit"),
   VETERAN("veteran"),
   HEROIC("heroic");

@@ -1,7 +1,7 @@
 package com.cs361d.flashpoint.manager;
 
 import com.cs361d.flashpoint.model.BoardElements.*;
-import com.cs361d.flashpoint.model.FireFighterSpecialities.FireFighterAdvanceSpecialities;
+import com.cs361d.flashpoint.model.FireFighterSpecialities.FireFighterAdvanceSpecialties;
 import com.cs361d.flashpoint.model.FireFighterSpecialities.FireFighterAdvanced;
 import com.cs361d.flashpoint.model.FireFighterSpecialities.Pyromancer;
 import com.cs361d.flashpoint.model.FireFighterSpecialities.Veteran;
@@ -158,7 +158,7 @@ public class BoardManagerAdvanced extends BoardManager {
     for (int i = 0; i < count; i++) {
       FireFighterAdvanced f =
           FireFighterAdvanced.createFireFighter(
-              colorList.removeFirst(), FireFighterAdvanceSpecialities.NO_SPECIALITY);
+              colorList.removeFirst(), FireFighterAdvanceSpecialties.NO_SPECIALTY);
       FireFighterTurnManager.getInstance().addFireFighter(f);
     }
   }
@@ -170,7 +170,7 @@ public class BoardManagerAdvanced extends BoardManager {
       int actionPoints,
       int specialApPoints,
       boolean veteranBonus,
-      FireFighterAdvanceSpecialities role,
+      FireFighterAdvanceSpecialties role,
       boolean firstTurn,
       boolean firstMove) {
     FireFighterAdvanced f = FireFighterAdvanced.createFireFighter(color, role);
@@ -615,7 +615,7 @@ public class BoardManagerAdvanced extends BoardManager {
       }
       if (f instanceof Veteran && f.getActionPointsLeft() > 0) {
         askForTheKnockedDownProcedure(f);
-      } else if (FireFighterTurnManagerAdvance.getInstance().verifyVeteranVacinity(f)
+      } else if (FireFighterTurnManagerAdvance.getInstance().verifyVeteranVicinity(f)
           && f.getActionPointsLeft() > 1) {
         askForTheKnockedDownProcedure(f);
       }
