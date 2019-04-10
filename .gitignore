@@ -126,4 +126,4 @@ Thumbs.db
 
 # Logs
 /core/assets/logs/*
-!/core/assets/logs/NETWORK_LOG_DUMMY.txt
+!/core/assets/logs/LOG_DUMMY.txt

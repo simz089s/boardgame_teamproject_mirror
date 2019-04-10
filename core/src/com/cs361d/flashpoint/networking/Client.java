@@ -16,6 +16,7 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 import java.util.logging.Logger;
 
 public class Client {
@@ -28,18 +29,30 @@ public class Client {
   private DataOutputStream dout; // client-to-server output stream
   private String clientIP;
   private boolean notStopped = true;
+  public static String serverIP = NetworkManager.DEFAULT_SERVER_IP;
 
   private static Client instance;
 
-  private static final Logger LOGGER = NetworkLogger.getLogger();
+  private static final Logger LOGGER = Logger.getLogger(NetworkLogger.class.getPackage().getName());
 
   public static Client createClient() {
+//    System.out.println(
+//        "If the server IP changed please enter it here (otherwise enter an invalid IP address string) :");
+//    Scanner sc = new Scanner(System.in);
     try {
-      instance = new Client(NetworkManager.DEFAULT_SERVER_IP, NetworkManager.DEFAULT_SERVER_PORT);
+//      String newIP = sc.next().trim();
+//      if (newIP.matches(
+//          "^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$")) {
+//        serverIP = newIP;
+//      }
+      System.out.println("Using server IP : " + serverIP);
+      instance = new Client(serverIP, NetworkManager.DEFAULT_SERVER_PORT);
       //      System.out.println("Client is starting...");
       LOGGER.info("Client is starting...");
     } catch (IOException e) {
       e.printStackTrace();
+    } finally {
+//      sc.close();
     }
     return instance;
   }
@@ -217,9 +230,9 @@ public class Client {
           }
           break;
         case SET_CURRENT_GAME_STATS:
-            jsonObject = (JSONObject) parser.parse(message);
-            final String name = jsonObject.get("name").toString();
-            final int numPlayer = Integer.parseInt(jsonObject.get("numPlayer").toString());
+          jsonObject = (JSONObject) parser.parse(message);
+          final String name = jsonObject.get("name").toString();
+          final int numPlayer = Integer.parseInt(jsonObject.get("numPlayer").toString());
           Gdx.app.postRunnable(
               new Runnable() {
                 @Override

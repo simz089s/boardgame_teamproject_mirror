@@ -5,7 +5,6 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.cs361d.flashpoint.manager.BoardManager;
-import com.cs361d.flashpoint.manager.BoardManagerAdvanced;
 import com.cs361d.flashpoint.manager.FireFighterTurnManager;
 import com.cs361d.flashpoint.manager.User;
 import com.cs361d.flashpoint.model.BoardElements.FireFighterColor;
@@ -39,7 +38,7 @@ public class BoardGameInfoLabel {
 
         String specialty = "\n";
         if(BoardManager.getInstance().isAdvanced()) {
-            specialty = "\n[ " + ((FireFighterAdvanced) FireFighterTurnManager.getInstance().getCurrentFireFighter()).getSpeciality() + " ]";
+            specialty = "\n[ " + ((FireFighterAdvanced) FireFighterTurnManager.getInstance().getCurrentFireFighter()).getSpecialty() + " ]";
         }
 
         String specialAP = "";

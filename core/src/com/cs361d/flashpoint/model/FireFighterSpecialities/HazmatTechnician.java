@@ -8,7 +8,7 @@ import java.util.List;
 public class HazmatTechnician extends FireFighterAdvanced {
 
   public HazmatTechnician(FireFighterColor color) {
-    super(color, 4, 0, FireFighterAdvanceSpecialities.HAZMAT_TECHNICIAN, true);
+    super(color, 4, 0, FireFighterAdvanceSpecialties.HAZMAT_TECHNICIAN, true);
   }
 
   @Override

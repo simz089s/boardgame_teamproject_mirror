@@ -1,6 +1,5 @@
 package com.cs361d.flashpoint.screen;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -11,15 +10,12 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.cs361d.flashpoint.manager.BoardManager;
-import com.cs361d.flashpoint.manager.MapKind;
-import com.cs361d.flashpoint.model.FireFighterSpecialities.FireFighterAdvanceSpecialities;
+import com.cs361d.flashpoint.model.FireFighterSpecialities.FireFighterAdvanceSpecialties;
 import com.cs361d.flashpoint.networking.Client;
 import com.cs361d.flashpoint.networking.ServerCommands;
-import org.json.simple.JSONObject;
 
 import java.util.Random;
 
-import static com.cs361d.flashpoint.screen.FlashPointScreen.game;
 import static com.cs361d.flashpoint.screen.FlashPointScreen.skinUI;
 
 // TO BE USED ONLY WHEN THE STAGE IS BOARDSCREEN (not for other pages)
@@ -70,7 +66,7 @@ public class BoardDialog {
         dialog.show(stage);
     }
 
-    public void drawOnSpecialtyClickDialog(FireFighterAdvanceSpecialities specialty) {
+    public void drawOnSpecialtyClickDialog(FireFighterAdvanceSpecialties specialty) {
         BoardManager.getInstance().setGameEnded();
         final Dialog dialog = new Dialog("Description", skinUI, "dialog");
 

@@ -16,7 +16,7 @@ class ServerToClientRunnable implements Runnable {
     boolean isloggedin;
     private boolean notStopped = true;
 
-    private static final Logger LOGGER = NetworkLogger.getLogger();
+    private static final Logger LOGGER = Logger.getLogger(NetworkLogger.class.getPackage().getName());
 
     // constructor
     public ServerToClientRunnable(Socket s, String name, DataInputStream din, DataOutputStream dout, String ip) {

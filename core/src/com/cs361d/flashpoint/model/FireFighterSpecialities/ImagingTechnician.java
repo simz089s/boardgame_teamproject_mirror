@@ -7,7 +7,7 @@ import java.util.List;
 
 public class ImagingTechnician extends FireFighterAdvanced {
   public ImagingTechnician(FireFighterColor color) {
-    super(color, 4, 0, FireFighterAdvanceSpecialities.IMAGING_TECHNICIAN, true);
+    super(color, 4, 0, FireFighterAdvanceSpecialties.IMAGING_TECHNICIAN, true);
   }
 
   @Override

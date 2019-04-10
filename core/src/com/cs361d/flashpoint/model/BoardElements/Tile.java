@@ -162,9 +162,9 @@ public class Tile {
   }
 
     /**
-     * If we play in advanced mode there can be no vicitm at the end of a turn at the ambulance since
-     * the ambulance rescues the victim and fireFighers knockdown at the ambulance will respown there thus we set tiles
-     * with ambulance to always be free of any fire or smoke. The same principle applies for the familly version
+     * If we play in advanced mode there can be no victim at the end of a turn at the ambulance since
+     * the ambulance rescues the victim and fireFighters knockdown at the ambulance will respawn there thus we set tiles
+     * with ambulance to always be free of any fire or smoke. The same principle applies for the family version
      * but in this case it is with the tiles that can contain an ambulance
      * @param f Firestatus that you want to update the tile to
      */

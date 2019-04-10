@@ -1,11 +1,16 @@
 package com.cs361d.flashpoint.networking;
 
+import com.cs361d.flashpoint.screen.FlashPointServerHandler;
+import com.cs361d.flashpoint.screen.ServerScreen;
+
 import java.io.IOException;
 import java.io.OutputStream;
 import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.logging.*;
+
+import static com.cs361d.flashpoint.screen.ServerScreen.logMessage;
 
 /*
  * Put these calls where you want to log. They will be called depending on corresponding logging level
@@ -27,7 +32,7 @@ public class NetworkLogger {
     //    private static FileHandler fileHandler;
     //    private static SimpleFormatter formatterTxt;
 
-    NetworkLogger() {
+    public NetworkLogger() {
         try {
             setup();
         } catch (IOException e) {
@@ -47,7 +52,7 @@ public class NetworkLogger {
         //        for (Handler handler : handlers) {
         //            globalLogger.removeHandler(handler);
         //        }
-        //        LogManager.getLogManager().reset();
+        LogManager.getLogManager().reset();
         LOGGER.setUseParentHandlers(false);
 
         LOGGER.setLevel(Level.INFO);
@@ -55,7 +60,9 @@ public class NetworkLogger {
 
         // Also log to a dated log file
         Format formatter = new SimpleDateFormat("YYYY-MM-dd_hh-mm-ss");
-        FileHandler fileHandler = new FileHandler("logs/NETWORK_LOG_" + formatter.format(new Date()) + ".txt");
+
+        FileHandler fileHandler =
+                new FileHandler("logs/LOG_" + formatter.format(new Date()) + ".txt");
 
         // ConsoleHandler outputs to stderr by default and cannot be changed...
         ConsoleHandler cmdHandler =
@@ -67,6 +74,8 @@ public class NetworkLogger {
                     }
                 };
 
+        Handler fpsHandler = new FlashPointServerHandler();
+
         // Formats outputs
         SimpleFormatter formatterTxt = new SimpleFormatter();
 
@@ -75,9 +84,9 @@ public class NetworkLogger {
 
         cmdHandler.setFormatter(formatterTxt);
         LOGGER.addHandler(cmdHandler);
+
+        fpsHandler.setFormatter(formatterTxt);
+        LOGGER.addHandler(fpsHandler);
     }
 
-    public static Logger getLogger() {
-        return LOGGER;
-    }
 }

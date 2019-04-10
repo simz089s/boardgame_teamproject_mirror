@@ -1,10 +1,8 @@
 package com.cs361d.flashpoint.manager;
 
 import com.cs361d.flashpoint.model.BoardElements.*;
-import com.cs361d.flashpoint.model.FireFighterSpecialities.FireFighterAdvanceSpecialities;
+import com.cs361d.flashpoint.model.FireFighterSpecialities.FireFighterAdvanceSpecialties;
 import com.cs361d.flashpoint.model.FireFighterSpecialities.FireFighterAdvanced;
-import com.cs361d.flashpoint.networking.Client;
-import com.cs361d.flashpoint.screen.Actions;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -364,7 +362,7 @@ public class DBHandler {
 
     JSONObject gameParams = (JSONObject) jsonObject.get("gameParams");
     Object diff = gameParams.get("difficulty");
-    if (diff == null || Difficulty.FAMILLY == Difficulty.fromString(diff.toString())) {
+    if (diff == null || Difficulty.FAMILY == Difficulty.fromString(diff.toString())) {
       loadFamBoardFromJSONStr(jsonString);
     } else {
       loadAdvBoardFromJSONStr(jsonString);
@@ -500,8 +498,8 @@ public class DBHandler {
             boolean hadVeteranBonus = (Boolean) firefighterParams.get("hadVeteranBonus");
             boolean firstTurn = (Boolean) firefighterParams.get("firstTurn");
             boolean firstMove = (Boolean) firefighterParams.get("firstMove");
-            FireFighterAdvanceSpecialities specialty =
-                FireFighterAdvanceSpecialities.fromString("" + firefighterParams.get("specialty"));
+            FireFighterAdvanceSpecialties specialty =
+                FireFighterAdvanceSpecialties.fromString("" + firefighterParams.get("specialty"));
             myBoardManager.addFireFighter(
                 i, j, fc, numAP, numSpecialAP, hadVeteranBonus, specialty, firstTurn, firstMove);
           }
@@ -755,7 +753,7 @@ public class DBHandler {
           firefighterParams.put("numAP", f.getActionPointsLeft());
           firefighterParams.put("numSpecialAP", fAdvanced.getSpecialActionPoints());
           firefighterParams.put("hadVeteranBonus", fAdvanced.getHadVeteranBonus());
-          firefighterParams.put("specialty", fAdvanced.getSpeciality().toString());
+          firefighterParams.put("specialty", fAdvanced.getSpecialty().toString());
           firefighterParams.put("firstTurn", fAdvanced.isFirstTurn());
           firefighterParams.put("firstMove", fAdvanced.isFirstMove());
           newFirefightersList.add(firefighterParams);
@@ -870,7 +868,7 @@ public class DBHandler {
       FireFighter f = it.next();
       playersOrdering.add("" + f.getColor());
     }
-    gameParams.put("difficulty", Difficulty.FAMILLY.toString());
+    gameParams.put("difficulty", Difficulty.FAMILY.toString());
     gameParams.put("gameName", boardManager.getInstance().getGameName());
     gameParams.put("numVictimsLost", BoardManager.getInstance().getNumVictimDead());
     gameParams.put("numVictimsSaved", BoardManager.getInstance().getNumVictimSaved());

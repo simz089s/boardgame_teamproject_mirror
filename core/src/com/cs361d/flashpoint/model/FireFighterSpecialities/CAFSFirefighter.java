@@ -6,7 +6,7 @@ import com.cs361d.flashpoint.model.BoardElements.FireFighterColor;
 public class CAFSFirefighter extends FireFighterAdvanced {
   private int saveForCaptain = 0;
   public CAFSFirefighter(FireFighterColor color) {
-    super(color,3,3, FireFighterAdvanceSpecialities.CAFS_FIREFIGHTER, true);
+    super(color,3,3, FireFighterAdvanceSpecialties.CAFS_FIREFIGHTER, true);
     this.maxSpecialAp = 3;
     this.actionsPointPerTurn = 3;
   }

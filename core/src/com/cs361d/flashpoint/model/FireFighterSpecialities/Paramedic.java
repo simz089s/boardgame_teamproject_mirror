@@ -7,7 +7,7 @@ import java.util.List;
 
 public class Paramedic extends FireFighterAdvanced{
   public Paramedic(FireFighterColor color) {
-    super(color, 4, 0, FireFighterAdvanceSpecialities.PARAMEDIC, true);
+    super(color, 4, 0, FireFighterAdvanceSpecialties.PARAMEDIC, true);
   }
 
   public boolean treatVictimAP() {
