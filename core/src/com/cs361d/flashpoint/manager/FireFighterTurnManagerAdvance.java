@@ -166,10 +166,12 @@ public class FireFighterTurnManagerAdvance extends FireFighterTurnManager {
       } else if (currentTile.hasObstacle(d)) {
         Obstacle o = currentTile.getObstacle(d);
         if (o.isDoor()) {
+          sendActionRejectedMessageToCurrentPlayer("You cannot go through a door even if you are the rescue dog");
           return false;
         } else if (o.getHealth() < 2) {
           return true;
         } else {
+          sendActionRejectedMessageToCurrentPlayer("You cannot squeeze through a perfectly healthy wall");
           return false;
         }
       }

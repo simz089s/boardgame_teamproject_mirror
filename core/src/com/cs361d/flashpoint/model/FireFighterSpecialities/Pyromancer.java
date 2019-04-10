@@ -17,14 +17,14 @@ public class Pyromancer extends FireFighterAdvanced {
     }
 
     public boolean spreadFireAP() {
-        if (specialActionPoints > 1) {
+        if (specialActionPoints > 0) {
             firstMoveDone();
             specialActionPoints--;
             return true;
         }
-        else if (actionPoints > 1) {
+        else if (actionPoints > 0) {
             firstMoveDone();
-            specialActionPoints--;
+            actionPoints--;
             return true;
         }
         return false;
