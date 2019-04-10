@@ -17,7 +17,7 @@ public class NetworkManager {
 //  public static final String DEFAULT_SERVER_IP = "142.157.67.193"; // Elvric public ip address
  //  final public static String DEFAULT_SERVER_IP = "132.216.233.202"; // DC public ip
 //  final public static String DEFAULT_SERVER_IP = "142.157.66.229"; // JZ public ip
-  //final public static String DEFAULT_SERVER_IP = "142.157.75.105"; // Matty V IP
+  final public static String DEFAULT_SERVER_IP = "142.157.75.105"; // Matty V IP
   public static final int DEFAULT_SERVER_PORT = 54590;
 
   // In the controller, because both Server and Client need this class
